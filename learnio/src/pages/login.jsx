@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import LoginForm from '../components/LoginForm'
 import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 import backgroundimg from '../images/learniobglogin.png'
 
 const background = {
@@ -15,22 +16,18 @@ const vertAlign = {
     flexDirection: "column",
     justifyContent: "center"
 }
-const center = {
-
-        minWidth: "25%",
-        maxWidth: "100%",
-        margin: "0 auto",
-
-
-}
 
 class Login extends Component {
     render() {
         return (
             <div style={{...background, ...vertAlign}}>
-                <Paper elevation={3} style = {{...center, ...vertAlign}}>
-                    <LoginForm/>
-                </Paper>
+                <Grid container direction="row" justify="center" alignItems="center">
+                    <Grid item xs={11} sm={6} md={4} lg={3}>
+                        <Paper elevation={3} style = {{ ...vertAlign}}>
+                         <LoginForm/>
+                        </Paper>
+                    </Grid>
+                </Grid>
             </div>
         );
     }
