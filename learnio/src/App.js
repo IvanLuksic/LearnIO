@@ -1,20 +1,32 @@
 import React from "react";
 import { Route } from "react-router-dom";
+import Login from "./pages/login.jsx";
+import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import "./App.css";
 import Home from "./components/Home"
 import About from "./components/About"
 import Navbar from './components/Navbar';
 import Contact from './components/Contact';
 
+
+const theme = createMuiTheme({
+    palette: {
+      primary: {main: "#4372ec"},
+      secondary: {main: "#EB4949"}
+    },
+  });
+
 function App() {
     return (
         <div className="App" style={{height: '100vh'}} >
+          <ThemeProvider them={theme}>
           <Navbar/>
           <div className="App-intro">
                 <Route exact path="/" component={Home}/>
                 <Route path="/about" component={About}/>
                 <Route path="/contact"component={Contact}/>
           </div>
+          </ThemeProvider>
         </div>
     );
 }
