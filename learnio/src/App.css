@@ -1,62 +1,53 @@
-@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
-
-.App {
-    background-image:url("./components/learniobg10-15.png");
-    background-size: cover;
-    background-position: fixed;
-    background-attachment: fixed;
-    background-repeat: repeat-y;
-    min-height: 200vh;
-}
+@import url("https://fonts.googleapis.com/css2?family=Righteous&display=swap");
 
 .App-logo {
     height: 40vmin;
     pointer-events: none;
 }
 
-
-a:hover, a:visited, a:link, a:active
-{ 
-    color: #737B7D;
+a:hover,
+a:visited,
+a:link,
+a:active {
+    color: #737b7d;
     text-decoration: none;
     font-size: 14.5px;
 }
 
-span{
-  font-family: 'Righteous', cursive;
-  text-transform: none;
-  font-size: inherit;
-
+span {
+    font-family: "Righteous", cursive;
+    text-transform: none;
+    font-size: inherit;
 }
 
 .learnioNavbar {
-  font-size: 23px;
-  color: black;
+    font-size: 23px;
+    color: black;
 }
 
 li {
-  font-family: 'Righteous', cursive;
-  list-style: none;
-  text-decoration: none;
-  color: inherit;
-  font-size: inherit;
+    font-family: "Righteous", cursive;
+    list-style: none;
+    text-decoration: none;
+    color: inherit;
+    font-size: inherit;
 }
 
-::-webkit-scrollbar{
-  width: 1vh;
+::-webkit-scrollbar {
+    width: 1vh;
 }
 
-::-webkit-scrollbar-track{
-  background: whitesmoke;
+::-webkit-scrollbar-track {
+    background: whitesmoke;
 }
 
-::-webkit-scrollbar-thumb{
-  background-image: linear-gradient(#27AE60,rgb(41, 97, 65));
-  border-radius: 25px;
+::-webkit-scrollbar-thumb {
+    background-image: linear-gradient(#27ae60, rgb(41, 97, 65));
+    border-radius: 25px;
 }
 
-::-webkit-scrollbar-thumb:hover{
-  background-image: linear-gradient(#6ce49e,rgb(28, 146, 81));
+::-webkit-scrollbar-thumb:hover {
+    background-image: linear-gradient(#6ce49e, rgb(28, 146, 81));
 }
 
 .App-header {
@@ -73,4 +64,3 @@ li {
 .App-link {
     color: #61dafb;
 }
-

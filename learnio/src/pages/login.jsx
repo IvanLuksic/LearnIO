@@ -5,7 +5,7 @@ import backgroundimg from '../images/learniobglogin.png'
 
 const background = {
     width: "100%",
-    height: "100%",
+    height: "100vh",
     backgroundImage: "url("+backgroundimg+")" ,
 
 }

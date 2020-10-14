@@ -40,8 +40,8 @@ class LoginForm extends Component {
             <React.Fragment>
                 <Typography color="primary" className={classes.loginHeadline}>Login </Typography>
                 <form className={classes.root} validate autoComplete="off">
-                    <TextField fullWidth className={classes.fields} type="email" id="filled-basic" label="E-mail" variant="filled" />
-                    <TextField fullWidth className={classes.fields} type="password" id="filled-basic" label="Password" variant="filled" />
+                    <TextField fullWidth className={classes.fields} type="email" label="E-mail" variant="filled" />
+                    <TextField fullWidth className={classes.fields} type="password" label="Password" variant="filled" />
                     <Button variant="contained" className={classes.loginButton} type="submit" color="primary">
                         Prijavi se
                     </Button>

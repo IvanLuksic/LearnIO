@@ -1,12 +1,12 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import Login from "./pages/login.jsx";
-import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import "./App.css";
 import Home from "./components/Home"
 import About from "./components/About"
 import Navbar from './components/Navbar';
-import Contact from './components/Contact';
+import Contact from './images/Contact';
 
 
 const theme = createMuiTheme({
@@ -19,12 +19,13 @@ const theme = createMuiTheme({
 function App() {
     return (
         <div className="App" style={{height: '100vh'}} >
-          <ThemeProvider them={theme}>
+          <ThemeProvider theme={theme}>
           <Navbar/>
           <div className="App-intro">
                 <Route exact path="/" component={Home}/>
                 <Route path="/about" component={About}/>
                 <Route path="/contact"component={Contact}/>
+                <Route path="/login"><Login/> </Route>
           </div>
           </ThemeProvider>
         </div>
