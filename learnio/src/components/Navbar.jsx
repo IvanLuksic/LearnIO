@@ -7,7 +7,6 @@ import logo from '../images/favicon-32x32.png';
 import Box from '@material-ui/core/Box';
 import Hidden from '@material-ui/core/Hidden';
 import {Link} from 'react-router-dom';
-import { Typography } from '@material-ui/core';
 
 
 const ColorButton = withStyles((theme) => ({
