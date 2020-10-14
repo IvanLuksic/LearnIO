@@ -4,6 +4,7 @@ import logo from '../images/compLogo.png';
 import linda from '../images/linda.jpg';
 import Box from '@material-ui/core/Box';
 import backgroundIMG from '../images/learniobg10-15.png'
+import { Grid } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     image:{
@@ -28,24 +29,28 @@ function Home(){
     
     return(
     <div style={{ width: '100%', ...background }}>
-      <Box display="flex" justifyContent="space-evenly" flexDirection="row" alignItems="center" pl={"5vw"} pr={"3vw"} pt={"25vh"} pb={"40vh"} bgcolor="transparent">
-        <Box width="50%" flexGrow={1} flexShrink={1} bgcolor="transparent" mr={"3vw"} >
+      <Grid container  justify="space-evenly" alignItems="center">
+        
+        <Grid sm={12} md={6} spacing={12} style={{marginTop: '7em'}}>
+        <Box flexGrow={1} flexShrink={1} bgcolor="transparent" mr={"3vw"}>
             <img src={logo} alt='slika' className={classes.image}/>
-        </Box>
-        <Box width="50%" flexGrow={1} flexShrink={1}  bgcolor="transparent" ml={"5vw"} mr={"5vw"} >
-            <Box  mb={"2vh"}> <span style={{fontSize: "3vw", color:"#373F41"}}>Welcome to LearnIO </span></Box>
-            <p style={{fontSize: "2.2vw",color: "#737B7D"}}>LearnIO is a half-intelligent WebApp that will help you learn only things you need to learn.</p> 
-        </Box>
-      </Box>
-      <Box display="flex" justifyContent="space-evenly" flexDirection="row" alignItems="center" pl={"7.5vw"} pr={"3vw"} pt={"12.5vh"} pb={"40vh"} bgcolor="transparent">
-      <Box width="50%" flexGrow={1} flexShrink={1}  bgcolor="transparent" ml={"5vw"} mr={"5vw"} >
-        <Box mb={2}> <span style={{fontSize: "3vw", color:"#373F41"}}>Welcome to LearnIO </span></Box>
-            <p style={{fontSize: "2.2vw",color: "#737B7D"}}>LearnIO is a half-intelligent WebApp that will help you learn only things you need to learn.</p> 
-        </Box>
-        <Box  width="50%" flexGrow={1} flexShrink={1} display="flex" justifyContent="center" bgcolor="transparent" >
-            <img src={linda} alt='slika' className={classes.image} width="50%"/>
-        </Box>
-      </Box>
+        </Box></Grid>
+        <Grid sm={12} md={6} spacing={12}>
+        <Box flexGrow={1} flexShrink={1}  bgcolor="transparent" ml={"5vw"} mr={"5vw"} >
+            <Box  mb={"2vh"}> <span style={{fontSize: "3em", color:"#373F41"}}>Welcome to LearnIO </span></Box>
+            <p style={{fontSize: "2em",color: "#737B7D"}}>LearnIO is a half-intelligent WebApp that will help you learn only things you need to learn.</p> 
+        </Box></Grid>
+      <Grid sm={12} md={6} spacing={12}>
+      <Box flexGrow={1} flexShrink={1}  bgcolor="transparent" ml={"5vw"} mr={"5vw"} >
+        <Box mb={2}> <span style={{fontSize: "2em", color:"#373F41"}}>Welcome to LearnIO </span></Box>
+            <p style={{fontSize: "2em",color: "#737B7D"}}>LearnIO is a half-intelligent WebApp that will help you learn only things you need to learn.</p> 
+        </Box></Grid>
+        <Grid sm={12} md={6} spacing={12}>
+        <Box flexGrow={1} flexShrink={1} display="flex" justifyContent="center" bgcolor="transparent" >
+            <img src={linda} alt='slika' className={classes.image}/>
+        </Box></Grid>
+      
+      </Grid>
     </div>
     );
 };
