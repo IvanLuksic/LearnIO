@@ -7,6 +7,7 @@ import Home from "./components/Home"
 import About from "./components/About"
 import Navbar from './components/Navbar';
 import Contact from './images/Contact';
+import StudentTopics from "./components/StudentTopics";
 
 
 const theme = createMuiTheme({
@@ -25,6 +26,7 @@ function App() {
                 <Route exact path="/" component={Home}/>
                 <Route path="/about" component={About}/>
                 <Route path="/contact"component={Contact}/>
+                <Route path="/topics"><StudentTopics/></Route>
                 <Route path="/login"><Login/> </Route>
           </div>
           </ThemeProvider>

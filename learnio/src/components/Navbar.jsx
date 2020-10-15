@@ -58,8 +58,11 @@ function Navbar(){
         <Box mr={8}>
             <li > <Link to="/contact">Contact</Link> </li>
         </Box>
-        <Box >
+        <Box mr={8}>
             <li> <Link to="/about">About</Link> </li>
+        </Box>
+        <Box >
+            <li> <Link to="/topics">Topics</Link> </li>
         </Box>
         </Hidden>
         <ColorButton  size="small" style={{borderRadius: 25}}>
