@@ -44,9 +44,9 @@ function Navbar(){
     return(
     <div className={classes.root} >
     <AppBar elevation={3} position="fixed" style={{background: '#FFFFFF'}}>
-    <Toolbar  alignItems="right" >
+    <Toolbar >
         <img src={logo} alt='slika' className={classes.image}/>
-        <Box ml={1} fontColor="black !important">
+        <Box ml={1}>
            <Link to="/"> <span className="learnioNavbar"  >
                LearnIO
             </span></Link>
@@ -62,7 +62,7 @@ function Navbar(){
             <li> <Link to="/about">About</Link> </li>
         </Box>
         </Hidden>
-        <ColorButton  size="small" style={{borderRadius: 25}} buttonStyle={{borderRadius: 25} }>
+        <ColorButton  size="small" style={{borderRadius: 25}}>
         <li> <Link to="/login" style={{color: "white"}}>Log in</Link></li>
         </ColorButton>
     </Toolbar>

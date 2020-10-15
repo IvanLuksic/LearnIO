@@ -88,6 +88,7 @@ const useStyles = makeStyles((theme) => ({
 
     txtS:{
       color: "#373F41",
+      fontFamily: "righteous",
       [theme.breakpoints.down('sm')]: {
         fontSize: "4.5vw",
       },

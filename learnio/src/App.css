@@ -1,5 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Righteous&display=swap");
 
+* {
+    font-family: "Roboto";
+}
 .App-logo {
     height: 40vmin;
     pointer-events: none;
@@ -14,13 +17,16 @@ a:active {
     font-size: 14.5px;
 }
 
-span {
+.righteous {
     font-family: "Righteous", cursive;
+}
+span {
     text-transform: none;
     font-size: inherit;
 }
 
 .learnioNavbar {
+    font-family: "Righteous", cursive;
     font-size: 23px;
     color: black;
 }
