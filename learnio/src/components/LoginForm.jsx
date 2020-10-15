@@ -24,8 +24,8 @@ const styles = {
     },
     loginButton:{
         margin: "auto",
-        marginTop: "1.5em",
-        marginBottom: "1.5em",
+        marginTop: "2em",
+        marginBottom: "2em",
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -42,7 +42,7 @@ class LoginForm extends Component {
                 <form className={classes.root} noValidate autoComplete="off">
                     <TextField fullWidth className={classes.fields} type="email" label="E-mail" variant="filled" />
                     <TextField fullWidth  className={classes.fields} type="password" label="Password" variant="filled" />
-                    <Button variant="contained" className={classes.loginButton} type="submit" color="primary">
+                    <Button variant="contained" className={classes.loginButton} style={{borderRadius: 25}} type="submit" color="primary">
                         Prijavi se
                     </Button>
                 </form>
