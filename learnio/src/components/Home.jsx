@@ -78,22 +78,23 @@ const useStyles = makeStyles((theme) => ({
 
     txtP:{
       color: "#737B7D",//textalign justify
+      lineHeight: "1.2em",
       [theme.breakpoints.down('sm')]: {
         fontSize: "3.5vw",
       },
       [theme.breakpoints.up('md')]: {
-        fontSize: "2.2vw",
+        fontSize: "2vw",
       },
     },
 
     txtS:{
       color: "#373F41",
-      fontFamily: "righteous",
+      fontFamily: "Lobster",
       [theme.breakpoints.down('sm')]: {
         fontSize: "4.5vw",
       },
       [theme.breakpoints.up('md')]: {
-        fontSize: "2.2vw",
+        fontSize: "3.2vw",
       },
     }
   }));

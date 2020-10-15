@@ -32,7 +32,8 @@ span {
 }
 
 li {
-    font-family: "Righteous", cursive;
+    font-family: "Roboto", cursive;
+    font-weight: 600;
     list-style: none;
     text-decoration: none;
     color: inherit;

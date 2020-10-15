@@ -63,7 +63,7 @@ function Navbar(){
         </Box>
         </Hidden>
         <ColorButton  size="small" style={{borderRadius: 25}}>
-        <li> <Link to="/login" style={{color: "white"}}>Log in</Link></li>
+         <Link to="/login" style={{color: "white", fontFamily: "Lobster"}}>Login</Link>
         </ColorButton>
     </Toolbar>
     </AppBar>
