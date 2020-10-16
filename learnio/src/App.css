@@ -76,7 +76,7 @@ li {
 .MuiDataGrid-colCellWrapper {
     background-color: #27ae60;
     color: white;
-    border: none;
+    border: none !important;
     border-radius: 25px;
 }
 
@@ -86,7 +86,4 @@ li {
 
 .MuiDataGrid-footer {
     background-color: white;
-}
-.MuiDataGrid-window {
-    border: none;
 }

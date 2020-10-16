@@ -66,7 +66,7 @@ function CustomPagination(props) {
 function StudentTopics(){
     const classes = useStyles();
     const columns = [
-      { field: 'topic', width: 150, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
+      { field: 'topic', width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
       { field: 'id', headerName:'ID'},
       { field: 'ao1', hide: true},
       { field: 'ao1P', headerName:'AO 1',
