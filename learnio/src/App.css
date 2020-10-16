@@ -73,48 +73,48 @@ li {
     color: #61dafb;
 }
 
-
 .MuiDataGrid-colCellWrapper {
     background-color: #27ae60;
-    box-shadow: inset 10px -12px 67px -25px rgba(0,0,0,0.7);
     color: white;
     border-radius: 25px;
-    border: 1px solid darkgreen ;
     font-weight: 600 !important;
     font-size: 1.05em;
 }
-.MuiDataGrid-mainGridContainer {
-    background-color: transparent;
-    border: none;
-}
-.MuiDataGrid-sortIcon{
+
+.MuiDataGrid-sortIcon {
     color: white;
 }
-.MuiDataGrid-footer{
+.MuiDataGrid-footer {
     background-color: white;
     border: 1px solid rgba(224, 224, 224, 1);
     border-radius: 25px;
 }
-.MuiDataGrid-columnsContainer{
+.MuiDataGrid-columnsContainer {
     border-radius: 25px;
 }
-.MuiDataGrid-root	
-{
+.MuiDataGrid-root {
     border: none !important;
 }
-.MuiDataGrid-row{
+.MuiDataGrid-row {
     background-color: white;
     border-radius: 25px;
-    border: 1px solid rgba(224, 224, 224, 1);
 }
-.Mui-selected{
-    background-color:#4373ec9f !important;
+.Mui-selected {
+    background-color: #4373ec !important;
     color: white;
 }
-.MuiDataGrid-cell{
+.MuiDataGrid-cell {
     border: none !important;
 }
-.MuiDataGrid-colCellTitle{
-    font-weight: 600 !important;
+.MuiDataGrid-colCellTitle {
+    font-weight: 500 !important;
     font-size: 1.05em;
+}
+
+.Mui-even {
+    background-color: #f7f5f5;
+}
+
+.Mui-odd {
+    background-color: #ededed;
 }
