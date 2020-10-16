@@ -72,3 +72,21 @@ li {
 .App-link {
     color: #61dafb;
 }
+
+.MuiDataGrid-colCellWrapper {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 25px;
+}
+
+.MuiDataGrid-mainGridContainer {
+    background-color: white;
+}
+
+.MuiDataGrid-footer {
+    background-color: white;
+}
+.MuiDataGrid-window {
+    border: none;
+}

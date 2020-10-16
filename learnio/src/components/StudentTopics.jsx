@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
     tabela:{
       paddingBottom:"10vh",
-      height:"380px",
+      height:"30em",
       [theme.breakpoints.down('sm')]: {
         width:"90%",
       },
@@ -95,7 +95,7 @@ function StudentTopics(){
 
     return(  
     <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background} >
-        <span className={classes.topicTitle}>Topics</span>
+        <Typography color="primary"><span className={classes.topicTitle}>Topics</span></Typography>
         <div className={classes.tabela}>
           <DataGrid  pagination pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />
         </div>
