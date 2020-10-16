@@ -73,17 +73,48 @@ li {
     color: #61dafb;
 }
 
+
 .MuiDataGrid-colCellWrapper {
     background-color: #27ae60;
+    box-shadow: inset 10px -12px 67px -25px rgba(0,0,0,0.7);
     color: white;
-    border: none !important;
+    border-radius: 25px;
+    border: 1px solid darkgreen ;
+    font-weight: 600 !important;
+    font-size: 1.05em;
+}
+.MuiDataGrid-mainGridContainer {
+    background-color: transparent;
+    border: none;
+}
+.MuiDataGrid-sortIcon{
+    color: white;
+}
+.MuiDataGrid-footer{
+    background-color: white;
+    border: 1px solid rgba(224, 224, 224, 1);
     border-radius: 25px;
 }
-
-.MuiDataGrid-mainGridContainer {
-    background-color: white;
+.MuiDataGrid-columnsContainer{
+    border-radius: 25px;
 }
-
-.MuiDataGrid-footer {
+.MuiDataGrid-root	
+{
+    border: none !important;
+}
+.MuiDataGrid-row{
     background-color: white;
+    border-radius: 25px;
+    border: 1px solid rgba(224, 224, 224, 1);
+}
+.Mui-selected{
+    background-color:#4373ec9f !important;
+    color: white;
+}
+.MuiDataGrid-cell{
+    border: none !important;
+}
+.MuiDataGrid-colCellTitle{
+    font-weight: 600 !important;
+    font-size: 1.05em;
 }
