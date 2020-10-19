@@ -1,38 +1,120 @@
-.App {
-  text-align: center;
-}
+@import url("https://fonts.googleapis.com/css2?family=Righteous&display=swap");
 
+* {
+    font-family: "Roboto";
+}
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+a:hover,
+a:visited,
+a:link,
+a:active {
+    color: #737b7d;
+    text-decoration: none;
+    font-size: 14.5px;
+}
+
+.righteous {
+    font-family: "Righteous", cursive;
+}
+span {
+    text-transform: none;
+    font-size: inherit;
+}
+
+.learnioNavbar {
+    font-family: "Righteous", cursive;
+    font-size: 23px;
+    color: black;
+}
+
+li {
+    font-family: "Roboto", cursive;
+    font-weight: 600;
+    list-style: none;
+    text-decoration: none;
+    color: inherit;
+    font-size: inherit;
+}
+
+::-webkit-scrollbar {
+    width: 1vh;
+    height: 1vh;
+}
+
+::-webkit-scrollbar-track {
+    background: whitesmoke;
+}
+
+::-webkit-scrollbar-thumb {
+    background-image: linear-gradient(#27ae60, rgb(41, 97, 65));
+    border-radius: 25px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-image: linear-gradient(#6ce49e, rgb(28, 146, 81));
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.MuiDataGrid-colCellWrapper {
+    background-color: #27ae60;
+    color: white;
+    border-radius: 25px;
+    font-weight: 600 !important;
+    font-size: 1.05em;
+}
+
+.MuiDataGrid-sortIcon {
+    color: white;
+}
+.MuiDataGrid-footer {
+    background-color: white;
+    border: 1px solid rgba(224, 224, 224, 1);
+    border-radius: 25px;
+}
+.MuiDataGrid-columnsContainer {
+    border-radius: 25px;
+}
+.MuiDataGrid-root {
+    border: none !important;
+}
+.MuiDataGrid-row {
+    background-color: white;
+    border-radius: 25px;
+}
+.Mui-selected {
+    background-color: #4373ec !important;
+    color: white;
+}
+.MuiDataGrid-cell {
+    border: none !important;
+}
+.MuiDataGrid-colCellTitle {
+    font-weight: 500 !important;
+    font-size: 1.05em;
+}
+
+.Mui-even {
+    background-color: #f7f5f5;
+}
+
+.Mui-odd {
+    background-color: #ededed;
 }
