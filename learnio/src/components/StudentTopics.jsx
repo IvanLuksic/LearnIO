@@ -1,11 +1,26 @@
 import React from 'react';
-import { makeStyles} from '@material-ui/core/styles';
+import { makeStyles,withStyles} from '@material-ui/core/styles';
 import { DataGrid, RowsProp, ColDef  } from '@material-ui/data-grid';
 import backgroundIMG from '../images/learniobg10-15.png'
 import { Hidden, Typography } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
+import Button from '@material-ui/core/Button';
 
 
+const ColorButton = withStyles((theme) => ({
+  root: {
+      MarginRight: 0,
+      marginLeft: "auto",
+      color: "#FFFFFF",
+      fontFamily: "Lobster !important",
+      borderRadius:"25px",
+      backgroundColor: "#EB4949",
+      maxHeight: 30,
+      '&:hover': {
+          backgroundColor: "#D54646",
+    },
+  },
+}))(Button);
 
 const useStyles = makeStyles((theme) => ({
 
@@ -26,7 +41,8 @@ const useStyles = makeStyles((theme) => ({
 
     tabela:{
       paddingBottom:"10vh",
-      height:"380px",
+      borderColor: "transparent !important",
+      height:"25em",
       [theme.breakpoints.down('sm')]: {
         width:"90%",
       },
@@ -66,7 +82,7 @@ function CustomPagination(props) {
 function StudentTopics(){
     const classes = useStyles();
     const columns = [
-      { field: 'topic', width: 150, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
+      { field: 'topic', width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
       { field: 'id', headerName:'ID'},
       { field: 'ao1', hide: true},
       { field: 'ao1P', headerName:'AO 1',
@@ -80,6 +96,10 @@ function StudentTopics(){
       { field: 'ao3P', headerName:'AO 3',
       valueGetter: (params) => `${params.getValue('ao3')}%`,
       sortComparator: (v1, v2, row1, row2) => row1.data.ao3 - row2.data.ao3,},
+      { field: 'open', headerName: `${' '}`, renderCell: (params) => (<ColorButton size="small" > Open </ColorButton>
+        ),
+      },
+    
     ];
     const rows=[
       { id: 1, topic:'Trigonometry 1', ao1:'70',ao2:'55', ao3:'66'},
@@ -95,7 +115,7 @@ function StudentTopics(){
 
     return(  
     <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background} >
-        <span className={classes.topicTitle}>Topics</span>
+        <Typography color="primary"><span className={classes.topicTitle}>Topics</span></Typography>
         <div className={classes.tabela}>
           <DataGrid  pagination pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />
         </div>

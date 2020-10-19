@@ -18,7 +18,7 @@ const ColorButton = withStyles((theme) => ({
         marginLeft: "auto",
         color: "#FFFFFF",
         backgroundColor: "#27AE60",
-         maxHeight: 27,
+         maxHeight: 35,
         '&:hover': {
             backgroundColor: "#23A259",
       },
@@ -82,7 +82,7 @@ function Navbar(){
 
         </Hidden>
         <ColorButton  size="small" style={{borderRadius: 25}}>
-         <Link to="/login" style={{color: "white", fontFamily: "Lobster"}}>Login</Link>
+         <Link to="/login" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Login</Link>
         </ColorButton>
     </Toolbar>
     </AppBar>
