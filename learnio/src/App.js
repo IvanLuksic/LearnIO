@@ -25,12 +25,14 @@ function App() {
           <div className="App-intro">
                 <Route exact path="/" component={Home}/>
                 <Route path="/about" component={About}/>
-                <Route path="/contact"component={Contact}/>
+                <Route path="/contact" component={Contact}/>
+                <Route path="/add-question" component={AddQuestPU}/>
                 <Route path="/topics"><StudentTopics/></Route>
                 <Route path="/login"><Login/> </Route>
           </div>
           </ThemeProvider>
         </div>
+
     );
 }
 
