@@ -8,6 +8,8 @@ import About from "./components/About"
 import Navbar from './components/Navbar';
 import Contact from './images/Contact';
 import StudentTopics from "./components/StudentTopics";
+import AddQuestPU from "./components/AddQuestPU";
+import Matrica from"./components/Matrica";
 
 
 const theme = createMuiTheme({
@@ -30,6 +32,7 @@ function App() {
                 <Route path="/topics"><StudentTopics/></Route>
                 <Route path="/login"><Login/> </Route>
           </div>
+
           </ThemeProvider>
         </div>
 

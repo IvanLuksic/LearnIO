@@ -79,6 +79,13 @@ function Navbar(){
                 }
             </Popup>
         </Box>
+        {
+            // box za matricu samo da vidin kako izgleda ------------------------------------
+        }
+        <Box mr={8}>
+            <li> <Link to="/matrica">matrica</Link> </li>
+        </Box>
+
 
         </Hidden>
         <ColorButton  size="small" style={{borderRadius: 25}}>
