@@ -17,13 +17,13 @@ const useStyles=makeStyles(theme =>({
 
 
 
-function Popup(props){
+function PitanjeTekst(props){
     const [value, setValue] = React.useState('A');
 
     const handleChange = (event) => {
     setValue(event.target.value);
     };
-    const {title,openPopupLabel,setOpenPopupLabel}=props;
+    const {title, openPopupLabel, setOpenPopupLabel}=props;
     const classes=useStyles();
     
     return(
@@ -54,4 +54,4 @@ function Popup(props){
         );
 
 }
-export default Popup;
+export default PitanjeTekst;

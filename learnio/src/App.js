@@ -8,6 +8,7 @@ import About from "./components/About"
 import Navbar from './components/Navbar';
 import Contact from './images/Contact';
 import StudentTopics from "./components/StudentTopics";
+import AddQuestPU from "./components/AddQuestPU"
 
 
 const theme = createMuiTheme({

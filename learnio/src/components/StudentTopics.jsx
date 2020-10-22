@@ -5,10 +5,12 @@ import backgroundIMG from '../images/learniobg10-15.png'
 import { Hidden, Typography } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import Button from '@material-ui/core/Button';
+import {Link} from 'react-router-dom';
 
 
 const ColorButton = withStyles((theme) => ({
   root: {
+      border: 0,
       MarginRight: 0,
       marginLeft: "auto",
       color: "#FFFFFF",
@@ -96,8 +98,7 @@ function StudentTopics(){
       { field: 'ao3P', headerName:'AO 3',
       valueGetter: (params) => `${params.getValue('ao3')}%`,
       sortComparator: (v1, v2, row1, row2) => row1.data.ao3 - row2.data.ao3,},
-      { field: 'open', headerName: `${' '}`, renderCell: (params) => (<ColorButton size="small" > Open </ColorButton>
-        ),
+      { field: 'open', headerName: `${' '}`, renderCell: (params) => (<Link to='/contacts'><ColorButton size="small"> Open </ColorButton></Link>),
       },
     
     ];
