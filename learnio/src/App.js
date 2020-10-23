@@ -31,6 +31,7 @@ function App() {
                 <Route path="/add-question" component={AddQuestPU}/>
                 <Route path="/topics"><StudentTopics/></Route>
                 <Route path="/login"><Login/> </Route>
+                <Route path="/topic"><Matrica/></Route>
           </div>
 
           </ThemeProvider>
