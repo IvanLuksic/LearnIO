@@ -67,8 +67,9 @@ function DisplayRow(props){
       return <Grid container item direction="row" justify="center" alignItems="center" spacing={3} >{returnRow}</Grid>
     }
 
-function Matrica()
+function Matrica(props)
 {
+    console.log(props.match.params.id);
     const classes = useStyles();
     return(
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 

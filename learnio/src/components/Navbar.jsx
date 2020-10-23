@@ -82,9 +82,6 @@ function Navbar(){
         {
             // box za matricu samo da vidin kako izgleda ------------------------------------
         }
-        <Box mr={8}>
-            <li> <Link to="/topic">matrica</Link> </li>
-        </Box>
 
 
         </Hidden>

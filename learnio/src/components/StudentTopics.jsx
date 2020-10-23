@@ -5,10 +5,12 @@ import backgroundIMG from '../images/learniobg10-15.png';
 import { Hidden, Typography } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import Button from '@material-ui/core/Button';
+import {Link} from 'react-router-dom';
 
 
 const ColorButton = withStyles((theme) => ({
   root: {
+      border: 0,
       MarginRight: 0,
       marginLeft: "auto",
       color: "#FFFFFF",
@@ -81,6 +83,7 @@ function CustomPagination(props) {
 
 function StudentTopics(){
     const classes = useStyles();
+    var linkage='contacts' ;
     const columns = [
       { field: 'topic', width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
       { field: 'id', headerName:'ID'},
@@ -96,10 +99,8 @@ function StudentTopics(){
       { field: 'ao3P', headerName:'AO 3',
       valueGetter: (params) => `${params.getValue('ao3')}%`,
       sortComparator: (v1, v2, row1, row2) => row1.data.ao3 - row2.data.ao3,},
-      { field: 'open', headerName: `${' '}`, renderCell: (params) => (<ColorButton size="small" > Open </ColorButton>
-        ),
+      { field: 'open', headerName: `${' '}`, renderCell: (params) => (<Link to={'/topic/'+ linkage}><ColorButton size="small"> Open </ColorButton></Link>),
       },
-    
     ];
     const rows=[
       { id: 1, topic:'Trigonometry 1', ao1:'70',ao2:'55', ao3:'66'},
@@ -117,7 +118,7 @@ function StudentTopics(){
     <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background} >
         <Typography color="primary"><span className={classes.topicTitle}>Topics</span></Typography>
         <div className={classes.tabela}>
-          <DataGrid  pagination pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />
+          <DataGrid  onRowHover={(Row)=>{linkage=Row.data.id}} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />
         </div>
     </div>
     );
