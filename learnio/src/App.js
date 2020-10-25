@@ -9,7 +9,8 @@ import Navbar from './components/Navbar';
 import Contact from './images/Contact';
 import StudentTopics from "./components/StudentTopics";
 import AddQuestPU from "./components/AddQuestPU";
-import Matrica from"./components/MatricaAdmin";
+import Matrica from"./components/Matrica";
+import EditQuestion from './components/EditQuestion';
 
 
 const theme = createMuiTheme({
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/about" component={About}/>
                 <Route path="/contact" component={Contact}/>
                 <Route path="/add-question" component={AddQuestPU}/>
+                <Route path="/edit-question" component={EditQuestion}/>
                 <Route exact path="/topics"><StudentTopics/></Route>
                 <Route path="/login"><Login/> </Route>
                 <Route path="/topic/:id" component={Matrica}/>
