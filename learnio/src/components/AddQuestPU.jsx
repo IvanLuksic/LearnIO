@@ -101,7 +101,7 @@ function AddQuestPU(props) {
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
   const [show3, setShow3] = useState(false);
-  const [showIMG, setIMG] = useState(false);
+  const [showIMG, setIMG] = useState(props.prop.photo);
   const [open, setOpen] = useState(false);
   const[selectedIndex, setSelectedIndex] = useState(0);
   const anchorRef = React.useRef(null);
@@ -180,7 +180,7 @@ const handleToggle2 = (value) => () => {
             multiline
             rows={4}
             variant="outlined"
-            value={props.text}
+            value={props.prop.text}
             />
           <Button onClick={
           () => setIMG(true)
@@ -192,7 +192,9 @@ const handleToggle2 = (value) => () => {
           showIMG ?
           <div className={classes.photoCheck}>
             <button onClick={
-          () => setIMG(false)
+          () => {
+            setIMG(false);
+          }
           }>remove photo</button>
             <p>yes photo</p>
           </div>
