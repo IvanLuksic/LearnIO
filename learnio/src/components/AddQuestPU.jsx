@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme)=>({
 
 const options = ['One word answer', 'Multiple Choice'];
 
-function AddQuestPU(Component) {
+function AddQuestPU(props) {
   //states of elements-------------------
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
@@ -179,7 +179,9 @@ const handleToggle2 = (value) => () => {
             label="Question Text"
             multiline
             rows={4}
-            variant="outlined"/>
+            variant="outlined"
+            value={props.text}
+            />
           <Button onClick={
           () => setIMG(true)
           }className={classes.uploadBtn} variant="contained" color="primary">

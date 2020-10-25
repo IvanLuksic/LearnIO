@@ -79,10 +79,14 @@ function Navbar(){
         <Box>
             <Popup trigger={<Button> PopUp </Button>} modal nested fixed>
                 {
-                AddQuestPU()
+                <AddQuestPU/>
                 }
             </Popup>
         </Box>
+        {
+            // box za matricu samo da vidin kako izgleda ------------------------------------
+        }
+
 
         </Hidden>
         <ColorButton  size="small" style={{borderRadius: 25}}>

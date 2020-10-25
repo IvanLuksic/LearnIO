@@ -19,7 +19,7 @@ const useStyles=makeStyles(theme =>({
 
 
 
-function Popup(props){
+function PitanjeABC(props){
     const [value, setValue] = React.useState('A');
 
     const handleChange = (event) => {
@@ -61,4 +61,4 @@ function Popup(props){
         );
 
 }
-export default Popup;
+export default PitanjeABC;
