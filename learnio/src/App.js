@@ -9,7 +9,7 @@ import Navbar from './components/Navbar';
 import Contact from './images/Contact';
 import StudentTopics from "./components/StudentTopics";
 import AddQuestPU from "./components/AddQuestPU";
-import Matrica from"./components/Matrica";
+import Matrica from"./components/MatricaAdmin";
 
 
 const theme = createMuiTheme({

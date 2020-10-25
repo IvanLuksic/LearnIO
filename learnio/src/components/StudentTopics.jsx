@@ -1,8 +1,8 @@
 import React from 'react';
 import { makeStyles,withStyles} from '@material-ui/core/styles';
-import { DataGrid, RowsProp, ColDef  } from '@material-ui/data-grid';
+import { DataGrid} from '@material-ui/data-grid';
 import backgroundIMG from '../images/learniobg10-15.png';
-import { Hidden, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
