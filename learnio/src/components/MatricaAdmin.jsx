@@ -123,15 +123,15 @@ function MatricaAdmin(props)
             ],
             ao: 1,
             d: 1,
-            get status() {
-                return((this.question.length>0) ? "INSERTED":"EMPTY");
-            },
-            get color() {
-                return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-            },
-            get icon(){
-                return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-            }
+            // get status() {
+            //     return((this.question.length>0) ? "INSERTED":"EMPTY");
+            // },
+            // get color() {
+            //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
+            // },
+            // get icon(){
+            //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
+            // }
         },
         {
             question: [
@@ -153,15 +153,15 @@ function MatricaAdmin(props)
                 ],
                 ao: 2,
                 d: 1,
-                get status() {
-                    return((this.question.length>0) ? "INSERTED":"EMPTY");
-                },
-                get color() {
-                    return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-                },
-                get icon(){
-                    return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-                }
+                // get status() {
+                //     return((this.question.length>0) ? "INSERTED":"EMPTY");
+                // },
+                // get color() {
+                //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
+                // },
+                // get icon(){
+                //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
+                // }
         },
         {
             question: [
@@ -183,30 +183,30 @@ function MatricaAdmin(props)
                 ],
                 ao: 3,
                 d: 1,
-                get status() {
-                    return((this.question.length>0) ? "INSERTED":"EMPTY");
-                },
-                get color() {
-                    return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-                },
-                get icon(){
-                    return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-                }
+                // get status() {
+                //     return((this.question.length>0) ? "INSERTED":"EMPTY");
+                // },
+                // get color() {
+                //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
+                // },
+                // get icon(){
+                //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
+                // }
         },
         {
             question: [
                 ],
                 ao: 1,
                 d: 2,
-                get status() {
-                    return((this.question.length>0) ? "INSERTED":"EMPTY");
-                },
-                get color() {
-                    return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-                },
-                get icon(){
-                    return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-                }
+                // get status() {
+                //     return((this.question.length>0) ? "INSERTED":"EMPTY");
+                // },
+                // get color() {
+                //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
+                // },
+                // get icon(){
+                //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
+                // }
         },
         {
             question: [
@@ -228,15 +228,15 @@ function MatricaAdmin(props)
                 ],
                 ao: 2,
                 d: 2,
-                get status() {
-                    return((this.question.length>0) ? "INSERTED":"EMPTY");
-                },
-                get color() {
-                    return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-                },
-                get icon(){
-                    return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-                }
+                // get status() {
+                //     return((this.question.length>0) ? "INSERTED":"EMPTY");
+                // },
+                // get color() {
+                //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
+                // },
+                // get icon(){
+                //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
+                // }
         },
         {
             question: [
@@ -258,60 +258,60 @@ function MatricaAdmin(props)
                 ],
                 ao: 3,
                 d: 2,
-                get status() {
-                    return((this.question.length>0) ? "INSERTED":"EMPTY");
-                },
-                get color() {
-                    return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-                },
-                get icon(){
-                    return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-                }
+                // get status() {
+                //     return((this.question.length>0) ? "INSERTED":"EMPTY");
+                // },
+                // get color() {
+                //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
+                // },
+                // get icon(){
+                //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
+                // }
         },
         {
             question: [
             ],
             ao: 1,
             d: 3,
-            get status() {
-                return((this.question.length>0) ? "INSERTED":"EMPTY");
-            },
-            get color() {
-                return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-            },
-            get icon(){
-                return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-            }
+            // get status() {
+            //     return((this.question.length>0) ? "INSERTED":"EMPTY");
+            // },
+            // get color() {
+            //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
+            // },
+            // get icon(){
+            //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
+            // }
         },
         {
             question: [
             ],
             ao: 2,
             d: 3,
-            get status() {
-                return((this.question.length>0) ? "INSERTED":"EMPTY");
-            },
-            get color() {
-                return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-            },
-            get icon(){
-                return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-            }
+            // get status() {
+            //     return((this.question.length>0) ? "INSERTED":"EMPTY");
+            // },
+            // get color() {
+            //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
+            // },
+            // get icon(){
+            //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
+            // }
         },
         {
             question: [
             ],
             ao: 3,
             d: 3,
-            get status() {
-                return((this.question.length>0) ? "INSERTED":"EMPTY");
-            },
-            get color() {
-                return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-            },
-            get icon(){
-                return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-            }
+            // get status() {
+            //     return((this.question.length>0) ? "INSERTED":"EMPTY");
+            // },
+            // get color() {
+            //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
+            // },
+            // get icon(){
+            //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
+            // }
         },
     ]
 

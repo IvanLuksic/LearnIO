@@ -97,7 +97,7 @@ function AddQuestPU(props) {
   const [open, setOpen] = useState(false);
   const[selectedIndex, setSelectedIndex] = useState(0);
   const anchorRef = React.useRef(null);
-  const [checked, setChecked] = useState([0]);
+  const [text, setText] = useState(props.prop.text);
 
   const classes = useStyles();
 //dropdown button---------------------
@@ -118,24 +118,12 @@ function AddQuestPU(props) {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-
     setOpen(false);
   };
-//-------------------------
 
-// tag - checklist-----------
-const handleToggle2 = (value) => () => {
-  const currentIndex = checked.indexOf(value);
-  const newChecked = [...checked];
-
-  if (currentIndex === -1) {
-    newChecked.push(value);
-  } else {
-    newChecked.splice(currentIndex, 1);
+  const handleText = (event) => {
+    setText(event.target.value);
   }
-
-  setChecked(newChecked);
-};
 //------------------------
 
   return(
@@ -169,7 +157,8 @@ const handleToggle2 = (value) => () => {
             multiline
             rows={4}
             variant="outlined"
-            value={props.prop.text}
+            value={text}
+            onChange={handleText}
             />
           <Button onClick={
           () => setIMG(true)

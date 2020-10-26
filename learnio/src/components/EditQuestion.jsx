@@ -82,8 +82,6 @@ const useStyles = makeStyles((theme)=>({
       borderRadius: '10px',
       padding:'5px',
       marginTop:'5%',
-      display: 'flex',
-      justifyContent: 'flex-end',
     },
     photoCheck: {
       position: 'relative',
@@ -149,7 +147,17 @@ function AddAccordion(props) {
       </div>
     ))}
     <div className={classes.pagin}>
-      <Pagination count={pageCount} page={page} onChange={changePage} color="primary" />
+      <Popup trigger={
+        <Button style={{position:'relative', marginLeft:'3px', float:'left', borderRadius:'10px'}} variant="contained" color="primary">
+          Add Question
+        </Button>
+        } modal nested fixed>
+        {
+          <AddQuestPU/>
+        }
+      </Popup>
+      
+      <Pagination style={{display: 'flex', justifyContent:'flex-end'}} count={pageCount} page={page} onChange={changePage} color="primary" />
     </div>
     </div>
     
