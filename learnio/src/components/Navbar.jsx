@@ -64,14 +64,6 @@ function Navbar(){
             <li> <Link to="/topics">Topics</Link> </li>
         </Box>
 
-        {/* iduci box je samo test, hvala --------------------------- */}
-
-        <Box mr={8}>
-            <li> <Link to="/edit-question">Edit Question</Link> </li>
-        </Box>
-        {
-            // box za matricu samo da vidin kako izgleda ------------------------------------
-        }
 
 
         </Hidden>
