@@ -11,13 +11,6 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles((theme)=>({
   popupStyle: {
@@ -100,7 +93,6 @@ function AddQuestPU(props) {
   //states of elements-------------------
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
-  const [show3, setShow3] = useState(false);
   const [showIMG, setIMG] = useState(props.prop.photo);
   const [open, setOpen] = useState(false);
   const[selectedIndex, setSelectedIndex] = useState(0);
@@ -152,14 +144,11 @@ const handleToggle2 = (value) => () => {
       <div className={classes.leftSide}>
       <ButtonGroup color="primary" className={classes.bgr1} orientation="vertical" size="small" aria-label="small outlined button group">
         <Button onClick={
-          () => [setShow1(true),setShow2(false),setShow3(false)]
+          () => [setShow1(true),setShow2(false)]
           } >question</Button>
         <Button onClick={
-          () => [setShow1(false),setShow2(true),setShow3(false)]
+          () => [setShow1(false),setShow2(true)]
           }>answers</Button>
-        <Button onClick={
-          () => [setShow1(false),setShow2(false),setShow3(true)]
-          }>tags</Button>
       </ButtonGroup>
 
       <Button variant="contained" className={classes.saveBtn} style={{borderRadius: 25}} type="submit" color="primary">
@@ -260,35 +249,6 @@ const handleToggle2 = (value) => () => {
               : 
               <TextField className={classes.answerStyle} id="outlined-basic" label="Answer" variant="outlined" style={{top:'10%'}} />
             }
-          </div>
-          : null
-        }{
-          show3 ? // third case - tags
-          <div>
-            <List className={classes.listThing}>
-          {[0, 1, 2, 3].map((value) => {
-            const labelId = `checkbox-list-label-${value}`;
-    
-            return (
-              <ListItem key={value} role={undefined} dense button onClick={handleToggle2(value)}>
-                <ListItemIcon>
-                  <Checkbox
-                    edge="start"
-                    checked={checked.indexOf(value) !== -1}
-                    tabIndex={-1}
-                    disableRipple
-                    inputProps={{ 'aria-labelledby': labelId }}
-                  />
-                </ListItemIcon>
-                <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
-                <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="comments">
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            );
-          })}
-        </List>
           </div>
           : null
         }
