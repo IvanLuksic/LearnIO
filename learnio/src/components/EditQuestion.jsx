@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { makeStyles} from '@material-ui/core/styles';
 import backgroundIMG from '../images/learniobg10-15.png';
 import Accordion from '@material-ui/core/Accordion';
@@ -110,10 +110,17 @@ function AddAccordion(props) {
     setPage(value);
   };
 
+  useEffect(() => {
+
+        if(pageCount < 2){
+           changePage(1, 1);
+        }
+  })
 
   var rowLen = props.questions.length-1;
   var pageCount = (rowLen+(8-((rowLen)%8)))/8;
   var topQ = 0 + (page-1)*8;
+
 
   const handleChange = (panel) => (event, isExpanded) => {
   setExpanded(isExpanded ? panel : false);
@@ -137,7 +144,7 @@ function AddAccordion(props) {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>{question.text}</Typography>
-            <Popup trigger={<Button style={{marginLeft:'3vh',marginRight:'1vh',maxHeight:'3vh',backgroundColor:'#EB4949',color:'white'}} variant="contained">Edit</Button>} modal nested fixed>
+            <Popup trigger={<Button style={{marginLeft:'3vh',marginRight:'1vh',maxHeight:'3vh',backgroundColor:'#EB4949',color:'white', borderRadius: "25px", fontFamily: "Lobster"}} variant="contained">Edit</Button>} modal nested fixed>
               {
               <AddQuestPU prop={question}/>
               }
@@ -147,15 +154,7 @@ function AddAccordion(props) {
       </div>
     ))}
     <div className={classes.pagin}>
-      <Popup trigger={
-        <Button style={{position:'relative', marginLeft:'3px', float:'left', borderRadius:'10px'}} variant="contained" color="primary">
-          Add Question
-        </Button>
-        } modal nested fixed>
-        {
-          <AddQuestPU/>
-        }
-      </Popup>
+
       
       <Pagination style={{display: 'flex', justifyContent:'flex-end'}} count={pageCount} page={page} onChange={changePage} color="primary" />
     </div>
@@ -172,9 +171,16 @@ export function EditQuestion(props) {
             <div className={classes.accRoot}>
             <div className={classes.tableHeader}>
             <Typography className={classes.Heading}>ID</Typography>
-            <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>
+            <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>     
+             <Popup trigger={
+              <Button style={{position:'relative', float:'right', borderRadius:'25px', fontFamily:"Lobster"}} variant="contained" color="secondary">
+                Add Question
+              </Button>
+              } modal nested fixed>
+              { <AddQuestPU/>  }
+              </Popup>
             </div>
-            <div style={{position:'relative', marginTop:'5%'}}><AddAccordion questions={props.questions} start={1}/></div>
+            <div style={{position:'relative', marginTop:'5%'}}><AddAccordion questions={props.questions}/></div>
             </div>
         </div>
     )

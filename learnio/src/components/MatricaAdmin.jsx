@@ -44,9 +44,9 @@ const useStyles = makeStyles((theme) => ({
       lobster: {
           fontFamily: "Lobster"
       },
-    paper:{
-        width: "100%",
-        height: "100%",
+    paper:{ 
+        width: 150,
+        height: 150,
         textAlign: 'center',
         variant: "outlined",
         backgroundColor: '#BDBDBD',
@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(1),
         color:"white",
         borderRadius: "10px",
+        cursor: "pointer"
     },
     divider:{
         [theme.breakpoints.down('sm')]: {
@@ -83,7 +84,7 @@ function DisplayField(props){
         if((props.aoSelected===props.ao) && (props.dSelected===props.d))
         {
             setStatus("SELECTED");
-            setColor("green")
+            setColor("#27AE60")
         }
         else  
         {
@@ -93,7 +94,7 @@ function DisplayField(props){
     });
     return (
 
-            <Grid item > 
+            <Grid item> 
                 <Paper onClick={(event)=>{props.changeSelected(event,props.ao,props.d);}} className={classes.paper} style={{backgroundColor: color}} >
                     <Grid container direction="column" justify="center" alignItems="center" style={{height: "100%"}}>
                         <Grid item><h1>AO={props.ao} D={props.d}</h1></Grid>
@@ -106,7 +107,7 @@ function DisplayField(props){
 }
 
 function DisplayRow(props){
-    let returnRow = props.questions.map( (field) => <DisplayField questions={field.question} changeSelected={props.changeSelected} ao={field.ao} d={field.d} aoSelected={props.aoSelected} dSelected={props.dSelected}/> )
+    let returnRow = props.questions.map( (field,index) => <DisplayField key={index} questions={field.question} changeSelected={props.changeSelected} ao={field.ao} d={field.d} aoSelected={props.aoSelected} dSelected={props.dSelected}/> )
     return(<Grid container item direction="row" justify="center" alignItems="center" spacing={3}>{returnRow}</Grid>);
     }
 
@@ -364,7 +365,7 @@ function MatricaAdmin(props)
     return (
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         <Grid container direction="row" justify="space-evenly" alignItems="center"  height="100%">
-            <Grid container  md={6} direction="row" justify="center" alignItems="center" >
+            <Grid container item md={6} direction="row" justify="center" alignItems="center" >
                 <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
                     <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>Topic {topicID}</Typography></Grid>
                     <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></Grid>
@@ -374,7 +375,7 @@ function MatricaAdmin(props)
                 </Grid>
             </Grid> 
             <Divider orientation="vertical" className={classes.divider} flexItem/>
-            <Grid container md={5} sm={12} xs={12}  direction="row" justify="center" alignItems="center" >
+            <Grid container item md={5} sm={12} xs={12}  direction="row" justify="center" alignItems="center" >
                     <EditQuestion questions={(field[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? field[(aoSelected+aoLVL*(dSelected-1)-1)].question : [{id: 1, heading:"NOTHING", secondary:"nothing", photo:false, url:'', text:"-----------------------------------------------------------------------------------------------------"}] }/>
             </Grid>
         </Grid>
