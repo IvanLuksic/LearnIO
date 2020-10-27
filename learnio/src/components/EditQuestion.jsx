@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Pagination from '@material-ui/lab/Pagination';
 import Button from '@material-ui/core/Button';
+import Hidden from '@material-ui/core/Hidden';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import AddQuestPU from './AddQuestPU';
@@ -48,6 +49,7 @@ const useStyles = makeStyles((theme)=>({
         borderRadius: '10px',
         display: 'flex',
         alignItems:'center',
+        justify: "space-evenly"
     },
     accRoot: {
         position: 'relative',
@@ -172,13 +174,14 @@ export function EditQuestion(props) {
             <div className={classes.tableHeader}>
             <Typography className={classes.Heading}>ID</Typography>
             <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>     
-             <Popup trigger={
+             <Hidden smDown><Popup trigger={
               <Button style={{position:'relative', float:'right', borderRadius:'25px', fontFamily:"Lobster"}} variant="contained" color="secondary">
                 Add Question
               </Button>
               } modal nested fixed>
               { <AddQuestPU/>  }
               </Popup>
+              </Hidden>
             </div>
             <div style={{position:'relative', marginTop:'5%'}}><AddAccordion questions={props.questions}/></div>
             </div>

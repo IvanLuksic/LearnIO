@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
             paddingTop:"10vh",
           },
           [theme.breakpoints.up('md')]: {
-            paddingTop:"1vh",
+            paddingTop:"10vh",
           },
           paddingBottom:'9px', 
       },
@@ -45,8 +45,8 @@ const useStyles = makeStyles((theme) => ({
           fontFamily: "Lobster"
       },
     paper:{ 
-        width: 150,
-        height: 150,
+        width: "6em",
+        height: "6em",
         textAlign: 'center',
         variant: "outlined",
         backgroundColor: '#BDBDBD',
@@ -63,8 +63,15 @@ const useStyles = makeStyles((theme) => ({
             height: "0vh",
           },
           [theme.breakpoints.up('md')]: {
-            height: "80vh",
+            height: "100vh",
           },
+    },
+    matrix:{
+        [theme.breakpoints.up('md')]: {
+             overflowY: "scroll",
+             maxHeight: "100vh"
+          },
+       
     }
 }));
 
@@ -74,7 +81,7 @@ function DisplayField(props){
         return ((props.questions.length>0)?"INSERTED":"EMPTY");
     });
     const [color,setColor]= useState(()=>{
-        if(status==="SELECTED") return "green";
+        if(status==="SELECTED") return "#27AE60";
         else return ((props.questions.length>0)?"#4373ec":"grey");
     });
     const [icon,setIcon]= useState(()=>{
@@ -365,12 +372,12 @@ function MatricaAdmin(props)
     return (
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         <Grid container direction="row" justify="space-evenly" alignItems="center"  height="100%">
-            <Grid container item md={6} direction="row" justify="center" alignItems="center" >
+            <Grid container item md={6} direction="row"  className={classes.matrix} justify="center" alignItems="center" >
                 <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
                     <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>Topic {topicID}</Typography></Grid>
                     <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></Grid>
                 </Grid>
-                <Grid item md = {8} xs = {12} sm = {12} spacing={3} container direction="row" justify="center" alignItems="center" >
+                <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
                     <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(field,aoLVL,dLVL)} aoSelected={aoSelected} dSelected={dSelected}/>
                 </Grid>
             </Grid> 
