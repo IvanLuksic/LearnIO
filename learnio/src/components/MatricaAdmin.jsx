@@ -358,6 +358,10 @@ function MatricaAdmin(props)
         return ar;
     };
 
+    const handleChange = (value)=>{
+        field[(aoSelected+aoLVL*(dSelected-1)-1)].question = value
+    };
+
     const classes = useStyles();
 
     return (
@@ -373,8 +377,8 @@ function MatricaAdmin(props)
                 </Grid>
             </Grid> 
             <Divider orientation="vertical" className={classes.divider} flexItem/>
-            <Grid container item md={5} sm={12} xs={12}  direction="column" alignItems="baseline" justify="center">
-                <EditQuestion questions={(field[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? field[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
+            <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center">
+                <EditQuestion questChange={handleChange} questions={(field[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? field[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
             </Grid>
         </Grid>
         </div>

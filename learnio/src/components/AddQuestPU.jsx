@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
@@ -98,6 +98,8 @@ function AddQuestPU(props) {
   const[selectedIndex, setSelectedIndex] = useState(0);
   const anchorRef = React.useRef(null);
   const [text, setText] = useState(props.prop.text);
+  const [quest, setQuest] = useState(props.prop);
+  console.log(quest);
 
   const classes = useStyles();
 //dropdown button---------------------
@@ -124,6 +126,11 @@ function AddQuestPU(props) {
   const handleText = (event) => {
     setText(event.target.value);
   }
+
+  useEffect(() => {
+    quest.text = text;
+    props.questChange(quest);
+  })
 //------------------------
 
   return(

@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme)=>({
         display: 'flex',
         justifyContent:'center',
         alignItems: 'flex-end',
+        position: 'relative',
     },
     tableHeader: {
         position: 'relative',
@@ -145,7 +146,7 @@ function AddAccordion(props) {
           <Typography>{question.text}</Typography>
             <Popup trigger={<Button style={{marginLeft:'3vh',marginRight:'1vh',maxHeight:'3vh',backgroundColor:'#EB4949',color:'white', borderRadius: "25px", fontFamily: "Lobster"}} variant="contained">Edit</Button>} modal nested fixed>
               {
-              <AddQuestPU prop={question}/>
+              <AddQuestPU questChange={props.questChange} prop={question}/>
               }
             </Popup>
         </AccordionDetails>
@@ -181,7 +182,7 @@ export function EditQuestion(props) {
               </Hidden>
             </div>
             {
-              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion questions={props.questions}/></div>
+              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion questChange={props.questChange} questions={props.questions}/></div>
               : <div style={{position:'relative', marginTop:'5%'}}><Typography style={{display:'flex', justifyContent:'center', color:'gray'}}>No questions added</Typography></div>
             }
             
