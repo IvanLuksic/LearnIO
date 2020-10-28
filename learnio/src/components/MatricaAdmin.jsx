@@ -253,15 +253,6 @@ function MatricaAdmin(props)
                 {id: 4, heading:"4 head", secondary:"first something", photo:true, url:'', text:"Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."},
                 {id: 5, heading:"5 head", secondary:"second something", photo:false, url:'', text:"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo."},
                 {id: 6, heading:"6 head", secondary:"third something", photo:false, url:'', text:"Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt."},
-                {id: 7, heading:"7 head", secondary:"first something", photo:true, url:'', text:"Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem."},
-                {id: 8, heading:"8 head", secondary:"second something", photo:false, url:'', text:"Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?"},
-                {id: 9, heading:"9 head", secondary:"third something", photo:true, url:'', text:"Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"},
-                {id: 10, heading:"10 head", secondary:"first something", photo:false, url:'', text:"Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem."},
-                {id: 11, heading:"11 head", secondary:"second something", photo:true, url:'', text:"Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?"},
-                {id: 12, heading:"12 head", secondary:"third something", photo:false, url:'', text:"Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"},
-                {id: 13, heading:"13 head", secondary:"first something", photo:false, url:'', text:"Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem."},
-                {id: 14, heading:"14 head", secondary:"second something", photo:true, url:'', text:"Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?"},
-                {id: 15, heading:"15 head", secondary:"third something", photo:true, url:'', text:"Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"},
                 ],
                 ao: 2,
                 d: 2,
@@ -382,8 +373,8 @@ function MatricaAdmin(props)
                 </Grid>
             </Grid> 
             <Divider orientation="vertical" className={classes.divider} flexItem/>
-            <Grid container item md={5} sm={12} xs={12}  direction="row" justify="center" alignItems="center" >
-                    <EditQuestion questions={(field[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? field[(aoSelected+aoLVL*(dSelected-1)-1)].question : [{id: 1, heading:"NOTHING", secondary:"nothing", photo:false, url:'', text:"-----------------------------------------------------------------------------------------------------"}] }/>
+            <Grid container item md={5} sm={12} xs={12}  direction="column" alignItems="baseline" justify="center">
+                <EditQuestion questions={(field[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? field[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
             </Grid>
         </Grid>
         </div>

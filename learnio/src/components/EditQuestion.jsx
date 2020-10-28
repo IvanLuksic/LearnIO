@@ -31,14 +31,11 @@ const useStyles = makeStyles((theme)=>({
     },
     root: {
         backgroundColor: 'transparent',
-        maxWidth: '90%',
+        width: '90%',
         border: 'none',
         display: 'flex',
         justifyContent:'center',
-        // borderStyle: 'solid',
-        // borderWidth: '2px',
-        // borderColor: 'grey',
-        // borderRadius:'25px',
+        alignItems: 'flex-end',
     },
     tableHeader: {
         position: 'relative',
@@ -183,7 +180,11 @@ export function EditQuestion(props) {
               </Popup>
               </Hidden>
             </div>
-            <div style={{position:'relative', marginTop:'5%'}}><AddAccordion questions={props.questions}/></div>
+            {
+              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion questions={props.questions}/></div>
+              : <div style={{position:'relative', marginTop:'5%'}}><Typography style={{display:'flex', justifyContent:'center', color:'gray'}}>No questions added</Typography></div>
+            }
+            
             </div>
         </div>
     )
