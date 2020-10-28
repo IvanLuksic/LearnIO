@@ -96,12 +96,12 @@ const useStyles = makeStyles((theme)=>({
 
 const options = ['One word answer', 'Multiple Choice'];
 
-function AddQuestPU(Component) {
+function AddQuestPU(props) {
   //states of elements-------------------
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
   const [show3, setShow3] = useState(false);
-  const [showIMG, setIMG] = useState(false);
+  const [showIMG, setIMG] = useState(props.prop.photo);
   const [open, setOpen] = useState(false);
   const[selectedIndex, setSelectedIndex] = useState(0);
   const anchorRef = React.useRef(null);
@@ -179,7 +179,9 @@ const handleToggle2 = (value) => () => {
             label="Question Text"
             multiline
             rows={4}
-            variant="outlined"/>
+            variant="outlined"
+            value={props.prop.text}
+            />
           <Button onClick={
           () => setIMG(true)
           }className={classes.uploadBtn} variant="contained" color="primary">
@@ -190,7 +192,9 @@ const handleToggle2 = (value) => () => {
           showIMG ?
           <div className={classes.photoCheck}>
             <button onClick={
-          () => setIMG(false)
+          () => {
+            setIMG(false);
+          }
           }>remove photo</button>
             <p>yes photo</p>
           </div>

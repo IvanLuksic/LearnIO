@@ -7,10 +7,6 @@ import logo from '../images/favicon-32x32.png';
 import Box from '@material-ui/core/Box';
 import Hidden from '@material-ui/core/Hidden';
 import {Link} from 'react-router-dom';
-//---------------------------------------
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
-import AddQuestPU from './AddQuestPU';
 
 const ColorButton = withStyles((theme) => ({
     root: {
@@ -68,23 +64,6 @@ function Navbar(){
             <li> <Link to="/topics">Topics</Link> </li>
         </Box>
 
-        {
-            // iduci box je samo test, hvala ---------------------------
-        }
-
-        <Box>
-            <Popup trigger={<Button> PopUp </Button>} modal nested fixed>
-                {
-                AddQuestPU()
-                }
-            </Popup>
-        </Box>
-        {
-            // box za matricu samo da vidin kako izgleda ------------------------------------
-        }
-        <Box mr={8}>
-            <li> <Link to="/matrica">matrica</Link> </li>
-        </Box>
 
 
         </Hidden>
