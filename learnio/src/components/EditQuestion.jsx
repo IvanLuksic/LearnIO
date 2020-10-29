@@ -12,6 +12,8 @@ import Hidden from '@material-ui/core/Hidden';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import AddQuestPU from './AddQuestPU';
+import EditQuestionPU from './EditQuestionPU';
+
 
 const useStyles = makeStyles((theme)=>({
     background:{
@@ -118,8 +120,8 @@ function AddAccordion(props) {
   })
 
   var rowLen = props.questions.length-1;
-  var pageCount = (rowLen+(8-((rowLen)%8)))/8;
-  var topQ = 0 + (page-1)*8;
+  var pageCount = (rowLen+(6-((rowLen)%6)))/6;
+  var topQ = 0 + (page-1)*6;
 
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -128,25 +130,21 @@ function AddAccordion(props) {
   return(
     <div>
     {
-    props.questions.slice(topQ,topQ+8).map((question, index) =>(
+    props.questions.slice(topQ,topQ+6).map((question, index) =>(
       <div key={question.id}>
         <Accordion style={{marginTop:'2px'}} expanded={expanded === question.id} onChange={handleChange(question.id)}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1bh-content"
-          id="panel1bh-header"
-        >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
           {/* <div className={classes.photoCheck}></div> */}
           <Typography className={classes.accHeading}>{question.heading}</Typography>
           {question.id!==expanded && 
           <Typography className={classes.accSecondaryHeading}>{question.secondary}</Typography>}
-          
+
         </AccordionSummary>
         <AccordionDetails>
           <Typography>{question.text}</Typography>
             <Popup trigger={<Button style={{marginLeft:'3vh',marginRight:'1vh',maxHeight:'3vh',backgroundColor:'#EB4949',color:'white', borderRadius: "25px", fontFamily: "Lobster"}} variant="contained">Edit</Button>} modal nested fixed>
               {
-              <AddQuestPU questChange={props.questChange} prop={question}/>
+              <EditQuestionPU questChange={props.questChange} prop={question}/>
               }
             </Popup>
         </AccordionDetails>
@@ -172,14 +170,15 @@ export function EditQuestion(props) {
             <div className={classes.tableHeader}>
             <Typography className={classes.Heading}>ID</Typography>
             <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>     
-             <Hidden smDown><Popup trigger={
-              <Button style={{position:'relative', float:'right', borderRadius:'25px', fontFamily:"Lobster"}} variant="contained" color="secondary">
-                Add Question
-              </Button>
-              } modal nested fixed>
-              { <AddQuestPU/>  }
-              </Popup>
-              </Hidden>
+              <Hidden smDown>
+                  <Popup trigger={
+                    <Button style={{position:'relative', float:'right', borderRadius:'25px', fontFamily:"Lobster"}} variant="contained" color="secondary">
+                      Add Question
+                    </Button>
+                  } modal nested fixed>
+                  { <AddQuestPU/>  }
+                  </Popup>
+                </Hidden>
             </div>
             {
               props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion questChange={props.questChange} questions={props.questions}/></div>

@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import Icon from '@material-ui/core/Icon';
 import Divider from '@material-ui/core/Divider';
 import {EditQuestion} from './EditQuestion'; 
+import { array } from "prop-types";
 
 
 
@@ -81,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
     }
 
 }));
-
+//renders the field of the matrix element, takes changeSelected function, question = array of questions, AO and D of selected field as props
 function DisplayField(props){
     const classes=useStyles();
     const [status,setStatus] = useState(()=>{
@@ -119,14 +120,14 @@ function DisplayField(props){
             </Grid>
         )
 }
-
+//renders the rows of the matrix element, takes changeSelected function, row (only one) of fields (length = AO), AO and D of selected field as props
 function DisplayRow(props){
     let returnRow = props.questions.map( (field,index) => <DisplayField key={index} questions={field.question} changeSelected={props.changeSelected} ao={field.ao} d={field.d} aoSelected={props.aoSelected} dSelected={props.dSelected}/> )
     return(<Grid container item direction="row" justify="center" alignItems="center" spacing={3}>{returnRow}</Grid>);
     }
-
+//renders the matrix element, takes changeSelected function, rowS (plural) of fields (length = AO), AO and D of selected field as props
 function DisplayMatrix(props){
-    let returnMatrix=props.ar.map(row=><DisplayRow key={row.id} changeSelected={props.changeSelected} questions={row.arr} aoSelected={props.aoSelected} dSelected={props.dSelected}/>)
+    let returnMatrix=props.ar.map(row=><DisplayRow key={row.id} changeSelected={props.changeSelected} questions={row.array} aoSelected={props.aoSelected} dSelected={props.dSelected}/>)
     return returnMatrix;
 }
 
@@ -137,16 +138,7 @@ function MatricaAdmin(props)
     });
     const [aoSelected,setAoSelected]=useState(1);
     const [dSelected,setDSelected]=useState(1);
-    const [aoLVL,setAoLVL]=useState(3);
-    const [dLVL,setDLVL]=useState(3);
-    const changeAoDSelected= (e,ao,d)=>{
-        e.preventDefault();
-        setDSelected(d);
-        setAoSelected(ao);
-
-    };
-
-    const field=[
+    const [fields, setFields]=useState([
         {
             question: [
             {id: 1, heading:"1 head", secondary:"prva", photo:false, url:'', text:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
@@ -267,26 +259,58 @@ function MatricaAdmin(props)
             ao: 3,
             d: 3,
         },
-    ]
+    ]);
+    const [aoLVL,setAoLVL]=useState(3);
+    const [dLVL,setDLVL]=useState(3);
+    const changeAoDSelected= (e,ao,d)=>{
+        e.preventDefault();
+        setDSelected(d);
+        setAoSelected(ao);
+    };
 
+    
+    //slices the fields array into rows of fields for the matrix render
     const fieldToRows=(field,ao,d)=>{
-        let ar=[{   
-                    arr: field.slice(0,(ao)),
+        // const sorted= field.sort((a,b)=>(a.ao-b.ao));
+        // sorted= field.sort((a,b)=>(a.d-b.d)); ar=arrayOfRows arr=row o=obj
+        let arrayOfRows=[{   
+                    array: field.slice(0,(ao)),
                     id: 1,
                 }];
         for(var i=2;i<=d;i++)
         {
-            let o={ arr: field.slice((i-1)*ao,(i*ao)),
+            let obj={ array: field.slice((i-1)*ao,(i*ao)),
                     id: i,};
-            ar=[...ar,o];
+            arrayOfRows=[...arrayOfRows,obj];
         }
-        console.log(ar);
-        return ar;
+        return arrayOfRows;
     };
-
-    const handleChange = (value)=>{
-        field[(aoSelected+aoLVL*(dSelected-1)-1)].question = value
+    //deletes value=question from selected field's array of questions
+    const deleteQuestion=(value)=>{
+        var polje=fields[(aoSelected+aoLVL*(dSelected-1)-1)];
+        setFields(
+            [ ...fields.filter(question=> ((question.ao!==aoSelected)&&(question.d!==dSelected)))]
+        );
+        polje.question= [...polje.question.filter(question=>(question.id!==value.id))];
+        setFields([...fields, polje]);
     };
+    //adds a value=question to the selected field's array of questions
+    const addQuestion=(value)=>{
+        var polja=fields;
+        polja.map(polje=>{
+            if(polje.ao===aoSelected && polje.d===dSelected){
+                polje.question=[...polje.question,value];
+                polje.question=polje.question.sort((a,b)=>(a.id-b.id));
+            }
+        });
+        setFields(polja);
+    };
+    //combination of latter functions for editQuestion component
+    const changeQuestion = (value)=>{
+        deleteQuestion(value);
+        addQuestion(value);
+    };
+    
 
     const classes = useStyles();
 
@@ -299,12 +323,12 @@ function MatricaAdmin(props)
                     <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></Grid>
                 </Grid>
                 <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
-                    <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(field,aoLVL,dLVL)} aoSelected={aoSelected} dSelected={dSelected}/>
+                    <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,aoLVL,dLVL)} aoSelected={aoSelected} dSelected={dSelected}/>
                 </Grid>
-            </Grid> 
+            </Grid>
             <Divider  orientation="vertical" className={classes.divider} flexItem/>
             <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
-                <EditQuestion questChange={handleChange} questions={(field[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? field[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
+                <EditQuestion questChange={changeQuestion} questions={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
             </Grid>
         </Grid>
         </div>
