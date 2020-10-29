@@ -129,6 +129,7 @@ function AddQuestPU(props) {
   const handleSave= ()=>{
     quest.text=text;
     props.questChange(quest);
+    props.changeText(text);
   };
   useEffect(() => {
     // quest.text = text;

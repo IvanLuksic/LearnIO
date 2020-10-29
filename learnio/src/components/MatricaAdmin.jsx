@@ -110,7 +110,7 @@ function DisplayField(props){
     return (
 
             <Grid item> 
-                <Paper onClick={(event)=>{props.changeSelected(event,props.ao,props.d);}} className={classes.paper} style={{backgroundColor: color}} >
+                <Paper onClick={(event)=>{props.changeSelected(event,props.ao,props.d);}} className={classes.paper} style={{backgroundColor: color}}>
                     <Grid container direction="column" justify="center" alignItems="center" style={{height: "100%"}}>
                         <Grid item><h1>AO={props.ao} D={props.d}</h1></Grid>
                         <Grid item><Icon className={classes.icons}>{icon}</Icon></Grid>
@@ -138,6 +138,8 @@ function MatricaAdmin(props)
     });
     const [aoSelected,setAoSelected]=useState(1);
     const [dSelected,setDSelected]=useState(1);
+    const [expanded, setExpanded] = useState(false);
+    const [page, setPage] = useState(1);
     const [fields, setFields]=useState([
         {
             question: [
@@ -266,9 +268,16 @@ function MatricaAdmin(props)
         e.preventDefault();
         setDSelected(d);
         setAoSelected(ao);
+        setExpanded(false);
+        setPage(1);
+    };
+    const changeExpanded=(value)=>{
+        setExpanded(value);
+    };
+    const changePage=(value)=>{
+        setPage(value);
     };
 
-    
     //slices the fields array into rows of fields for the matrix render
     const fieldToRows=(field,ao,d)=>{
         // const sorted= field.sort((a,b)=>(a.ao-b.ao));
@@ -328,7 +337,7 @@ function MatricaAdmin(props)
             </Grid>
             <Divider  orientation="vertical" className={classes.divider} flexItem/>
             <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
-                <EditQuestion questChange={changeQuestion} questions={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
+                <EditQuestion page={page} changePage={changePage} questChange={changeQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
             </Grid>
         </Grid>
         </div>

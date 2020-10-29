@@ -106,10 +106,9 @@ function Background() {
 
 function AddAccordion(props) {
   const classes = useStyles();
-  const [expanded, setExpanded] = useState(false);
-  const [page, setPage] = useState(1);
+  const [text, setText] = useState("nesto");
   const changePage = (event, value) => {
-    setPage(value);
+    props.changePage(value);
   };
 
   useEffect(() => {
@@ -121,30 +120,35 @@ function AddAccordion(props) {
 
   var rowLen = props.questions.length-1;
   var pageCount = (rowLen+(6-((rowLen)%6)))/6;
-  var topQ = 0 + (page-1)*6;
+  var topQ = 0 + (props.page-1)*6;
 
 
   const handleChange = (panel) => (event, isExpanded) => {
-  setExpanded(isExpanded ? panel : false);
-};
+    props.changeExpanded( isExpanded? panel.id:false);
+    setText(panel.text);
+  };
+  const changeText=(value)=>{
+    setText(value);
+  };
+  
   return(
     <div>
     {
     props.questions.slice(topQ,topQ+6).map((question, index) =>(
       <div key={question.id}>
-        <Accordion style={{marginTop:'2px'}} expanded={expanded === question.id} onChange={handleChange(question.id)}>
+        <Accordion style={{marginTop:'2px'}} expanded={props.expanded === question.id} onChange={handleChange(question)}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
           {/* <div className={classes.photoCheck}></div> */}
           <Typography className={classes.accHeading}>{question.heading}</Typography>
-          {question.id!==expanded && 
+          {question.id!==props.expanded && 
           <Typography className={classes.accSecondaryHeading}>{question.secondary}</Typography>}
 
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>{question.text}</Typography>
+          <Typography>{text}</Typography>
             <Popup trigger={<Button style={{marginLeft:'3vh',marginRight:'1vh',maxHeight:'3vh',backgroundColor:'#EB4949',color:'white', borderRadius: "25px", fontFamily: "Lobster"}} variant="contained">Edit</Button>} modal nested fixed>
               {
-              <EditQuestionPU questChange={props.questChange} prop={question}/>
+              <EditQuestionPU questChange={props.questChange} prop={question} changeText={changeText}/>
               }
             </Popup>
         </AccordionDetails>
@@ -154,7 +158,7 @@ function AddAccordion(props) {
     <div className={classes.pagin}>
 
       
-      <Pagination style={{display: 'flex', justifyContent:'flex-end'}} count={pageCount} page={page} onChange={changePage} color="primary" />
+      <Pagination style={{display: 'flex', justifyContent:'flex-end'}} count={pageCount} page={props.page} onChange={changePage} color="primary" />
     </div>
     </div>
     
@@ -181,7 +185,7 @@ export function EditQuestion(props) {
                 </Hidden>
             </div>
             {
-              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion questChange={props.questChange} questions={props.questions}/></div>
+              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions}/></div>
               : <div style={{position:'relative', marginTop:'5%'}}><Typography style={{display:'flex', justifyContent:'center', color:'gray'}}>No questions added</Typography></div>
             }
             
