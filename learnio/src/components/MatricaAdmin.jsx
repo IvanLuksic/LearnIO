@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
             paddingTop:"10vh",
           },
           [theme.breakpoints.up('md')]: {
-            paddingTop:"10vh",
+            paddingTop:"4vh",
           },
           paddingBottom:'9px', 
       },
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
       lobster: {
           fontFamily: "Lobster"
       },
-    paper:{ 
+    paper:{ //ode stani
         width: "6em",
         height: "6em",
         textAlign: 'center',
@@ -63,16 +63,23 @@ const useStyles = makeStyles((theme) => ({
             height: "0vh",
           },
           [theme.breakpoints.up('md')]: {
-            height: "100vh",
+            marginTop:"12vh",
+            height: "85vh",
           },
     },
     matrix:{
+        marginRight:"2vh",
         [theme.breakpoints.up('md')]: {
+             marginTop:"10vh",
              overflowY: "scroll",
-             maxHeight: "100vh"
+             maxHeight: "90vh"
           },
-       
+    },
+    questionsTable:{
+        minHeight: "100vh",
+        paddingTop:"17vh"
     }
+
 }));
 
 function DisplayField(props){
@@ -160,15 +167,6 @@ function MatricaAdmin(props)
             ],
             ao: 1,
             d: 1,
-        //     get status() {
-        //         return((this.question.length>0) ? "INSERTED":"EMPTY");
-        //     },
-        //     get color() {
-        //         return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-        //     },
-        //     get icon(){
-        //         return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-        //     }
         },
         {
             question: [
@@ -190,15 +188,6 @@ function MatricaAdmin(props)
                 ],
                 ao: 2,
                 d: 1,
-                // get status() {
-                //     return((this.question.length>0) ? "INSERTED":"EMPTY");
-                // },
-                // get color() {
-                //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-                // },
-                // get icon(){
-                //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-                // }
         },
         {
             question: [
@@ -220,30 +209,12 @@ function MatricaAdmin(props)
                 ],
                 ao: 3,
                 d: 1,
-                // get status() {
-                //     return((this.question.length>0) ? "INSERTED":"EMPTY");
-                // },
-                // get color() {
-                //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-                // },
-                // get icon(){
-                //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-                // }
         },
         {
             question: [
                 ],
                 ao: 1,
                 d: 2,
-                // get status() {
-                //     return((this.question.length>0) ? "INSERTED":"EMPTY");
-                // },
-                // get color() {
-                //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-                // },
-                // get icon(){
-                //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-                // }
         },
         {
             question: [
@@ -256,15 +227,6 @@ function MatricaAdmin(props)
                 ],
                 ao: 2,
                 d: 2,
-                // get status() {
-                //     return((this.question.length>0) ? "INSERTED":"EMPTY");
-                // },
-                // get color() {
-                //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-                // },
-                // get icon(){
-                //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-                // }
         },
         {
             question: [
@@ -286,60 +248,24 @@ function MatricaAdmin(props)
                 ],
                 ao: 3,
                 d: 2,
-                // get status() {
-                //     return((this.question.length>0) ? "INSERTED":"EMPTY");
-                // },
-                // get color() {
-                //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-                // },
-                // get icon(){
-                //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-                // }
         },
         {
             question: [
             ],
             ao: 1,
             d: 3,
-            // get status() {
-            //     return((this.question.length>0) ? "INSERTED":"EMPTY");
-            // },
-            // get color() {
-            //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-            // },
-            // get icon(){
-            //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-            // }
         },
         {
             question: [
             ],
             ao: 2,
             d: 3,
-            // get status() {
-            //     return((this.question.length>0) ? "INSERTED":"EMPTY");
-            // },
-            // get color() {
-            //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-            // },
-            // get icon(){
-            //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-            // }
         },
         {
             question: [
             ],
             ao: 3,
             d: 3,
-            // get status() {
-            //     return((this.question.length>0) ? "INSERTED":"EMPTY");
-            // },
-            // get color() {
-            //     return ((this.status==="INSERTED") ? " #4373ec" : "grey");
-            // },
-            // get icon(){
-            //     return ((this.status==="INSERTED") ? "check_circle_out_icon" : "cancel_icon");
-            // }
         },
     ]
 
@@ -366,7 +292,7 @@ function MatricaAdmin(props)
 
     return (
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
-        <Grid container direction="row" justify="space-evenly" alignItems="center"  height="100%">
+        <Grid container direction="row" justify="center" alignItems="center"  height="100%" >
             <Grid container item md={6} direction="row"  className={classes.matrix} justify="center" alignItems="center" >
                 <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
                     <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>Topic {topicID}</Typography></Grid>
@@ -376,8 +302,8 @@ function MatricaAdmin(props)
                     <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(field,aoLVL,dLVL)} aoSelected={aoSelected} dSelected={dSelected}/>
                 </Grid>
             </Grid> 
-            <Divider orientation="vertical" className={classes.divider} flexItem/>
-            <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center">
+            <Divider  orientation="vertical" className={classes.divider} flexItem/>
+            <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
                 <EditQuestion questChange={handleChange} questions={(field[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? field[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
             </Grid>
         </Grid>
