@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme)=>({
         position:'absolute',
         textAlign: 'center',
         height:'36vh',
-        width:'400vh',
+        width:'70%',
     },
     buttonGroup:{
         position: 'relative',

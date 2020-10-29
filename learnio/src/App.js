@@ -36,7 +36,7 @@ function App() {
                 <Route path="/login"><Login/> </Route>
                 <Route path="/topic/:id" component={MatricaAdmin}/>
           </div>
-          
+         
 
           </ThemeProvider>
         </div>
