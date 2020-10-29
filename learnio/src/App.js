@@ -39,7 +39,7 @@ function App() {
                 <Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>
 
           </div>
-          
+         
 
           </ThemeProvider>
         </div>
