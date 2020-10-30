@@ -264,6 +264,7 @@ function MatricaAdmin(props)
     ]);
     const [aoLVL,setAoLVL]=useState(3);
     const [dLVL,setDLVL]=useState(3);
+    //function that is executed on matrix field select
     const changeAoDSelected= (e,ao,d)=>{
         e.preventDefault();
         setDSelected(d);
@@ -296,6 +297,8 @@ function MatricaAdmin(props)
     };
     //deletes value=question from selected field's array of questions
     const deleteQuestion=(value)=>{
+        console.log(value);
+        console.log("pozvan delete");
         var polje=fields[(aoSelected+aoLVL*(dSelected-1)-1)];
         setFields(
             [ ...fields.filter(question=> ((question.ao!==aoSelected)&&(question.d!==dSelected)))]
@@ -337,7 +340,7 @@ function MatricaAdmin(props)
             </Grid>
             <Divider  orientation="vertical" className={classes.divider} flexItem/>
             <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
-                <EditQuestion page={page} changePage={changePage} questChange={changeQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
+                <EditQuestion page={page} changePage={changePage} questChange={changeQuestion} questDelete={deleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
             </Grid>
         </Grid>
         </div>

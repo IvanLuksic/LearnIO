@@ -13,6 +13,10 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import AddQuestPU from './AddQuestPU';
 import EditQuestionPU from './EditQuestionPU';
+import Icon from '@material-ui/core/Icon';
+import Grid from '@material-ui/core/Grid';
+
+
 
 
 const useStyles = makeStyles((theme)=>({
@@ -92,6 +96,12 @@ const useStyles = makeStyles((theme)=>({
       backgroundColor: 'blue',
       display: 'flex',
       justifyContent: 'center',
+    },
+    iconButtons:{
+      minWidth:'0',
+      maxWidth:'3em',
+      maxHeight:'3em',
+      alignItems:"flex-start"
     }
 }));
 
@@ -107,16 +117,8 @@ function Background() {
 function AddAccordion(props) {
   const classes = useStyles();
   const [text, setText] = useState("nesto");
-  const changePage = (event, value) => {
-    props.changePage(value);
-  };
 
-  useEffect(() => {
 
-        if(pageCount < 2){
-           changePage(1, 1);
-        }
-  })
 
   var rowLen = props.questions.length-1;
   var pageCount = (rowLen+(6-((rowLen)%6)))/6;
@@ -130,7 +132,13 @@ function AddAccordion(props) {
   const changeText=(value)=>{
     setText(value);
   };
-  
+  const changePage = (event, value) => {
+    props.changePage(value);
+  };
+  const handleDelete= (value)=>{
+    props.questDelete(value);
+  }
+
   return(
     <div>
     {
@@ -145,19 +153,26 @@ function AddAccordion(props) {
 
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>{text}</Typography>
-            <Popup trigger={<Button style={{marginLeft:'3vh',marginRight:'1vh',maxHeight:'3vh',backgroundColor:'#EB4949',color:'white', borderRadius: "25px", fontFamily: "Lobster"}} variant="contained">Edit</Button>} modal nested fixed>
-              {
-              <EditQuestionPU questChange={props.questChange} prop={question} changeText={changeText}/>
-              }
-            </Popup>
+          <Grid  container direction="row" justify="center" alignItems="center" spacing={0.5}>
+            <Grid item md={9} xs={8} direction="row" justify="flex-start" alignItems="center">
+              <Typography>{text}</Typography>
+            </Grid>
+            <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center">    
+                <Popup trigger={<Button className={classes.iconButtons} ><Icon style={{color:"#4372ec",fontSize:'2em'}}> edit_outlined_icon </Icon></Button>} modal nested fixed>
+                {
+                <EditQuestionPU questChange={props.questChange} questDelete={props.questDelete} prop={question} changeText={changeText}/>
+                }
+              </Popup>
+              <Button className={classes.iconButtons} onClick={(question) => handleDelete(question)} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}> delete_forever_rounded_icon</Icon></Button>
+            </Grid>
+          </Grid>
         </AccordionDetails>
       </Accordion>
       </div>
     ))}
     <div className={classes.pagin}>
 
-      
+
       <Pagination style={{display: 'flex', justifyContent:'flex-end'}} count={pageCount} page={props.page} onChange={changePage} color="primary" />
     </div>
     </div>
@@ -185,7 +200,7 @@ export function EditQuestion(props) {
                 </Hidden>
             </div>
             {
-              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions}/></div>
+              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion page={props.page} changePage={props.changePage} questDelete={props.questDelete} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions}/></div>
               : <div style={{position:'relative', marginTop:'5%'}}><Typography style={{display:'flex', justifyContent:'center', color:'gray'}}>No questions added</Typography></div>
             }
             

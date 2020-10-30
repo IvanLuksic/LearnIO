@@ -131,10 +131,10 @@ function AddQuestPU(props) {
     props.questChange(quest);
     props.changeText(text);
   };
-  useEffect(() => {
-    // quest.text = text;
-    // props.questChange(quest);
-  })
+  // useEffect(() => {
+  //   // quest.text = text;
+  //   // props.questChange(quest);
+  // })
 //------------------------
 
   return(
