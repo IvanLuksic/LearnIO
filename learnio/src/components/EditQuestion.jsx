@@ -79,30 +79,39 @@ const useStyles = makeStyles((theme)=>({
       marginLeft: '3%',
       position: 'relative',
   },
-    pagin: {
-      backgroundColor:'white',
-      borderStyle: 'solid',
-      boxShadow: "0px 2px 0.5px 1px rgba(0,0,0,0.18)",
-      borderColor: 'transparent',
-      borderWidth: '1px',
-      borderRadius: '10px',
-      padding:'5px',
-      marginTop:'5%',
-    },
-    photoCheck: {
-      position: 'relative',
-      width: '10px',
-      height: '10px',
-      backgroundColor: 'blue',
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    iconButtons:{
-      minWidth:'0',
-      maxWidth:'3em',
-      maxHeight:'3em',
-      alignItems:"flex-start"
-    }
+  pagin: {
+    backgroundColor:'white',
+    borderStyle: 'solid',
+    boxShadow: "0px 2px 0.5px 1px rgba(0,0,0,0.18)",
+    borderColor: 'transparent',
+    borderWidth: '1px',
+    borderRadius: '10px',
+    padding:'5px',
+    marginTop:'5%',
+  },
+  photoCheck: {
+    position: 'relative',
+    width: '10px',
+    height: '10px',
+    backgroundColor: 'blue',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  iconButtons:{
+    minWidth:'0',
+    maxWidth:'3em',
+    maxHeight:'3em',
+    alignItems:"flex-start"
+  },
+  addButton:{
+    position:'relative',
+    marginLeft:"auto",
+    marginRight:"1em", 
+    borderRadius:'25px',
+    maxWidth:"2.5em",
+    minWidth:"2.5em",
+    backgroundColor:"transparent"
+  }
 }));
 
 function Background() {
@@ -117,6 +126,7 @@ function Background() {
 function AddAccordion(props) {
   const classes = useStyles();
   const [text, setText] = useState("nesto");
+  const [expandedQuestion,setExpandedQuestion]=useState(false);
 
 
 
@@ -128,6 +138,7 @@ function AddAccordion(props) {
   const handleChange = (panel) => (event, isExpanded) => {
     props.changeExpanded( isExpanded? panel.id:false);
     setText(panel.text);
+    setExpandedQuestion(panel);
   };
   const changeText=(value)=>{
     setText(value);
@@ -135,8 +146,9 @@ function AddAccordion(props) {
   const changePage = (event, value) => {
     props.changePage(value);
   };
-  const handleDelete= (value)=>{
-    props.questDelete(value);
+  const handleDelete= ()=>{
+    props.questDelete(expandedQuestion);
+    setExpandedQuestion(false);
   }
 
   return(
@@ -158,12 +170,12 @@ function AddAccordion(props) {
               <Typography>{text}</Typography>
             </Grid>
             <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center">    
-                <Popup trigger={<Button className={classes.iconButtons} ><Icon style={{color:"#4372ec",fontSize:'2em'}}> edit_outlined_icon </Icon></Button>} modal nested fixed>
+                <Popup trigger={<Button className={classes.iconButtons} ><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>} modal nested fixed>
                 {
-                <EditQuestionPU questChange={props.questChange} questDelete={props.questDelete} prop={question} changeText={changeText}/>
+                  <EditQuestionPU questChange={props.questChange} questDelete={props.questDelete} prop={question} changeText={changeText}/>
                 }
               </Popup>
-              <Button className={classes.iconButtons} onClick={(question) => handleDelete(question)} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}> delete_forever_rounded_icon</Icon></Button>
+              <Button className={classes.iconButtons} onClick={() =>handleDelete()} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>
             </Grid>
           </Grid>
         </AccordionDetails>
@@ -171,8 +183,6 @@ function AddAccordion(props) {
       </div>
     ))}
     <div className={classes.pagin}>
-
-
       <Pagination style={{display: 'flex', justifyContent:'flex-end'}} count={pageCount} page={props.page} onChange={changePage} color="primary" />
     </div>
     </div>
@@ -187,23 +197,18 @@ export function EditQuestion(props) {
         <div className={classes.root}>
             <div className={classes.accRoot}>
             <div className={classes.tableHeader}>
-            <Typography className={classes.Heading}>ID</Typography>
-            <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>     
-              <Hidden smDown>
-                  <Popup trigger={
-                    <Button style={{position:'relative', float:'right', borderRadius:'25px', fontFamily:"Lobster"}} variant="contained" color="secondary">
-                      Add Question
-                    </Button>
-                  } modal nested fixed>
-                  { <AddQuestPU/>  }
-                  </Popup>
-                </Hidden>
+              <Typography className={classes.Heading}>ID</Typography>
+              <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>     
+                <Popup trigger={ <Button className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>} modal nested fixed>
+                { 
+                  <AddQuestPU/>  
+                }
+                </Popup>
             </div>
             {
               props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion page={props.page} changePage={props.changePage} questDelete={props.questDelete} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions}/></div>
               : <div style={{position:'relative', marginTop:'5%'}}><Typography style={{display:'flex', justifyContent:'center', color:'gray'}}>No questions added</Typography></div>
             }
-            
             </div>
         </div>
     )
