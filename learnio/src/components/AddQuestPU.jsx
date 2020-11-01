@@ -91,15 +91,15 @@ const options = ['One word answer', 'Multiple Choice'];
 
 function AddQuestPU(props) {
   //states of elements-------------------
-  const [show1, setShow1] = useState(false);
+  const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(false);
-  const [showIMG, setIMG] = useState(props.prop.photo);
   const [open, setOpen] = useState(false);
   const[selectedIndex, setSelectedIndex] = useState(0);
   const anchorRef = React.useRef(null);
-  const [text, setText] = useState(props.prop.text);
-  const [quest, setQuest] = useState(props.prop);
-  console.log(quest);
+
+  const question = {id: 16, heading:'new heading', secondary:'new secondary', photo:false, url:'', text:''};
+  const [showIMG, setIMG] = useState(false);
+  const [text, setText] = useState('');
 
   const classes = useStyles();
 //dropdown button---------------------
@@ -127,10 +127,12 @@ function AddQuestPU(props) {
     setText(event.target.value);
   }
 
-  useEffect(() => {
-    quest.text = text;
-    props.questChange(quest);
-  })
+  const handleSave= ()=>{
+    question.text=text;
+    question.photo=showIMG;
+    props.questAdd(question);
+    props.changeText(text);
+  }
 //------------------------
 
   return(
@@ -146,7 +148,7 @@ function AddQuestPU(props) {
           }>answers</Button>
       </ButtonGroup>
 
-      <Button variant="contained" className={classes.saveBtn} style={{borderRadius: 25}} type="submit" color="primary">
+      <Button onClick={()=>{handleSave()}} variant="contained" className={classes.saveBtn} style={{borderRadius: 25}} type="submit" color="primary">
         Save Question
       </Button>
 

@@ -7,7 +7,6 @@ import Paper from '@material-ui/core/Paper';
 import Icon from '@material-ui/core/Icon';
 import Divider from '@material-ui/core/Divider';
 import {EditQuestion} from './EditQuestion'; 
-import { array } from "prop-types";
 
 
 
@@ -316,6 +315,7 @@ function MatricaAdmin(props)
             }
         });
         setFields(polja);
+        console.log(fields);
     };
     //combination of latter functions for editQuestion component
     const changeQuestion = (value)=>{
@@ -340,7 +340,7 @@ function MatricaAdmin(props)
             </Grid>
             <Divider  orientation="vertical" className={classes.divider} flexItem/>
             <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
-                <EditQuestion page={page} changePage={changePage} questChange={changeQuestion} questDelete={deleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
+                <EditQuestion page={page} changePage={changePage} questChange={changeQuestion} questAdd={addQuestion} questDelete={deleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
             </Grid>
         </Grid>
         </div>

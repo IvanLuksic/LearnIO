@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
@@ -89,9 +89,9 @@ const useStyles = makeStyles((theme)=>({
 
 const options = ['One word answer', 'Multiple Choice'];
 
-function AddQuestPU(props) {
+function EditQuestionPU(props) {
   //states of elements-------------------
-  const [show1, setShow1] = useState(false);
+  const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(false);
   const [showIMG, setIMG] = useState(props.prop.photo);
   const [open, setOpen] = useState(false);
@@ -130,11 +130,7 @@ function AddQuestPU(props) {
     quest.text=text;
     props.questChange(quest);
     props.changeText(text);
-  };
-  // useEffect(() => {
-  //   // quest.text = text;
-  //   // props.questChange(quest);
-  // })
+  }
 //------------------------
 
   return(
@@ -259,4 +255,4 @@ function AddQuestPU(props) {
   );
 }
 
-export default AddQuestPU;
+export default EditQuestionPU;
