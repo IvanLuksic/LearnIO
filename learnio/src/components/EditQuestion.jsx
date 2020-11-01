@@ -148,9 +148,9 @@ function AddAccordion(props) {
               <Typography>{props.text}</Typography>
             </Grid>
             <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center">    
-                <Popup trigger={<Button className={classes.iconButtons} ><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>} modal nested fixed>
+                <Popup  trigger={<Button className={classes.iconButtons} ><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>} modal nested fixed >
                 {
-                  <EditQuestionPU questChange={props.questChange} prop={question} changeText={props.changeText}/>
+                  <EditQuestionPU style={{borderRadius:'25px'}} questChange={props.questChange} prop={question} changeText={props.changeText}/>
                 }
               </Popup>
               <Button className={classes.iconButtons} onClick={() =>props.handleDelete()} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>
@@ -194,10 +194,6 @@ export function EditQuestion(props) {
     props.questDelete(expandedQuestion);
     setExpandedQuestion(false);
   };
-  // const handleAdd = () => {
-  //   props.questAdd();
-  //   setExpandedQuestion(false);
-  // };
 
     return(
         <div className={classes.root}>

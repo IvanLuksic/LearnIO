@@ -121,3 +121,12 @@ li {
 .lobster {
     font-family: "Lobster";
 }
+
+.popup-content{
+    border-radius: 7px;
+    width: 80% !important;
+    height: auto;
+    padding:1vw !important;
+    background: lightgrey !important;
+
+}
