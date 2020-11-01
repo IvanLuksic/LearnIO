@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { makeStyles} from '@material-ui/core/styles';
 import backgroundIMG from '../images/learniobg10-15.png';
 import Accordion from '@material-ui/core/Accordion';
@@ -128,6 +128,9 @@ function AddAccordion(props) {
   const changePage = (event, value) => {
     props.changePage(value);
   };
+  useEffect(()=>{
+    props.handlePages();
+  });
 
   return(
     <div>
@@ -172,11 +175,14 @@ export function EditQuestion(props) {
     const classes = useStyles();
     const [text, setText] = useState("nesto");
     const [expandedQuestion,setExpandedQuestion]=useState(false);
-
+    var nextID;
     var rowLen;
     {
       props.questions ? rowLen = props.questions.length-1
       : rowLen = 0;
+    }{
+      props.questions ? nextID = props.questions.length+1
+      : nextID = 1;
     }
     var topQ = 0 + (props.page-1)*6;
 
@@ -194,23 +200,30 @@ export function EditQuestion(props) {
     props.questDelete(expandedQuestion);
     setExpandedQuestion(false);
   };
+  const dropExpandedQuestion= () => {
+    setExpandedQuestion(false);
+  };
+  const handlePages= ()=>{
+    props.questions ? rowLen = props.questions.length-1
+      : rowLen = 0
+    setPageCount((rowLen+(6-((rowLen)%6)))/6)
+  }
 
     return(
         <div className={classes.root}>
             <div className={classes.accRoot}>
             <div className={classes.tableHeader}>
               <Typography className={classes.Heading}>ID</Typography>
-              <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>     
-                <Popup 
-                  trigger={ <Button className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>}
+              <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>  
+                <Popup
+                  trigger={<Button className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>}
+                  onOpen={dropExpandedQuestion}
                   modal nested fixed>
-                { 
-                  <AddQuestPU changeText={changeText} questAdd={props.questAdd}/>  
-                }
+                {<AddQuestPU reset={props.reset} nextID={nextID} changeText={changeText} questAdd={props.questAdd}/>}
                 </Popup>
             </div>
             {
-              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion topQ={topQ} pageCount={pageCount} handleChange={handleChange} changeText={changeText} text={text} handleDelete={handleDelete} page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions}/></div>
+              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion handlePages={handlePages} topQ={topQ} pageCount={pageCount} handleChange={handleChange} changeText={changeText} text={text} handleDelete={handleDelete} page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions}/></div>
               : <div style={{position:'relative', marginTop:'5%'}}><Typography style={{display:'flex', justifyContent:'center', color:'gray'}}>No questions added</Typography></div>
             }
             </div>

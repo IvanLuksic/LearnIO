@@ -322,6 +322,17 @@ function MatricaAdmin(props)
         deleteQuestion(value);
         addQuestion(value);
     };
+
+    const handleReset = () => {
+        setAoSelected(1);
+        setDSelected(1);
+        handleReset2();
+    };
+
+    const handleReset2 = () => {
+        setAoSelected(1);
+        setDSelected(3);
+    };
     
 
     const classes = useStyles();
@@ -340,7 +351,7 @@ function MatricaAdmin(props)
             </Grid>
             <Divider  orientation="vertical" className={classes.divider} flexItem/>
             <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
-                <EditQuestion page={page} changePage={changePage} questChange={changeQuestion} questAdd={addQuestion} questDelete={deleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
+                <EditQuestion reset={handleReset} page={page} changePage={changePage} questChange={changeQuestion} questAdd={addQuestion} questDelete={deleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
             </Grid>
         </Grid>
         </div>
