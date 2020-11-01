@@ -10,7 +10,6 @@ import Contact from './images/Contact';
 import StudentTopics from "./components/StudentTopics";
 import AddQuestPU from "./components/AddQuestPU";
 import MatricaAdmin from"./components/MatricaAdmin";
-import EditQuestion from './components/EditQuestion';
 import AddTopicPU from './components/AddTopicPU';
 
 

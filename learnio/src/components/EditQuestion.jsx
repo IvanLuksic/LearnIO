@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { makeStyles} from '@material-ui/core/styles';
 import backgroundIMG from '../images/learniobg10-15.png';
 import Accordion from '@material-ui/core/Accordion';
@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Pagination from '@material-ui/lab/Pagination';
 import Button from '@material-ui/core/Button';
-import Hidden from '@material-ui/core/Hidden';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import AddQuestPU from './AddQuestPU';
@@ -170,9 +169,9 @@ function AddAccordion(props) {
               <Typography>{text}</Typography>
             </Grid>
             <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center">    
-                <Popup trigger={<Button className={classes.iconButtons} ><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>} modal nested fixed>
+                <Popup  trigger={<Button className={classes.iconButtons} ><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>} modal nested fixed >
                 {
-                  <EditQuestionPU questChange={props.questChange} questDelete={props.questDelete} prop={question} changeText={changeText}/>
+                  <EditQuestionPU style={{borderRadius:'25px'}} questChange={props.questChange} questDelete={props.questDelete} prop={question} changeText={changeText}/>
                 }
               </Popup>
               <Button className={classes.iconButtons} onClick={() =>handleDelete()} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>
