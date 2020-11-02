@@ -149,8 +149,7 @@ function AddAccordion(props) {
               </Grid>
               <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center">  
                   <Popup 
-                  trigger = {                  <Button className={classes.iconButtons}><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>
-                }
+                  trigger = {<Button className={classes.iconButtons}><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>}
                     modal nested fixed>
                   {
                     <EditQuestionPU popUpClose={handleClose} style={{borderRadius:'25px'}} questChange={props.questChange} prop={question} changeText={props.changeText}/>
