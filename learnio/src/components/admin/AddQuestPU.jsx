@@ -108,49 +108,13 @@ const useStyles = makeStyles((theme) => ({
       },
   
     }
-  // popupStyle: {
-  //   left: '0',
-  //   top: '0',
-  //   width: '100%',
-  //   height: 'auto',
-  //   backgroundColor: 'white',
-  //   padding:"3em !important",
-  //   borderRadius:"7px" 
-  // },
-  // grupaBotuna: {
-  //   p
-  // },
-
-
-  // photoCheck:{
-  //   position: 'absolute',
-  //   top: '53%',
-  //   left: '80%',
-  // },
-  // answerStyle:{
-  //   height: '10%',
-  //   width: '40%',
-  //   position: 'absolute',
-  // },
-  // listThing:{
-  //   width:'100%',
-  //   maxWidth: 360,
-  //   position: 'absolute',
-  //   float: 'top',
-  //   left: '20%',
-  //   }
 }));
-
-const options = ['One word answer', 'Multiple Choice'];
 
 function AddQuestPU(props) {
   //states of elements-------------------
   const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(false);
   const [showIMG, setIMG] = useState(false);
-  const [open, setOpen] = useState(false);
-  const[selectedIndex, setSelectedIndex] = useState(0);
-  const anchorRef = React.useRef(null);
   const [text, setText] = useState('');
   const [imageState, setimageState] = useState(null);
   const [ID, setID] = useState(props.nextID);
@@ -167,11 +131,10 @@ function AddQuestPU(props) {
   };
 
   const handleSave= ()=>{
-
     quest.text=text;
     quest.id = ID;
     props.questAdd(quest);
-    quest.id = quest.id +1;
+    props.popUpClose();
     props.forceUpdate();
   }
 //------------------------
@@ -225,70 +188,6 @@ function AddQuestPU(props) {
                    </Grid> 
               : null
               }
-              
-              {/* {
-              show2 ? // second case - answer
-              <div>
-
-            <Grid style={{top:'10%',left:'5%', float:'left', position:'absolute'}}>
-      <Grid item xs={12}>
-        <ButtonGroup color="primary" ref={anchorRef} aria-label="split button">
-          <Button onClick={handleClick}>{options[selectedIndex]}</Button>
-          <Button
-            color="primary"
-            size="small"
-            aria-controls={open ? 'split-button-menu' : undefined}
-            aria-expanded={open ? 'true' : undefined}
-            aria-label="select merge strategy"
-            aria-haspopup="menu"
-            onClick={handleToggle}
-          >
-            <ArrowDropDownIcon />
-          </Button>
-        </ButtonGroup>
-        <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList id="split-button-menu">
-                    {options.map((option, index) => (
-                      <MenuItem
-                        key={option}
-                        disabled={index === 2}
-                        selected={index === selectedIndex}
-                        onClick={(event) => handleMenuItemClick(event, index)}
-                      >
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-      </Grid>
-    </Grid>
-            {
-              selectedIndex ? 
-              <div>
-              <TextField className={classes.answerStyle} id="outlined-basic" label="Correct Answer" variant="outlined" style={{top:'10%'}} />
-              <TextField className={classes.answerStyle} id="outlined-basic" label="Incorect Answers" variant="outlined" style={{top:'40%'}} />
-              </div>
-              : 
-              <TextField className={classes.answerStyle} id="outlined-basic" label="Answer" variant="outlined" style={{top:'10%'}} />
-            }
-          </div>
-          : null
-        }
-        </Grid>*/}
-      
   </Grid>
 
   );
