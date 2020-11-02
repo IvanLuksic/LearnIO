@@ -175,8 +175,8 @@ export function EditQuestion(props) {
     const classes = useStyles();
     const [text, setText] = useState("nesto");
     const [expandedQuestion,setExpandedQuestion]=useState(false);
-    var nextID;
-    var rowLen;
+    let nextID;
+    let rowLen;
     {
       props.questions ? rowLen = props.questions.length-1
       : rowLen = 0;
@@ -184,7 +184,7 @@ export function EditQuestion(props) {
       props.questions ? nextID = props.questions.length+1
       : nextID = 1;
     }
-    var topQ = 0 + (props.page-1)*6;
+    let topQ = 0 + (props.page-1)*6;
 
     const [pageCount, setPageCount] = useState((rowLen+(6-((rowLen)%6)))/6);
     
@@ -200,14 +200,15 @@ export function EditQuestion(props) {
     props.questDelete(expandedQuestion);
     setExpandedQuestion(false);
   };
-  const dropExpandedQuestion= () => {
+  const handleAdd= (value) => {
+    props.questAdd(value)
     setExpandedQuestion(false);
   };
   const handlePages= ()=>{
     props.questions ? rowLen = props.questions.length-1
       : rowLen = 0
     setPageCount((rowLen+(6-((rowLen)%6)))/6)
-  }
+  };
 
     return(
         <div className={classes.root}>
@@ -217,9 +218,8 @@ export function EditQuestion(props) {
               <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>  
                 <Popup
                   trigger={<Button className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>}
-                  onOpen={dropExpandedQuestion}
                   modal nested fixed>
-                {<AddQuestPU reset={props.reset} nextID={nextID} changeText={changeText} questAdd={props.questAdd}/>}
+                {<AddQuestPU forceUpdate={props.forceUpdate} nextID={nextID} changeText={changeText} questAdd={handleAdd}/>}
                 </Popup>
             </div>
             {

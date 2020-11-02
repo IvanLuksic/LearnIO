@@ -62,9 +62,14 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
+function useForceUpdate() {
+    let [value, setState] = useState(true);
+    return () => setState(!value);
+  }
 
 function MatricaAdmin(props)
 {
+    const forceUpdate = useForceUpdate();
     const [topicID,setTopicID] = useState(()=>{
        return props.match.params.id;
     });
@@ -151,7 +156,7 @@ function MatricaAdmin(props)
             </Grid>
             <Divider  orientation="vertical" className={classes.divider} flexItem/>
             <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
-                <EditQuestion page={page} changePage={changePage} questChange={changeQuestion} questDelete={deleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
+                <EditQuestion forceUpdate={forceUpdate} page={page} changePage={changePage} questChange={changeQuestion} questAdd={addQuestion} questDelete={deleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
             </Grid>
         </Grid>
         </div>

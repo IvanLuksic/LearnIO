@@ -171,8 +171,8 @@ function AddQuestPU(props) {
     quest.text=text;
     quest.id = ID;
     props.questAdd(quest);
-    props.changeText(text);
     quest.id = quest.id +1;
+    props.forceUpdate();
   }
 //------------------------
 
