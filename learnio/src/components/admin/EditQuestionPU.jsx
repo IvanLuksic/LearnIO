@@ -107,18 +107,17 @@ const useStyles = makeStyles((theme) => ({
         paddingRight:"5em",
       },
   
+<<<<<<< HEAD
+=======
+    }
+>>>>>>> 159db67c2de252d9f0b1d05078f7642b108a2a54
 }));
-
-const options = ['One word answer', 'Multiple Choice'];
 
 function EditQuestionPU(props) {
   //states of elements-------------------
   const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(false);
   const [showIMG, setIMG] = useState(props.prop.photo);
-  const [open, setOpen] = useState(false);
-  const[selectedIndex, setSelectedIndex] = useState(0);
-  const anchorRef = React.useRef(null);
   const [text, setText] = useState(props.prop.text);
   const [quest, setQuest] = useState(props.prop);
   const [imageState, setimageState] = useState(null);
@@ -126,25 +125,6 @@ function EditQuestionPU(props) {
 
   const classes = useStyles();
 //dropdown button---------------------
-  const handleClick = () => {
-    console.info(`You clicked ${options[selectedIndex]}`);
-  };
-
-  const handleMenuItemClick = (event, index) => {
-    setSelectedIndex(index);
-    setOpen(false);
-  };
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
-
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-    setOpen(false);
-  };
 
   const handleText = (event) => {
     setText(event.target.value);
@@ -154,6 +134,7 @@ function EditQuestionPU(props) {
     quest.text=text;
     props.questChange(quest);
     props.changeText(text);
+    props.popUpClose();
   }
 //------------------------
 
@@ -206,8 +187,6 @@ function EditQuestionPU(props) {
                    </Grid> 
               : null
               }
-              
-      
   </Grid>
 
   );
