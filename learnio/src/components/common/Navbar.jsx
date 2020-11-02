@@ -3,7 +3,7 @@ import { makeStyles, withStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
-import logo from '../images/favicon-32x32.png';
+import logo from '../../images/favicon-32x32.png';
 import Box from '@material-ui/core/Box';
 import Hidden from '@material-ui/core/Hidden';
 import {Link} from 'react-router-dom';

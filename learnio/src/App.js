@@ -3,14 +3,14 @@ import { Route } from "react-router-dom";
 import Login from "./pages/login.jsx";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import "./App.css";
-import Home from "./components/Home"
-import About from "./components/About"
-import Navbar from './components/Navbar';
+import Home from "./components/common/Home"
+import About from "./components/common/About"
+import Navbar from './components/common/Navbar';
 import Contact from './images/Contact';
-import StudentTopics from "./components/StudentTopics";
-import AddQuestPU from "./components/AddQuestPU";
-import MatricaAdmin from"./components/MatricaAdmin";
-import AddTopicPU from './components/AddTopicPU';
+import StudentTopics from "./components/student/StudentTopics";
+import AddQuestPU from "./components/admin/AddQuestPU";
+import MatricaAdmin from"./components/admin/MatricaAdmin";
+import AddTopicPU from './components/admin/AddTopicPU';
 
 
 

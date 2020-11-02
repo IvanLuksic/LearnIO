@@ -1,9 +1,9 @@
 import React from 'react';
 import { makeStyles} from '@material-ui/core/styles';
-import logo from '../images/compLogo.png';
-import linda from '../images/linda.jpg';
+import logo from '../../images/compLogo.png';
+import linda from '../../images/linda.jpg';
 import Box from '@material-ui/core/Box';
-import backgroundIMG from '../images/learniobg10-15.png'
+import backgroundIMG from '../../images/learniobg10-15.png'
 
 
 const useStyles = makeStyles((theme) => ({

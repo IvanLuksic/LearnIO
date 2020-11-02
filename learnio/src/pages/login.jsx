@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import LoginForm from '../components/LoginForm'
+import LoginForm from '../components/common/LoginForm'
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import backgroundimg from '../images/learniobglogin.png'
