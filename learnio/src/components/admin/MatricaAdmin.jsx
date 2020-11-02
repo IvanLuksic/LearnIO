@@ -64,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
 
 function useForceUpdate() {
     let [value, setState] = useState(true);
+    console.log("pozvan forceUpdate");
     return () => setState(!value);
   }
 
