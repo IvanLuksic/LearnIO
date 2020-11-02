@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { makeStyles} from '@material-ui/core/styles';
 import backgroundIMG from '../../images/learniobg10-15.png';
 import Accordion from '@material-ui/core/Accordion';
@@ -124,38 +124,20 @@ function Background() {
 
 function AddAccordion(props) {
   const classes = useStyles();
-  const [text, setText] = useState("nesto");
-  const [expandedQuestion,setExpandedQuestion]=useState(false);
 
-
-
-  var rowLen = props.questions.length-1;
-  var pageCount = (rowLen+(6-((rowLen)%6)))/6;
-  var topQ = 0 + (props.page-1)*6;
-
-
-  const handleChange = (panel) => (event, isExpanded) => {
-    props.changeExpanded( isExpanded? panel.id:false);
-    setText(panel.text);
-    setExpandedQuestion(panel);
-  };
-  const changeText=(value)=>{
-    setText(value);
-  };
   const changePage = (event, value) => {
     props.changePage(value);
   };
-  const handleDelete= ()=>{
-    props.questDelete(expandedQuestion);
-    setExpandedQuestion(false);
-  }
+  useEffect(()=>{
+    props.handlePages();
+  });
 
   return(
     <div>
     {
-    props.questions.slice(topQ,topQ+6).map((question, index) =>(
+    props.questions.slice(props.topQ,props.topQ+6).map((question, index) =>(
       <div key={question.id}>
-        <Accordion style={{marginTop:'2px'}} expanded={props.expanded === question.id} onChange={handleChange(question)}>
+        <Accordion style={{marginTop:'2px'}} expanded={props.expanded === question.id} onChange={props.handleChange(question)}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
           {/* <div className={classes.photoCheck}></div> */}
           <Typography className={classes.accHeading}>{question.heading}</Typography>
@@ -166,15 +148,15 @@ function AddAccordion(props) {
         <AccordionDetails>
           <Grid  container direction="row" justify="center" alignItems="center" spacing={0.5}>
             <Grid item md={9} xs={8} direction="row" justify="flex-start" alignItems="center">
-              <Typography>{text}</Typography>
+              <Typography>{props.text}</Typography>
             </Grid>
             <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center">    
                 <Popup  trigger={<Button className={classes.iconButtons} ><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>} modal nested fixed >
                 {
-                  <EditQuestionPU style={{borderRadius:'25px'}} questChange={props.questChange} questDelete={props.questDelete} prop={question} changeText={changeText}/>
+                  <EditQuestionPU style={{borderRadius:'25px'}} questChange={props.questChange} prop={question} changeText={props.changeText}/>
                 }
               </Popup>
-              <Button className={classes.iconButtons} onClick={() =>handleDelete()} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>
+              <Button className={classes.iconButtons} onClick={() =>props.handleDelete()} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>
             </Grid>
           </Grid>
         </AccordionDetails>
@@ -182,7 +164,7 @@ function AddAccordion(props) {
       </div>
     ))}
     <div className={classes.pagin}>
-      <Pagination style={{display: 'flex', justifyContent:'flex-end'}} count={pageCount} page={props.page} onChange={changePage} color="primary" />
+      <Pagination style={{display: 'flex', justifyContent:'flex-end'}} count={props.pageCount} page={props.page} onChange={changePage} color="primary" />
     </div>
     </div>
     
@@ -191,21 +173,57 @@ function AddAccordion(props) {
 
 export function EditQuestion(props) {
     const classes = useStyles();
+    const [text, setText] = useState("nesto");
+    const [expandedQuestion,setExpandedQuestion]=useState(false);
+    var nextID;
+    var rowLen;
+    {
+      props.questions ? rowLen = props.questions.length-1
+      : rowLen = 0;
+    }{
+      props.questions ? nextID = props.questions.length+1
+      : nextID = 1;
+    }
+    var topQ = 0 + (props.page-1)*6;
+
+    const [pageCount, setPageCount] = useState((rowLen+(6-((rowLen)%6)))/6);
+    
+  const handleChange = (panel) => (event, isExpanded) => {
+    props.changeExpanded( isExpanded? panel.id:false);
+    setText(panel.text);
+    setExpandedQuestion(panel);
+  };
+  const changeText=(value)=>{
+    setText(value);
+  };
+  const handleDelete= ()=>{
+    props.questDelete(expandedQuestion);
+    setExpandedQuestion(false);
+  };
+  const dropExpandedQuestion= () => {
+    setExpandedQuestion(false);
+  };
+  const handlePages= ()=>{
+    props.questions ? rowLen = props.questions.length-1
+      : rowLen = 0
+    setPageCount((rowLen+(6-((rowLen)%6)))/6)
+  }
 
     return(
         <div className={classes.root}>
             <div className={classes.accRoot}>
             <div className={classes.tableHeader}>
               <Typography className={classes.Heading}>ID</Typography>
-              <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>     
-                <Popup trigger={ <Button className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>} modal nested fixed>
-                { 
-                  <AddQuestPU/>  
-                }
+              <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>  
+                <Popup
+                  trigger={<Button className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>}
+                  onOpen={dropExpandedQuestion}
+                  modal nested fixed>
+                {<AddQuestPU reset={props.reset} nextID={nextID} changeText={changeText} questAdd={props.questAdd}/>}
                 </Popup>
             </div>
             {
-              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion page={props.page} changePage={props.changePage} questDelete={props.questDelete} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions}/></div>
+              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion handlePages={handlePages} topQ={topQ} pageCount={pageCount} handleChange={handleChange} changeText={changeText} text={text} handleDelete={handleDelete} page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions}/></div>
               : <div style={{position:'relative', marginTop:'5%'}}><Typography style={{display:'flex', justifyContent:'center', color:'gray'}}>No questions added</Typography></div>
             }
             </div>

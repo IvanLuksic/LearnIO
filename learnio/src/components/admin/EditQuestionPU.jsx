@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Icon from '@material-ui/core/Icon';
-import Hidden from '@material-ui/core/Hidden';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -144,7 +143,7 @@ const useStyles = makeStyles((theme) => ({
 
 const options = ['One word answer', 'Multiple Choice'];
 
-function AddQuestPU(props) {
+function EditQuestionPU(props) {
   //states of elements-------------------
   const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(false);
@@ -187,11 +186,7 @@ function AddQuestPU(props) {
     quest.text=text;
     props.questChange(quest);
     props.changeText(text);
-  };
-  // useEffect(() => {
-  //   // quest.text = text;
-  //   // props.questChange(quest);
-  // })
+  }
 //------------------------
 
   return(
@@ -312,4 +307,4 @@ function AddQuestPU(props) {
   );
 }
 
-export default AddQuestPU;
+export default EditQuestionPU;
