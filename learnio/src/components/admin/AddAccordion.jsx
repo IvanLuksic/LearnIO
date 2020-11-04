@@ -118,11 +118,9 @@ function AddAccordion(props) {
     const handleOpen = () => {
       setOpen(true);
     };
-  
     const handleClose = () => {
       setOpen(false);
     };
-  
     const changePage = (event, value) => {
       props.resetExpanded();
       props.changePage(value);
@@ -130,6 +128,7 @@ function AddAccordion(props) {
     useEffect(()=>{
       props.handlePages();
     });
+
   
     return(
       <div>
@@ -149,13 +148,9 @@ function AddAccordion(props) {
                 <Typography>{props.text}</Typography>
               </Grid>
               <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center">  
-                  <Button onClick={()=>handleOpen()} className={classes.iconButtons} ><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>  
                   <Popup 
-                    closeOnDocumentClick
-                    open={open}
-                    onOpen={handleOpen}
-                    onClose={handleClose}
-                    modal nested fixed >
+                  trigger = {<Button className={classes.iconButtons}><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>}
+                    modal nested fixed>
                   {
                     <EditQuestionPU popUpClose={handleClose} style={{borderRadius:'25px'}} questChange={props.questChange} prop={question} changeText={props.changeText}/>
                   }
