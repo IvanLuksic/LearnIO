@@ -11,6 +11,7 @@ import StudentTopics from "./components/student/StudentTopics";
 import AddQuestPU from "./components/admin/AddQuestPU";
 import MatricaAdmin from"./components/admin/MatricaAdmin";
 import AddTopicPU from './components/admin/AddTopicPU';
+import AdminTopics from './components/admin/AdminTopics';
 
 
 
@@ -36,6 +37,8 @@ function App() {
                 <Route path="/login"><Login/> </Route>
                 <Route path="/topic/:id" component={MatricaAdmin}/>
                 <Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>
+                <Route path="/AdminTopic" component={AdminTopics}/>
+                  
 
           </div>
          

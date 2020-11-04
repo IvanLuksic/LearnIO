@@ -70,6 +70,9 @@ function AddTopicPU(props){
     const [show2, setShow2] = React.useState(false);
     const [show3, setShow3] = React.useState(false);
     const [tagName, setTagName] = React.useState([]);
+    const [ID, setID] = React.useState(props.nextID);
+
+    const topic = {id: 0, topic: ' ', AO: 0, D: 0};
 
     const handleChangeTag = (event) => {
         setTagName(event.target.value);
@@ -84,6 +87,14 @@ function AddTopicPU(props){
     const handleChangeD = (event) => {
     setValueD(event.target.value); 
     };
+    const handleSave= ()=>{
+        topic.id=ID;
+        topic.topic=valueText;
+        topic.AO=valueAO;
+        topic.D=valueD;
+       
+    };
+
     const classes=useStyles();
     return(
         <div>
@@ -176,7 +187,7 @@ function AddTopicPU(props){
                             </div>
                             : null
                         }
-                        <Button className={classes.formControl} variant="contained" color="primary" onClick={()=>setOpenAddTopic(false)}>SUBMIT</Button>
+                        <Button className={classes.formControl} variant="contained" color="primary" onClick={handleSave}>SUBMIT</Button>
                     </div>               
                 </DialogContent> 
             </Dialog>
