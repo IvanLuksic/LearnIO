@@ -12,6 +12,8 @@ import AddQuestPU from "./components/admin/AddQuestPU";
 import MatricaAdmin from"./components/admin/MatricaAdmin";
 import AddTopicPU from './components/admin/AddTopicPU';
 import AdminTopics from './components/admin/AdminTopics';
+import Matrica from './components/student/Matrica';
+
 
 
 
@@ -24,6 +26,8 @@ const theme = createMuiTheme({
 
 function App() {
   const[openAddTopic,setOpenAddTopic]=useState(true);
+
+
     return (
         <div className="App" style={{height: '100vh'}} >
           <ThemeProvider theme={theme}>
@@ -39,6 +43,9 @@ function App() {
                 <Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>
                 <Route path="/AdminTopic" component={AdminTopics}/>
                   
+                <Route path="/matrica" component={Matrica}/>
+        
+
 
           </div>
          
