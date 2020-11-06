@@ -10,6 +10,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import logo from '../../images/logo.png';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+
 
 
 const useStyles=makeStyles(theme =>({
@@ -95,42 +97,45 @@ function QuestionPopup(props){
     return(
         <div> 
             <Dialog open={props.openPopup} classes={{paper: classes.dialogWrapper}}>
-                <DialogTitle className={classes.dialogPart1}>
-                    <div style={{display:'flex'}}>
-                        <Typography variant="h6" component="div" className={classes.questionName}>AO{props.question.ao} D{props.question.d}</Typography>
-                        <CloseIcon onClick={()=>props.setOpenPopup(false)}></CloseIcon>
-                    </div>
-                </DialogTitle>
-                <DialogContent className={classes.dialogPart2}>
-                    {  
-                    showABC ?
-                        <div>
-                            <FormControl component="fieldset" >
-                                <FormLabel component="legend" style={{color:"grey"}}>{props.question.text}</FormLabel>
-                                <div style={{display:'flex',margin: "2em auto"}}>
-                                <RadioGroup aria-label="answer" component="div" name="answer1" value={value} onChange={handleChange} className={classes.radioGroup}>
-                                        <DisplayAnswers questions={props.question.answerABC}/>
-                                </RadioGroup>
+                <ClickAwayListener onClickAway={()=>{props.setOpenPopup(false);}}>
+                    <div> 
+                        <DialogTitle className={classes.dialogPart1}>
+                            <div style={{display:'flex'}}>
+                                <Typography variant="h6" component="div" className={classes.questionName}>AO{props.question.ao} D{props.question.d}</Typography>
+                                <CloseIcon style={{cursor:"pointer"}} onClick={()=>props.setOpenPopup(false)}></CloseIcon>
+                            </div>
+                        </DialogTitle>
+                        <DialogContent className={classes.dialogPart2}>
+                            {  
+                            showABC ?
+                                <div>
+                                    <FormControl component="fieldset" >
+                                        <FormLabel component="legend" style={{color:"grey"}}>{props.question.text}</FormLabel>
+                                        <div style={{display:'flex',margin: "2em auto"}}>
+                                        <RadioGroup aria-label="answer" component="div" name="answer1" value={value} onChange={handleChange} className={classes.radioGroup}>
+                                                <DisplayAnswers questions={props.question.answerABC}/>
+                                        </RadioGroup>
+                                        </div>
+                                    </FormControl>
+                                    <Button variant="contained" color="primary" onClick={handleSave} className={classes.saveButton}>Save</Button>
                                 </div>
-                            </FormControl>
-                            <Button variant="contained" color="primary" onClick={handleSave} className={classes.saveButton}>Save</Button>
-                        </div>
-                        : 
-                        <div>
-                            <FormControl component="fieldset"> 
-                                <FormLabel component="legend">{props.question.text}</FormLabel>
-                                    <div className={classes.imgWithText} >
-                                    <img src={props.question.url} className={classes.questionImg} style={{display:props.question.photo}} alt="slika zadatka"></img>
-                                    <TextField id="standard-basic" className={classes.answerText} label="Unesi kratki odgovor" onChange={handleChange}/> 
-                                    </div>
-                            </FormControl>
-                            <Button variant="contained" color="primary" onClick={handleSave} className={classes.saveButton}>Save</Button>
-                        </div>
-                    }
-                </DialogContent>
+                                : 
+                                <div>
+                                    <FormControl component="fieldset"> 
+                                        <FormLabel component="legend">{props.question.text}</FormLabel>
+                                            <div className={classes.imgWithText} >
+                                            <img src={props.question.url} className={classes.questionImg} style={{display:props.question.photo}} alt="slika zadatka"></img>
+                                            <TextField id="standard-basic" className={classes.answerText} label="Unesi kratki odgovor" onChange={handleChange}/> 
+                                            </div>
+                                    </FormControl>
+                                    <Button variant="contained" color="primary" onClick={handleSave} className={classes.saveButton}>Save</Button>
+                                </div>
+                            }
+                        </DialogContent>
+                    </div>
+                </ClickAwayListener>
             </Dialog>
         </div>
-       
         );
 
 }
