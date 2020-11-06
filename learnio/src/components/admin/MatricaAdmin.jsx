@@ -114,8 +114,6 @@ function MatricaAdmin(props)
     };
     //deletes value=question from selected field's array of questions
     const deleteQuestion=(value)=>{
-        console.log(value);
-        console.log("pozvan delete");
         var polje=fields[(aoSelected+aoLVL*(dSelected-1)-1)];
         setFields(
             [ ...fields.filter(question=> ((question.ao!==aoSelected)&&(question.d!==dSelected)))]
