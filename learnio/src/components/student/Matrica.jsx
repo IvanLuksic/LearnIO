@@ -3,8 +3,6 @@ import React,{useState} from 'react';
 import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../../images/learniobg10-15.png';
 import { makeStyles} from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Icon from '@material-ui/core/Icon';
 import data from './questions.json';
 import DisplayMatrix from './DisplayMatrix';
 import QuestionPopup from "./QuestionPopup";

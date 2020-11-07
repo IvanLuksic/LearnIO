@@ -51,7 +51,7 @@ const useStyles=makeStyles(theme =>({
         flexDirection:"column",
         alignItems:"center",
         flexWrap:"wrap",
-        justifyItems:"space-evenly"
+        justifyContent:"space-evenly"
     },
     questionImg:{
         marginTop:"2em",

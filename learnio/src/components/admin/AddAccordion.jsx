@@ -13,6 +13,7 @@ import 'reactjs-popup/dist/index.css';
 import EditQuestionPU from './EditQuestionPU';
 import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
+import ConfirmDialog from "../common/ConfirmDialog"
 
 
 
@@ -115,6 +116,7 @@ const useStyles = makeStyles((theme)=>({
 function AddAccordion(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
+    const [openPopup, setOpenPopup] = useState(false);
     const handleOpen = () => {
       setOpen(true);
     };
@@ -132,6 +134,7 @@ function AddAccordion(props) {
   
     return(
       <div>
+      <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this question?" functionToConfirm={props.handleDelete}/>
       {
       props.questions.slice(props.topQ,props.topQ+6).map((question, index) =>(
         <div key={question.id}>
@@ -155,7 +158,7 @@ function AddAccordion(props) {
                     <EditQuestionPU popUpClose={handleClose} style={{borderRadius:'25px'}} questChange={props.questChange} prop={question} changeText={props.changeText}/>
                   }
                 </Popup>
-                <Button className={classes.iconButtons} onClick={() =>props.handleDelete()} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>
+                <Button className={classes.iconButtons} onClick={() =>{setOpenPopup(true)}} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>
               </Grid>
             </Grid>
           </AccordionDetails>
