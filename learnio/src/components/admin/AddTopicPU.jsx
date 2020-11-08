@@ -62,28 +62,61 @@ const MenuProps = {
 
 
 function AddTopicPU(props){
+
     const {openAddTopic,setOpenAddTopic}=props;
-    const [valueAO, setValueAO] = React.useState(' ');
-    const [valueD, setValueD] = React.useState(' ');
+    const [valueAO, setValueAO] = React.useState(1);
+    const [valueD, setValueD] = React.useState(1);
     const [valueText,setValueText]=React.useState(' ');
-    const [show1, setShow1] = React.useState(false);
+    const [show1, setShow1] = React.useState(true);
     const [show2, setShow2] = React.useState(false);
     const [show3, setShow3] = React.useState(false);
     const [tagName, setTagName] = React.useState([]);
+    const [ID, setID] = React.useState(props.nextID);
+
+    const topic = {topic: ' ', ao: 0, d: 0, tags: []};
+
 
     const handleChangeTag = (event) => {
         setTagName(event.target.value);
-      };
-  
+    };
     const handleChangeText=(event)=>{
         setValueText(event.target.value); 
-    }
+    };
     const handleChangeAO = (event) => {
     setValueAO(event.target.value); 
     };
     const handleChangeD = (event) => {
     setValueD(event.target.value); 
     };
+
+    //submit botun sprema vrijednosti i poziva closePopUp
+    const handleSave= ()=>{
+        topic.topic=valueText;
+        topic.ao=valueAO;
+        topic.d=valueD;
+        topic.tags=tagName;
+        props.addTopic(topic);
+        //neznan jel uvik ovo radi closePopUp();
+        closePopUp();
+        //pa san stavia ovo u komentar jer sigurno radi
+        /*setOpenAddTopic(false);
+        setValueAO(1);
+        setValueD(1);
+        setValueText(' ');
+        setTagName([]);*/
+    };
+    // prilikom zatvaranja popupa da postavi sve na pocetne vrijednosti
+    const closePopUp=()=>{
+        setOpenAddTopic(false);
+        setValueAO(1);
+        setValueD(1);
+        setValueText(' ');
+        setTagName([]);
+        setShow1(true);
+        setShow2(false);
+        setShow3(false);
+    }
+
     const classes=useStyles();
     return(
         <div>
@@ -91,7 +124,7 @@ function AddTopicPU(props){
                 <DialogTitle>
                     <div style={{display:'flex'}}>
                         <Typography variant="h6" component="div" className={classes.title}>Add topic</Typography>
-                        <CloseIcon onClick={()=>setOpenAddTopic(false)}></CloseIcon>
+                        <CloseIcon onClick={()=>closePopUp()}></CloseIcon>
                     </div> 
                 </DialogTitle>
 
@@ -176,7 +209,7 @@ function AddTopicPU(props){
                             </div>
                             : null
                         }
-                        <Button className={classes.formControl} variant="contained" color="primary" onClick={()=>setOpenAddTopic(false)}>SUBMIT</Button>
+                        <Button className={classes.formControl} variant="contained" color="primary" onClick={handleSave}>SUBMIT</Button>
                     </div>               
                 </DialogContent> 
             </Dialog>

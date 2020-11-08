@@ -63,6 +63,9 @@ function Navbar(){
         <Box mr={8}>
             <li> <Link to="/topics">Topics</Link> </li>
         </Box>
+        <Box mr={8}>
+            <li> <Link to="/AdminTopic">AdminTopics</Link> </li>
+        </Box>
 
 
 

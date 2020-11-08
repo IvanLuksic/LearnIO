@@ -184,6 +184,68 @@ function EditQuestionPU(props) {
                    </Grid> 
               : null
               }
+              {/* {
+              show2 ? // second case - answer
+              <div>
+            <Grid style={{top:'10%',left:'5%', float:'left', position:'absolute'}}>
+      <Grid item xs={12}>
+        <ButtonGroup color="primary" ref={anchorRef} aria-label="split button">
+          <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+          <Button
+            color="primary"
+            size="small"
+            aria-controls={open ? 'split-button-menu' : undefined}
+            aria-expanded={open ? 'true' : undefined}
+            aria-label="select merge strategy"
+            aria-haspopup="menu"
+            onClick={handleToggle}
+          >
+            <ArrowDropDownIcon />
+          </Button>
+        </ButtonGroup>
+        <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{
+                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+              }}
+            >
+              <Paper>
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList id="split-button-menu">
+                    {options.map((option, index) => (
+                      <MenuItem
+                        key={option}
+                        disabled={index === 2}
+                        selected={index === selectedIndex}
+                        onClick={(event) => handleMenuItemClick(event, index)}
+                      >
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+      </Grid>
+    </Grid>
+            {
+              selectedIndex ? 
+              <div>
+              <TextField className={classes.answerStyle} id="outlined-basic" label="Correct Answer" variant="outlined" style={{top:'10%'}} />
+              <TextField className={classes.answerStyle} id="outlined-basic" label="Incorect Answers" variant="outlined" style={{top:'40%'}} />
+              </div>
+              : 
+              <TextField className={classes.answerStyle} id="outlined-basic" label="Answer" variant="outlined" style={{top:'10%'}} />
+            }
+          </div>
+          : null
+        }
+        </Grid>*/}
+
   </Grid>
 
   );
