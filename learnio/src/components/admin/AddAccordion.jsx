@@ -18,21 +18,6 @@ import Grid from '@material-ui/core/Grid';
 
 
 const useStyles = makeStyles((theme)=>({
-    background:{
-        position: 'absolute',
-        backgroundImage:"url("+backgroundIMG+")",
-        backgroundSize: "cover",
-        backgroundPosition: "fixed",
-        backgroundAttachment: "fixed",
-        backgroundRepeat: "repeat-y",
-        width: "100%",
-        [theme.breakpoints.down('sm')]: {
-          minHeight: "100vh",
-        },
-        [theme.breakpoints.up('md')]: {
-          minHeight: "200vh",
-        },
-    },
     root: {
         backgroundColor: 'transparent',
         width: '90%',
@@ -147,9 +132,11 @@ function AddAccordion(props) {
               <Grid item md={9} xs={8} direction="row" justify="flex-start" alignItems="center">
                 <Typography>{props.text}</Typography>
               </Grid>
-              <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center">  
+              <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center"> 
+              <Button onClick={()=>handleOpen()} className={classes.iconButtons}><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>
                   <Popup 
-                  trigger = {<Button className={classes.iconButtons}><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>}
+                    open={props.openEdit===question.id && open}
+                    onClose={handleClose}
                     modal nested fixed>
                   {
                     <EditQuestionPU popUpClose={handleClose} style={{borderRadius:'25px'}} questChange={props.questChange} prop={question} changeText={props.changeText}/>
@@ -163,6 +150,7 @@ function AddAccordion(props) {
         </div>
       ))}
       <div className={classes.pagin}>
+        <p className={classes.accHeading} style={{float: 'left', margin: '10px'}}>Total questions: {props.questions.length}</p>
         <Pagination style={{display: 'flex', justifyContent:'flex-end'}} count={props.pageCount} page={props.page} onChange={changePage} color="primary" />
       </div>
       </div>

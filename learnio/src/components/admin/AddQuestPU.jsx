@@ -7,7 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Icon from '@material-ui/core/Icon';
 
-
 const useStyles = makeStyles((theme) => ({
   grupaBotuna:{
     [theme.breakpoints.down('sm')]: {
@@ -121,8 +120,6 @@ function AddQuestPU(props) {
 
   const quest = {id: 0, heading:"new head", secondary:"new something", photo:false, url:'', text:''};
 
-
-
   const classes = useStyles();
 //dropdown button---------------------
 
@@ -135,6 +132,7 @@ function AddQuestPU(props) {
     quest.id = ID;
     props.questAdd(quest);
     props.popUpClose();
+    props.changePage(ID);
     props.forceUpdate();
   }
 //------------------------
