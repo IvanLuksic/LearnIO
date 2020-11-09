@@ -160,7 +160,7 @@ function EditQuestion(props) {
                   modal nested fixed>
                   {
                     <AddQuestPU popUpClose={handleClose} changePage={props.jumpToPage} forceUpdate={props.forceUpdate} nextID={nextID} changeText={changeText} questAdd={handleAdd}/>
-                    }
+                  }
                 </Popup>
             </div>
             {
