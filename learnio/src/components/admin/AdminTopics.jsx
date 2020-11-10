@@ -80,7 +80,7 @@ function AdminTopics(props){
     const classes=useStyles();
     
     var linkage='contacts' ;
-
+    
     // brisanje topica iz liste
     const handleDelete=(id)=>{
       console.log(id);
@@ -88,7 +88,7 @@ function AdminTopics(props){
       var polje=rows;
       setRows(
           [ ...rows.filter(polje=> ((polje.id!==id)))]
-      );      
+      ); 
     };
     // dodavanje novog topica u listu i id tom topicu
     // problem s id kad se izbrise jedan i ide dodat novi ne radi!!!
