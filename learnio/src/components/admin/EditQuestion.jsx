@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import { makeStyles} from '@material-ui/core/styles';
-import backgroundIMG from '../../images/learniobg10-15.png';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Popup from 'reactjs-popup';
@@ -10,21 +9,6 @@ import Icon from '@material-ui/core/Icon';
 import AddAccordion from './AddAccordion.jsx';
 
 const useStyles = makeStyles((theme)=>({
-    background:{
-        position: 'absolute',
-        backgroundImage:"url("+backgroundIMG+")",
-        backgroundSize: "cover",
-        backgroundPosition: "fixed",
-        backgroundAttachment: "fixed",
-        backgroundRepeat: "repeat-y",
-        width: "100%",
-        [theme.breakpoints.down('sm')]: {
-          minHeight: "100vh",
-        },
-        [theme.breakpoints.up('md')]: {
-          minHeight: "200vh",
-        },
-    },
     root: {
         backgroundColor: 'transparent',
         width: '90%',
@@ -104,19 +88,11 @@ const useStyles = makeStyles((theme)=>({
   }
 }));
 
-function Background() {
-    const classes = useStyles();
-    return(
-    <div className={classes.background}>
-        <EditQuestion/>
-    </div>
-    )
-}
-
-export function EditQuestion(props) {
+function EditQuestion(props) {
     const classes = useStyles();
     const [text, setText] = useState("nesto");
     const [expandedQuestion,setExpandedQuestion]=useState(false);
+    const [openEdit, setOpenEdit]=useState(false);
     const [open, setOpen] = useState(false);
 
     let nextID;
@@ -132,10 +108,14 @@ export function EditQuestion(props) {
 
     const [pageCount, setPageCount] = useState((rowLen+(6-((rowLen)%6)))/6);
     
+  const changeOpenEdit=(value)=>{
+      setOpenEdit(value);
+  };
   const handleChange = (panel) => (event, isExpanded) => {
     props.changeExpanded( isExpanded? panel.id:false);
     setText(panel.text);
     setExpandedQuestion(panel);
+    changeOpenEdit(isExpanded? panel.id:false);
   };
   const changeText=(value)=>{
     setText(value);
@@ -174,16 +154,17 @@ export function EditQuestion(props) {
               <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>  
               <Button onClick={()=>handleOpen()} className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>
                 <Popup
-                  closeOnDocumentClick
                   open={open}
                   onOpen={handleOpen}
                   onClose={handleClose}
                   modal nested fixed>
-                  {<AddQuestPU popUpClose={handleClose} forceUpdate={props.forceUpdate} nextID={nextID} changeText={changeText} questAdd={handleAdd}/>}
+                  {
+                    <AddQuestPU popUpClose={handleClose} changePage={props.jumpToPage} forceUpdate={props.forceUpdate} nextID={nextID} changeText={changeText} questAdd={handleAdd}/>
+                  }
                 </Popup>
             </div>
             {
-              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion resetExpanded={resetExpanded} popUpClose={handleClose} handlePages={handlePages} topQ={topQ} pageCount={pageCount} handleChange={handleChange} changeText={changeText} text={text} handleDelete={handleDelete} page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions}/></div>
+              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion resetExpanded={resetExpanded} popUpClose={handleClose} handlePages={handlePages} topQ={topQ} pageCount={pageCount} handleChange={handleChange} changeText={changeText} text={text} handleDelete={handleDelete} page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions} openEdit={openEdit}/></div>
               : <div style={{position:'relative', marginTop:'5%'}}><Typography style={{display:'flex', justifyContent:'center', color:'gray'}}>No questions added</Typography></div>
             }
             </div>
@@ -191,4 +172,4 @@ export function EditQuestion(props) {
     )
 }
 
-export default Background;
+export default EditQuestion;

@@ -13,26 +13,12 @@ import 'reactjs-popup/dist/index.css';
 import EditQuestionPU from './EditQuestionPU';
 import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
+import ConfirmDialog from "../common/ConfirmDialog"
 
 
 
 
 const useStyles = makeStyles((theme)=>({
-    background:{
-        position: 'absolute',
-        backgroundImage:"url("+backgroundIMG+")",
-        backgroundSize: "cover",
-        backgroundPosition: "fixed",
-        backgroundAttachment: "fixed",
-        backgroundRepeat: "repeat-y",
-        width: "100%",
-        [theme.breakpoints.down('sm')]: {
-          minHeight: "100vh",
-        },
-        [theme.breakpoints.up('md')]: {
-          minHeight: "200vh",
-        },
-    },
     root: {
         backgroundColor: 'transparent',
         width: '90%',
@@ -115,6 +101,7 @@ const useStyles = makeStyles((theme)=>({
 function AddAccordion(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
+    const [openPopup, setOpenPopup] = useState(false);
     const handleOpen = () => {
       setOpen(true);
     };
@@ -132,6 +119,7 @@ function AddAccordion(props) {
   
     return(
       <div>
+      <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this question?" functionToConfirm={props.handleDelete}/>
       {
       props.questions.slice(props.topQ,props.topQ+6).map((question, index) =>(
         <div key={question.id}>
@@ -147,15 +135,17 @@ function AddAccordion(props) {
               <Grid item md={9} xs={8} direction="row" justify="flex-start" alignItems="center">
                 <Typography>{props.text}</Typography>
               </Grid>
-              <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center">  
+              <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center"> 
+              <Button onClick={()=>handleOpen()} className={classes.iconButtons}><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>
                   <Popup 
-                  trigger = {<Button className={classes.iconButtons}><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>}
+                    open={props.openEdit===question.id && open}
+                    onClose={handleClose}
                     modal nested fixed>
                   {
                     <EditQuestionPU popUpClose={handleClose} style={{borderRadius:'25px'}} questChange={props.questChange} prop={question} changeText={props.changeText}/>
                   }
                 </Popup>
-                <Button className={classes.iconButtons} onClick={() =>props.handleDelete()} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>
+                <Button className={classes.iconButtons} onClick={() =>{setOpenPopup(true)}} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>
               </Grid>
             </Grid>
           </AccordionDetails>
@@ -163,6 +153,7 @@ function AddAccordion(props) {
         </div>
       ))}
       <div className={classes.pagin}>
+        <p className={classes.accHeading} style={{float: 'left', margin: '10px'}}>Total questions: {props.questions.length}</p>
         <Pagination style={{display: 'flex', justifyContent:'flex-end'}} count={props.pageCount} page={props.page} onChange={changePage} color="primary" />
       </div>
       </div>
