@@ -135,7 +135,7 @@ function AddTopicPU(props){
         topic.d=valueD;
         topic.tags=tagName;
         props.addTopic(topic);
-        props.closePopUp();
+        props.closePopup();
         //neznan jel uvik ovo radi closePopUp();
         //closePopUp();
         //pa san stavia ovo u komentar jer sigurno radi

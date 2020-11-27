@@ -10,7 +10,7 @@ import AddTopicPU from './AddTopicPU';
 import Icon from '@material-ui/core/Icon';
 import topici from './topics.json';
 import Popup from 'reactjs-popup';
-import Alert from '@material-ui/lab/Alert';
+import {Dialog} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -57,6 +57,10 @@ const useStyles = makeStyles((theme) => ({
         paddingRight:"4em",
       },
     },
+    popupStyle:{
+      minWidth:'60%',
+      minHeight: '40%'
+    }
 }))
 
 function CustomPagination(props) {
@@ -133,15 +137,9 @@ function AdminTopics(props){
                 <DataGrid onRowHover={(Row)=>{linkage=Row.data.id}} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
             </div>
             <Button variant="contained" color="primary" className={classes.addButton} onClick={()=>handleOpen()}>Add topic</Button>
-            <Popup
-              open={open}
-              onOpen={handleOpen}
-              onClose={handleClose}
-              modal nested fixed>
-              {
-                <AddTopicPU closePopup={handleClose} addTopic={addQuestion}/>
-              }
-            </Popup>
+            <Dialog open={open} onClose={handleClose} classes={{paper: classes.popupStyle}}>
+              <AddTopicPU closePopup={handleClose} addTopic={addQuestion}/>
+            </Dialog>
         </div>
          
     )

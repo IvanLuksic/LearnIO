@@ -131,14 +131,14 @@ function EditQuestionPU(props) {
     quest.text=text;
     props.questChange(quest);
     props.changeText(text);
-    props.popUpClose();
+    props.popUpClose(false);
   }
 //------------------------
 
   return(
     // left popup div -------------------
     //<div >
-      <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="center" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
+      <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="flex-start" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
             <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
               <Grid item className={classes.grupaBotuna}>
                 <ButtonGroup orientation="vertical" size="small" aria-label="small outlined button group">
