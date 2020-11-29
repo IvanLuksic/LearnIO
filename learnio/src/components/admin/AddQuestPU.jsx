@@ -7,7 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Icon from '@material-ui/core/Icon';
 
-
 const useStyles = makeStyles((theme) => ({
   grupaBotuna:{
     [theme.breakpoints.down('sm')]: {
@@ -22,14 +21,12 @@ const useStyles = makeStyles((theme) => ({
     height:"auto",
     backgroundColor:"white",
     padding:"3em !important",
-    borderRadius:"7px" ,
-    
+    borderRadius: "7px",
   },
   popupMenu:{
     [theme.breakpoints.down('sm')]: {
       marginBottom: "3em",
   }},
-  
   divider:{
     [theme.breakpoints.down('sm')]: {
       display:"none",
@@ -37,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
   editText:{
     [theme.breakpoints.down('sm')]: {
       marginLeft:"0em",
-  }},
+  },
+},
   buttonContainer:{
     display:"inline-block",
     position:"relative",
@@ -121,8 +119,6 @@ function AddQuestPU(props) {
 
   const quest = {id: 0, heading:"new head", secondary:"new something", photo:false, url:'', text:''};
 
-
-
   const classes = useStyles();
 //dropdown button---------------------
 
@@ -135,15 +131,15 @@ function AddQuestPU(props) {
     quest.id = ID;
     props.questAdd(quest);
     props.popUpClose();
+    props.changePage(ID);
     props.forceUpdate();
   }
 //------------------------
 
   return(
-    // left popup div -------------------
-    //<div >
-      <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="center" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
-            <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
+      <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="center" style={{padding:"1em",height:"auto"}}> 
+            <Grid container item style={{maxWidth:"25%"}} direction="row" justify="space-between" alignItems="center">
+            <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center" xs={12} md={4} > 
               <Grid item className={classes.grupaBotuna}>
                 <ButtonGroup orientation="vertical" size="small" aria-label="small outlined button group">
                   <Button variant="contained" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>Question</Button>
@@ -158,9 +154,10 @@ function AddQuestPU(props) {
               </Grid>
             </Grid>
             <Divider orientation="vertical" flexItem className={classes.divider}/>
+            </Grid>
               {
               show1 ? //first case - question
-                  <Grid container item className={classes.editText} xs={12} md={8} direction="column" justify="center" alignItems="center" spacing={5}> 
+                  <Grid container item style={{width:"75%"}} className={classes.editText} direction="column" justify="center" alignItems="center" spacing={5}> 
                       <Grid container item xs={12}  justify="center" alignItems="center">
                         <TextField style={{width:"100%"}} id="outlined-multiline-static" label="Question Text" multiline rows={5} variant="outlined" value={text} onChange={handleText}/>
                       </Grid>
@@ -189,7 +186,6 @@ function AddQuestPU(props) {
               : null
               }
   </Grid>
-
   );
 }
 
