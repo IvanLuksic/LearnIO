@@ -6,7 +6,12 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Icon from '@material-ui/core/Icon';
-
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
+import TagFacesIcon from '@material-ui/icons/TagFaces';
 
 const useStyles = makeStyles((theme) => ({
   grupaBotuna:{
@@ -18,12 +23,16 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   popupStyle:{
-    width:"100%",
     height:"auto",
     backgroundColor:"white",
     padding:"3em !important",
     borderRadius:"7px" ,
-    
+    [theme.breakpoints.up('xl')]: {
+      width:"80%",
+    },
+    [theme.breakpoints.down('xl')]: {
+      width:"100%",
+    },
   },
   popupMenu:{
     [theme.breakpoints.down('sm')]: {
@@ -106,9 +115,50 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft:"5em",
         paddingRight:"5em",
       },
-  
-    }
+    },
+    rootChips: {
+      boxShadow:"none !important",
+      display: 'flex',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+      listStyle: 'none',
+      padding: theme.spacing(0.5),
+      margin: 0,
+    },
+    textAnswers:{
+      [theme.breakpoints.up('md')]: {
+        paddingLeft:"2em",
+      },
+      [theme.breakpoints.down('sm')]: {
+        paddingBottom:"1em",
+      },
+    },
+    toggleMultiple:{
+      [theme.breakpoints.up('md')]: {
+        paddingLeft:"1em",
+      },
+    },
+
 }));
+
+
+const ChipsArray=(props)=> {
+  const classes = useStyles();
+  return (
+    <Paper component="ul" className={classes.rootChips}>
+      {
+      props.wrongAnswers.map((data) => {
+        return (
+          <li key={data}>
+            <Chip style={{margin:"0 0.1em"}} label={data} onDelete={()=>{props.deleteWrongAnswer(data)}}/>
+          </li>
+        );
+      })}
+    </Paper>
+  );
+};
+
+
 
 function EditQuestionPU(props) {
   //states of elements-------------------
@@ -117,16 +167,39 @@ function EditQuestionPU(props) {
   const [showIMG, setIMG] = useState(props.prop.photo);
   const [text, setText] = useState(props.prop.text);
   const [quest, setQuest] = useState(props.prop);
+  const [answerInput,setAnswerInput]=useState("");
   const [imageState, setimageState] = useState(null);
+  const [wrongAnswers, setWrongAnswers]=useState(()=>{ return ["halo","svijete","čipsa"]});
+  const [correctAnswer, setCorrectAnswers]=useState(()=>{ return "Točno"});
+  const [multipleAnswer, setMultipleAnswers]=useState(()=>{ return false});
+
+
 
 
   const classes = useStyles();
 //dropdown button---------------------
 
+  const toggleMultiple = (event) => {  
+    setMultipleAnswers(!multipleAnswer);
+  };
+  const handleCorrect = (event) => {  
+    setCorrectAnswers(event.target.value);
+  };
   const handleText = (event) => {
     setText(event.target.value);
   };
-
+  const updateAnsweInput=(event)=>{
+    setAnswerInput(event.target.value);
+  };
+  const addWrongAnswer= (event)=>{
+    if(event.keyCode==13 && answerInput!==""){
+      setWrongAnswers([...wrongAnswers,answerInput]);
+      setAnswerInput("");
+    }
+  };
+  const deleteWrongAnswer= (answer)=>{
+    setWrongAnswers([...wrongAnswers.filter(item=>(item!==answer))]);
+  };
   const handleSave= ()=>{
     quest.text=text;
     props.questChange(quest);
@@ -142,8 +215,8 @@ function EditQuestionPU(props) {
             <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
               <Grid item className={classes.grupaBotuna}>
                 <ButtonGroup orientation="vertical" size="small" aria-label="small outlined button group">
-                  <Button variant="contained" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>Question</Button>
-                  <Button variant="contained" onClick={() => [setShow1(false),setShow2(true)]} className={classes.buttonsInGroup}>Answers</Button>
+                  <Button variant="contained" color="#27AE60" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>Question</Button>
+                  <Button variant="contained" color="#27AE60" onClick={() => [setShow1(false),setShow2(true)]} className={classes.buttonsInGroup}>Answers</Button>
                 </ButtonGroup>
               </Grid>
               <Grid item>          
@@ -184,67 +257,33 @@ function EditQuestionPU(props) {
                    </Grid> 
               : null
               }
-              {/* {
+              {
               show2 ? // second case - answer
-              <div>
-            <Grid style={{top:'10%',left:'5%', float:'left', position:'absolute'}}>
-      <Grid item xs={12}>
-        <ButtonGroup color="primary" ref={anchorRef} aria-label="split button">
-          <Button onClick={handleClick}>{options[selectedIndex]}</Button>
-          <Button
-            color="primary"
-            size="small"
-            aria-controls={open ? 'split-button-menu' : undefined}
-            aria-expanded={open ? 'true' : undefined}
-            aria-label="select merge strategy"
-            aria-haspopup="menu"
-            onClick={handleToggle}
-          >
-            <ArrowDropDownIcon />
-          </Button>
-        </ButtonGroup>
-        <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList id="split-button-menu">
-                    {options.map((option, index) => (
-                      <MenuItem
-                        key={option}
-                        disabled={index === 2}
-                        selected={index === selectedIndex}
-                        onClick={(event) => handleMenuItemClick(event, index)}
-                      >
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-      </Grid>
-    </Grid>
-            {
-              selectedIndex ? 
-              <div>
-              <TextField className={classes.answerStyle} id="outlined-basic" label="Correct Answer" variant="outlined" style={{top:'10%'}} />
-              <TextField className={classes.answerStyle} id="outlined-basic" label="Incorect Answers" variant="outlined" style={{top:'40%'}} />
-              </div>
-              : 
-              <TextField className={classes.answerStyle} id="outlined-basic" label="Answer" variant="outlined" style={{top:'10%'}} />
-            }
-          </div>
-          : null
-        }
-        </Grid>*/}
+                <Grid container item className={classes.editText} xs={12} md={8} direction="column" justify="space-around" alignItems="center" spacing={2}> 
+                  <Grid container item xs={12}  justify="center" alignItems="center" direction="row">
+                    <Grid className={classes.textAnswers} container item xs={12} md={8} justify="center" alignItems="center" direction="row">
+                      <TextField style={{width:"100%"}} id="outlined-multiline-static" label="Correct Answer" multiline rows={multipleAnswer?1:6} variant="outlined" value={correctAnswer} onChange={handleCorrect}/>
+                    </Grid>
+                    <Grid  className={classes.toggleMultiple} container item xs={12} md={4} justify="center" alignItems="center" direction="row">
+                      <FormControlLabel control={ <Checkbox checked={multipleAnswer} onChange={toggleMultiple} name="checkedB" color="primary" />} label="Multiple choice" />
+                    </Grid>
+                  </Grid>
+                  { multipleAnswer &&
+                    <Grid container item xs={12}  justify="center" alignItems="center" direction="row">
+                      <ChipsArray wrongAnswers={wrongAnswers} deleteWrongAnswer={deleteWrongAnswer}/> 
+                    </Grid>
+                  }
+                  {multipleAnswer&&
+                  <Grid container item xs={12} justify="center" alignItems="center" direction="row">
+                    <form onSubmit={(e)=>{e.preventDefault();}}>
+                      <TextField style={{width:"100%"}} placeholder="Odgovor" value={answerInput} onChange={updateAnsweInput} onKeyDown={addWrongAnswer}/>
+                    </form>
+                  </Grid>
+                  }
+                </Grid>
+                : null
+              }
+
 
   </Grid>
 
