@@ -1,5 +1,5 @@
 import React from'react';
-import {Button, Dialog,DialogContent,DialogTitle, TextField, Typography}from'@material-ui/core';
+import {Button, TextField}from'@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Grid from '@material-ui/core/Grid';
@@ -12,10 +12,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
-
-
-
-import CloseIcon from'@material-ui/icons/Close';
 
 const useStyles = makeStyles((theme)=>({
     dialogWrapper:{
@@ -110,8 +106,6 @@ function AddTopicPU(props){
     const [show1, setShow1] = React.useState(true);
     const [show2, setShow2] = React.useState(false);
     const [tagName, setTagName] = React.useState([]);
-    const [ID, setID] = React.useState(props.nextID);
-
     const topic = {topic: ' ', ao: 0, d: 0, tags: []};
 
 
@@ -135,7 +129,7 @@ function AddTopicPU(props){
         topic.d=valueD;
         topic.tags=tagName;
         props.addTopic(topic);
-        props.closePopUp();
+        props.closePopup();
         //neznan jel uvik ovo radi closePopUp();
         //closePopUp();
         //pa san stavia ovo u komentar jer sigurno radi

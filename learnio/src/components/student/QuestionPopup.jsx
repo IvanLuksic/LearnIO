@@ -1,5 +1,4 @@
 import React from 'react';
-import { Component } from 'react';
 import {Button, Dialog,DialogContent,DialogTitle, makeStyles, Typography}from'@material-ui/core';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -7,8 +6,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import CloseIcon from '@material-ui/icons/Close';
-import logo from '../../images/logo.png';
-import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
@@ -74,7 +71,7 @@ function DisplayAnswers(props){
 
 function QuestionPopup(props){
     const [value, setValue] = React.useState('A');
-    const [showABC, setShow] = React.useState(props.question.ABC);
+    const showABC = props.question.ABC;
     const classes=useStyles();
 
     const handleChange = (event) => {

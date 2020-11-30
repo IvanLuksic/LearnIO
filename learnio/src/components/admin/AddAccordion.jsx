@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import { makeStyles} from '@material-ui/core/styles';
-import backgroundIMG from '../../images/learniobg10-15.png';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -8,12 +7,12 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Pagination from '@material-ui/lab/Pagination';
 import Button from '@material-ui/core/Button';
-import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import EditQuestionPU from './EditQuestionPU';
 import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
 import ConfirmDialog from "../common/ConfirmDialog"
+import {Dialog} from '@material-ui/core';
 
 
 
@@ -95,18 +94,19 @@ const useStyles = makeStyles((theme)=>({
     maxWidth:"2.5em",
     minWidth:"2.5em",
     backgroundColor:"transparent"
+  },
+  popupStyle:{
+    minWidth:'60%',
+    minHeight: '40%'
   }
 }));
 
 function AddAccordion(props) {
     const classes = useStyles();
-    const [open, setOpen] = useState(false);
     const [openPopup, setOpenPopup] = useState(false);
-    const handleOpen = () => {
-      setOpen(true);
-    };
+    const [openPopup2, setOpenPopup2] = useState(false);
     const handleClose = () => {
-      setOpen(false);
+      setOpenPopup2(false);
     };
     const changePage = (event, value) => {
       props.resetExpanded();
@@ -136,15 +136,10 @@ function AddAccordion(props) {
                 <Typography>{props.text}</Typography>
               </Grid>
               <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center"> 
-              <Button onClick={()=>handleOpen()} className={classes.iconButtons}><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>
-                  <Popup 
-                    open={props.openEdit===question.id && open}
-                    onClose={handleClose}
-                    modal nested fixed>
-                  {
-                    <EditQuestionPU popUpClose={handleClose} style={{borderRadius:'25px'}} questChange={props.questChange} prop={question} changeText={props.changeText}/>
-                  }
-                </Popup>
+                <Button onClick={()=>setOpenPopup2(true)} className={classes.iconButtons}><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>
+                  <Dialog open={question.id === props.openEdit && openPopup2} onClose={handleClose} classes={{paper: classes.popupStyle}}>
+                    <EditQuestionPU popUpClose={setOpenPopup2} style={{borderRadius:'25px'}} questChange={props.questChange} prop={question} changeText={props.changeText}/>
+                  </Dialog>
                 <Button className={classes.iconButtons} onClick={() =>{setOpenPopup(true)}} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>
               </Grid>
             </Grid>

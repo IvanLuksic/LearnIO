@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import { makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import AddQuestPU from './AddQuestPU';
 import Icon from '@material-ui/core/Icon';
 import AddAccordion from './AddAccordion.jsx';
+import {Dialog} from '@material-ui/core';
 
 const useStyles = makeStyles((theme)=>({
     root: {
@@ -85,7 +85,11 @@ const useStyles = makeStyles((theme)=>({
     maxWidth:"2.5em",
     minWidth:"2.5em",
     backgroundColor:"transparent"
-  }
+  },
+  popupStyle:{
+    minWidth:'60%',
+    minHeight: '40%'
+  },
 }));
 
 function EditQuestion(props) {
@@ -97,13 +101,10 @@ function EditQuestion(props) {
 
     let nextID;
     let rowLen;
-    {
-      props.questions ? rowLen = props.questions.length-1
-      : rowLen = 0;
-    }{
-      props.questions ? nextID = props.questions.length+1
-      : nextID = 1;
-    }
+    props.questions ? rowLen = props.questions.length-1
+    : rowLen = 0;
+    props.questions ? nextID = props.questions.length+1
+    : nextID = 1;
     let topQ = 0 + (props.page-1)*6;
 
     const [pageCount, setPageCount] = useState((rowLen+(6-((rowLen)%6)))/6);
@@ -153,15 +154,9 @@ function EditQuestion(props) {
               <Typography className={classes.Heading}>ID</Typography>
               <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>  
               <Button onClick={()=>handleOpen()} className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>
-                <Popup
-                  open={open}
-                  onOpen={handleOpen}
-                  onClose={handleClose}
-                  modal nested fixed>
-                  {
-                    <AddQuestPU popUpClose={handleClose} changePage={props.jumpToPage} forceUpdate={props.forceUpdate} nextID={nextID} changeText={changeText} questAdd={handleAdd}/>
-                  }
-                </Popup>
+                <Dialog open={open} onClose={handleClose} classes={{paper: classes.popupStyle}}>
+                  <AddQuestPU popUpClose={handleClose} changePage={props.jumpToPage} forceUpdate={props.forceUpdate} nextID={nextID} changeText={changeText} questAdd={handleAdd}/>
+                </Dialog>
             </div>
             {
               props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion resetExpanded={resetExpanded} popUpClose={handleClose} handlePages={handlePages} topQ={topQ} pageCount={pageCount} handleChange={handleChange} changeText={changeText} text={text} handleDelete={handleDelete} page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions} openEdit={openEdit}/></div>
