@@ -36,15 +36,17 @@ function App() {
                 <Route exact path="/" component={Home}/>
                 <Route path="/about" component={About}/>
                 <Route path="/contact" component={Contact}/>
-                <Route path="/add-question" component={AddQuestPU}/>
                 <Route exact path="/topics"><StudentTopics/></Route>
                 <Route path="/login"><Login/> </Route>
-                <Route path="/topic/:id" component={MatricaAdmin}/>
-                <Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>
+                <Route path="/topic/:id" component={MatricaAdmin}/> 
                 <Route path="/AdminTopic" component={AdminTopics}/>
                   
+                <Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>
+                <Route path="/add-question" component={AddQuestPU}/>
+
+
                 <Route path="/matrica" component={Matrica}/>
-        
+      
 
 
           </div>
