@@ -115,7 +115,7 @@ function AddQuestPU(props) {
   const [showIMG, setIMG] = useState(false);
   const [text, setText] = useState('');
   const [imageState, setimageState] = useState(null);
-  const [ID, setID] = useState(props.nextID);
+  const ID = props.nextID;
 
   const quest = {id: 0, heading:"new head", secondary:"new something", photo:false, url:'', text:''};
 
@@ -174,7 +174,7 @@ function AddQuestPU(props) {
                           {
                           showIMG ?
                               <div className={classes.buttonContainer}>
-                                <img  className={classes.imageUploaded} src={imageState} />
+                                <img  className={classes.imageUploaded} src={imageState} alt="hello world"/>
                                 <Icon className={classes.buttonB} onClick={()=>{setIMG(false); setimageState(null)}}>cancel_icon</Icon>
                                 <Icon className={classes.buttonA} onClick={()=>{setIMG(false); setimageState(null)}}>cloud_done_icon</Icon>
                               </div>   
@@ -183,6 +183,9 @@ function AddQuestPU(props) {
                         </Grid> 
                       </Grid>
                    </Grid> 
+              : null
+              }{
+              show2 ? <p>hello world</p>
               : null
               }
   </Grid>

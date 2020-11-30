@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import { makeStyles} from '@material-ui/core/styles';
-import backgroundIMG from '../../images/learniobg10-15.png';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -8,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Pagination from '@material-ui/lab/Pagination';
 import Button from '@material-ui/core/Button';
-import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import EditQuestionPU from './EditQuestionPU';
 import Icon from '@material-ui/core/Icon';

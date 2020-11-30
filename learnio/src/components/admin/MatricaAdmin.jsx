@@ -70,16 +70,14 @@ function useForceUpdate() {
 function MatricaAdmin(props)
 {
     const forceUpdate = useForceUpdate();
-    const [topicID,setTopicID] = useState(()=>{
-       return props.match.params.id;
-    });
+    const topicID = props.match.params.id;
     const [aoSelected,setAoSelected]=useState(1);
     const [dSelected,setDSelected]=useState(1);
     const [expanded, setExpanded] = useState(false);
     const [page, setPage] = useState(1);
     const [fields, setFields]=useState(data);
-    const [aoLVL,setAoLVL]=useState(3);
-    const [dLVL,setDLVL]=useState(3);
+    const aoLVL = 3;
+    const dLVL = 3;
     //function that is executed on matrix field select
     const changeAoDSelected= (e,ao,d)=>{
         e.preventDefault();

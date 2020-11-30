@@ -6,12 +6,10 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Icon from '@material-ui/core/Icon';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
-import TagFacesIcon from '@material-ui/icons/TagFaces';
 
 const useStyles = makeStyles((theme) => ({
   grupaBotuna:{
@@ -166,7 +164,7 @@ function EditQuestionPU(props) {
   const [show2, setShow2] = useState(false);
   const [showIMG, setIMG] = useState(props.prop.photo);
   const [text, setText] = useState(props.prop.text);
-  const [quest, setQuest] = useState(props.prop);
+  const quest = props.prop;
   const [answerInput,setAnswerInput]=useState("");
   const [imageState, setimageState] = useState(null);
   const [wrongAnswers, setWrongAnswers]=useState(()=>{ return ["halo","svijete","čipsa"]});
@@ -192,7 +190,7 @@ function EditQuestionPU(props) {
     setAnswerInput(event.target.value);
   };
   const addWrongAnswer= (event)=>{
-    if(event.keyCode==13 && answerInput!==""){
+    if(event.keyCode===13 && answerInput!==""){
       setWrongAnswers([...wrongAnswers,answerInput]);
       setAnswerInput("");
     }
@@ -246,7 +244,7 @@ function EditQuestionPU(props) {
                           {
                           showIMG ?
                               <div className={classes.buttonContainer}>
-                                <img  className={classes.imageUploaded} src={imageState} />
+                                <img  className={classes.imageUploaded} src={imageState} alt="hello world"/>
                                 <Icon className={classes.buttonB} onClick={()=>{setIMG(false); setimageState(null)}}>cancel_icon</Icon>
                                 <Icon className={classes.buttonA} onClick={()=>{setIMG(false); setimageState(null)}}>cloud_done_icon</Icon>
                               </div>   

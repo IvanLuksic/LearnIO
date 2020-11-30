@@ -1,15 +1,14 @@
 import React,{useState} from 'react';
-import { makeStyles,withStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import backgroundIMG from '../../images/learniobg10-15.png';
 import { Typography } from '@material-ui/core';
-import { DataGrid, Row } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
 import Pagination from '@material-ui/lab/Pagination';
 import AddTopicPU from './AddTopicPU';
 import Icon from '@material-ui/core/Icon';
 import topici from './topics.json';
-import Popup from 'reactjs-popup';
 import {Dialog} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -97,7 +96,6 @@ function AdminTopics(props){
     const handleDelete=(id)=>{
       console.log(id);
       console.log("pozvan delete");
-      var polje=rows;
       setRows(
           [ ...rows.filter(polje=> ((polje.id!==id)))]
       );      

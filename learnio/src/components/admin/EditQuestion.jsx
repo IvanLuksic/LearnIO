@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import { makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import AddQuestPU from './AddQuestPU';
 import Icon from '@material-ui/core/Icon';
@@ -102,13 +101,10 @@ function EditQuestion(props) {
 
     let nextID;
     let rowLen;
-    {
-      props.questions ? rowLen = props.questions.length-1
-      : rowLen = 0;
-    }{
-      props.questions ? nextID = props.questions.length+1
-      : nextID = 1;
-    }
+    props.questions ? rowLen = props.questions.length-1
+    : rowLen = 0;
+    props.questions ? nextID = props.questions.length+1
+    : nextID = 1;
     let topQ = 0 + (props.page-1)*6;
 
     const [pageCount, setPageCount] = useState((rowLen+(6-((rowLen)%6)))/6);

@@ -46,9 +46,7 @@ function DisplayField(props){
         if(status==="SELECTED") return "#27AE60";
         else return ((props.questions.length>0)?"#4373ec":"grey");
     });
-    const [icon,setIcon]= useState(()=>{
-        return ((props.questions.length>0)?"check_circle_out_icon":"cancel_icon");
-    });
+    const icon = ((props.questions.length>0)?"check_circle_out_icon":"cancel_icon");
     useEffect(()=>{
         if((props.aoSelected===props.ao) && (props.dSelected===props.d))
         {
