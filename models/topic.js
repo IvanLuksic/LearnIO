@@ -10,23 +10,24 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.Predmet,{foreignKey: 'predmet_id'});
-      this.hasMany(models.Rezultati);
-      this.hasMany(models.Spremanje);
-      this.hasMany(models.Pitanje);
-      this.belongsToMany(models.Topic,{through: 'Tagovi',as: 'source_topic'},{foreignKey: 'source_topic'});
-      this.belongsToMany(models.Topic,{through: 'Tagovi',as: 'associated_topic'},{foreignKey: 'povezani_topic'});
-      this.belongsToMany(models.Kursevi,{through:'Topici_kursevi'},{foreignKey: 'topic_id'});
+      this.belongsTo(models.Subject,{foreignKey: 'subject_id'});
+      this.hasMany(models.Result,{foreignKey: 'topic_id'});
+      this.hasMany(models.Save,{foreignKey: 'topic_id'});
+      this.hasMany(models.Question,{foreignKey: 'topic_id'});
+      this.belongsToMany(models.Topic,{through: 'Tags_of_topic',as: 'source_topic'},{foreignKey: 'source_topic'});
+      this.belongsToMany(models.Topic,{through: 'Tags_of_topic',as: 'associated_topic'},{foreignKey: 'povezani_topic'});
+      this.belongsToMany(models.Course,{through:'Course-Topic'},{foreignKey: 'topic_id'});
     }
   }
   Topic.init({
-    naziv: DataTypes.STRING,
-    retci_D: DataTypes.INTEGER,
-    broj_stupaca: DataTypes.INTEGER
+    name: DataTypes.STRING,
+    rows_D: DataTypes.INTEGER,
+    column_numbers: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Topic',
     freezeTableName: true,
+    timestamps: false
   });
   return Topic;
 };

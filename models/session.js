@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.Korisnik,{foreignKey: 'korisnik_id'});
+      this.belongsTo(models.User,{foreignKey: 'user_id'});
     }
   };
   Session.init({
@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Session',
     freezeTableName: true,
+    timestamps: false
   });
   return Session;
 };

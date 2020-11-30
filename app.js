@@ -6,8 +6,8 @@ async function start()
 {
     try {
         await loaders.load(app);
-        app.listen(3000,()=>{
-            nodelogger.info("App listening on port 3000 ");
+        app.listen(process.env.PORT,()=>{
+            nodelogger.info(`App listening on ${process.env.PORT} `);
         });
     } catch (error) {
         nodelogger.error(error);

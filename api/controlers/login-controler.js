@@ -1,33 +1,36 @@
-const {Login_instanca}=require('../../services');//object destrucuturing(jer require vrati objekt) + automatski trazi index.js file u service folderu
+const {Login_instance, Session_instance}=require('../../services');//object destrucuturing(jer require vrati objekt) + automatski trazi index.js file u service folderu
 const {nodelogger}=require('../../loaders/logger');//-> cacheano je
 module.exports={
     logiraj:async (req,res)=>{//arrow funckije imaju lexical scope koji sto znaci da imaju pristup varijablama koje se nalaze u scopeu s mjesta koje ih je pozvalo-> ovdje su pozvane iz middleware funkcije unutar validatora koja ima pristup req,res objektima pa stoga ima i ona
         const {username,password}=req.body;//object destrucutiring,uz preptostavku da saljemo JSON body pa ne parsiramo
         try {
-            const user=await Login_instanca.dohvatiKorisnika(username);
+            const user=await Login_instance.getUser(username);
             if(user && user.password===password)//ako je user =NULL -> vratit ce NULL i nece uci u if
-            {
-                //res.status(200).send('Correct crednetials. Login succesful');
-                if(user.user_type===1)//admin
-                {
-                //redirect na admin stranicu->res.redirect('/admin)
-                nodelogger.info("Logging succesful");
-               return  res.status(200).send('Hello admin.Correct crednetials. Login succesful');
+            {   
+               
+                req.session.user=user.id;//ako je loadan napravimo mu session id
+                req.session.user_type=user.user_type;
+                try {
+                    await Session_instance.createSession(user.id);//pohrani ga u sesiju za pracenje aktivnosti
+                } catch (error) {
+                    throw(error);//idi na iduci catch handler-> ovi skroz doli
                 }
-                else if(user.user_type===2)//ucitelj
+                if(user.user_type == process.env.ADMIN)//admin->STAVI == JER JE ADMIN env varijabla string
                 {
-                      //redirect na učitelj stranicu->res.redirect('/teacher)
                 nodelogger.info("Logging succesful");
-               return res.status(200).send('Hello teacher.Correct crednetials. Login succesful');
+                res.redirect('/admin');
                 }
-                else {
-                      //redirect na ucenik stranicu->res.redirect('/student)
+                else if(user.user_type==process.env.TEACHER)//ucitelj
+                {
                 nodelogger.info("Logging succesful");
-                return res.status(200).send('Hello student.Correct crednetials. Login succesful');
+                res.redirect('/teacher');
+                }
+                else {//student
+                nodelogger.info("Logging succesful");
+                res.redirect('/student');
                 }
 
-            }
-            else if(!user) {
+             } else if(!user) {
                 nodelogger.error('Login failed');
                return res.status(401).send('Authnetication failed. Username not found. Check your username');
             }
@@ -39,6 +42,23 @@ module.exports={
             nodelogger.error(err);
            return res.status(400).send('error in login controler ');
         }
+    },
+    sesion:async(req,res)=>{//ovdje dode kada login pozove next()-> ako je tu dosao onda je vec logiran unutra pa ga trebamo samo preusmjerit na zadanu rutu
+            if(req.session.user_type===1)//admin
+                {
+                nodelogger.info("Logging succesful");
+                res.redirect('/admin');
+                }
+                else if(req.session.user_type===2)//ucitelj
+                {
+                nodelogger.info("Logging succesful");
+                res.redirect('/teacher');
+                }
+                else {
+                nodelogger.info("Logging succesful");
+                res.redirect('/student');
+                }
+
     }
     
 }

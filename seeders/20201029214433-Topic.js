@@ -4,34 +4,34 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('Topic',[
       {
-        naziv:'Zbrajanje',
-        retci_D: 7,
-        broj_stupaca:3,
-        predmet_id:1
+        name:'Zbrajanje',
+        rows_D: 7,
+        column_numbers:3,
+        subject_id:1
       },
       {
-      naziv:'Mnozenje',
-      retci_D: 5,
-      broj_stupaca:3,
-      predmet_id:1
+      name:'Mnozenje',
+      rows_D: 5,
+      column_numbers:3,
+      subject_id:1
     },
     {
-    naziv:'Dijeljenje',
-    retci_D: 6,
-    broj_stupaca:3,
-    predmet_id:1
+    name:'Dijeljenje',
+    rows_D: 6,
+    column_numbers:3,
+    subject_id:1
   },
   {
-  naziv:'Fluidi',
-  retci_D: 5,
-  broj_stupaca:3,
-  predmet_id:2
+  name:'Fluidi',
+  rows_D: 5,
+  column_numbers:3,
+  subject_id:2
   },
   {
-    naziv:'Booleova algebra',
-  retci_D: 6,
-  broj_stupaca:4,
-  predmet_id:3
+    name:'Booleova algebra',
+  rows_D: 6,
+  column_numbers:4,
+  subject_id:3
   }
     ])
   },

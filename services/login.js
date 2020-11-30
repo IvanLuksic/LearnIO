@@ -1,20 +1,35 @@
 module.exports= class LoginService{//exportanje klasa na ovaj način-> module.exports nije vise objekt nego klasa
-    constructor(Korisnik_model,logger)
+    constructor(user_model,logger)
     {
-        this.Korisnik=Korisnik_model;
+        this.User=user_model;
+        this.Logger=logger;
     }
-    async dohvatiKorisnika(usersname)
+    async getUser(usersname)
     {
         try {
-            const user=await this.Korisnik.findOne({
-                attributes:['username','password','user_type'],
+            const user=await this.User.findOne({
+                attributes:['id','username','password','user_type'],
                 where:{
                     username: usersname
                 }
              } )
              return user;
         } catch (error) {
-            logger.error("Error in fetching user from database. "+error);
+            this.Logger.error("Error in fetching user from database. "+error);
+        }
+    }
+    async getUserbyID(user_id)
+    {
+        try {
+            const user=await this.User.findOne({
+                attributes:['user_type'],
+                where:{
+                    id: user_id
+                }
+             } )
+             return user;
+        } catch (error) {
+            this.Logger.error("Error in fetching user from database. "+error);
         }
     }
 }

@@ -8,13 +8,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      naziv: {
+      name: {
         type: Sequelize.STRING
       },
-      retci_D: {
+      rows_D: {
         type: Sequelize.INTEGER
       },
-      broj_stupaca: {
+      column_numbers: {
         type: Sequelize.INTEGER
       },
     });
