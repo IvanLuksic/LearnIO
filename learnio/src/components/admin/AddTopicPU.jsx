@@ -103,15 +103,19 @@ function AddTopicPU(props){
     const [valueAO, setValueAO] = React.useState(1);
     const [valueD, setValueD] = React.useState(1);
     const [valueText,setValueText]=React.useState(' ');
+    const [desc,setDesc]=React.useState(' ');
     const [show1, setShow1] = React.useState(true);
     const [show2, setShow2] = React.useState(false);
     const [tagName, setTagName] = React.useState([]);
-    const topic = {topic: ' ', ao: 0, d: 0, tags: []};
+    const topic = {topic: ' ',description: ' ', ao: 0, d: 0, tags: []};
 
 
     const handleChangeTag = (event) => {
         setTagName(event.target.value);
     };
+    const handleChangeDesc=(event) => {
+      setDesc(event.target.value);
+  };
     const handleChangeText=(event)=>{
         setValueText(event.target.value); 
     };
@@ -125,6 +129,7 @@ function AddTopicPU(props){
     //submit botun sprema vrijednosti i poziva closePopUp
     const handleSave= ()=>{
         topic.topic=valueText;
+        topic.description=desc;
         topic.ao=valueAO;
         topic.d=valueD;
         topic.tags=tagName;
@@ -179,7 +184,8 @@ function AddTopicPU(props){
                         show1 ? 
                             <Grid container item direction="row" justify="space-between" alignItems="flex-start" style={{width:"70%"}}>
                                 <Grid style={{width:"30%"}}>
-                                    <TextField id="outlined-basic" variant="outlined" label="Topic name" value={valueText} onChange={handleChangeText}/>
+                                    <TextField style={{marginTop: "1em", marginBottom: "1em"}} id="outlined-basic" variant="outlined" label="Topic name" value={valueText} onChange={handleChangeText}/>
+                                    <TextField style={{marginTop: "1em", marginBottom: "1em"}} id="outlined-basic" variant="outlined" label="description" value={desc} onChange={handleChangeDesc}/>
                                 </Grid>
 
                                 <Grid style={{width:"45%"}}>

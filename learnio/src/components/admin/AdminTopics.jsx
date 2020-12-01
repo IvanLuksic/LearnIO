@@ -91,14 +91,14 @@ function AdminTopics(props){
     };
     
     var linkage='contacts' ;
-
+    
     // brisanje topica iz liste
     const handleDelete=(id)=>{
       console.log(id);
       console.log("pozvan delete");
       setRows(
           [ ...rows.filter(polje=> ((polje.id!==id)))]
-      );      
+      ); 
     };
     // dodavanje novog topica u listu i id tom topicu
     // problem s id kad se izbrise jedan i ide dodat novi ne radi!!!

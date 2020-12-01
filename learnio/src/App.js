@@ -8,7 +8,6 @@ import About from "./components/common/About"
 import Navbar from './components/common/Navbar';
 import Contact from './images/Contact';
 import StudentTopics from "./components/student/StudentTopics";
-import AddQuestPU from "./components/admin/AddQuestPU";
 import MatricaAdmin from"./components/admin/MatricaAdmin";
 import AddTopicPU from './components/admin/AddTopicPU';
 import AdminTopics from './components/admin/AdminTopics';
@@ -36,7 +35,6 @@ function App() {
                 <Route exact path="/" component={Home}/>
                 <Route path="/about" component={About}/>
                 <Route path="/contact" component={Contact}/>
-                <Route path="/add-question" component={AddQuestPU}/>
                 <Route exact path="/topics"><StudentTopics/></Route>
                 <Route path="/login"><Login/> </Route>
                 <Route path="/topic/:id" component={Matrica}/>
