@@ -41,8 +41,6 @@ function App() {
                 <Route path="/admin-topic/:id" component={MatricaAdmin}/>
                 <Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>
                 <Route path="/AdminTopic" component={AdminTopics}/>
-        
-
 
           </div>
          

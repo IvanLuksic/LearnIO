@@ -102,7 +102,7 @@ function StudentTopics(){
       { field: 'ao3P', headerName:'AO 3',
       valueGetter: (params) => `${params.getValue('ao3')}%`,
       sortComparator: (v1, v2, row1, row2) => row1.data.ao3 - row2.data.ao3,},
-      { field: 'open', headerName: `${' '}`, renderCell: (params) => (<Link to={'/matrica/'+ linkage}><ColorButton size="small"> Open </ColorButton></Link>),
+      { field: 'open', headerName: `${' '}`, renderCell: (params) => (<Link to={'/topic/'+ linkage}><ColorButton size="small"> Open </ColorButton></Link>),
       },
     ];
     const rows=[
