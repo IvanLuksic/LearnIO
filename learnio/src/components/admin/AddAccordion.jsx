@@ -18,32 +18,6 @@ import {Dialog} from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme)=>({
-    root: {
-        backgroundColor: 'transparent',
-        width: '90%',
-        border: 'none',
-        display: 'flex',
-        justifyContent:'center',
-        alignItems: 'flex-end',
-        position: 'relative',
-    },
-    tableHeader: {
-        position: 'relative',
-        width: '100%',
-        height: '6vh',
-        backgroundColor: '#27AE60',
-        borderStyle: 'hidden',
-        borderRadius: '10px',
-        display: 'flex',
-        alignItems:'center',
-        justify: "space-evenly"
-    },
-    accRoot: {
-        position: 'relative',
-        marginTop: '10vh',
-        // marginLeft: '5%',
-        width: '90%',
-    },
     accHeading: {
         fontSize: theme.typography.pxToRem(15),
         flexBasis: '33.33%',
@@ -53,15 +27,6 @@ const useStyles = makeStyles((theme)=>({
         fontSize: theme.typography.pxToRem(15),
         color: theme.palette.text.secondary,
     },
-    Heading: {
-      fontSize: theme.typography.pxToRem(15),
-      flexBasis: '33.33%',
-      flexShrink: 0,
-      fontWeight: 'bold',
-      color: 'white',
-      marginLeft: '3%',
-      position: 'relative',
-  },
   pagin: {
     backgroundColor:'white',
     borderStyle: 'solid',
@@ -72,28 +37,11 @@ const useStyles = makeStyles((theme)=>({
     padding:'5px',
     marginTop:'5%',
   },
-  photoCheck: {
-    position: 'relative',
-    width: '10px',
-    height: '10px',
-    backgroundColor: 'blue',
-    display: 'flex',
-    justifyContent: 'center',
-  },
   iconButtons:{
     minWidth:'0',
     maxWidth:'3em',
     maxHeight:'3em',
     alignItems:"flex-start"
-  },
-  addButton:{
-    position:'relative',
-    marginLeft:"auto",
-    marginRight:"1em", 
-    borderRadius:'25px',
-    maxWidth:"2.5em",
-    minWidth:"2.5em",
-    backgroundColor:"transparent"
   },
   popupStyle:{
     minWidth:'60%',

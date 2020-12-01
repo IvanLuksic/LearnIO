@@ -2,7 +2,7 @@ import Grid from '@material-ui/core/Grid';
 import React, { useEffect, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Icon from '@material-ui/core/Icon';
-import { makeStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 
 const useStyles = makeStyles((theme) => ({

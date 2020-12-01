@@ -35,15 +35,6 @@ const useStyles = makeStyles((theme)=>({
         // marginLeft: '5%',
         width: '90%',
     },
-    accHeading: {
-        fontSize: theme.typography.pxToRem(15),
-        flexBasis: '33.33%',
-        flexShrink: 0,
-    },
-    accSecondaryHeading: {
-        fontSize: theme.typography.pxToRem(15),
-        color: theme.palette.text.secondary,
-    },
     Heading: {
       fontSize: theme.typography.pxToRem(15),
       flexBasis: '33.33%',
@@ -52,30 +43,6 @@ const useStyles = makeStyles((theme)=>({
       color: 'white',
       marginLeft: '3%',
       position: 'relative',
-  },
-  pagin: {
-    backgroundColor:'white',
-    borderStyle: 'solid',
-    boxShadow: "0px 2px 0.5px 1px rgba(0,0,0,0.18)",
-    borderColor: 'transparent',
-    borderWidth: '1px',
-    borderRadius: '10px',
-    padding:'5px',
-    marginTop:'5%',
-  },
-  photoCheck: {
-    position: 'relative',
-    width: '10px',
-    height: '10px',
-    backgroundColor: 'blue',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  iconButtons:{
-    minWidth:'0',
-    maxWidth:'3em',
-    maxHeight:'3em',
-    alignItems:"flex-start"
   },
   addButton:{
     position:'relative',

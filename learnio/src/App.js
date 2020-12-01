@@ -39,11 +39,10 @@ function App() {
                 <Route path="/add-question" component={AddQuestPU}/>
                 <Route exact path="/topics"><StudentTopics/></Route>
                 <Route path="/login"><Login/> </Route>
-                <Route path="/topic/:id" component={MatricaAdmin}/>
+                <Route path="/topic/:id" component={Matrica}/>
+                <Route path="/admin-topic/:id" component={MatricaAdmin}/>
                 <Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>
                 <Route path="/AdminTopic" component={AdminTopics}/>
-                  
-                <Route path="/matrica" component={Matrica}/>
         
 
 

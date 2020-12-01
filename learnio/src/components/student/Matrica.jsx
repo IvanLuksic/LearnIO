@@ -3,13 +3,14 @@ import React,{useState} from 'react';
 import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../../images/learniobg10-15.png';
 import { makeStyles} from '@material-ui/core/styles';
-import data from './questions.json';
 import DisplayMatrix from './DisplayMatrix';
 import QuestionPopup from "./QuestionPopup";
+import Divider from '@material-ui/core/Divider';
+import TestMainMenu from './TestMainMenu.jsx';
+import data from '../admin/questions.json'
 
 const useStyles = makeStyles((theme) => ({
-
-    background:{
+  background:{
       backgroundImage:"url("+backgroundIMG+")",
       backgroundSize: "cover",
       backgroundPosition: "fixed",
@@ -34,26 +35,31 @@ const useStyles = makeStyles((theme) => ({
         },
         paddingBottom:'9px', 
     },
-    paper:{
-        width: 150,
-        height: 150,
-        textAlign: 'center',
-        variant: "outlined",
-        backgroundColor: '#BDBDBD',
-        fontFamily:'Roboto',
-        fontSize: '3vh',
-        paddingTop:  '10px',
-        padding: theme.spacing(1),
-        color:"white",
-        borderRadius: "10px"
-    },
-    icons:{
-        padding:'15px',
-        fontSize:'1.25em',
-    },
     lobster: {
         fontFamily: "Lobster"
-    }
+    },
+  divider:{
+      [theme.breakpoints.down('sm')]: {
+          height: "0vh",
+        },
+        [theme.breakpoints.up('md')]: {
+          marginTop:"12vh",
+          height: "85vh",
+        },
+  },
+  matrix:{
+      marginRight:"2vh",
+      [theme.breakpoints.up('md')]: {
+           marginTop:"10vh",
+           overflowY: "scroll",
+           maxHeight: "90vh"
+        },
+  },
+  questionsTable:{
+      minHeight: "100vh",
+      paddingTop:"17vh"
+  }
+
 }));
 
 const fieldToRows=(field,ao,d)=>{
@@ -100,15 +106,19 @@ function Matrica(props)
     return(
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         {openPopup && <QuestionPopup openPopup={openPopup} setOpenPopup={setOpenPopup} question={questionSelected} changeQuestions={changeQuestions} field={fields}/>}
-        <Grid container direction="column" justify="center" alignItems="center">
+        <Grid container direction="row" justify="center" alignItems="center">
+            <Grid container item md={6} direction="row"  className={classes.matrix} justify="center" alignItems="center" >
                 <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
-                    <Grid  item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>Tema matrice</Typography></Grid>
+                    <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>Topic</Typography></Grid>
                     <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></Grid>
                 </Grid>
-                <Grid item md = {8} xs = {12} sm = {12} spacing={3} container direction="row" justify="center" alignItems="center" >
-                  <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
-                      <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,aoLVL,dLVL)} aoSelected={aoSelected} dSelected={dSelected}/>
-                  </Grid>
+                <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
+                    <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,aoLVL,dLVL)} aoSelected={aoSelected} dSelected={dSelected}/>
+                </Grid>
+            </Grid>
+                <Divider  orientation="vertical" className={classes.divider} flexItem/>
+                <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="flex-end" className={classes.questionsTable}>
+                  <TestMainMenu questions={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
                 </Grid>
         </Grid> 
         </div>
