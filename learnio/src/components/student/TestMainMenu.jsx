@@ -37,8 +37,7 @@ const useStyles = makeStyles((theme)=>({
         color: theme.palette.text.secondary,
     },
     btn: {
-      height: '30px',
-      width: '50px',
+      padding: '5px',
       borderStyle: 'solid',
       borderColor: 'transparent',
       borderRadius: '5px',
@@ -82,17 +81,19 @@ function TestMainMenu(props) {
           <div className={classes.accRoot}>
           <div className={classes.tableHeader}>
             <Typography className={classes.Heading}>Test results</Typography>
-            <Button className={classes.btn}>Hello</Button>
+            <Button className={classes.btn}>Take Test</Button>
           </div>
             {
-            props.questions.slice(0,5).map((question, index) =>(
-              <div key={question.id}>
+            props.tests ? 
+            props.tests.map((test, index) =>(
+              <div key={test.id}>
                 <div className={classes.acc}>
-                  <Typography className={classes.accHeading}>header thing {question.id}</Typography>
-                  <Typography className={classes.accSecondaryHeading}>hello world</Typography>
+                  <Typography className={classes.accHeading}>ID: {test.id}</Typography>
+                  <Typography className={classes.accSecondaryHeading}>Score: {test.score}%    Result: {test.result}    Status: {test.status}</Typography>
                 </div>
               </div>
-            ))}
+            ))
+          : <div style={{width:'100%', display:'flex',justifyContent:'center', color:'gray'}}>You haven't taken any tests</div>}
           </div>
         </div>
     )

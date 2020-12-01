@@ -7,7 +7,7 @@ import DisplayMatrix from './DisplayMatrix';
 import QuestionPopup from "./QuestionPopup";
 import Divider from '@material-ui/core/Divider';
 import TestMainMenu from './TestMainMenu.jsx';
-import data from '../admin/questions.json'
+import data from './studTest.json'
 
 const useStyles = makeStyles((theme) => ({
   background:{
@@ -105,7 +105,7 @@ function Matrica(props)
    const classes = useStyles();
     return(
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
-        {openPopup && <QuestionPopup openPopup={openPopup} setOpenPopup={setOpenPopup} question={questionSelected} changeQuestions={changeQuestions} field={fields}/>}
+        {/* {openPopup && <QuestionPopup openPopup={openPopup} setOpenPopup={setOpenPopup} question={questionSelected} changeQuestions={changeQuestions} field={fields}/>} */}
         <Grid container direction="row" justify="center" alignItems="center">
             <Grid container item md={6} direction="row"  className={classes.matrix} justify="center" alignItems="center" >
                 <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
@@ -118,7 +118,7 @@ function Matrica(props)
             </Grid>
                 <Divider  orientation="vertical" className={classes.divider} flexItem/>
                 <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="flex-end" className={classes.questionsTable}>
-                  <TestMainMenu questions={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].question.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].question : null }/>
+                  <TestMainMenu tests={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].test.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].test : null }/>
                 </Grid>
         </Grid> 
         </div>
