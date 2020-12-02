@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Save.init({
-    button_id: DataTypes.STRING,
+    row_D: DataTypes.SMALLINT,
+    column_A: DataTypes.SMALLINT,
     status: DataTypes.SMALLINT
   }, {
     sequelize,

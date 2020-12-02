@@ -8,8 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      button_id: {
-        type: Sequelize.STRING,
+      row_D: {
+        type: Sequelize.SMALLINT
+      },
+      column_A: {
+        type: Sequelize.SMALLINT
       },
       status: {
         type: Sequelize.SMALLINT

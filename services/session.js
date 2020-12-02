@@ -1,5 +1,3 @@
-const { nodelogger } = require("../loaders/logger");
-
 module.exports= class Session{
     constructor(session_model,logger)
     {

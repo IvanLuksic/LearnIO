@@ -8,7 +8,8 @@ module.exports = {
        topic_id:1,
       student_id:1,
        question_id:1,
-       button_id:'button_11',
+       row_D:1,
+      column_A:1,
        status:1
      },
      {
@@ -16,7 +17,8 @@ module.exports = {
       topic_id:1,
       student_id:1,
       question_id:2,
-      button_id:'button_12',
+      row_D:1,
+      column_A:2,
       status:1
      },
      {
@@ -24,15 +26,8 @@ module.exports = {
       topic_id:1,
      student_id:1,
       question_id:3,
-      button_id:'button_13',
-      status:2
-     },
-     {
-     course_id:1,
-      topic_id:1,
-      student_id:1,
-     question_id:4,
-      button_id:'button_21',
+      row_D:1,
+      column_A:3,
       status:2
      },
      {
@@ -40,7 +35,8 @@ module.exports = {
      topic_id:1,
      student_id:1,
     question_id:5,
-     button_id:'button_22',
+    row_D:2,
+    column_A:2,
      status:3
     },
     {
@@ -48,7 +44,8 @@ module.exports = {
       topic_id:1,
      student_id:1,
      question_id:6,
-      button_id:'button_23',
+     row_D:2,
+     column_A:3,
       status:3
     }
     ])

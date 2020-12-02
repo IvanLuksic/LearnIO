@@ -2,10 +2,12 @@ const  { Main_ruter}=require('../api');//index.js u api gdje se loadaju svi rute
 const bodyParser = require('body-parser');
 const session=require('express-session');
 var PostgreSqlStore = require('connect-pg-simple')(session);
+var cors = require('cors')
 module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcija
     app.use(httplogger);
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(cors());
     /*MORA BITI PRIJE MAIN RUTERA JER SE INACE NECE MOC KORSITIT U NJIMA*/
     app.use(session({/*session objektu lako pristupimo preko request objekta-> req.session i njemu dodajemo propertiese:
       POSTUPCI KOD ZAHTJEVA KORISNIKA:
@@ -24,7 +26,7 @@ module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcij
       pruneSessionInterval:60//svako 60 sekundi brise sesije koje se expireale
     }),
     cookie:{
-      path: '/', httpOnly: true, secure: false, maxAge: null // POSTAVTI NA NEKI RAZUMNI BROJ->defulte vrijednosti-> maxage null znaci da se brise kada izade iz browsera,BROJ MILISKEUNDI KOLIKO TRAJE COOKIE
+      path: '/', httpOnly: true, secure: false, maxAge: 1000*60*60*24 // POSTAVTI NA NEKI RAZUMNI BROJ->defulte vrijednosti-> maxage null znaci da se brise kada izade iz browsera,BROJ MILISKEUNDI KOLIKO TRAJE COOKIE
     }//PROBLEM S maxage=null je sta se nece pruneat nikako u bazi pa bolje postavti na neko odredeno vrijeme->DOGOVORIT SE
   }))
   app.use('/',Main_ruter);
