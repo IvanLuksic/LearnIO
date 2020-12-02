@@ -11,10 +11,9 @@ import 'reactjs-popup/dist/index.css';
 import EditQuestionPU from './EditQuestionPU';
 import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
-import ConfirmDialog from "../common/ConfirmDialog"
+import ConfirmDialog from "../common/ConfirmDialog";
 import {Dialog} from '@material-ui/core';
-
-
+import PopupDialog from '../common/PopupDialog';
 
 
 const useStyles = makeStyles((theme)=>({
@@ -43,10 +42,6 @@ const useStyles = makeStyles((theme)=>({
     maxHeight:'3em',
     alignItems:"flex-start"
   },
-  popupStyle:{
-    minWidth:'60%',
-    minHeight: '40%'
-  }
 }));
 
 function AddAccordion(props) {
@@ -85,9 +80,9 @@ function AddAccordion(props) {
               </Grid>
               <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center"> 
                 <Button onClick={()=>setOpenPopup2(true)} className={classes.iconButtons}><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>
-                  <Dialog open={question.id === props.openEdit && openPopup2} onClose={handleClose} classes={{paper: classes.popupStyle}}>
+                  <PopupDialog openPopup={question.id === props.openEdit && openPopup2} setOpenPopup={handleClose} clickAway={true} style={{minWidth:'60%',minHeight:'40%'}}>
                     <EditQuestionPU popUpClose={setOpenPopup2} style={{borderRadius:'25px'}} questChange={props.questChange} prop={question} changeText={props.changeText}/>
-                  </Dialog>
+                  </PopupDialog>
                 <Button className={classes.iconButtons} onClick={() =>{setOpenPopup(true)}} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>
               </Grid>
             </Grid>

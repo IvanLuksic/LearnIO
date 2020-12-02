@@ -10,6 +10,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
   grupaBotuna:{
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   popupStyle:{
     height:"auto",
     backgroundColor:"white",
-    padding:"3em !important",
+    padding:"0 2em 1em 2em !important",
     borderRadius:"7px" ,
     [theme.breakpoints.up('xl')]: {
       width:"80%",
@@ -35,7 +36,11 @@ const useStyles = makeStyles((theme) => ({
   popupMenu:{
     [theme.breakpoints.down('sm')]: {
       marginBottom: "3em",
-  }},
+    },
+    [theme.breakpoints.up('sm')]: {
+      padding:"2em 0 3em 0",
+  }
+  },
   
   divider:{
     [theme.breakpoints.down('sm')]: {
@@ -44,7 +49,11 @@ const useStyles = makeStyles((theme) => ({
   editText:{
     [theme.breakpoints.down('sm')]: {
       marginLeft:"0em",
-  }},
+    },
+    [theme.breakpoints.up('sm')]: {
+      padding:"2em 0 3em 0",
+    }
+  },
   buttonContainer:{
     display:"inline-block",
     position:"relative",
@@ -135,9 +144,10 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.up('md')]: {
         paddingLeft:"1em",
       },
-    },
-
-}));
+    },    
+    toggleButton:{marginRight:"0 !important"},
+    toggleButtonLabel:{fontSize:"0.9em !important"},
+  }));
 
 
 const ChipsArray=(props)=> {
@@ -207,8 +217,6 @@ function EditQuestionPU(props) {
 //------------------------
 
   return(
-    // left popup div -------------------
-    //<div >
       <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="flex-start" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
             <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
               <Grid item className={classes.grupaBotuna}>
@@ -257,13 +265,17 @@ function EditQuestionPU(props) {
               }
               {
               show2 ? // second case - answer
-                <Grid container item className={classes.editText} xs={12} md={8} direction="column" justify="space-around" alignItems="center" spacing={2}> 
+                <Grid container item className={classes.editText} xs={12} md={8} direction="column" justify="center" alignItems="center" spacing={5}> 
                   <Grid container item xs={12}  justify="center" alignItems="center" direction="row">
-                    <Grid className={classes.textAnswers} container item xs={12} md={8} justify="center" alignItems="center" direction="row">
+                      <Grid container item xs={12} md={8}  justify="center" alignItems="center">
+                        <TextField style={{width:"100%"}} id="outlined-multiline-static" label="Correct Answer" multiline rows={multipleAnswer?1:5} variant="outlined" value={correctAnswer} onChange={handleCorrect}/>
+                      </Grid>
+                    {/* <Grid className={classes.textAnswers} container item xs={12} md={8} justify="center" alignItems="center" direction="row">
                       <TextField style={{width:"100%"}} id="outlined-multiline-static" label="Correct Answer" multiline rows={multipleAnswer?1:6} variant="outlined" value={correctAnswer} onChange={handleCorrect}/>
-                    </Grid>
+                    </Grid> */}
                     <Grid  className={classes.toggleMultiple} container item xs={12} md={4} justify="center" alignItems="center" direction="row">
-                      <FormControlLabel control={ <Checkbox checked={multipleAnswer} onChange={toggleMultiple} name="checkedB" color="primary" />} label="Multiple choice" />
+                      <FormControlLabel className={classes.toggleButton} control={ <Checkbox checked={multipleAnswer} onChange={toggleMultiple} name="checkedB" color="primary" />} />
+                      <p className={classes.toggleButtonLabel} > Mutiple choices</p>
                     </Grid>
                   </Grid>
                   { multipleAnswer &&

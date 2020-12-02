@@ -9,7 +9,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import AddTopicPU from './AddTopicPU';
 import Icon from '@material-ui/core/Icon';
 import topici from './topics.json';
-import {Dialog} from '@material-ui/core';
+import PopupDialog from '../common/PopupDialog';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -135,9 +135,9 @@ function AdminTopics(props){
                 <DataGrid onRowHover={(Row)=>{linkage=Row.data.id}} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
             </div>
             <Button variant="contained" color="primary" className={classes.addButton} onClick={()=>handleOpen()}>Add topic</Button>
-            <Dialog open={open} onClose={handleClose} classes={{paper: classes.popupStyle}}>
+            <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false} style={{minWidth:'60%',minHeight:'40%'}}>
               <AddTopicPU closePopup={handleClose} addTopic={addQuestion}/>
-            </Dialog>
+            </PopupDialog>
         </div>
          
     )

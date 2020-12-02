@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { Route } from "react-router-dom";
-import Login from "./pages/login.jsx";
+import Login from "./pages/login";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import "./App.css";
 import Home from "./components/common/Home"
@@ -31,20 +31,17 @@ function App() {
         <div className="App" style={{height: '100vh'}} >
           <ThemeProvider theme={theme}>
           <Navbar/>
-          <div className="App-intro">
-                <Route exact path="/" component={Home}/>
-                <Route path="/about" component={About}/>
-                <Route path="/contact" component={Contact}/>
-                <Route exact path="/topics"><StudentTopics/></Route>
-                <Route path="/login"><Login/> </Route>
-                <Route path="/topic/:id" component={Matrica}/>
-                <Route path="/admin-topic/:id" component={MatricaAdmin}/>
-                <Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>
-                <Route path="/AdminTopic" component={AdminTopics}/>
-
-          </div>
-         
-
+              <div className="App-intro">
+                    <Route exact path="/" component={Home}/>
+                    <Route path="/about" component={About}/>
+                    <Route path="/contact" component={Contact}/>
+                    <Route exact path="/topics"component={StudentTopics}/>
+                    <Route path="/login" component={Login}/>
+                    <Route path="/topic/:id" component={Matrica}/>
+                    <Route path="/admin-topic/:id" component={MatricaAdmin}/>
+                    <Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>
+                    <Route path="/AdminTopic" component={AdminTopics}/>
+              </div>
           </ThemeProvider>
         </div>
 

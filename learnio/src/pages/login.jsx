@@ -17,20 +17,18 @@ const vertAlign = {
     justifyContent: "center"
 }
 
-class Login extends Component {
-    render() {
-        return (
-            <div style={{...background, ...vertAlign}}>
-                <Grid container direction="row" justify="center" alignItems="center">
-                    <Grid item xs={11} sm={6} md={4} lg={3}>
-                        <Paper elevation={3} style = {{ ...vertAlign}}>
-                         <LoginForm/>
-                        </Paper>
-                    </Grid>
+function Login(props) {
+    return (
+        <div style={{...background, ...vertAlign}}>
+            <Grid container direction="row" justify="center" alignItems="center">
+                <Grid item xs={11} sm={6} md={4} lg={3}>
+                    <Paper elevation={3} style = {{ ...vertAlign}}>
+                        <LoginForm pageProps={props}/>
+                    </Paper>
                 </Grid>
-            </div>
-        );
-    }
+            </Grid>
+        </div>
+    );
 }
 
 export default Login;

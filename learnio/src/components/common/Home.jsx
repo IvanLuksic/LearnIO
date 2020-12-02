@@ -102,7 +102,6 @@ const useStyles = makeStyles((theme) => ({
 
 function Home(){
     const classes = useStyles();
-    
     return(
     <div className={classes.background}>
       <Box display="flex" className={classes.mobFlex1} >
