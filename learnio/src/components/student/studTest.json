@@ -13,9 +13,9 @@
                 {"id":6},
                 {"id":7}
             ],
-            "score": 100,
+            "score": 40,
             "status": "valid",
-            "result": "passed"
+            "result": "failed"
         },{
             "id":2,
             "name":"",
@@ -26,9 +26,9 @@
                 {"id":4},
                 {"id":5}
             ],
-            "score": 60,
+            "score": 40,
             "status": "overwritten",
-            "result": "passed"
+            "result": "failed"
         },{
             "id":3,
             "name":"",

@@ -39,12 +39,12 @@ const useStyles = makeStyles((theme) => ({
 
 function DisplayField(props){
     const classes=useStyles();
-    const [status,setStatus] = useState(()=>{
-        return ((props.questions.length>0)?"INSERTED":"EMPTY");
+    const [status,setStatus] = useState(()=>{ return "EMPTY";
+        // return ((props.questions.length>0)?"INSERTED":"EMPTY");
     });
-    const [color,setColor]= useState(()=>{
-        if(status==="SELECTED") return "#27AE60";
-        else return ((props.questions.length>0)?"#4373ec":"grey");
+    const [color,setColor]= useState(()=>{ return "grey";
+        // if(status==="SELECTED") return "#27AE60";
+        // else return ((props.questions.length>0)?"#4373ec":"grey");
     });
     const icon = ((props.questions.length>0)?"check_circle_out_icon":"cancel_icon");
     useEffect(()=>{

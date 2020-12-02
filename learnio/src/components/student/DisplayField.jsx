@@ -40,39 +40,40 @@ const useStyles = makeStyles((theme) => ({
 function DisplayField(props){
     const classes=useStyles();
     const [status,setStatus] = useState(()=>{
-        console.log(props.question);
-        if(props.question.status==="solve") return ("SOLVE");
-        else if(props.question.status==="wrong") return ("WRONG");
-        else if(props.question.status==="done") return ("DONE");
-        else return ("LOCKED");
+        // if(props.test.result==="solve") return ("SOLVE");
+        // else if(props.test.result==="failed") return ("WRONG");
+        // else if(props.test.result==="passed") return ("DONE");
+        return ("LOCKED");
         
     });
     const [color,setColor]= useState(()=>{
-        if(props.question.status==="solve") return ("#27AE60");
-        else if(props.question.status==="wrong") return ("#EB4949");
-        else if(props.question.status==="done") return ("#4372ec");
-        else return ("grey");
+        // if(props.test.result==="solve") return ("#27AE60");
+        // else if(props.test.result==="failed") return ("#EB4949");
+        // else if(props.test.result==="passed") return ("#4372ec");
+        return ("grey");
     });
     const [icon,setIcon]= useState(()=>{      
-        if(props.question.status==="solve") return ("lock_open_icon");
-        else if(props.question.status==="wrong") return ("cancel_icon");
-        else if(props.question.status==="done") return ("check_circle_out_icon");
-        else return ("lock_icon");
+        // if(props.test.result==="solve") return ("lock_open_icon");
+        // else if(props.test.result==="failed") return ("cancel_icon");
+        // else if(props.test.result==="passed") return ("check_circle_out_icon");
+        return ("lock_icon");
     });
     useEffect(()=>{
 
-            if(props.question.status==="solve") setStatus("SOLVE");
-            else if(props.question.status==="wrong") setStatus("WRONG");
-            else if(props.question.status==="done") setStatus("DONE");
+        if(props.test.length > 0) {
+            if(props.test[0].result==="solve" && props.test[0].status==="valid") setStatus("SOLVE");
+            else if(props.test[0].result==="failed" && props.test[0].status==="valid") setStatus("WRONG");
+            else if(props.test[0].result==="passed" && props.test[0].status==="valid") setStatus("DONE");
             else setStatus("LOCKED");
-            if(props.question.status==="solve") setColor("#27AE60");
-            else if(props.question.status==="wrong") setColor("#EB4949");
-            else if(props.question.status==="done") setColor("#4372ec");
+            if(props.test[0].result==="solve" && props.test[0].status==="valid") setColor("#27AE60");
+            else if(props.test[0].result==="failed" && props.test[0].status==="valid") setColor("#EB4949");
+            else if(props.test[0].result==="passed" && props.test[0].status==="valid") setColor("#4372ec");
             else setColor("grey");
-            if(props.question.status==="solve") setIcon("lock_open_icon");
-            else if(props.question.status==="wrong") setIcon("cancel_icon");
-            else if(props.question.status==="done") setIcon("check_circle_out_icon");
+            if(props.test[0].result==="solve" && props.test[0].status==="valid") setIcon("lock_open_icon");
+            else if(props.test[0].result==="failed" && props.test[0].status==="valid") setIcon("cancel_icon");
+            else if(props.test[0].result==="passed" && props.test[0].status==="valid") setIcon("check_circle_out_icon");
             else setIcon("lock_icon");
+        }
     });
  
     return (
