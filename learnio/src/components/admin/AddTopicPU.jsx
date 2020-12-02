@@ -184,8 +184,8 @@ function AddTopicPU(props){
                         show1 ? 
                             <Grid container item direction="row" justify="space-between" alignItems="flex-start" style={{width:"70%"}}>
                                 <Grid style={{width:"30%"}}>
-                                    <TextField style={{marginTop: "1em", marginBottom: "1em"}} id="outlined-basic" variant="outlined" label="Topic name" value={valueText} onChange={handleChangeText}/>
-                                    <TextField style={{marginTop: "1em", marginBottom: "1em"}} id="outlined-basic" variant="outlined" label="description" value={desc} onChange={handleChangeDesc}/>
+                                    <TextField noValidate autoComplete="off" style={{marginTop: "1em", marginBottom: "1em"}} id="outlined-basic" variant="outlined" label="Topic name" value={valueText} onChange={handleChangeText}/>
+                                    <TextField noValidate autoComplete="off" style={{marginTop: "1em", marginBottom: "1em"}} id="outlined-basic" variant="outlined" label="description" value={desc} onChange={handleChangeDesc}/>
                                 </Grid>
 
                                 <Grid style={{width:"45%"}}>
