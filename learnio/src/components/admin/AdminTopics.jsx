@@ -94,6 +94,7 @@ function AdminTopics(props){
     
     // brisanje topica iz liste
     const handleDelete=(id)=>{
+
       console.log(id);
       console.log("pozvan delete");
       setRows(
@@ -124,7 +125,7 @@ function AdminTopics(props){
         {field: "ao", headerName: 'AO'},
         {field: "d", headerName:'D'},
         {field: 'open', headerName: `${' '}`, renderCell: (params) => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>),},
-        {field: 'delete', headerName: `${' '}` ,renderCell: (params) => (<Button onClick={() =>handleDelete(params.data.id)}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>), },
+        {field: 'delete', headerName: `${' '}` ,renderCell: (params) => (<Button onClick={() =>{handleDelete(params.data.id)}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>), },
     ];
 
 
@@ -139,7 +140,6 @@ function AdminTopics(props){
               <AddTopicPU closePopup={handleClose} addTopic={addQuestion}/>
             </PopupDialog>
         </div>
-         
     )
 };
 export default AdminTopics;

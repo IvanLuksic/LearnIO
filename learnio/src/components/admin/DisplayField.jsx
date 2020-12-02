@@ -39,12 +39,12 @@ const useStyles = makeStyles((theme) => ({
 
 function DisplayField(props){
     const classes=useStyles();
-    const [status,setStatus] = useState(()=>{
-        return ((props.questions.length>0)?"INSERTED":"EMPTY");
+    const [status,setStatus] = useState(()=>{ return "EMPTY";
+        // return ((props.questions.length>0)?"INSERTED":"EMPTY");
     });
-    const [color,setColor]= useState(()=>{
-        if(status==="SELECTED") return "#27AE60";
-        else return ((props.questions.length>0)?"#4373ec":"grey");
+    const [color,setColor]= useState(()=>{ return "grey";
+        // if(status==="SELECTED") return "#27AE60";
+        // else return ((props.questions.length>0)?"#4373ec":"grey");
     });
     const icon = ((props.questions.length>0)?"check_circle_out_icon":"cancel_icon");
     useEffect(()=>{
@@ -60,15 +60,15 @@ function DisplayField(props){
         }
     });
     return (
-
+        
             <Grid item> 
                 <Paper onClick={(event)=>{props.changeSelected(event,props.ao,props.d);}} className={classes.paper} style={{backgroundColor: color}}>
                     <Grid container direction="column" justify="center" alignItems="center" style={{height: "100%"}}>
                         <Grid item><h1>AO={props.ao} D={props.d}</h1></Grid>
                         <Grid item><Icon className={classes.icons}>{icon}</Icon></Grid>
                         <Grid item><p>{status}</p></Grid>
-                    </Grid>
-                </Paper> 
+                    </Grid> 
+                </Paper>     
             </Grid>
         )
 }
