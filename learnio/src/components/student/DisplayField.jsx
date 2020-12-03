@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
         },
 }));
 
-
 //renders the field of the matrix element, takes changeSelected function, question = array of questions, AO and D of selected field as props
 
 function DisplayField(props){
@@ -61,15 +60,15 @@ function DisplayField(props){
     useEffect(()=>{
 
         if(props.test.length > 0) {
-            if(props.test[0].result==="solve" && props.test[0].status==="valid") setStatus("SOLVE");
+            if(props.aoSelected===props.ao && props.dSelected===props.d) setStatus("SELECTED");
             else if(props.test[0].result==="failed" && props.test[0].status==="valid") setStatus("WRONG");
             else if(props.test[0].result==="passed" && props.test[0].status==="valid") setStatus("DONE");
             else setStatus("LOCKED");
-            if(props.test[0].result==="solve" && props.test[0].status==="valid") setColor("#27AE60");
+            if(props.aoSelected===props.ao && props.dSelected===props.d) setColor("#27AE60");
             else if(props.test[0].result==="failed" && props.test[0].status==="valid") setColor("#EB4949");
             else if(props.test[0].result==="passed" && props.test[0].status==="valid") setColor("#4372ec");
             else setColor("grey");
-            if(props.test[0].result==="solve" && props.test[0].status==="valid") setIcon("lock_open_icon");
+            if(props.aoSelected===props.ao && props.dSelected===props.d) setIcon("lock_open_icon");
             else if(props.test[0].result==="failed" && props.test[0].status==="valid") setIcon("cancel_icon");
             else if(props.test[0].result==="passed" && props.test[0].status==="valid") setIcon("check_circle_out_icon");
             else setIcon("lock_icon");
