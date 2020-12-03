@@ -48,7 +48,7 @@ const useStyles=makeStyles(theme =>({
         },
       },
 }))
-function WrongPU(){
+function WrongPU(props){
 
     const classes=useStyles();
     var linkage='contacts' ;
@@ -56,7 +56,7 @@ function WrongPU(){
         { field: 'topic', width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
         { field: 'result', headerName:'Result',
         valueGetter: (params) => `${params.getValue('result')}%`,},
-        { field: 'open', headerName: `${' '}`, renderCell: (params) => (<Link to={'/topic/'+ linkage}><ColorButton size="small"> Open </ColorButton></Link>),},
+        { field: 'open', headerName: `${' '}`, renderCell: (params) => (<Link to={'/topic/'+ linkage} onClick={props.closePopup}><ColorButton size="small"> Open </ColorButton></Link>),},
     ]
     const rows=[
         {id: 1, topic:'Trigonometry 1',result:'10' },

@@ -44,7 +44,7 @@ function App() {
                     <Route path="/topic/:id" component={Matrica}/>
                     <Route path="/admin-topic/:id" component={MatricaAdmin}/>
                     <Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>
-                    {(loginStatus==='admin')?<Route path="/AdminTopic" component={AdminTopics}/>:<Route exact path="/AdminTopic" component={Home}/>}
+                    {(loginStatus==='admin')?<Route path="/AdminTopic" component={AdminTopics}/>:<Route exact path="/AdminTopic" component={AdminTopics}/>}
               </div>
           </ThemeProvider>
         </div>
