@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
         },
 }));
 
-
 //renders the field of the matrix element, takes changeSelected function, question = array of questions, AO and D of selected field as props
 
 function DisplayField(props){
@@ -60,20 +59,20 @@ function DisplayField(props){
     });
     useEffect(()=>{
 
-        if(props.test.length > 0) {
-            if(props.test[0].result==="solve" && props.test[0].status==="valid") setStatus("SOLVE");
-            else if(props.test[0].result==="failed" && props.test[0].status==="valid") setStatus("WRONG");
-            else if(props.test[0].result==="passed" && props.test[0].status==="valid") setStatus("DONE");
+        // if(props.question.length > 0) {
+            if(props.question.status==="solve") setStatus("UNLOCKED");
+            else if(props.question.status==="wrong") setStatus("WRONG");
+            else if(props.question.status==="done") setStatus("DONE");
             else setStatus("LOCKED");
-            if(props.test[0].result==="solve" && props.test[0].status==="valid") setColor("#27AE60");
-            else if(props.test[0].result==="failed" && props.test[0].status==="valid") setColor("#EB4949");
-            else if(props.test[0].result==="passed" && props.test[0].status==="valid") setColor("#4372ec");
+            if(props.question.status==="solve") setColor("#4372ec");
+            else if(props.question.status==="wrong") setColor("#EB4949");
+            else if(props.question.status==="done") setColor("#27AE60");
             else setColor("grey");
-            if(props.test[0].result==="solve" && props.test[0].status==="valid") setIcon("lock_open_icon");
-            else if(props.test[0].result==="failed" && props.test[0].status==="valid") setIcon("cancel_icon");
-            else if(props.test[0].result==="passed" && props.test[0].status==="valid") setIcon("check_circle_out_icon");
+            if(props.question.status==="solve") setIcon("lock_open_icon");
+            else if(props.question.status==="wrong") setIcon("cancel_icon");
+            else if(props.question.status==="done") setIcon("check_circle_out_icon");
             else setIcon("lock_icon");
-        }
+        // }
     });
  
     return (

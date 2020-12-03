@@ -15,6 +15,18 @@
 
     },
     {
+        "id":2,
+        "photo":"none",        
+        "url":"",
+        "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "ABC":true,
+        "answerABC":["amet","tempor","eiusmod"],
+        "answerCorrect":"eiusmod",
+        "ao":2,
+        "d":1,
+        "status":"solve"
+    },
+    {
 
         "id":3,
         "photo":"none",        
@@ -25,7 +37,7 @@
         "answerCorrect":"eiusmod",
         "ao":3,
         "d":1,
-        "status":"done"
+        "status":"locked"
     },
     {
         "id":4,
@@ -37,7 +49,7 @@
         "answerCorrect":"eiusmod",
         "ao":1,
         "d":2,
-        "status":"done"
+        "status":"solve"
     },
     {
         "id":5,
@@ -49,7 +61,7 @@
         "answerCorrect":"eiusmod",
         "ao":2,
         "d":2,
-        "status":"done"
+        "status":"locked"
     },
     {
         "id":6,
@@ -61,19 +73,7 @@
         "answerCorrect":"eiusmod",
         "ao":3,
         "d":2,
-        "status":"wrong"
-    },    
-    {
-        "id":2,
-        "photo":"none",        
-        "url":"",
-        "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        "ABC":true,
-        "answerABC":["amet","tempor","eiusmod"],
-        "answerCorrect":"eiusmod",
-        "ao":2,
-        "d":1,
-        "status":"done"
+        "status":"locked"
     },
     {
         "id":7,
@@ -85,7 +85,7 @@
         "answerCorrect":"eiusmod",
         "ao":1,
         "d":3,
-        "status":"solve"
+        "status":"locked"
     },
     {
         "id":8,
@@ -97,7 +97,7 @@
         "answerCorrect":"eiusmod",
         "ao":2,
         "d":3,
-        "status":"solve"
+        "status":"locked"
     },
     {
         "id":9,
