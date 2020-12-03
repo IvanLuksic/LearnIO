@@ -2,6 +2,7 @@ const {Login_instance, Session_instance}=require('../../services');//object dest
 const {nodelogger}=require('../../loaders/logger');//-> cacheano je
 module.exports={
     logiraj:async (req,res)=>{
+        nodelogger.info(req.body);
         const {username,password}=req.body;//object destrucutiring,uz preptostavku da saljemo JSON body pa ne parsiramo
         try {
             const user=await Login_instance.getUser(username);
@@ -18,7 +19,7 @@ module.exports={
                 if(user.user_type == process.env.ADMIN)//admin->STAVI == JER JE ADMIN env varijabla string
                 {
                 nodelogger.info("Logging succesful tu smoo");
-                //res.redirect('/admin');
+                res.sendStatus(200);
                 }
                 else if(user.user_type==process.env.TEACHER)//ucitelj
                 {
@@ -27,7 +28,7 @@ module.exports={
                 }
                 else {//student
                 nodelogger.info("Logging succesful");
-                res.redirect('/student');
+                res.send('Login succesful');
                 }
 
              } else if(!user) {
@@ -36,7 +37,7 @@ module.exports={
             }
             else {
                 nodelogger.error('Login failed');
-                return res.status(401).send('Authnetication failed. Incorrect pasword. Check your password');
+                return res.sendStatus(401).send('Authnetication failed. Incorrect pasword. Check your password');
             }
         } catch (err) {
             nodelogger.error(err);

@@ -1,5 +1,6 @@
-const { nodelogger } = require("../loaders/logger");
-const { Op } = require("../models");//izvuc ga iz sequelizea koji vraca index.js file u modelsima
+const { Op } = require("sequelize");//izvuc ga iz sequelizea koji vraca index.js file u modelsima
+const {sequelize}=require('../models');
+const queryInterface = sequelize.getQueryInterface();
 module.exports=class Question{
     constructor(question,logger,topic,save,course,user)//svi dependency modeli od ove klase
     {
@@ -10,6 +11,7 @@ module.exports=class Question{
         this.Course=course;
         this.User=user;
     }
+    //JSON.stringify RADI STRING, JSON.parse VRAĆA OBJEKT U JSON TIPU
      async getQuestionsFromSave(topics_id,courses_id,users_id)//za odredeni topic,usera i kurs izvuc pitanja iz tog topica i slozit ih po retcima i stupcima i vratit na frontend
      {
         //1. vidit koliki je broj stupaca i redaka od tog TOPICA da znamo u for petlji izvlacit redom po retcima i stupcima ta pitanja i stavljat u json
@@ -29,7 +31,7 @@ module.exports=class Question{
         try {
             var questions= await this.Save.findAll({//vraca NIZ modela
                 attributes:['row_D','column_A','status'],
-                include:{model:this.Question,attributes:['text','solution','question_type','image_path','answer_a','answer_b','answer_c','answer_d']},
+                include:{model:this.Question,attributes:['id','text','question_type','image_path','answer_a','answer_b','answer_c','answer_d']},
                 where:{
                     topic_id : topics_id
                 },
@@ -57,9 +59,10 @@ module.exports=class Question{
                 }
             }
         }
-        return matrica;//nju vracamo
+        return matrica;//nju vracamo-> U NJOJ BI TREBAO BITI ISPRAVAN REDOSLIJED PITANJA PO RETCIMA I STUPCIMA
     } catch (error) {
             this.Logger.error('error in reading questions '+ error);
+            throw(error);//za index.js catch
         }
 
     }
@@ -68,7 +71,7 @@ module.exports=class Question{
         //1.Saznat retke i stupce od topica
         try {
             try {
-                const rows_columns=await this.Topic.findOne({
+                var rows_columns=await this.Topic.findOne({
                     attributes:['rows_D','column_numbers'],
                     where:{
                         id:topics_id
@@ -130,7 +133,7 @@ module.exports=class Question{
             }
             //3. Kad smo dobili sva pitanja onda ih spremimo u SAVE tablicu
             try {
-                    const saved=await this.Save.bulkInsert(save_questions);
+                    const saved=await queryInterface.bulkInsert('Save',save_questions);//REDOSLIJED UPISIVANJA NIJE GARANTIRAN?
                     this.Logger.info('Saved to database');
             } catch (error) {
                 this.Logger.error('Error in saving questions to database');
@@ -139,12 +142,182 @@ module.exports=class Question{
 
         } catch (error) {
             this.Logger.error('Error in generating questions '+error);
+            throw(error);//za index.js
         }
        
     }
+    //1)ako je funkcija check answer uspješna odma se poziva i funkcija otkljucaj->AKO JE KRIV ODGOVOR ZASAD 2 OPCIJE:1)VRATI MU NEKI KOD+ PONOVI MU SVA PITANJA pomoću getQuestionsFromsave,2) SAMO VRATI STATUSNI KOD POMOCU KOJEG ON SKUZI DA NE MORA NISTA RENDERIRAT
+    //2)NAKON funkcije otkljucaj se mijenjaju statusi onih koji se otkljucaju-> to radimo u LAGORITMU OTKLJUCAVANJA-> promjene se rade direktno u bazi nad njima po question_id
+    //3)Nakon toga šaljemo u RESPONSE sve answere pomoću funkcije getQuestionsFromSave koje će se ponovno renderirat na klijentu
+    async checkAnswer(question_id,answer)
+    /*answer moze biti:a) Slovo-> a,b,c,d
+                        b)Rjesenje-> string*/
+    {
+        //1.Izvuci to pitanje iz baze
+        try {
+            try {
+                var question=await this.Question.findOne({
+                    attributes:['solution'],
+                    where:{
+                        id:question_id
+                    }
+                });
+                this.Logger.info('Question fetched succesfully from database');
+            } catch (error) {
+                this.Logger.error('Error in fetching question from database');
+                throw(error);
+            }
+            if(question.solution==answer)//u oba slucaja je string samo je u jednome brojcani string 
+            {
+                return -1;
+            }
+            else return 0;
+        } catch (error) {
+            this.Logger.error('Error in checkAnswer '+error);
+            throw(error);
+        }
+
+    }
+    async UnlockQuestions(students_id,topics_id,courses_id,questions_id)//promjena statusa questiona u tablici save
+    {
+        //1. saznaj poziciju u retku i stupcu od tog questiona
+        try {
+            try {
+                var question=await  this.Question.findOne({
+                    attributes:['row_D','column_A'],
+                    where:{
+                        id:questions_id
+                    }
+                });
+                this.Logger.info('Question fetched succesfully from database');
+                var topic=await this.Topic.findOne({
+                    attributes:['rows_D','column_numbers'],
+                    where:{
+                        id:topics_id
+                    }
+                 } );
+                this.Logger.info('Topic fetched succesfully from database');
+            } catch (error) {
+                this.Logger.error('error in fetching question from database '+error);
+                throw(error);
+            }
+            //koordinate tocnog pitanja u matrici
+            const y=question.row_D;
+            const x=question.column_A;
+            this.Logger.info('Koordinate tocno dogvorenog pitanja. Redak: '+y+'Stupac: '+x);
+            //broj redaka i stupaca matrice
+            const rows=topic.rows_D;
+            const columns=topic.column_numbers;
+            this.Logger.info('Broj redaka i stupaca matrice: '+rows+columns);
+            //za pocetak otkljucaj susjedne-> otkljucaj livo desno i dole i gore ako postoje
+            //vidit koji sve postoje pa onda citat iz baze a ne da citamo za svako pitanje-> bolje performanse i manje pristupa bazi
+            //spremamo koordinate u niz objekata od kojih svaki objkt sadrzi x i y koordinate pitanja kojeg trebamo otkljucat
+            //NE ZABORAVIT POSTAVIT TOCNO PITANJE U ZELENO
+            var check_status=[];//niz pitanja kojima moramo pregledat status i prominit ga ako vec nisu OTKLJUCANI-> STATUS=2
+            var temp={};//y=REDAK,x=STUPAC
+            if(y-1>=1)//postoji gornji
+            {
+                temp={
+                    cor_x:x,
+                    cor_y:y-1
+                };
+               check_status.push(temp);
+               temp={};
+                this.Logger.info('Postoji gornji');
+            }
+            if(y+1<=rows)//postoji donji
+            {
+                temp={
+                    cor_x:x,
+                    cor_y:y+1
+                };
+               check_status.push(temp);
+               temp={};
+                this.Logger.info('Postoji donji');
+            }
+            if(x-1>=1)//postoji lijevi
+            {
+                temp={
+                    cor_x:x-1,
+                    cor_y:y
+                };
+               check_status.push(temp);
+               temp={};
+                this.Logger.info('Postoji lijevi');
+            }
+            if(x+1<=columns)
+            {
+                temp={
+                    cor_x:x+1,
+                    cor_y:y
+                };
+               check_status.push(temp);
+               temp={};
+                this.Logger.info('Postoji desni');
+            }
+            for(let i=0;i<check_status;i++)
+            {
+                this.Logger.info('Redak: '+check_status.cor_y+'Stupac: '+check_status.cor_x);
+            }
+            //Promijeni status pitanja iz niza check status
+            try {
+                for(let k=0;k<check_status.length;k++)
+                {
+                var questions_status=await this.Save.update({status:2},{//postavi status na 2
+                    where:{
+                        row_D:check_status[k].cor_y,//probat nać kako usporedit s jednin pristupon bazi
+                        column_A:check_status[k].cor_x,
+                        course_id:courses_id,
+                        topic_id:topics_id,
+                        student_id:students_id,
+                        status:{
+                            [Op.eq]:3//ako su zakljucana promini in status
+                        }
+                    }
+                });
+                }
+                var correct_question=await this.Save.update({status:1},{
+                    where:{
+                        row_D:y,//koordinate tocno odgovorenog pitanja u bazi
+                        column_A:x,
+                        course_id:courses_id,
+                        topic_id:topics_id,
+                        student_id:students_id,
+                        question_id:questions_id
+                    }
+                });
+                this.Logger.info('Question status changed succesfully');
+            } catch (error) {
+                this.Logger.error('Error in updating status of questions '+error);
+                throw(error);
+            }
+        } catch (error) {
+            this.Logger.error('Error in unlocking questions '+error);
+            throw(error);
+        }
+    }
+    async WrongAnswer(students_id,topics_id,courses_id,questions_id)//ALGORITAM KADA NETOCNO ODGOVORI->ova 4(dovoljna prva 3 ali kad imamo 4. iskoristimo ga) argumenta jedinstveno odreduju redak u tablici SAVE-> samo mu promijenimo status
+    {
+        //+ DODAT U RESPONSE flag koji ce njima oznacit jeli tocno ili netocno
+        try {
+            try {
+               const wrong_question=await this.Save.update({status:3},{//zakljucaj prethodno otkljucano pitanje
+                where:{
+                        course_id:courses_id,
+                        topic_id:topics_id,
+                        student_id:students_id,
+                        question_id:questions_id
+                }
+               });
+               this.Logger.info('Succesful locked question');
+            } catch (error) {
+                this.Logger.error('Error in accesing wrong answer in database ');
+                throw(error);
+            }
+        } catch (error) {
+            this.Logger.error('Error in changing wrong answer status '+error);
+            throw(error);
+        }
+    }
 
 }
-/* 1) funkcija za provjeru rjesenja/odgovora
-2)funkcija za otkljucavanje iduceg pitanja nakon tocnog odgovora
-3 funkcija za slanje pitanja useru-> iz tablice SAVE->NAPRAVLJENO
-4) funkcija za generianje pitanja kada prvi put ude u topic-> sprema u save tablicu -> slicno ko ovo-> to napravi sljedece!!!!*/

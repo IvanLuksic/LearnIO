@@ -1,7 +1,9 @@
 const questionclass= require('./services/question');
-const {Question,sequelize,Topic,Save,Course,User}=require('./models');
+const topicclass= require('./services/topic');
+const {Question,sequelize,Topic,Save,Course,User,Subject,Result,Asessment_objective}=require('./models');
 const {nodelogger}=require('./loaders/logger');
-instance=new questionclass(Question,nodelogger,Topic,Save,Course,User);
+//instance=new questionclass(Question,nodelogger,Topic,Save,Course,User);
+instance=new topicclass(nodelogger,Topic, Asessment_objective,Course,Subject,Result);
 async function DatabaseConnection ()
 {
     console.log('Connecting to database....');
@@ -19,9 +21,10 @@ async function init()
     await DatabaseConnection();//ne trebamo ga handleat sa try catch jer ce u slucaju greske ona sama terminirat proces
     //async funkcija vraca promise pa je awaitamo
     try {
-        const x= await instance.getQuestionsFromSave(1,1,1);
-        for (const iterator of x)//slanje nazad u resposne body-> res.body.payload=x +res.body.retci=retci +res.body.stupci=stupci da znaju renderirat
-        nodelogger.info(JSON.stringify(iterator));
+        //const x= await instance.GenerateQuestions(1,1,1);
+        //const x=await instance.UnlockQuestions(1,1,1,17);//await zato jer vraca promise
+        const x=await instance.GetTopicsForUserAndCourse(3,1,1);
+        nodelogger.info('Uspjesno');
     } catch (error) {
         console.log('Greska pri citanju rezultata'+error);
     }
