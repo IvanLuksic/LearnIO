@@ -72,9 +72,17 @@ function DisplayAnswers(props){
 
 function QuestionPopup(props){
     const [value, setValue] = React.useState('A');
-    const [openWrongPU,setWrongPU]=useState(true);
+    const [openWrongPU,setWrongPU]=useState(false);
     const showABC = props.question.ABC;
     const classes=useStyles();
+
+    const handleCloseWrongPU=()=>{
+        setWrongPU(false);
+        props.setOpenPopup(false);
+    }
+    const handleOpenWrongPU=()=>{
+        setWrongPU(true);
+    }
 
     const handleChange = (event) => {
     setValue(event.target.value);
@@ -90,11 +98,15 @@ function QuestionPopup(props){
                 item1.status="done";
                 if(item2.status==="locked") item2.status="solve";
                 if(item3.status==="locked") item3.status="solve";
+                props.setOpenPopup(false);
             }
-            else item1.status="wrong";
+            else{
+                item1.status="wrong";
+                handleOpenWrongPU();
+            } 
             newFields1=[...newFields1,item1,item2,item3];
             props.changeQuestions(newFields1);
-            props.setOpenPopup(false);
+           // props.setOpenPopup(false);
     }
 
     return(
@@ -137,6 +149,12 @@ function QuestionPopup(props){
                     </div>
                 {/* </ClickAwayListener> */}
             {/* </Dialog> */}
+
+            <div>
+            <PopupDialog openPopup={openWrongPU} setOpenPopup={handleCloseWrongPU} clickAway={false} style={{minWidth:'40%',minHeight:'40%'}}>
+              <WrongPU closePopup={handleCloseWrongPU}/>
+            </PopupDialog>
+            </div>
         </div>
         );
 
