@@ -17,16 +17,26 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   popupStyle:{
-    width:"100%",
     height:"auto",
     backgroundColor:"white",
-    padding:"3em !important",
-    borderRadius: "7px",
+    padding:"0 2em 1em 2em !important",
+    borderRadius:"7px" ,
+    [theme.breakpoints.up('xl')]: {
+      width:"80%",
+    },
+    [theme.breakpoints.down('xl')]: {
+      width:"100%",
+    },
   },
   popupMenu:{
     [theme.breakpoints.down('sm')]: {
       marginBottom: "3em",
-  }},
+    },
+    [theme.breakpoints.up('sm')]: {
+      padding:"2em 0 3em 0",
+  }
+  },
+  
   divider:{
     [theme.breakpoints.down('sm')]: {
       display:"none",
@@ -34,8 +44,11 @@ const useStyles = makeStyles((theme) => ({
   editText:{
     [theme.breakpoints.down('sm')]: {
       marginLeft:"0em",
+    },
+    [theme.breakpoints.up('sm')]: {
+      padding:"2em 0 3em 0",
+    }
   },
-},
   buttonContainer:{
     display:"inline-block",
     position:"relative",
@@ -104,9 +117,33 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft:"5em",
         paddingRight:"5em",
       },
-  
-    }
-}));
+    },
+    rootChips: {
+      boxShadow:"none !important",
+      display: 'flex',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+      listStyle: 'none',
+      padding: theme.spacing(0.5),
+      margin: 0,
+    },
+    textAnswers:{
+      [theme.breakpoints.up('md')]: {
+        paddingLeft:"2em",
+      },
+      [theme.breakpoints.down('sm')]: {
+        paddingBottom:"1em",
+      },
+    },
+    toggleMultiple:{
+      [theme.breakpoints.up('md')]: {
+        paddingLeft:"1em",
+      },
+    },    
+    toggleButton:{marginRight:"0 !important"},
+    toggleButtonLabel:{fontSize:"0.9em !important"},
+  }));
+
 
 function AddQuestPU(props) {
   //states of elements-------------------
@@ -137,54 +174,52 @@ function AddQuestPU(props) {
 //------------------------
 
   return(
-      <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="center" style={{padding:"1em",height:"auto"}}> 
-            <Grid container item style={{maxWidth:"25%"}} direction="row" justify="space-between" alignItems="center">
-            <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center" xs={12} md={4} > 
-              <Grid item className={classes.grupaBotuna}>
-                <ButtonGroup orientation="vertical" size="small" aria-label="small outlined button group">
-                  <Button variant="contained" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>Question</Button>
-                  <Button variant="contained" onClick={() => [setShow1(false),setShow2(true)]} className={classes.buttonsInGroup}>Answers</Button>
-                </ButtonGroup>
+    <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="flex-start" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
+    <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
+      <Grid item className={classes.grupaBotuna}>
+        <ButtonGroup orientation="vertical" size="small" aria-label="small outlined button group">
+          <Button variant="contained" color="#27AE60" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>Question</Button>
+          <Button variant="contained" color="#27AE60" onClick={() => [setShow1(false),setShow2(true)]} className={classes.buttonsInGroup}>Answers</Button>
+        </ButtonGroup>
+      </Grid>
+      <Grid item>          
+        <Button variant="contained" style={{borderRadius: "7px",background:"#EB4949",color:"white",paddingLeft:"3em",paddingRight:"3em"}} type="submit"  onClick={handleSave}>
+            SAVE  
+        <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}} color="white">save_icon</Icon>
+        </Button>
+      </Grid>
+    </Grid>
+    <Divider orientation="vertical" flexItem className={classes.divider}/>
+      {
+      show1 ? //first case - question
+          <Grid container item className={classes.editText} xs={12} md={8} direction="column" justify="center" alignItems="center" spacing={5}> 
+              <Grid container item xs={12}  justify="center" alignItems="center">
+                <TextField style={{width:"100%"}} id="outlined-multiline-static" label="Question Text" multiline rows={5} variant="outlined" value={text} onChange={handleText}/>
               </Grid>
-              <Grid item>          
-                <Button variant="contained" style={{borderRadius: "7px",background:"#EB4949",color:"white",paddingLeft:"3em",paddingRight:"3em"}} type="submit"  onClick={handleSave}>
-                    SAVE  
-                <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}} color="white">save_icon</Icon>
-                </Button>
+              <Grid container item direction="row" justify="center" alignItems="center" >
+                <Grid container item xs justify="center" alignItems="center">
+                  <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; setimageState(URL.createObjectURL(img)); setIMG(true) ;}}}/>
+                  <label htmlFor="contained-button-file">
+                    <Button variant="contained" color="primary" component="span" className={classes.uploadButton}>
+                      Upload photo
+                    </Button>
+                  </label>
+                </Grid>
+                <Grid container item xs justify="center" alignItems="center">
+                  {
+                  showIMG ?
+                      <div className={classes.buttonContainer}>
+                        <img  className={classes.imageUploaded} src={imageState} alt="hello world"/>
+                        <Icon className={classes.buttonB} onClick={()=>{setIMG(false); setimageState(null)}}>cancel_icon</Icon>
+                        <Icon className={classes.buttonA} onClick={()=>{setIMG(false); setimageState(null)}}>cloud_done_icon</Icon>
+                      </div>   
+                    : <p className={classes.pictureNotLoaded}> Image has not been uploaded yet.</p>
+                  }      
+                </Grid> 
               </Grid>
-            </Grid>
-            <Divider orientation="vertical" flexItem className={classes.divider}/>
-            </Grid>
-              {
-              show1 ? //first case - question
-                  <Grid container item style={{width:"75%"}} className={classes.editText} direction="column" justify="center" alignItems="center" spacing={5}> 
-                      <Grid container item xs={12}  justify="center" alignItems="center">
-                        <TextField style={{width:"100%"}} id="outlined-multiline-static" label="Question Text" multiline rows={5} variant="outlined" value={text} onChange={handleText}/>
-                      </Grid>
-                      <Grid container item direction="row" justify="center" alignItems="center" >
-                        <Grid container item xs justify="center" alignItems="center">
-                          <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; setimageState(URL.createObjectURL(img)); setIMG(true) ; console.log(showIMG)}}}/>
-                          <label htmlFor="contained-button-file">
-                            <Button variant="contained" color="primary" component="span" className={classes.uploadButton}>
-                              Upload photo
-                            </Button>
-                          </label>
-                        </Grid>
-                        <Grid container item xs justify="center" alignItems="center">
-                          {
-                          showIMG ?
-                              <div className={classes.buttonContainer}>
-                                <img  className={classes.imageUploaded} src={imageState} alt="hello world"/>
-                                <Icon className={classes.buttonB} onClick={()=>{setIMG(false); setimageState(null)}}>cancel_icon</Icon>
-                                <Icon className={classes.buttonA} onClick={()=>{setIMG(false); setimageState(null)}}>cloud_done_icon</Icon>
-                              </div>   
-                            : <p className={classes.pictureNotLoaded}> Image has not been uploaded yet.</p>
-                          }      
-                        </Grid> 
-                      </Grid>
-                   </Grid> 
-              : null
-              }{
+           </Grid> 
+      : null
+      }{
               show2 ? <p>hello world</p>
               : null
               }

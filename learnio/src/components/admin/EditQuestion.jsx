@@ -7,6 +7,7 @@ import AddQuestPU from './AddQuestPU';
 import Icon from '@material-ui/core/Icon';
 import AddAccordion from './AddAccordion.jsx';
 import {Dialog} from '@material-ui/core';
+import PopupDialog from '../common/PopupDialog';
 
 const useStyles = makeStyles((theme)=>({
     root: {
@@ -121,9 +122,9 @@ function EditQuestion(props) {
               <Typography className={classes.Heading}>ID</Typography>
               <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>  
               <Button onClick={()=>handleOpen()} className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>
-                <Dialog open={open} onClose={handleClose} classes={{paper: classes.popupStyle}}>
+                <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={true} style={{minWidth:'60%',minHeight:'40%'}}>
                   <AddQuestPU popUpClose={handleClose} changePage={props.jumpToPage} forceUpdate={props.forceUpdate} nextID={nextID} changeText={changeText} questAdd={handleAdd}/>
-                </Dialog>
+                </PopupDialog>
             </div>
             {
               props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion resetExpanded={resetExpanded} popUpClose={handleClose} handlePages={handlePages} topQ={topQ} pageCount={pageCount} handleChange={handleChange} changeText={changeText} text={text} handleDelete={handleDelete} page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions} openEdit={openEdit}/></div>

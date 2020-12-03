@@ -10,7 +10,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
   grupaBotuna:{
@@ -241,7 +240,7 @@ function EditQuestionPU(props) {
                       </Grid>
                       <Grid container item direction="row" justify="center" alignItems="center" >
                         <Grid container item xs justify="center" alignItems="center">
-                          <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; setimageState(URL.createObjectURL(img)); setIMG(true) ; console.log(showIMG)}}}/>
+                          <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; setimageState(URL.createObjectURL(img)); setIMG(true) ;}}}/>
                           <label htmlFor="contained-button-file">
                             <Button variant="contained" color="primary" component="span" className={classes.uploadButton}>
                               Upload photo
