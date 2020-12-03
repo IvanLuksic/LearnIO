@@ -10,3 +10,9 @@ export const studentLogIn=()=>{
         type:'STUDENT_LOGGED_IN'
     };
 };
+
+export const logOut=()=>{
+    return{
+        type:'LOGGED_OUT'
+    };
+};

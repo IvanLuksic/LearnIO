@@ -4,17 +4,13 @@ import Login from "./pages/login";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import "./App.css";
 import Home from "./components/common/Home"
-import About from "./components/common/About"
 import Navbar from './components/common/Navbar';
-import Contact from './images/Contact';
 import StudentTopics from "./components/student/StudentTopics";
 import MatricaAdmin from"./components/admin/MatricaAdmin";
 import AddTopicPU from './components/admin/AddTopicPU';
 import AdminTopics from './components/admin/AdminTopics';
 import Matrica from './components/student/Matrica';
-import {useSelector, useDispatch} from 'react-redux';
-import { Button } from "@material-ui/core";
-import {studentLogIn, adminLogIn} from './redux/actions';
+import {useSelector} from 'react-redux';
 
 
 const theme = createMuiTheme({
@@ -27,7 +23,30 @@ const theme = createMuiTheme({
 function App() {
   const[openAddTopic,setOpenAddTopic]=useState(true);
   const loginStatus = useSelector(state=> state.login);
-  const dispatch = useDispatch();
+  let AdminFeatures=false;
+  let StudentFeatures=false;
+
+  switch(loginStatus){
+    case 'admin':{
+      AdminFeatures=true;
+      StudentFeatures=true;
+      break;      
+    }
+    case 'student':{
+      AdminFeatures=false;
+      StudentFeatures=true;
+      break;
+    }
+    case 'guest':{
+      AdminFeatures=false;
+      StudentFeatures=false;
+      break;      
+    }
+    default:{
+      AdminFeatures=false;
+      StudentFeatures=false;      
+    }
+  }
 
     return (
         <div className="App" style={{height: '100vh'}} >
@@ -37,14 +56,12 @@ function App() {
               <Button  onClick={()=>{dispatch(adminLogIn());console.log(loginStatus);}}>Admin </Button> */}
               <div className="App-intro">
                     <Route exact path="/" component={Home}/>
-                    <Route path="/about" component={About}/>
-                    <Route path="/contact" component={Contact}/>
-                    <Route exact path="/topics"component={StudentTopics}/>
                     <Route path="/login" component={Login}/>
-                    <Route path="/topic/:id" component={Matrica}/>
-                    <Route path="/admin-topic/:id" component={MatricaAdmin}/>
-                    <Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>
-                    {(loginStatus==='admin')?<Route path="/AdminTopic" component={AdminTopics}/>:<Route exact path="/AdminTopic" component={Home}/>}
+                    {StudentFeatures&&<Route exact path="/topics"component={StudentTopics}/>}
+                    {StudentFeatures&&<Route path="/topic/:id" component={Matrica}/>}
+                    {AdminFeatures&&<Route path="/admin-topic/:id" component={MatricaAdmin}/>}
+                    {AdminFeatures&&<Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>}
+                    {AdminFeatures&&<Route exact path="/AdminTopic" component={AdminTopics}/>}
               </div>
           </ThemeProvider>
         </div>

@@ -35,7 +35,7 @@ const styles = {
     }
   };
 
-  const PostLogin=(event,object)=>{
+const PostLogin=(event,object)=>{
         event.preventDefault();
 
         console.log(JSON.stringify(object));
@@ -51,18 +51,17 @@ const styles = {
             if(response.status===200)
             {
                 object.pageprops.history.push('/');
-                return 'student';
             }
             else {
                 console.log('krivoo');
                 console.log(response);
-                return 'admin';
             }
         })
         .catch((error)=>{
             console.log('Error in fetch function '+error);
         });
 }
+
 
 function LoginForm(props){
     const [username, setUsername]=useState("");
@@ -78,10 +77,16 @@ function LoginForm(props){
         passwords:password,
     };
 
+    const pseudoPostLogin=(event,object)=>{
+        event.preventDefault();
+        if((object.usernames==='admin')&&(object.passwords==='')){dispatch(adminLogIn())}
+        else if((object.usernames==='student')&&(object.passwords==='')){dispatch(studentLogIn())}
+    };
+
     return (
         <React.Fragment>
             <Typography color="primary" className={classes.loginHeadline}>Login </Typography>
-            <form onSubmit={(e)=>{const response=PostLogin(e,object);(response==='student')?(dispatch(studentLogIn())):(dispatch(adminLogIn()));}} className={classes.root} noValidate autoComplete="off" >
+            <form onSubmit={(e)=>{pseudoPostLogin(e,object)}} className={classes.root} noValidate autoComplete="off" >
                 <TextField onChange={(e)=>{setUsername(e.target.value)}} fullWidth className={classes.fields} type="email" label="E-mail" variant="filled" />
                 <TextField onChange={(e)=>{setPassword(e.target.value)}} fullWidth  className={classes.fields} type="password" label="Password" variant="filled" />
                 <Button variant="contained" className={classes.loginButton} style={{borderRadius: 25}} type="submit" color="primary" >
@@ -91,5 +96,4 @@ function LoginForm(props){
         </React.Fragment>
     );
 };
-
 export default withStyles(styles)(LoginForm);

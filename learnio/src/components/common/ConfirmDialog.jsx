@@ -3,7 +3,7 @@ import {Button, Dialog,DialogContent,DialogTitle, makeStyles, Typography}from'@m
 import CloseIcon from '@material-ui/icons/Close';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
-//takes a function to confirm and message text
+//takes a functionToConfirm and message text as text + openPopup and setOpenPopup
 
 const useStyles=makeStyles(theme =>({
     dialogWrapper:{
