@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Button, Dialog,DialogContent,DialogTitle, makeStyles, Typography}from'@material-ui/core';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -8,6 +8,8 @@ import FormLabel from '@material-ui/core/FormLabel';
 import CloseIcon from '@material-ui/icons/Close';
 import TextField from '@material-ui/core/TextField';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import PopupDialog from '../common/PopupDialog';
+import WrongPU from './WrongPU';
 
 
 
@@ -71,6 +73,7 @@ function DisplayAnswers(props){
 
 function QuestionPopup(props){
     const [value, setValue] = React.useState('A');
+    const [openWrongPU,setWrongPU]=useState(true);
     const showABC = props.question.ABC;
     const classes=useStyles();
 
@@ -132,6 +135,7 @@ function QuestionPopup(props){
                     </div>
                 </ClickAwayListener>
             </Dialog>
+          
         </div>
         );
 

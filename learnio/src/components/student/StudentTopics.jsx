@@ -6,6 +6,8 @@ import { Typography } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
+import PopupDialog from '../common/PopupDialog';
+import WrongPU from './WrongPU';
 
 
 const ColorButton = withStyles((theme) => ({
@@ -85,6 +87,19 @@ function CustomPagination(props) {
 
 
 function StudentTopics(){
+
+  //ovo je dodano za provjeru WrongPU
+  const [openWrongPU,setWrongPU]=React.useState(false); 
+  const handleCloseWrongPU=()=>{
+    setWrongPU(false)
+  }
+  const handleOpenWrongPU=()=>{
+    setWrongPU(true);
+  }
+  //sve do ode 
+
+
+
     const classes = useStyles();
     var linkage='contacts' ;
     const columns = [
@@ -123,6 +138,14 @@ function StudentTopics(){
         <div className={classes.tabela}>
           <DataGrid  onRowHover={(Row)=>{linkage=Row.data.id}} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />
         </div>
+
+        <div>
+          <button onClick={()=>handleOpenWrongPU()}></button>
+          <PopupDialog openPopup={openWrongPU} setOpenPopup={handleCloseWrongPU} clickAway={false} style={{minWidth:'40%',minHeight:'40%'}}>
+              <WrongPU closePopup={handleCloseWrongPU}/>
+            </PopupDialog>
+        </div>
+
     </div>
     );
 };
