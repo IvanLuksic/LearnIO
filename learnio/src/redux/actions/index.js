@@ -1,0 +1,12 @@
+// SELJAČINO PAZI AKCIJE MORAJU BIT JEDINSTVENOG IMENA JER INAČE DJELUJU NA SVE TOG IMENA
+export const adminLogIn=()=>{
+    return{
+        type:'ADMIN_LOGGED_IN'
+    };
+};
+
+export const studentLogIn=()=>{
+    return{
+        type:'STUDENT_LOGGED_IN'
+    };
+};

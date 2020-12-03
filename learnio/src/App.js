@@ -12,8 +12,9 @@ import MatricaAdmin from"./components/admin/MatricaAdmin";
 import AddTopicPU from './components/admin/AddTopicPU';
 import AdminTopics from './components/admin/AdminTopics';
 import Matrica from './components/student/Matrica';
-
-
+import {useSelector, useDispatch} from 'react-redux';
+import { Button } from "@material-ui/core";
+import {studentLogIn, adminLogIn} from './redux/actions';
 
 
 const theme = createMuiTheme({
@@ -25,12 +26,15 @@ const theme = createMuiTheme({
 
 function App() {
   const[openAddTopic,setOpenAddTopic]=useState(true);
-
+  const loginStatus = useSelector(state=> state.login);
+  const dispatch = useDispatch();
 
     return (
         <div className="App" style={{height: '100vh'}} >
           <ThemeProvider theme={theme}>
-          <Navbar/>
+              <Navbar/>
+              {/* <Button onClick={()=>{dispatch(studentLogIn());console.log(loginStatus);}}>Student </Button>
+              <Button  onClick={()=>{dispatch(adminLogIn());console.log(loginStatus);}}>Admin </Button> */}
               <div className="App-intro">
                     <Route exact path="/" component={Home}/>
                     <Route path="/about" component={About}/>
@@ -40,7 +44,7 @@ function App() {
                     <Route path="/topic/:id" component={Matrica}/>
                     <Route path="/admin-topic/:id" component={MatricaAdmin}/>
                     <Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>
-                    <Route path="/AdminTopic" component={AdminTopics}/>
+                    {(loginStatus==='admin')?<Route path="/AdminTopic" component={AdminTopics}/>:<Route exact path="/AdminTopic" component={Home}/>}
               </div>
           </ThemeProvider>
         </div>

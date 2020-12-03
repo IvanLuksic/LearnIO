@@ -12,7 +12,6 @@ import EditQuestionPU from './EditQuestionPU';
 import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
 import ConfirmDialog from "../common/ConfirmDialog";
-import {Dialog} from '@material-ui/core';
 import PopupDialog from '../common/PopupDialog';
 
 
