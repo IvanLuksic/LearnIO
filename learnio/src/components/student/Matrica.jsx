@@ -4,10 +4,9 @@ import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../../images/learniobg10-15.png';
 import { makeStyles} from '@material-ui/core/styles';
 import DisplayMatrix from './DisplayMatrix';
-import QuestionPopup from "./QuestionPopup";
-import Divider from '@material-ui/core/Divider';
-import TestMainMenu from './TestMainMenu.jsx';
-import data from './studTest.json'
+import data from './questions.json'
+import QuestionPopup from './QuestionPopup.jsx'
+import PopupDialog from '../common/PopupDialog.jsx'
 
 const useStyles = makeStyles((theme) => ({
   background:{
@@ -38,15 +37,6 @@ const useStyles = makeStyles((theme) => ({
     lobster: {
         fontFamily: "Lobster"
     },
-  divider:{
-      [theme.breakpoints.down('sm')]: {
-          height: "0vh",
-        },
-        [theme.breakpoints.up('md')]: {
-          marginTop:"12vh",
-          height: "85vh",
-        },
-  },
   matrix:{
       marginRight:"2vh",
       [theme.breakpoints.up('md')]: {
@@ -55,10 +45,6 @@ const useStyles = makeStyles((theme) => ({
            maxHeight: "90vh"
         },
   },
-  questionsTable:{
-      minHeight: "100vh",
-      paddingTop:"17vh"
-  }
 
 }));
 
@@ -96,16 +82,19 @@ function Matrica(props)
        setAoSelected(ao);
        setQuestionSelected(quest);
        setOpenPopup(true);
-   };
+      };
    const changeQuestions=(field)=>{
       setFields(field);
-      console.log(fields);
-    }
+    };
 
    const classes = useStyles();
     return(
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
-        {/* {openPopup && <QuestionPopup openPopup={openPopup} setOpenPopup={setOpenPopup} question={questionSelected} changeQuestions={changeQuestions} field={fields}/>} */}
+        {
+          <PopupDialog openPopup={openPopup} setOpenPopup={setOpenPopup} clickAway={true}>
+            <QuestionPopup ao={aoLVL} question={questionSelected} setOpenPopup={setOpenPopup} changeQuestions={changeQuestions} field={fields}/>
+          </PopupDialog>        
+        }
         <Grid container direction="row" justify="center" alignItems="center">
             <Grid container item md={6} direction="row"  className={classes.matrix} justify="center" alignItems="center" >
                 <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
@@ -116,10 +105,6 @@ function Matrica(props)
                     <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,aoLVL,dLVL)} aoSelected={aoSelected} dSelected={dSelected}/>
                 </Grid>
             </Grid>
-                <Divider  orientation="vertical" className={classes.divider} flexItem/>
-                <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="flex-end" className={classes.questionsTable}>
-                  <TestMainMenu tests={(fields[(aoSelected+aoLVL*(dSelected-1)-1)].test.length!==0) ? fields[(aoSelected+aoLVL*(dSelected-1)-1)].test : null }/>
-                </Grid>
         </Grid> 
         </div>
     )
