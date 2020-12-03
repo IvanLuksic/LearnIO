@@ -1,15 +1,22 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import {Button, Dialog,DialogContent,DialogTitle, makeStyles, Typography}from'@material-ui/core';
+=======
+import React from 'react';
+import {Button, DialogContent,DialogTitle, makeStyles, Typography}from'@material-ui/core';
+>>>>>>> 87cfa9a3c459e4aee9d088c0e407522b940cfa75
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-import CloseIcon from '@material-ui/icons/Close';
 import TextField from '@material-ui/core/TextField';
+<<<<<<< HEAD
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import PopupDialog from '../common/PopupDialog';
 import WrongPU from './WrongPU';
+=======
+>>>>>>> 87cfa9a3c459e4aee9d088c0e407522b940cfa75
 
 
 
@@ -83,26 +90,29 @@ function QuestionPopup(props){
 
     const handleSave=()=>{
 
-            let newFields=[...props.field.filter(item=>item.id!==props.question.id)];
-            let item=props.question;
-            if(value===item.answerCorrect){
-                item.status="done";
+            let newFields1=[...props.field.filter(item=>(item.id!==props.question.id && item.id!==props.question.id+1 && item.id!==props.question.id+props.ao))];
+            let item1=props.question;
+            let item2=props.field[props.question.id];
+            let item3=props.field[props.question.id+props.ao-1];
+            if(value===item1.answerCorrect){
+                item1.status="done";
+                if(item2.status==="locked") item2.status="solve";
+                if(item3.status==="locked") item3.status="solve";
             }
-            else item.status="wrong";
-            newFields=[...newFields,item];
-            props.changeQuestions(newFields);
+            else item1.status="wrong";
+            newFields1=[...newFields1,item1,item2,item3];
+            props.changeQuestions(newFields1);
             props.setOpenPopup(false);
     }
 
     return(
         <div> 
-            <Dialog open={props.openPopup} classes={{paper: classes.dialogWrapper}}>
-                <ClickAwayListener onClickAway={()=>{props.setOpenPopup(false);}}>
+            {/* <Dialog open={props.openPopup} classes={{paper: classes.dialogWrapper}}> */}
+                {/* <ClickAwayListener onClickAway={()=>{props.setOpenPopup(false);}}> */}
                     <div> 
                         <DialogTitle className={classes.dialogPart1}>
                             <div style={{display:'flex'}}>
                                 <Typography variant="h6" component="div" className={classes.questionName}>AO{props.question.ao} D{props.question.d}</Typography>
-                                <CloseIcon style={{cursor:"pointer"}} onClick={()=>props.setOpenPopup(false)}></CloseIcon>
                             </div>
                         </DialogTitle>
                         <DialogContent className={classes.dialogPart2}>
@@ -133,9 +143,8 @@ function QuestionPopup(props){
                             }
                         </DialogContent>
                     </div>
-                </ClickAwayListener>
-            </Dialog>
-          
+                {/* </ClickAwayListener> */}
+            {/* </Dialog> */}
         </div>
         );
 

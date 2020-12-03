@@ -4,6 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import {useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {studentLogIn, adminLogIn} from '../../redux/actions';
+
 const styles = {
     root: {
       margin: '0 auto',
@@ -31,53 +34,62 @@ const styles = {
         justifyContent: 'center',
     }
   };
+
   const PostLogin=(event,object)=>{
-      
-      console.log(JSON.stringify(object));
-      event.preventDefault();
-    const requestOptions = {
-        method: 'POST',
-        mode:'cors',
-        headers: { 'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({username:object.usernames, password:object.passwords})
-    };
-    fetch('http://localhost:3000/login', requestOptions)
+        event.preventDefault();
+
+        console.log(JSON.stringify(object));
+
+        const requestOptions = {
+            method: 'POST',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({username:object.usernames, password:object.passwords})
+        };
+        fetch('http://localhost:3000/login', requestOptions)
         .then((response) => {
             if(response.status===200)
             {
-                object.pageprops.history.push('/')
+                object.pageprops.history.push('/');
+                return 'student';
             }
             else {
                 console.log('krivoo');
                 console.log(response);
+                return 'admin';
             }
         })
         .catch((error)=>{
             console.log('Error in fetch function '+error);
         });
 }
+
 function LoginForm(props){
     const [username, setUsername]=useState("");
-  const [password, setPassword]=useState("");
-  let object={
-      pageprops:props.pageProps,
-      usernames:username,
-      passwords:password
-  };
+    const [password, setPassword]=useState("");
     let classes=props.classes;
-        return (
-            <React.Fragment>
-                <Typography color="primary" className={classes.loginHeadline}>Login </Typography>
-                <form onSubmit={(e)=>{PostLogin(e,object)}} className={classes.root} noValidate autoComplete="off" >
-                    <TextField onChange={(e)=>{setUsername(e.target.value)}} fullWidth className={classes.fields} type="email" label="E-mail" variant="filled" />
-                    <TextField onChange={(e)=>{setPassword(e.target.value)}} fullWidth  className={classes.fields} type="password" label="Password" variant="filled" />
-                    <Button variant="contained" className={classes.loginButton} style={{borderRadius: 25}} type="submit" color="primary" >
-                        Prijavi se
-                    </Button>
-                </form>
-            </React.Fragment>
-        );
+
+    const loginStatus = useSelector(state=> state.login);
+    const dispatch = useDispatch();
+
+    let object={
+        pageprops:props.pageProps,
+        usernames:username,
+        passwords:password,
+    };
+
+    return (
+        <React.Fragment>
+            <Typography color="primary" className={classes.loginHeadline}>Login </Typography>
+            <form onSubmit={(e)=>{const response=PostLogin(e,object);(response==='student')?(dispatch(studentLogIn())):(dispatch(adminLogIn()));}} className={classes.root} noValidate autoComplete="off" >
+                <TextField onChange={(e)=>{setUsername(e.target.value)}} fullWidth className={classes.fields} type="email" label="E-mail" variant="filled" />
+                <TextField onChange={(e)=>{setPassword(e.target.value)}} fullWidth  className={classes.fields} type="password" label="Password" variant="filled" />
+                <Button variant="contained" className={classes.loginButton} style={{borderRadius: 25}} type="submit" color="primary" >
+                    Prijavi se
+                </Button>
+            </form>
+        </React.Fragment>
+    );
 };
 
 export default withStyles(styles)(LoginForm);
