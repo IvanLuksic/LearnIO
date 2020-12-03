@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
         width:"50%",
       },
       [theme.breakpoints.up('xl')]: {
-        width:"40%",
+        width:"35%",
       },
     },
     topicTitle:{
@@ -122,8 +122,8 @@ function AdminTopics(props){
         {field: "topic", width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
         {field: "id", headerName:'ID',
         valueGetter: (params) => `${params.getValue('id')}`,},
-        {field: "ao", headerName: 'AO'},
-        {field: "d", headerName:'D'},
+        {field: "student", headerName: 'RESULTS', renderCell: (params) => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>school_icon </Icon> </Button></Link>)},
+        //{field: "d", headerName:'D'},
         {field: 'open', headerName: `${' '}`, renderCell: (params) => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>),},
         {field: 'delete', headerName: `${' '}` ,renderCell: (params) => (<Button onClick={() =>{handleDelete(params.data.id)}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>), },
     ];
