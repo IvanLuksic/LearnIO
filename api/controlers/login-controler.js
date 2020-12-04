@@ -1,7 +1,8 @@
 const {Login_instance, Session_instance}=require('../../services');//object destrucuturing(jer require vrati objekt) + automatski trazi index.js file u service folderu
 const {nodelogger}=require('../../loaders/logger');//-> cacheano je
 module.exports={
-    logiraj:async (req,res)=>{//arrow funckije imaju lexical scope koji sto znaci da imaju pristup varijablama koje se nalaze u scopeu s mjesta koje ih je pozvalo-> ovdje su pozvane iz middleware funkcije unutar validatora koja ima pristup req,res objektima pa stoga ima i ona
+    logiraj:async (req,res)=>{
+        nodelogger.info(req.body);
         const {username,password}=req.body;//object destrucutiring,uz preptostavku da saljemo JSON body pa ne parsiramo
         try {
             const user=await Login_instance.getUser(username);
@@ -17,8 +18,8 @@ module.exports={
                 }
                 if(user.user_type == process.env.ADMIN)//admin->STAVI == JER JE ADMIN env varijabla string
                 {
-                nodelogger.info("Logging succesful");
-                res.redirect('/admin');
+                nodelogger.info("Logging succesful tu smoo");
+                res.sendStatus(200);
                 }
                 else if(user.user_type==process.env.TEACHER)//ucitelj
                 {
@@ -27,7 +28,7 @@ module.exports={
                 }
                 else {//student
                 nodelogger.info("Logging succesful");
-                res.redirect('/student');
+                res.send('Login succesful');
                 }
 
              } else if(!user) {
@@ -36,14 +37,14 @@ module.exports={
             }
             else {
                 nodelogger.error('Login failed');
-                return res.status(401).send('Authnetication failed. Incorrect pasword. Check your password');
+                return res.sendStatus(401).send('Authnetication failed. Incorrect pasword. Check your password');
             }
         } catch (err) {
             nodelogger.error(err);
            return res.status(400).send('error in login controler ');
         }
     },
-    sesion:async(req,res)=>{//ovdje dode kada login pozove next()-> ako je tu dosao onda je vec logiran unutra pa ga trebamo samo preusmjerit na zadanu rutu
+    restoresesion:async(req,res)=>{//ovdje dode kada login pozove next()-> ako je tu dosao onda je vec logiran unutra pa ga trebamo samo preusmjerit na zadanu rutu
             if(req.session.user_type===1)//admin
                 {
                 nodelogger.info("Logging succesful");
@@ -59,6 +60,13 @@ module.exports={
                 res.redirect('/student');
                 }
 
+    },
+    logout: async(req,res)=>{
+        try {
+            req.session.destroy();//tribalo bi izbrisat sesiju iz memory storea
+        } catch (error) {
+            nodelogger.info('Error in session deleting');
+        }
     }
     
 }

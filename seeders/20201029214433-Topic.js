@@ -5,7 +5,7 @@ module.exports = {
     await queryInterface.bulkInsert('Topic',[
       {
         name:'Zbrajanje',
-        rows_D: 7,
+        rows_D: 5,
         column_numbers:3,
         subject_id:1
       },
