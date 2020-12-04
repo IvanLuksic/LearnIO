@@ -14,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.Result,{foreignKey: 'topic_id'});
       this.hasMany(models.Save,{foreignKey: 'topic_id'});
       this.hasMany(models.Question,{foreignKey: 'topic_id'});
-      this.belongsToMany(models.Topic,{through: 'Tags_of_topic',as: 'source_topic'},{foreignKey: 'source_topic'});
-      this.belongsToMany(models.Topic,{through: 'Tags_of_topic',as: 'associated_topic'},{foreignKey: 'povezani_topic'});
+      this.belongsToMany(models.Topic, {through: 'Tags_of_topic', as: 'associated', foreignKey: 'source_topic'});
+      this.belongsToMany(models.Topic, {through: 'Tags_of_topic', as: 'source', foreignKey: 'associated_topic'});
       this.belongsToMany(models.Course,{through:'Course-Topic'},{foreignKey: 'topic_id'});
     }
   }
