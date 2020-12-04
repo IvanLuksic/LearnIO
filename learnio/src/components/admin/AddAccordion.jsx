@@ -73,11 +73,11 @@ function AddAccordion(props) {
   
           </AccordionSummary>
           <AccordionDetails>
-            <Grid  container direction="row" justify="center" alignItems="center" spacing={0.5}>
-              <Grid item md={9} xs={8} direction="row" justify="flex-start" alignItems="center">
+            <Grid  container direction="row" justify="center" alignItems="center" spacing={1}>
+              <Grid container item md={9} xs={8} direction="row" justify="flex-start" alignItems="center">
                 <Typography>{props.text}</Typography>
               </Grid>
-              <Grid container md={3} xs={4} direction="row" justify="flex-end" alignItems="center"> 
+              <Grid container item md={3} xs={4} direction="row" justify="flex-end" alignItems="center"> 
                 <Button onClick={()=>setOpenPopup2(true)} className={classes.iconButtons}><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>
                   <PopupDialog openPopup={question.id === props.openEdit && openPopup2} setOpenPopup={handleClose} clickAway={true} style={{minWidth:'60%',minHeight:'40%'}}>
                     <EditQuestionPU popUpClose={setOpenPopup2} style={{borderRadius:'25px'}} questChange={props.questChange} prop={question} changeText={props.changeText}/>
