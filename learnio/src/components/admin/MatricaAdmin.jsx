@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     },
     questionsTable:{
         minHeight: "100vh",
-        paddingTop:"17vh"
+        paddingTop:"14vh"
     }
 
 }));

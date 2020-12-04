@@ -118,18 +118,18 @@ function EditQuestion(props) {
     return(
         <div className={classes.root}>
             <div className={classes.accRoot}>
-            <div className={classes.tableHeader}>
-              <Typography className={classes.Heading}>ID</Typography>
-              <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>  
-              <Button onClick={()=>handleOpen()} className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>
-                <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={true} style={{minWidth:'60%',minHeight:'40%'}}>
-                  <AddQuestPU popUpClose={handleClose} changePage={props.jumpToPage} forceUpdate={props.forceUpdate} nextID={nextID} changeText={changeText} questAdd={handleAdd}/>
-                </PopupDialog>
-            </div>
-            {
-              props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion resetExpanded={resetExpanded} popUpClose={handleClose} handlePages={handlePages} topQ={topQ} pageCount={pageCount} handleChange={handleChange} changeText={changeText} text={text} handleDelete={handleDelete} page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions} openEdit={openEdit}/></div>
-              : <div style={{position:'relative', marginTop:'5%'}}><Typography style={{display:'flex', justifyContent:'center', color:'gray'}}>No questions added</Typography></div>
-            }
+              <div className={classes.tableHeader}>
+                <Typography className={classes.Heading}>ID</Typography>
+                <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>  
+                <Button onClick={()=>handleOpen()} className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>
+                  <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={true} style={{minWidth:'60%',minHeight:'40%'}}>
+                    <AddQuestPU popUpClose={handleClose} changePage={props.jumpToPage} forceUpdate={props.forceUpdate} nextID={nextID} changeText={changeText} questAdd={handleAdd}/>
+                  </PopupDialog>
+              </div>
+              {
+                props.questions ? <div style={{position:'relative', marginTop:'5%'}}><AddAccordion resetExpanded={resetExpanded} popUpClose={handleClose} handlePages={handlePages} topQ={topQ} pageCount={pageCount} handleChange={handleChange} changeText={changeText} text={text} handleDelete={handleDelete} page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions} openEdit={openEdit}/></div>
+                : <div style={{position:'relative', marginTop:'5%'}}><Typography style={{display:'flex', justifyContent:'center', color:'gray'}}>No questions added</Typography></div>
+              }
             </div>
         </div>
     )
