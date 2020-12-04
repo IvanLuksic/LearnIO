@@ -83,6 +83,7 @@ function AdminTopics(props){
     const[rows,setRows]=useState(topici);
     const[open,setOpen]=useState(false); 
     const[openPopup,setOpenPopup]=useState(false);
+    const[item,setItem]=useState(0);
     const classes=useStyles();
     
     const handleOpen = () => {
@@ -95,12 +96,12 @@ function AdminTopics(props){
     var linkage='contacts' ;
     
     // brisanje topica iz liste
-    const handleDelete=(erase)=>{
+    const handleDelete=(id)=>{
 
-      console.log(erase);
+      console.log(id);
       console.log("pozvan delete");
       setRows(
-          [ ...rows.filter(polje=> ((polje.id!==erase.id)))]
+          [ ...rows.filter(polje=> ((polje.id!==id)))]
       ); 
     };
     // dodavanje novog topica u listu i id tom topicu
@@ -118,13 +119,17 @@ function AdminTopics(props){
       setRows(polje);
     };
 
-
-    //nije dovrseno neznan kako spojit
-    //s functionToConfirm
+    //dodatne dvi funkcije 
+    //postavljamo vrijednost id drugoj varijabli
+    //drugom funkcijom pozivamo samo handleDelete(bez nje san uvik upada u loop)
     const Confirm=(data)=>{
-      setOpenPopup(true);
-      console.log(data);
+      setOpenPopup(true); 
+      setItem(data);
     };
+    const DeleteTopic=()=>{
+      console.log(item);
+      handleDelete(item);
+    }
 
     const columns=[
         {field: "topic", width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
@@ -132,13 +137,13 @@ function AdminTopics(props){
         valueGetter: (params) => `${params.getValue('id')}`,},
         {field: "student", headerName: 'RESULTS', renderCell: (params) => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>school_icon </Icon> </Button></Link>)},
         {field: 'open', headerName: `${' '}`, renderCell: (params) => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>)},
-        {field: 'delete', headerName: `${' '}` ,renderCell: (params) => (<Button onClick={() =>{Confirm(params.data.id)}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
+        {field: 'delete', headerName: `${' '}` ,renderCell: (params) => (<Button onClick={()=>{Confirm(params.data.id)}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
     ];
 
 
     return(
       <div>
-      <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this question?" /*functionToConfirm={handleDelete(erase)}*//>
+      <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this question?" functionToConfirm={DeleteTopic}/>
       {
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}>
             <Typography color="primary"><span className={classes.topicTitle}>Topics</span></Typography>

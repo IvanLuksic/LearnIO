@@ -33,18 +33,24 @@ const useStyles=makeStyles(theme =>({
         padding:"0em 0 1em 0em",
     },
     tabela:{
-        paddingLeft:'7vw',
+        //paddingLeft:'8em',
         paddingTop:"2em",
         borderColor: "transparent !important",
-        height:"25em",
+        height:"20em",
         [theme.breakpoints.down('sm')]: {
           width:"90%",
+          paddingLeft: "5%",
+          paddingRight:'5%',
         },
         [theme.breakpoints.up('md')]: {
           width:"75%",
+          paddingLeft:'4em',
+          paddingRight:'4em',
         },
         [theme.breakpoints.up('xl')]: {
           width:"60%",
+          paddingLeft:'20%',
+          paddingRight:'20%',
         },
       },
 }))
