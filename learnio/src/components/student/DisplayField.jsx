@@ -17,20 +17,12 @@ const useStyles = makeStyles((theme) => ({
         variant: "outlined",
         backgroundColor: '#BDBDBD',
         fontFamily:'Roboto',
-        fontSize: '3vh',
+        fontSize: '2.8vh',
         paddingTop:  '10px',
-        padding: theme.spacing(1),
+        padding: theme.spacing(0.2),
         color:"white",
         borderRadius: "10px",
         cursor: "pointer"
-        },
-    matrix:{
-        marginRight:"2vh",
-        [theme.breakpoints.up('md')]: {
-             marginTop:"10vh",
-             overflowY: "scroll",
-             maxHeight: "90vh"
-          },
         },
 }));
 
@@ -78,7 +70,7 @@ function DisplayField(props){
     return (
 
             <Grid item> 
-                <Paper onClick={(event)=>{props.changeSelected(event,props.ao,props.d,props.question);}} className={classes.paper} style={{backgroundColor: color}}>
+                <Paper onClick={(event)=>{props.changeSelected(event,props.ao,props.d,props.question,status)}} className={classes.paper} style={{backgroundColor: color}}>
                     <Grid container direction="column" justify="center" alignItems="center" style={{height: "100%"}}>
                         <Grid item><h1>AO={props.ao} D={props.d}</h1></Grid>
                         <Grid item><Icon className={classes.icons}>{icon}</Icon></Grid>

@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
         variant: "outlined",
         backgroundColor: '#BDBDBD',
         fontFamily:'Roboto',
-        fontSize: '3vh',
+        fontSize: '2.8vh',
         paddingTop:  '10px',
-        padding: theme.spacing(1),
+        padding: theme.spacing(0.2),
         color:"white",
         borderRadius: "10px",
         cursor: "pointer"
