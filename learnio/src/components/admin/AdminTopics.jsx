@@ -35,10 +35,10 @@ const useStyles = makeStyles((theme) => ({
         width:"90%",
       },
       [theme.breakpoints.up('md')]: {
-        width:"50%",
+        width:"60%",
       },
       [theme.breakpoints.up('xl')]: {
-        width:"35%",
+        width:"45%",
       },
     },
     topicTitle:{
@@ -85,7 +85,6 @@ function AdminTopics(props){
     const[openPopup,setOpenPopup]=useState(false);
     const[item,setItem]=useState(0);
     const classes=useStyles();
-    
     const handleOpen = () => {
       setOpen(true);
     };
@@ -97,9 +96,6 @@ function AdminTopics(props){
     
     // brisanje topica iz liste
     const handleDelete=(id)=>{
-
-      console.log(id);
-      console.log("pozvan delete");
       setRows(
           [ ...rows.filter(polje=> ((polje.id!==id)))]
       ); 
@@ -107,7 +103,6 @@ function AdminTopics(props){
     // dodavanje novog topica u listu i id tom topicu
     // problem s id kad se izbrise jedan i ide dodat novi ne radi!!!
    const addQuestion=(value)=>{
-      console.log("pozvan add");
       console.log(value);
       var polje=rows;
       let nextID;
@@ -127,15 +122,18 @@ function AdminTopics(props){
       setItem(data);
     };
     const DeleteTopic=()=>{
-      console.log(item);
       handleDelete(item);
     }
 
     const columns=[
-        {field: "topic", width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
+        {field: "names", width: 200, type:'string', renderHeader: () => (<strong>{"Names"}</strong>)},
+        {field: "topic", width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>)},
         {field: "id", headerName:'ID',
-        valueGetter: (params) => `${params.getValue('id')}`,},
-        {field: "student", headerName: 'RESULTS', renderCell: (params) => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>school_icon </Icon> </Button></Link>)},
+        valueGetter: (params) => `${params.getValue('id')}`},
+        { field: 'results', hide: true},
+        { field: 'resultsP', headerName:'RESULTS',
+        valueGetter: (params) => `${params.getValue('results')}%`,
+        sortComparator: (v1, v2, row1, row2) => row1.data.results - row2.data.results,},
         {field: 'open', headerName: `${' '}`, renderCell: (params) => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>)},
         {field: 'delete', headerName: `${' '}` ,renderCell: (params) => (<Button onClick={()=>{Confirm(params.data.id)}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
     ];
@@ -148,7 +146,7 @@ function AdminTopics(props){
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}>
             <Typography color="primary"><span className={classes.topicTitle}>Topics</span></Typography>
             <div className={classes.tabela}>
-                <DataGrid onRowHover={(Row)=>{linkage=Row.data.id}} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
+                <DataGrid onRowHover={(Row)=>{linkage=Row.data.id}} pageSize={5} components={{pagination: CustomPagination,}} rows={rows}  columns={columns} />               
             </div>
             <Button variant="contained" color="primary" className={classes.addButton} onClick={()=>handleOpen()}>Add topic</Button>
             <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false} style={{minWidth:'60%',minHeight:'40%'}}>
