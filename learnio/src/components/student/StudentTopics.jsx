@@ -6,8 +6,6 @@ import { Typography } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
-import PopupDialog from '../common/PopupDialog';
-import WrongPU from './WrongPU';
 
 
 const ColorButton = withStyles((theme) => ({
@@ -82,18 +80,6 @@ function CustomPagination(props) {
 
 
 function StudentTopics(){
-
-  //ovo je dodano za provjeru WrongPU
-  const [openWrongPU,setWrongPU]=React.useState(false); 
-  const handleCloseWrongPU=()=>{
-    setWrongPU(false)
-  }
-  const handleOpenWrongPU=()=>{
-    setWrongPU(true);
-  }
-  //sve do ode 
-
-
 
     const classes = useStyles();
     var linkage='contacts' ;
