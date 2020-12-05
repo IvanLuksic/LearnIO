@@ -59,13 +59,14 @@ const fieldToRows=(field,ao,d)=>{
 
 function Matrica(props)
 {
-    const [fields, setFields]=useState(data);
+   const [fields, setFields]=useState(data);
    const [aoSelected,setAoSelected]=useState(1);
    const [dSelected,setDSelected]=useState(1);
    const [questionSelected,setQuestionSelected]=useState(null);
    const [openPopup, setOpenPopup] = useState(false);
    const aoLVL = 3;
    const dLVL = 3;
+   const id=props.id;
    
    //function that is executed on matrix field select
    const changeAoDSelected= (e,ao,d,quest)=>{
@@ -103,6 +104,5 @@ function Matrica(props)
         </Grid> 
         </div>
     )
-   
 }
 export default Matrica;

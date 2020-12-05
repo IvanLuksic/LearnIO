@@ -8,7 +8,7 @@ import Box from '@material-ui/core/Box';
 import Hidden from '@material-ui/core/Hidden';
 import {Link} from 'react-router-dom';
 import {useSelector,useDispatch} from 'react-redux';
-import {logOut} from '../../redux/actions';
+import {logOut} from '../../redux/actions/loginStatus';
 
 const useStyles = makeStyles((theme) => ({
     root: {

@@ -58,7 +58,7 @@ function App() {
                     <Route exact path="/" component={Home}/>
                     <Route path="/login" component={Login}/>
                     {StudentFeatures&&<Route exact path="/topics"component={StudentTopics}/>}
-                    {StudentFeatures&&<Route path="/topic/:id" component={Matrica}/>}
+                    {StudentFeatures&&<Route path="/topic/:nesto" component={Matrica}/>}
                     {AdminFeatures&&<Route path="/admin-topic/:id" component={MatricaAdmin}/>}
                     {AdminFeatures&&<Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>}
                     {AdminFeatures&&<Route exact path="/AdminTopic" component={AdminTopics}/>}

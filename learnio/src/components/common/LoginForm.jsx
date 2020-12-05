@@ -5,7 +5,7 @@ import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {studentLogIn, adminLogIn} from '../../redux/actions';
+import {studentLogIn, adminLogIn} from '../../redux/actions/loginStatus';
 
 const styles = {
     root: {

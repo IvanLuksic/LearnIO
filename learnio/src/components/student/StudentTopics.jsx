@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles,withStyles} from '@material-ui/core/styles';
 import { DataGrid} from '@material-ui/data-grid';
 import backgroundIMG from '../../images/learniobg10-15.png';
@@ -6,23 +6,10 @@ import { Typography } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
+import {useSelector, useDispatch} from 'react-redux';
+import {topicSelected} from '../../redux/actions/topicID';
+import fetchedTopics from './fetchedTopics.json'
 
-
-const ColorButton = withStyles((theme) => ({
-  root: {
-      border: 0,
-      MarginRight: 0,
-      marginLeft: "auto",
-      color: "#FFFFFF",
-      fontFamily: "Lobster !important",
-      borderRadius:"25px",
-      backgroundColor: "#EB4949",
-      maxHeight: 30,
-      '&:hover': {
-          backgroundColor: "#D54646",
-    },
-  },
-}))(Button);
 
 const useStyles = makeStyles((theme) => ({
 
@@ -60,7 +47,54 @@ const useStyles = makeStyles((theme) => ({
       marginTop:"15vh",
       marginBottom:"5vh",
     },
-
+    ColorButtonGrey: {
+      border: 0,
+      MarginRight: 0,
+      marginLeft: "auto",
+      color: "#FFFFFF",
+      fontFamily: "Lobster !important",
+      borderRadius:"25px",
+      backgroundColor: "#8c8c8c",
+      maxHeight: 30,
+      '&:hover': {
+      backgroundColor: "#595959",
+    },},
+    ColorButtonRed: {
+      border: 0,
+      MarginRight: 0,
+      marginLeft: "auto",
+      color: "#FFFFFF",
+      fontFamily: "Lobster !important",
+      borderRadius:"25px",
+      backgroundColor: "#EB4949",
+      maxHeight: 30,
+      '&:hover': {
+      backgroundColor: "#D54646",
+    },},
+    ColorButtonGreen: {
+      border: 0,
+      MarginRight: 0,
+      marginLeft: "auto",
+      color: "#FFFFFF",
+      fontFamily: "Lobster !important",
+      borderRadius:"25px",
+      backgroundColor: "#27ae60",
+      maxHeight: 30,
+      '&:hover': {
+          backgroundColor: "rgb(41, 97, 65)",
+    },},
+    ColorButtonBlue: {
+      border: 0,
+      MarginRight: 0,
+      marginLeft: "auto",
+      color: "#FFFFFF",
+      fontFamily: "Lobster !important",
+      borderRadius:"25px",
+      backgroundColor: "#4373ec",
+      maxHeight: 35,
+      '&:hover': {
+          backgroundColor: "#0e318b",
+    },},
   }));
 
 function CustomPagination(props) {
@@ -80,9 +114,18 @@ function CustomPagination(props) {
 
 
 function StudentTopics(){
-
+    const dispatch=useDispatch();
+    const [rows,setRows]=useState(fetchedTopics);
     const classes = useStyles();
-    var linkage='contacts' ;
+
+    function RenderStatusButton(id,status){
+      if(status=='locked') return (<Button size="small" className={classes.ColorButtonGrey}> Locked </Button>);
+      else if(status=='unlocked') return (<Link to={`/topic/${id}`} onClick={()=>{dispatch(topicSelected(id))}}><Button size="small" className={classes.ColorButtonRed}> Start </Button></Link>);
+      else if(status=='continue') return (<Link to={`/topic/${id}`} onClick={()=>{dispatch(topicSelected(id))}}><Button size="small" className={classes.ColorButtonBlue}> Continue </Button></Link>);
+      else if(status=='revise') return (<Link to={`/topic/${id}`} onClick={()=>{dispatch(topicSelected(id))}}><Button size="small" className={classes.ColorButtonGreen}> Revise </Button></Link>);
+      else return <p>sranje</p>;
+    };
+
     const columns = [
       { field: 'topic', width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
       { field: 'id', headerName:'ID'},
@@ -98,26 +141,15 @@ function StudentTopics(){
       { field: 'ao3P', headerName:'AO 3',
       valueGetter: (params) => `${params.getValue('ao3')}%`,
       sortComparator: (v1, v2, row1, row2) => row1.data.ao3 - row2.data.ao3,},
-      { field: 'open',sortable:false, headerName: `${' '}`, renderCell: () => (<Link to={'/topic/'+ linkage}><ColorButton size="small"> Open </ColorButton></Link>),
-      },
-    ];
-    const rows=[
-      { id: 1, topic:'Trigonometry 1', ao1:'70',ao2:'55', ao3:'66'},
-      { id: 2, topic:'Geometry 3', ao1:'100', ao2:'95', ao3:'76'},
-      { id: 3, topic:'Basic Calculus 2', ao1:'90', ao2:'65', ao3:'69'},
-      { id: 4, topic:'Trigonometry 2', ao1:'50',ao2:'30', ao3:'40'},
-      { id: 5, topic:'Geometry 1', ao1:'80', ao2:'95', ao3:'46'},
-      { id: 6, topic:'Basic Calculus 1', ao1:'80', ao2:'65', ao3:'59'},
-      { id: 7, topic:'Trigonometry 3', ao1:'60',ao2:'100', ao3:'36'},
-      { id: 8, topic:'Geometry 2', ao1:'90', ao2:'99', ao3:'86'},
-      { id: 9, topic:'Basic Calculus 3', ao1:'50', ao2:'85', ao3:'79'},
+      { field: 'status', hide: true},
+      { field: 'open',sortable:false, headerName: `${' '}`, renderCell: (params) => (RenderStatusButton(params.getValue('id'),params.getValue('status'))) },
     ];
 
     return(  
     <div style={{display: "flex", flexDirection: "column", justifyContent:"none", alignItems:"center"}} className={classes.background} >
         <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
         <div className={classes.tabela}>
-          <DataGrid disableSelectionOnClick={true}  onRowHover={(Row)=>{linkage=Row.data.id}} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />
+          <DataGrid disableSelectionOnClick={true} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />
         </div>
 
     </div>
