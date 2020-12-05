@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
         width:"90%",
       },
       [theme.breakpoints.up('md')]: {
-        width:"62%",
+        width:"55%",
       },
       [theme.breakpoints.up('xl')]: {
         width:"45%",
@@ -127,8 +127,8 @@ function AdminTopics(props){
     const columns=[
         {field: "names", width: 200, type:'string', renderHeader: () => (<strong>{"Names"}</strong>)},
         {field: "topic", width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
-        {field: "id", headerName:'ID',type:'number', valueGetter: (params) => `${params.getValue('id')}`,},
-        {field: "student", headerName: 'Results', renderCell: () => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>school_icon </Icon> </Button></Link>)},
+        {field: "id", headerName:'ID',type:'string', valueGetter: (params) => `${params.getValue('id')}`,},
+        {field: "results", headerName: 'Results',hide:true, renderCell: () => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>school_icon </Icon> </Button></Link>)},
         {field: 'open', headerName: `${'Edit'}`, renderCell: () => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>)},
         {field: 'delete', headerName: `${'Delete '}` , renderCell: (params) => (<Button onClick={()=>{Confirm(params.data.id)}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
         {field: 'add', headerName: `${'Add '}` ,sortable: false , renderHeader: () => (<Button onClick={()=>handleOpen()} className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>)},
