@@ -3,27 +3,27 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Class extends Model {
+  class clas extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsToMany(models.Subject,{through: 'Class-Subject'},{foreignKey: 'class_id'});
-      this.belongsToMany(models.User,{through: 'Class-Student'},{foreignKey: 'class_id'});
-      this.belongsToMany(models.Course,{through: 'Class-Course'},{foreignKey: 'class_id'});
-      this.belongsToMany(models.User,{through:'Class_of_Teacher'},{foreignKey: 'class_id'});
+      this.belongsToMany(models.subject,{through: 'class_subject',as: 'subject_class',foreignKey: 'class_id'});
+      this.belongsToMany(models.user,{through: 'class_student',as:'Students_class',foreignKey: 'class_id'});
+      this.belongsToMany(models.course,{through: 'class_course',as:'courses_class',foreignKey: 'class_id'});
+      this.belongsToMany(models.user,{through:'class_of_teacher',as:'Teachers_class',foreignKey: 'class_id'});
     }
   };
-  Class.init({
+  clas.init({
     school_year: DataTypes.STRING,
     name: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'Class',
+    modelName: 'clas',
     freezeTableName: true,
     timestamps: false
   });
-  return Class;
+  return clas;
 };

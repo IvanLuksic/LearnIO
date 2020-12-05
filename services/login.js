@@ -18,7 +18,7 @@ module.exports= class LoginService{//exportanje klasa na ovaj način-> module.ex
             this.Logger.error("Error in fetching user from database. "+error);
         }
     }
-    async getUserbyID(user_id)
+    async getUserByID(user_id)
     {
         try {
             const user=await this.User.findOne({

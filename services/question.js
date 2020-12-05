@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");//izvuc ga iz sequelizea koji vraca index.js file u modelsima
 const {sequelize}=require('../models');
 const queryInterface = sequelize.getQueryInterface();
-module.exports=class Question{
+module.exports=class question{
     constructor(question,logger,topic,save,course,user)//svi dependency modeli od ove klase
     {
         this.Question=question;
@@ -14,7 +14,7 @@ module.exports=class Question{
     //JSON.stringify RADI STRING, JSON.parse VRAĆA OBJEKT U JSON TIPU
      async getQuestionsFromSave(topics_id,courses_id,users_id)//za odredeni topic,usera i kurs izvuc pitanja iz tog topica i slozit ih po retcima i stupcima i vratit na frontend
      {
-        //1. vidit koliki je broj stupaca i redaka od tog TOPICA da znamo u for petlji izvlacit redom po retcima i stupcima ta pitanja i stavljat u json
+        //1. vidit koliki je broj stupaca i redaka od tog topicA da znamo u for petlji izvlacit redom po retcima i stupcima ta pitanja i stavljat u json
         try {
         try {
             var rows_columns= await this.Save.findOne({
@@ -26,10 +26,10 @@ module.exports=class Question{
         } catch (error) {
             throw(error);//idi na vanjski error handler-> OVO RADIMO ZATO JER BI SE ODI HANDLEA ERROR I DALJE BI SE SVE NASTAVILO RADIT NORMALNO A MI ZELIMO SVE PREKINUTI I IZACI IZ FUNKCIJE PA IDEMO SKROZ DO VANJSKOG ERROR HANDLEARA
         }
-        this.Logger.info(rows_columns.Topic.rows_D+' '+rows_columns.Topic.column_numbers);
+        this.Logger.info(rows_columns.topic.rows_D+' '+rows_columns.topic.column_numbers);
         //2. izvuci sva pitanja iz tog topica koja su spremljena za tog korisnika taj topic i kurs s potrebnin atributima
         try {
-            var questions= await this.Save.findAll({//vraca NIZ modela
+            varquestions= await this.Save.findAll({//vraca NIZ modela
                 attributes:['row_D','column_A','status'],
                 include:{model:this.Question,attributes:['id','text','question_type','image_path','answer_a','answer_b','answer_c','answer_d']},
                 where:{
@@ -42,16 +42,16 @@ module.exports=class Question{
         }
         //3. soritraj pitanja po retcima i stupcima sa 2 for petlje-> matrica json objekata sa podacima od pitanja 
         var matrica=[];//'1D matrica'-> niz koji predstavlja matricu-> slozeni po redu retci u matrici u 1 niz
-       // nodelogger.info('Questions array:\n'+questions[0]);
+       // nodelogger.info('questions array:\n'+questions[0]);
        
 
-       for(let i=1;i<=rows_columns.Topic.rows_D;i++) //jer se unutar question modela rows_columns nalazi includeani Topic model-> ugniježđeni su
+       for(let i=1;i<=rows_columns.topic.rows_D;i++) //jer se unutarquestion modela rows_columns nalazi includeani topic model-> ugniježđeni su
         {
-            for(let j=1;j<=rows_columns.Topic.column_numbers;j++)
+            for(let j=1;j<=rows_columns.topic.column_numbers;j++)
             {
                 for(let k=0;k<questions.length;k++)
                 {
-                    if(questions[k].row_D==i && questions[k].column_A==j)//nasli to pitanje
+                    if(questions[k].row_D==i &&questions[k].column_A==j)//nasli to pitanje
                     {
                         matrica.push(questions[k]);//stavi ga u niz matrice poredane po stupcu i retku
                         break;
@@ -61,7 +61,7 @@ module.exports=class Question{
         }
         return matrica;//nju vracamo-> U NJOJ BI TREBAO BITI ISPRAVAN REDOSLIJED PITANJA PO RETCIMA I STUPCIMA
     } catch (error) {
-            this.Logger.error('error in reading questions '+ error);
+            this.Logger.error('error in readingquestions '+ error);
             throw(error);//za index.js catch
         }
 
@@ -81,19 +81,19 @@ module.exports=class Question{
                 this.Logger.info('Error in fetching rows and columns of topic');
                 throw(error);//idi na vanjski error handler
             }
-            //2.za svaki redak i stupac po redu popunjavat pitanja u tablicu Save
-            //Izvlaci sva pitanja od tog retka i stupca za taj topic i od svih njih odaberi random jedno i pushaj ga u niz objekata koji ćemo kasnije bulk insertad u tablicu SAVE
+            //2.za svaki redak i stupac po redu popunjavat pitanja u tablicu save
+            //Izvlaci sva pitanja od tog retka i stupca za taj topic i od svih njih odaberi random jedno i pushaj ga u niz objekata koji ćemo kasnije bulk insertad u tablicu save
             var save_questions=[];//u njega ćemo spremat odabrano pitanje i kasnije ga bulk insertad
             var questions_ij=[];//u njega ćemo spremat sva pitanja s odredenim retkom i stupcom i birat random jednog
             var random;//random broj
-            var temp={};//privremeni objekt prije dodavanja u niz save questions
+            var temp={};//privremeni objekt prije dodavanja u niz savequestions
             var status_flag;//postavit ga na 1 2 3 ovisno o polozaju pitanja u matrici
             for(let i=1;i<=rows_columns.rows_D;i++)
             {
                 for(let j=1;j<=rows_columns.column_numbers;j++)
                 {
                     try {
-                        questions_ij=await this.Question.findAll({
+                       questions_ij=await this.Question.findAll({
                             attributes:['id'],//trebat će nam jedino id od pitanja
                             where:{
                                /*operator and*/ [Op.and]: [
@@ -103,12 +103,12 @@ module.exports=class Question{
                             },
                             raw:true//vrati niz objekata
                         });
-                        this.Logger.info('Succesfully read questions');
+                        this.Logger.info('Succesfully readquestions');
                     } catch (error) {
-                        this.Logger.error('Error in reading questions from QUESTIONS table');
+                        this.Logger.error('Error in readingquestions fromquestionS table');
                         throw(error);
                     }
-                    random=Math.floor(Math.random() * questions_ij.length);//random broj izmedu 0 i duljine niza -1
+                    random=Math.floor(Math.random() *questions_ij.length);//random broj izmedu 0 i duljine niza -1
                     //dodati atribute objektu prije nego ga dodamo u niz-> sve atribute koji trebaju tablici save
                     if(i==1&&j==1)//prvo pitanje moramo otkljucat
                     {
@@ -125,30 +125,30 @@ module.exports=class Question{
                         course_id:courses_id,
                         topic_id:topics_id,
                         student_id:students_id,
-                        question_id:questions_ij[random].id//id od rnadom questiona iz niza questiona
+                       question_id:questions_ij[random].id//id od rnadomquestiona iz nizaquestiona
                     }
                     save_questions.push(temp);
                     temp={};//vrati ga na prazan objekt
                 }
             }
-            //3. Kad smo dobili sva pitanja onda ih spremimo u SAVE tablicu
+            //3. Kad smo dobili sva pitanja onda ih spremimo u save tablicu
             try {
-                    const saved=await queryInterface.bulkInsert('Save',save_questions);//REDOSLIJED UPISIVANJA NIJE GARANTIRAN?
-                    this.Logger.info('Saved to database');
+                    const saved=await queryInterface.bulkInsert('save',save_questions);//REDOSLIJED UPISIVANJA NIJE GARANTIRAN?
+                    this.Logger.info('saved to database');
             } catch (error) {
-                this.Logger.error('Error in saving questions to database');
+                this.Logger.error('Error in savingquestions to database');
                 throw(error);
             }
 
         } catch (error) {
-            this.Logger.error('Error in generating questions '+error);
+            this.Logger.error('Error in generatingquestions '+error);
             throw(error);//za index.js
         }
        
     }
-    //1)ako je funkcija check answer uspješna odma se poziva i funkcija otkljucaj->AKO JE KRIV ODGOVOR ZASAD 2 OPCIJE:1)VRATI MU NEKI KOD+ PONOVI MU SVA PITANJA pomoću getQuestionsFromsave,2) SAMO VRATI STATUSNI KOD POMOCU KOJEG ON SKUZI DA NE MORA NISTA RENDERIRAT
-    //2)NAKON funkcije otkljucaj se mijenjaju statusi onih koji se otkljucaju-> to radimo u LAGORITMU OTKLJUCAVANJA-> promjene se rade direktno u bazi nad njima po question_id
-    //3)Nakon toga šaljemo u RESPONSE sve answere pomoću funkcije getQuestionsFromSave koje će se ponovno renderirat na klijentu
+    //1)ako je funkcija check answer uspješna odma se poziva i funkcija otkljucaj->AKO JE KRIV ODGOVOR ZASAD 2 OPCIJE:1)VRATI MU NEKI KOD+ PONOVI MU SVA PITANJA pomoću getquestionsFromsave,2) SAMO VRATI STATUSNI KOD POMOCU KOJEG ON SKUZI DA NE MORA NISTA RENDERIRAT
+    //2)NAKON funkcije otkljucaj se mijenjaju statusi onih koji se otkljucaju-> to radimo u LAGORITMU OTKLJUCAVANJA-> promjene se rade direktno u bazi nad njima poquestion_id
+    //3)Nakon toga šaljemo u RESPONSE sve answere pomoću funkcije getquestionsFromsave koje će se ponovno renderirat na klijentu
     async checkAnswer(question_id,answer)
     /*answer moze biti:a) Slovo-> a,b,c,d
                         b)Rjesenje-> string*/
@@ -156,15 +156,15 @@ module.exports=class Question{
         //1.Izvuci to pitanje iz baze
         try {
             try {
-                var question=await this.Question.findOne({
+                varquestion=await this.Question.findOne({
                     attributes:['solution'],
                     where:{
                         id:question_id
                     }
                 });
-                this.Logger.info('Question fetched succesfully from database');
+                this.Logger.info('question fetched succesfully from database');
             } catch (error) {
-                this.Logger.error('Error in fetching question from database');
+                this.Logger.error('Error in fetchingquestion from database');
                 throw(error);
             }
             if(question.solution==answer)//u oba slucaja je string samo je u jednome brojcani string 
@@ -178,9 +178,9 @@ module.exports=class Question{
         }
 
     }
-    async UnlockQuestions(students_id,topics_id,courses_id,questions_id)//promjena statusa questiona u tablici save
+    async UnlockQuestions(students_id,topics_id,courses_id,questions_id)//promjena statusaquestiona u tablici save
     {
-        //1. saznaj poziciju u retku i stupcu od tog questiona
+        //1. saznaj poziciju u retku i stupcu od togquestiona
         try {
             try {
                 var question=await  this.Question.findOne({
@@ -189,16 +189,16 @@ module.exports=class Question{
                         id:questions_id
                     }
                 });
-                this.Logger.info('Question fetched succesfully from database');
+                this.Logger.info('question fetched succesfully from database');
                 var topic=await this.Topic.findOne({
                     attributes:['rows_D','column_numbers'],
                     where:{
                         id:topics_id
                     }
                  } );
-                this.Logger.info('Topic fetched succesfully from database');
+                this.Logger.info('topic fetched succesfully from database');
             } catch (error) {
-                this.Logger.error('error in fetching question from database '+error);
+                this.Logger.error('error in fetchingquestion from database '+error);
                 throw(error);
             }
             //koordinate tocnog pitanja u matrici
@@ -283,20 +283,20 @@ module.exports=class Question{
                         course_id:courses_id,
                         topic_id:topics_id,
                         student_id:students_id,
-                        question_id:questions_id
+                       question_id:questions_id
                     }
                 });
-                this.Logger.info('Question status changed succesfully');
+                this.Logger.info('question status changed succesfully');
             } catch (error) {
-                this.Logger.error('Error in updating status of questions '+error);
+                this.Logger.error('Error in updating status ofquestions '+error);
                 throw(error);
             }
         } catch (error) {
-            this.Logger.error('Error in unlocking questions '+error);
+            this.Logger.error('Error in unlockingquestions '+error);
             throw(error);
         }
     }
-    async WrongAnswer(students_id,topics_id,courses_id,questions_id)//ALGORITAM KADA NETOCNO ODGOVORI->ova 4(dovoljna prva 3 ali kad imamo 4. iskoristimo ga) argumenta jedinstveno odreduju redak u tablici SAVE-> samo mu promijenimo status
+    async WrongAnswer(students_id,topics_id,courses_id,questions_id)//ALGORITAM KADA NETOCNO ODGOVORI->ova 4(dovoljna prva 3 ali kad imamo 4. iskoristimo ga) argumenta jedinstveno odreduju redak u tablici save-> samo mu promijenimo status
     {
         //+ DODAT U RESPONSE flag koji ce njima oznacit jeli tocno ili netocno
         try {
@@ -306,10 +306,10 @@ module.exports=class Question{
                         course_id:courses_id,
                         topic_id:topics_id,
                         student_id:students_id,
-                        question_id:questions_id
+                       question_id:questions_id
                 }
                });
-               this.Logger.info('Succesful locked question');
+               this.Logger.info('Succesful lockedquestion');
             } catch (error) {
                 this.Logger.error('Error in accesing wrong answer in database ');
                 throw(error);

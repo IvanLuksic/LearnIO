@@ -1,4 +1,4 @@
-const {Login_instance, Session_instance}=require('../../services');//object destrucuturing(jer require vrati objekt) + automatski trazi index.js file u service folderu
+const {Login_instance, session_instance}=require('../../services');//object destrucuturing(jer require vrati objekt) + automatski trazi index.js file u service folderu
 const {nodelogger}=require('../../loaders/logger');//-> cacheano je
 module.exports={
     logiraj:async (req,res)=>{
@@ -12,7 +12,7 @@ module.exports={
                 req.session.user=user.id;//ako je loadan napravimo mu session id
                 req.session.user_type=user.user_type;
                 try {
-                    await Session_instance.createSession(user.id);//pohrani ga u sesiju za pracenje aktivnosti
+                    await session_instance.createsession(user.id);//pohrani ga u sesiju za pracenje aktivnosti
                 } catch (error) {
                     throw(error);//idi na iduci catch handler-> ovi skroz doli
                 }
@@ -33,7 +33,7 @@ module.exports={
 
              } else if(!user) {
                 nodelogger.error('Login failed');
-               return res.status(401).send('Authnetication failed. Username not found. Check your username');
+               return res.status(401).send('Authnetication failed. username not found. Check your username');
             }
             else {
                 nodelogger.error('Login failed');

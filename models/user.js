@@ -3,22 +3,22 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class user extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsToMany(models.Subject,{through: 'Teacher-Subject'},{foreignKey: 'teacher_id'});
-      this.hasMany(models.Result,{foreignKey: 'student_id'});
-      this.belongsToMany(models.Class,{through:' Class-Student'},{foreignKey: 'student_id'});
-      this.hasMany(models.Session,{foreignKey: 'user_id'});
-      this.hasMany(models.Save,{foreignKey: 'student_id'});
-      this.belongsToMany(models.Class,{through:'Class_of_Teacher'},{foreignKey: 'teacher_id'});
+      this.belongsToMany(models.subject,{through: 'teacher_subject',as:'subjects_teacher',foreignKey: 'teacher_id'});
+      this.hasMany(models.result,{foreignKey: 'student_id'});
+      this.belongsToMany(models.clas,{through:' class_student',as:'classes_student',foreignKey: 'student_id'});
+      this.hasMany(models.session,{foreignKey: 'user_id'});
+      this.hasMany(models.save,{foreignKey: 'student_id'});
+      this.belongsToMany(models.clas,{through:'class_of_teacher',as:'classes_teacher',foreignKey: 'teacher_id'});
     }
   };
-  User.init({
+  user.init({
     name: DataTypes.STRING,
     surname: DataTypes.STRING,
     mail: DataTypes.STRING,
@@ -29,9 +29,9 @@ module.exports = (sequelize, DataTypes) => {
     user_type: DataTypes.SMALLINT
   }, {
     sequelize,
-    modelName: 'User',
+    modelName: 'user',
     freezeTableName: true,
     timestamps: false
   });
-  return User;
+  return user;
 };

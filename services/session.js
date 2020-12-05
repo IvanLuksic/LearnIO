@@ -1,13 +1,13 @@
-module.exports= class Session{
+module.exports= class session{
     constructor(session_model,logger)
     {
-        this.Session=session_model;
+        this.session=session_model;
         this.Logger=logger;
     }
-    async createSession(users_id)
+    async createsession(users_id)
     {
         try {
-           await this.Session.create({
+           await this.session.create({
                 timestamp_LOGIN: new Date(),
                 timestamp_LOGOUT:new Date(),
                 user_id:users_id

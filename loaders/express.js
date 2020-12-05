@@ -29,7 +29,7 @@ module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcij
     store: new PostgreSqlStore({
       conString:process.env.DATABASE_URL,
       tableName : 'user_session',
-      pruneSessionInterval:60//svako 60 sekundi brise sesije koje se expireale
+      prunesessionInterval:60//svako 60 sekundi brise sesije koje se expireale
     }),
     cookie:{
       path: '/', httpOnly: true, secure: false, maxAge: 1000*60*60*24 // POSTAVTI NA NEKI RAZUMNI BROJ->defulte vrijednosti-> maxage null znaci da se brise kada izade iz browsera,BROJ MILISKEUNDI KOLIKO TRAJE COOKIE

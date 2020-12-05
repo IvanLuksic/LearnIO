@@ -3,28 +3,28 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Result extends Model {
+  class result extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.Subject,{foreignKey: 'subject_id'});
-      this.belongsTo(models.Course,{foreignKey: 'course_id'});
-      this.belongsTo(models.User, {foreignKey: 'student_id'});
-      this.belongsTo(models.Topic,{foreignKey: 'topic_id'});
+      this.belongsTo(models.subject,{foreignKey: 'subject_id'});
+      this.belongsTo(models.course,{foreignKey: 'course_id'});
+      this.belongsTo(models.user, {foreignKey: 'student_id'});
+      this.belongsTo(models.topic,{foreignKey: 'topic_id'});
     }
   };
-  Result.init({
+  result.init({
     grade: DataTypes.INTEGER,
     result_array_by_columns: DataTypes.ARRAY(DataTypes.DECIMAL),
     booleanblue: DataTypes.BOOLEAN
   }, {
     sequelize,
-    modelName: 'Result',
+    modelName: 'result',
     freezeTableName: true,
     timestamps: false
   });
-  return Result;
+  return result;
 };

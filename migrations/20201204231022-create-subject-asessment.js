@@ -1,35 +1,32 @@
 'use strict';
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-   await queryInterface.createTable(
-    'class_of_teacher',//ime tablice isto kao ono u through
-    {
-     teacher_id:{
+    await queryInterface.createTable('subject_assesment', {
+      subject_id:{
         type: Sequelize.INTEGER,
         primaryKey:true,
+        foreignkey:true,
         references:{
-          model: 'user',
+          model: 'subject',
           key: 'id',
         },
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
       },
-    class_id:{
+     asessment_id:{
         type: Sequelize.INTEGER,
         primaryKey:true,
+        foreign_key:true,
         references:{
-          model: 'clas',
+          model: 'asessment_objective',
           key: 'id',
         },
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
       }
-    }
-  )
+    });
   },
-
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('class_of_teacher');
+    await queryInterface.dropTable('subject_assesment');
   }
 };

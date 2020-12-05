@@ -3,24 +3,24 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class session extends Model {
+  class class_subject extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.user,{foreignKey: 'user_id'});
+      // define association here
     }
   };
-  session.init({
-    timestamp_LOGIN: DataTypes.DATE,
-    timestamp_LOGOUT: DataTypes.DATE
+  class_subject.init({
+    subject_id: DataTypes.INTEGER,
+    class_id: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'session',
+    modelName: 'class_subject',
     freezeTableName: true,
     timestamps: false
   });
-  return session;
+  return class_subject;
 };

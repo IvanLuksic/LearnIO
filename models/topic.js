@@ -3,31 +3,31 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Topic extends Model {
+  class topic extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.Subject,{foreignKey: 'subject_id'});
-      this.hasMany(models.Result,{foreignKey: 'topic_id'});
-      this.hasMany(models.Save,{foreignKey: 'topic_id'});
-      this.hasMany(models.Question,{foreignKey: 'topic_id'});
-      this.belongsToMany(models.Topic,{through: 'Tags_of_topic',as: 'source_topic'},{foreignKey: 'source_topic'});
-      this.belongsToMany(models.Topic,{through: 'Tags_of_topic',as: 'associated_topic'},{foreignKey: 'povezani_topic'});
-      this.belongsToMany(models.Course,{through:'Course-Topic'},{foreignKey: 'topic_id'});
+      this.belongsTo(models.subject,{foreignKey: 'subject_id'});
+      this.hasMany(models.result,{foreignKey: 'topic_id'});
+      this.hasMany(models.save,{foreignKey: 'topic_id'});
+      this.hasMany(models.question,{foreignKey: 'topic_id'});
+     /* this.belongsToMany(models.topic,{through: models.tags_of_topic,as: 'Sources',foreignKey: 'associated_topic'});
+      this.belongsToMany(models.topic,{through: models.tags_of_topic,as: 'Associateds',foreignKey: 'source_topic'});*/
+      this.belongsToMany(models.course,{through:'course_topic',as:'courses_topic',foreignKey: 'topic_id'});
     }
   }
-  Topic.init({
+  topic.init({
     name: DataTypes.STRING,
     rows_D: DataTypes.INTEGER,
     column_numbers: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Topic',
+    modelName: 'topic',
     freezeTableName: true,
     timestamps: false
   });
-  return Topic;
+  return topic;
 };

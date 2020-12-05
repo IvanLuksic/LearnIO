@@ -3,21 +3,21 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Question extends Model {
+  class question extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.hasMany(models.Save,{foreignKey: 'question_id'});
-      this.belongsTo(models.Topic,{foreignKey: 'topic_id'});
+      this.hasMany(models.save,{foreignKey: 'question_id'});
+      this.belongsTo(models.topic,{foreignKey: 'topic_id'});
     }
   };
-  Question.init({
+ question.init({
     text: DataTypes.STRING,
     solution: DataTypes.STRING,
-    question_type: DataTypes.SMALLINT,
+   question_type: DataTypes.SMALLINT,
     row_D: DataTypes.SMALLINT,
     column_A: DataTypes.SMALLINT,
     image_path: DataTypes.STRING,
@@ -27,9 +27,9 @@ module.exports = (sequelize, DataTypes) => {
     answer_d: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'Question',
+    modelName: 'question',
     freezeTableName: true,
     timestamps: false
   });
-  return Question;
+  return question;
 };

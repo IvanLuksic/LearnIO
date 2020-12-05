@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
  
-     await queryInterface.bulkInsert('Question',
+     await queryInterface.bulkInsert('question',
      [{"text":"PITANJE1.","solution":"a","question_type":1,"row_D":1,"column_A":1,"answer_a":"Vesaccumsneife.","answer_b":"In asi at nibh.","answer_c":"Mauris enim leo, rhoncusro.","answer_d":"Crmpeit.","topic_id":1},
      {"text":"PITANJE2.","solution":"a","question_type":1,"row_D":1,"column_A":1,"answer_a":"Vesaccumsneife.","answer_b":"In asi at nibh.","answer_c":"Mauris enim leo, rhoncusro.","answer_d":"Crmpeit.","topic_id":1},
      {"text":"PITANJE3","solution":"a","question_type":1,"row_D":1,"column_A":1,"answer_a":"Vesaccumsneife.","answer_b":"In asi at nibh.","answer_c":"Mauris enim leo, rhoncusro.","answer_d":"Crmpeit.","topic_id":1},
@@ -51,7 +51,7 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
    
-    await queryInterface.bulkDelete('Question', null, {});
+    await queryInterface.bulkDelete('question', null, {});
     
   }
 };

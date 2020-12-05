@@ -3,28 +3,28 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Save extends Model {
+  class save extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.Course,{foreignKey: 'course_id'});
-      this.belongsTo(models.Topic,{foreignKey: 'topic_id'});
-      this.belongsTo(models.User,{foreignKey: 'student_id'});
-      this.belongsTo(models.Question,{foreignKey: 'question_id'});
+      this.belongsTo(models.course,{foreignKey: 'course_id'});
+      this.belongsTo(models.topic,{foreignKey: 'topic_id'});
+      this.belongsTo(models.user,{foreignKey: 'student_id'});
+      this.belongsTo(models.question,{foreignKey: 'question_id'});
     }
   };
-  Save.init({
+  save.init({
     row_D: DataTypes.SMALLINT,
     column_A: DataTypes.SMALLINT,
     status: DataTypes.SMALLINT
   }, {
     sequelize,
-    modelName: 'Save',
+    modelName: 'save',
     freezeTableName: true,
     timestamps: false,
   });
-  return Save;
+  return save;
 };

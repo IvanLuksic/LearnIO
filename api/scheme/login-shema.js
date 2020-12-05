@@ -4,7 +4,7 @@ login:{
     type: "object",
     properties:{
         username:{
-            title:"Username od korisnika",
+            title:"username od korisnika",
             type:"string",
             minLength:1
         },

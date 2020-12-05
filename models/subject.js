@@ -3,31 +3,31 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Subject extends Model {
+  class subject extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.hasMany(models.Topic,{foreignKey: 'subject_id'});
-      this.belongsToMany(models.Course,{through: 'Course-Subject'},{foreignKey: 'subject_id'});
-      this.belongsToMany(models.Asessment_objective,{through: 'Subject-Asessment'},{foreignKey: 'subject_id'});
-      this.belongsToMany(models.Class,{through: 'Class-Subject'},{foreignKey: 'subject_id'});
-      this.belongsToMany(models.User,{through: 'Teacher-Subject'},{foreignKey: 'subject_id'});
-      this.hasMany(models.Result,{foreignKey: 'subject_id'});
+      this.hasMany(models.topic,{foreignKey: 'subject_id'});
+      this.belongsToMany(models.course,{through: 'course_subject',as:'courses_subject',foreignKey: 'subject_id'});
+      this.belongsToMany(models.asessment_objective,{through: 'subject_assesment',as:'Asessments_subject',foreignKey: 'subject_id'});
+      this.belongsToMany(models.clas,{through: 'class_subject',as:'classes_subject',foreignKey: 'subject_id'});
+      this.belongsToMany(models.user,{through: 'teacher_subject',as:'Teachers_subject',foreignKey: 'subject_id'});
+      this.hasMany(models.result,{foreignKey: 'subject_id'});
     }
    
   }
-  Subject.init({
+  subject.init({
     name: DataTypes.STRING,
     column_number: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Subject',
+    modelName: 'subject',
     freezeTableName: true,
     timestamps: false
   });
  
-  return Subject;
+  return subject;
 };
