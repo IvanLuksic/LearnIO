@@ -37,14 +37,6 @@ const useStyles = makeStyles((theme) => ({
     lobster: {
         fontFamily: "Lobster"
     },
-  matrix:{
-      marginRight:"2vh",
-      [theme.breakpoints.up('md')]: {
-           marginTop:"10vh",
-           overflowY: "scroll",
-           maxHeight: "90vh"
-        },
-  },
 
 }));
 
@@ -81,11 +73,14 @@ function Matrica(props)
        setDSelected(d);
        setAoSelected(ao);
        setQuestionSelected(quest);
-       setOpenPopup(true);
       };
    const changeQuestions=(field)=>{
       setFields(field);
     };
+  const handleChangeAndPopup = (event,ao,d,question,status)=>{
+    changeAoDSelected(event,ao,d,question);
+    if(status!=="LOCKED") setOpenPopup(true);
+  }
 
    const classes = useStyles();
     return(
@@ -95,14 +90,14 @@ function Matrica(props)
             <QuestionPopup ao={aoLVL} question={questionSelected} setOpenPopup={setOpenPopup} changeQuestions={changeQuestions} field={fields}/>
           </PopupDialog>        
         }
-        <Grid container direction="row" justify="center" alignItems="center">
-            <Grid container item md={6} direction="row"  className={classes.matrix} justify="center" alignItems="center" >
+        <Grid container direction="column" justify="flex-start" alignItems="center">
+            <Grid container item md={6} direction="row"  justify="center" alignItems="center" >
                 <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
                     <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>Topic</Typography></Grid>
                     <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></Grid>
                 </Grid>
                 <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
-                    <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,aoLVL,dLVL)} aoSelected={aoSelected} dSelected={dSelected}/>
+                    <DisplayMatrix changeSelected={handleChangeAndPopup} ar={fieldToRows(fields,aoLVL,dLVL)} aoSelected={aoSelected} dSelected={dSelected}/>
                 </Grid>
             </Grid>
         </Grid> 

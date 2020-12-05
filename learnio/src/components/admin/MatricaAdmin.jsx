@@ -47,14 +47,6 @@ const useStyles = makeStyles((theme) => ({
             height: "85vh",
           },
     },
-    matrix:{
-        marginRight:"2vh",
-        [theme.breakpoints.up('md')]: {
-             marginTop:"10vh",
-             overflowY: "scroll",
-             maxHeight: "90vh"
-          },
-    },
     questionsTable:{
         minHeight: "100vh",
         paddingTop:"14vh"
@@ -158,7 +150,7 @@ function MatricaAdmin(props)
     return (
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         <Grid container direction="row" justify="center" alignItems="center"  height="100%" >
-            <Grid container item md={6} direction="row"  className={classes.matrix} justify="center" alignItems="center" >
+            <Grid container item md={6} direction="row" justify="center" alignItems="center" >
                 <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
                     <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>Topic {topicID}</Typography></Grid>
                     <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></Grid>
