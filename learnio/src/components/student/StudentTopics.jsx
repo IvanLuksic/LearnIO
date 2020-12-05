@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
     },
 
     tabela:{
-      paddingBottom:"10vh",
       borderColor: "transparent !important",
       height:"25em",
       [theme.breakpoints.down('sm')]: {
@@ -59,14 +58,10 @@ const useStyles = makeStyles((theme) => ({
     },
     topicTitle:{
       fontFamily:'Lobster',
-      fontSize:'6vh',
-      [theme.breakpoints.down('sm')]: {
-        paddingTop:"10vh",
-      },
-      [theme.breakpoints.up('md')]: {
-        paddingTop:"1vh",
-      }
-    }
+      fontSize:'8vh',
+      marginTop:"15vh",
+      marginBottom:"5vh",
+    },
 
   }));
 
@@ -133,17 +128,10 @@ function StudentTopics(){
     ];
 
     return(  
-    <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background} >
-        <Typography color="primary"><span className={classes.topicTitle}>Topics</span></Typography>
+    <div style={{display: "flex", flexDirection: "column", justifyContent:"none", alignItems:"center"}} className={classes.background} >
+        <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
         <div className={classes.tabela}>
           <DataGrid  onRowHover={(Row)=>{linkage=Row.data.id}} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />
-        </div>
-
-        <div>
-          <button onClick={()=>handleOpenWrongPU()}></button>
-          <PopupDialog openPopup={openWrongPU} setOpenPopup={handleCloseWrongPU} clickAway={false} style={{minWidth:'40%',minHeight:'40%'}}>
-              <WrongPU closePopup={handleCloseWrongPU}/>
-            </PopupDialog>
         </div>
 
     </div>

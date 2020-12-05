@@ -42,20 +42,19 @@ const useStyles = makeStyles((theme) => ({
       },
     },
     topicTitle:{
-        fontFamily:'Lobster',
-        fontSize:'6vh',
-        [theme.breakpoints.down('sm')]: {
-          paddingTop:"10vh",
-        },
-        [theme.breakpoints.up('md')]: {
-          paddingTop:"1vh",
-        },
+      fontFamily:'Lobster',
+      fontSize:'8vh',
+      marginTop:"15vh",
+      marginBottom:"5vh",
     },
     addButton:{
-      [theme.breakpoints.up('md')]: {
-        paddingLeft:"4em",
-        paddingRight:"4em",
-      },
+      position:'relative',
+      marginLeft:"auto",
+      marginRight:"1em", 
+      borderRadius:'25px',
+      maxWidth:"3em",
+      minWidth:"3em",
+      backgroundColor:"transparent"
     },
     popupStyle:{
       minWidth:'60%',
@@ -133,24 +132,24 @@ function AdminTopics(props){
 
     const columns=[
         {field: "topic", width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
-        {field: "id", headerName:'ID',
-        valueGetter: (params) => `${params.getValue('id')}`,},
-        {field: "student", headerName: 'RESULTS', renderCell: (params) => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>school_icon </Icon> </Button></Link>)},
-        {field: 'open', headerName: `${' '}`, renderCell: (params) => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>)},
-        {field: 'delete', headerName: `${' '}` ,renderCell: (params) => (<Button onClick={()=>{Confirm(params.data.id)}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
+        {field: "id", headerName:'ID',type:'number', valueGetter: (params) => `${params.getValue('id')}`,},
+        {field: "student", headerName: 'Results', renderCell: () => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>school_icon </Icon> </Button></Link>)},
+        {field: 'open', headerName: `${'Edit'}`, renderCell: () => (<Link to={'/admin-topic/'+ linkage}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>)},
+        {field: 'delete', headerName: `${'Delete '}` , renderCell: (params) => (<Button onClick={()=>{Confirm(params.data.id)}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
+        {field: 'add', headerName: `${'Add '}` ,sortable: false , renderHeader: () => (<Button onClick={()=>handleOpen()} className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>)},
     ];
+
 
 
     return(
       <div>
       <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this question?" functionToConfirm={DeleteTopic}/>
       {
-        <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}>
-            <Typography color="primary"><span className={classes.topicTitle}>Topics</span></Typography>
+        <div style={{display: "flex", flexDirection: "column",justifyContent:"none", alignItems:"center"}} className={classes.background}>
+            <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
             <div className={classes.tabela}>
-                <DataGrid onRowHover={(Row)=>{linkage=Row.data.id}} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
+                <DataGrid disableSelectionOnClick={true} onRowHover={(Row)=>{linkage=Row.data.id}} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
             </div>
-            <Button variant="contained" color="primary" className={classes.addButton} onClick={()=>handleOpen()}>Add topic</Button>
             <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false} style={{minWidth:'60%',minHeight:'40%'}}>
               <AddTopicPU closePopup={handleClose} addTopic={addQuestion}/>
             </PopupDialog>

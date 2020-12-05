@@ -121,6 +121,9 @@ li {
 .lobster {
     font-family: "Lobster";
 }
+.MuiDataGrid-columnsContainer .MuiDataGrid-colCell:nth-last-of-type(2) .MuiDataGrid-iconSeparator	{
+    display:none !important;
+}  
 
 .popup-content{
     border-radius: 7px;
