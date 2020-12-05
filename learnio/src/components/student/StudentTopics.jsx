@@ -112,7 +112,7 @@ function StudentTopics(){
       { field: 'ao3P', headerName:'AO 3',
       valueGetter: (params) => `${params.getValue('ao3')}%`,
       sortComparator: (v1, v2, row1, row2) => row1.data.ao3 - row2.data.ao3,},
-      { field: 'open', headerName: `${' '}`, renderCell: (params) => (<Link to={'/topic/'+ linkage}><ColorButton size="small"> Open </ColorButton></Link>),
+      { field: 'open',sortable:false, headerName: `${' '}`, renderCell: () => (<Link to={'/topic/'+ linkage}><ColorButton size="small"> Open </ColorButton></Link>),
       },
     ];
     const rows=[
@@ -131,7 +131,7 @@ function StudentTopics(){
     <div style={{display: "flex", flexDirection: "column", justifyContent:"none", alignItems:"center"}} className={classes.background} >
         <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
         <div className={classes.tabela}>
-          <DataGrid  onRowHover={(Row)=>{linkage=Row.data.id}} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />
+          <DataGrid disableSelectionOnClick={true}  onRowHover={(Row)=>{linkage=Row.data.id}} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />
         </div>
 
     </div>
