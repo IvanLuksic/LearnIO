@@ -6,9 +6,10 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import TextField from '@material-ui/core/TextField';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import PopupDialog from '../common/PopupDialog';
 import WrongPU from './WrongPU';
+import Grid from '@material-ui/core/Grid';
+
 
 
 
@@ -40,6 +41,7 @@ const useStyles=makeStyles(theme =>({
         textAlign:"left"
     },
     saveButton:{
+        display:"block",
         margin:"2em 0em",
         padding:"0.5em 3em ",
         fontFamily:"Lobster"
@@ -122,28 +124,36 @@ function QuestionPopup(props){
                         <DialogContent className={classes.dialogPart2}>
                             {  
                             showABC ?
-                                <div>
-                                    <FormControl component="fieldset" >
-                                        <FormLabel component="legend" style={{color:"grey"}}>{props.question.text}</FormLabel>
-                                        <div style={{display:'flex',margin: "2em auto"}}>
-                                        <RadioGroup aria-label="answer" component="div" name="answer1" value={value} onChange={handleChange} className={classes.radioGroup}>
-                                                <DisplayAnswers questions={props.question.answerABC}/>
-                                        </RadioGroup>
-                                        </div>
-                                    </FormControl>
-                                    <Button variant="contained" color="primary" onClick={handleSave} className={classes.saveButton}>Save</Button>
-                                </div>
-                                : 
-                                <div>
-                                    <FormControl component="fieldset"> 
-                                        <FormLabel component="legend">{props.question.text}</FormLabel>
-                                            <div className={classes.imgWithText} >
-                                            <img src={props.question.url} className={classes.questionImg} style={{display:props.question.photo}} alt="slika zadatka"></img>
-                                            <TextField id="standard-basic" className={classes.answerText} label="Unesi kratki odgovor" onChange={handleChange}/> 
+                                <Grid container direction="column" justify="center" alignItems="center">
+                                    <Grid item xs={9}>
+                                        <FormControl component="fieldset" >
+                                            <FormLabel component="legend" style={{color:"grey"}}>{props.question.text}</FormLabel>
+                                            <div style={{display:'flex',margin: "2em auto"}}>
+                                            <RadioGroup aria-label="answer" component="div" name="answer1" value={value} onChange={handleChange} className={classes.radioGroup}>
+                                                    <DisplayAnswers questions={props.question.answerABC}/>
+                                            </RadioGroup>
                                             </div>
-                                    </FormControl>
-                                    <Button variant="contained" color="primary" onClick={handleSave} className={classes.saveButton}>Save</Button>
-                                </div>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={3} >
+                                        <Button variant="contained" color="primary" onClick={handleSave} className={classes.saveButton}>Save</Button>
+                                    </Grid>
+                                </Grid>
+                                : 
+                                <Grid container direction="column" justify="center" alignItems="center">
+                                    <Grid item xs={7}>                                    
+                                        <FormControl component="fieldset"> 
+                                            <FormLabel component="legend">{props.question.text}</FormLabel>
+                                                <div className={classes.imgWithText} >
+                                                <img src={props.question.url} className={classes.questionImg} style={{display:props.question.photo}} alt="slika zadatka"></img>
+                                                <TextField id="standard-basic" className={classes.answerText} label="Unesi kratki odgovor" onChange={handleChange}/> 
+                                                </div>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={5}>
+                                        <Button variant="contained" color="primary" onClick={handleSave} className={classes.saveButton}>Save</Button>
+                                    </Grid>
+                                </Grid>
                             }
                         </DialogContent>
                     </div>

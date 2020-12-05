@@ -91,7 +91,7 @@ function Matrica(props)
     return(
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         {
-          <PopupDialog openPopup={openPopup} setOpenPopup={setOpenPopup} clickAway={true}>
+          <PopupDialog openPopup={openPopup} setOpenPopup={setOpenPopup} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
             <QuestionPopup ao={aoLVL} question={questionSelected} setOpenPopup={setOpenPopup} changeQuestions={changeQuestions} field={fields}/>
           </PopupDialog>        
         }
