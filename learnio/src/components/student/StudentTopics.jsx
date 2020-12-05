@@ -35,10 +35,10 @@ const useStyles = makeStyles((theme) => ({
         width:"90%",
       },
       [theme.breakpoints.up('md')]: {
-        width:"50%",
+        width:"60%",
       },
       [theme.breakpoints.up('xl')]: {
-        width:"40%",
+        width:"44%",
       },
     },
     topicTitle:{
@@ -129,6 +129,7 @@ function StudentTopics(){
     const columns = [
       { field: 'topic', width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
       { field: 'id', headerName:'ID'},
+      { field: 'grade', headerName:'Grade'},
       { field: 'ao1', hide: true},
       { field: 'ao1P', headerName:'AO 1',
         valueGetter: (params) => `${params.getValue('ao1')}%`,

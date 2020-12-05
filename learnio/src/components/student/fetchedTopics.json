@@ -1,10 +1,10 @@
 [
 { "id": 1, "topic":"Trigonometry 1","grade":5, "ao1":70,"ao2":55, "ao3":66,"status":"locked"},
-{ "id": 2, "topic":"Basic Calculus 2","grade":5, "ao1":90, "ao2":60, "ao3":69,"status":"unlocked"},
-{ "id": 4, "topic":"Trigonometry 2","grade":5, "ao1":50,"ao2":30, "ao3":40,"status":"continue"},
+{ "id": 2, "topic":"Basic Calculus 2","grade":3, "ao1":90, "ao2":60, "ao3":69,"status":"unlocked"},
+{ "id": 4, "topic":"Trigonometry 2","grade":4, "ao1":50,"ao2":30, "ao3":40,"status":"continue"},
 { "id": 5, "topic":"Geometry 1","grade":5, "ao1":80, "ao2":95, "ao3":46,"status":"revise"},
-{ "id": 6, "topic":"Basic Calculus 1","grade":5, "ao1":80, "ao2":65, "ao3":59,"status":"locked"},
-{ "id": 7, "topic":"Trigonometry 3","grade":5, "ao1":60,"ao2":100, "ao3":36,"status":"continue"},
+{ "id": 6, "topic":"Basic Calculus 1","grade":2, "ao1":80, "ao2":65, "ao3":59,"status":"locked"},
+{ "id": 7, "topic":"Trigonometry 3","grade":2, "ao1":60,"ao2":100, "ao3":36,"status":"continue"},
 { "id": 8, "topic":"Geometry 2","grade":5, "ao1":90, "ao2":99, "ao3":86,"status":"revise"},
-{ "id": 9, "topic":"Basic Calculus 3","grade":5, "ao1":50, "ao2":85, "ao3":79,"status":"locked"}
+{ "id": 9, "topic":"Basic Calculus 3","grade":4, "ao1":50, "ao2":85, "ao3":79,"status":"locked"}
 ]
