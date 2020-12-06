@@ -4,7 +4,7 @@ module.exports={
     authenticate_login: (req,res,next)=>{//provjeri samo jeli logiran-> sljedeci midleware ce ga presumjerit na odredenu rutu koja treba
         if(!req.session.user)
         {
-           res.send('Dobrodolsi ulogirajte se');
+           res.send('Dobrodolsi uloginte se');
         }
         else next();//ulogiran ali ne znamo s kojom ulogom
     },

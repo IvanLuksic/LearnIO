@@ -1,11 +1,12 @@
 const express = require('express');
-const router = express.Router();
-
-const models = require('../../models');
-const Topic = models.Topic;
-const TagsOfTopic = models.TagsOfTopic;
-
-router.get('/', (req, res) => {
+const topic = express.Router();
+const {authenticate_student,authenticate_admin,authenticate_teacher}=require('../middleware/login');
+const topic_controler=require('../controlers/topic-controler');
+module.exports=function (main_ruter){
+    main_ruter.use('/',topic);
+    topic.get('/topic',authenticate_student,topic_controler.getTopics)
+}
+/*router.get('/', (req, res) => {
     console.log(req.query);
 
     let args = {
@@ -78,4 +79,4 @@ router.get('/test', (req,res) => {
     });
 });
   
-module.exports = router;
+module.exports = router;*/

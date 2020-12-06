@@ -2,7 +2,7 @@ const { Op } = require("sequelize");//izvuc ga iz sequelizea koji vraca index.js
 const {sequelize}=require('../models');
 const queryInterface = sequelize.getQueryInterface();
 module.exports=class question{
-    constructor(question,logger,topic,save,course,user)//svi dependency modeli od ove klase
+    constructor(question,topic,save,course,user,logger)//svi dependency modeli od ove klase
     {
         this.Question=question;
         this.Logger=logger;
@@ -29,7 +29,7 @@ module.exports=class question{
         this.Logger.info(rows_columns.topic.rows_D+' '+rows_columns.topic.column_numbers);
         //2. izvuci sva pitanja iz tog topica koja su spremljena za tog korisnika taj topic i kurs s potrebnin atributima
         try {
-            varquestions= await this.Save.findAll({//vraca NIZ modela
+            var questions= await this.Save.findAll({//vraca NIZ modela
                 attributes:['row_D','column_A','status'],
                 include:{model:this.Question,attributes:['id','text','question_type','image_path','answer_a','answer_b','answer_c','answer_d']},
                 where:{
@@ -156,7 +156,7 @@ module.exports=class question{
         //1.Izvuci to pitanje iz baze
         try {
             try {
-                varquestion=await this.Question.findOne({
+                var question=await this.Question.findOne({
                     attributes:['solution'],
                     where:{
                         id:question_id
@@ -167,11 +167,15 @@ module.exports=class question{
                 this.Logger.error('Error in fetchingquestion from database');
                 throw(error);
             }
-            if(question.solution==answer)//u oba slucaja je string samo je u jednome brojcani string 
+            if(question.solution==answer)//u oba slucaja vrste pitanja je string samo je u jednome brojcani string 
             {
-                return -1;
+                this.Logger.info('Answer correct');
+                return 0;//točan
             }
-            else return 0;
+            else {
+                this.Logger.info('Answer incorrect');
+                return 1;//netočan
+            }
         } catch (error) {
             this.Logger.error('Error in checkAnswer '+error);
             throw(error);

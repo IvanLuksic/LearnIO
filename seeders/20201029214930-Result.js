@@ -24,7 +24,7 @@ module.exports = {
      {
       grade:1,
       result_array_by_columns:[0,0,0],
-      booleanblue:true,
+      booleanblue:false,
      subject_id:1,
      course_id:1,
      topic_id: 1,

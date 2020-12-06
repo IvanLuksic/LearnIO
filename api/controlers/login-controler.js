@@ -1,7 +1,7 @@
-const {Login_instance, session_instance}=require('../../services');//object destrucuturing(jer require vrati objekt) + automatski trazi index.js file u service folderu
+const {Login_instance, Session_instance}=require('../../services');//object destrucuturing(jer require vrati objekt) + automatski trazi index.js file u service folderu
 const {nodelogger}=require('../../loaders/logger');//-> cacheano je
 module.exports={
-    logiraj:async (req,res)=>{
+    login:async (req,res,next)=>{
         nodelogger.info(req.body);
         const {username,password}=req.body;//object destrucutiring,uz preptostavku da saljemo JSON body pa ne parsiramo
         try {
@@ -12,7 +12,7 @@ module.exports={
                 req.session.user=user.id;//ako je loadan napravimo mu session id
                 req.session.user_type=user.user_type;
                 try {
-                    await session_instance.createsession(user.id);//pohrani ga u sesiju za pracenje aktivnosti
+                    await Session_instance.createsession(user.id);//pohrani ga u sesiju za pracenje aktivnosti
                 } catch (error) {
                     throw(error);//idi na iduci catch handler-> ovi skroz doli
                 }
@@ -41,7 +41,7 @@ module.exports={
             }
         } catch (err) {
             nodelogger.error(err);
-           return res.status(400).send('error in login controler ');
+            next(err);//idii na error middleware handler
         }
     },
     restoresesion:async(req,res)=>{//ovdje dode kada login pozove next()-> ako je tu dosao onda je vec logiran unutra pa ga trebamo samo preusmjerit na zadanu rutu
@@ -61,11 +61,12 @@ module.exports={
                 }
 
     },
-    logout: async(req,res)=>{
+    logout: async(req,res,next)=>{
         try {
             req.session.destroy();//tribalo bi izbrisat sesiju iz memory storea
         } catch (error) {
             nodelogger.info('Error in session deleting');
+            next(error);
         }
     }
     
