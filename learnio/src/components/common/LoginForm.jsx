@@ -5,7 +5,7 @@ import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {studentLogIn, adminLogIn} from '../../redux/actions/loginStatus';
+import {studentLogIn, adminLogIn, teacherLogIn} from '../../redux/actions/loginStatus';
 
 const styles = {
     root: {
@@ -35,32 +35,7 @@ const styles = {
     }
   };
 
-const PostLogin=(event,object)=>{
-        event.preventDefault();
 
-        console.log(JSON.stringify(object));
-
-        const requestOptions = {
-            method: 'POST',
-            mode:'cors',
-            headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({username:object.usernames, password:object.passwords})
-        };
-        fetch('http://localhost:3000/login', requestOptions)
-        .then((response) => {
-            if(response.status===200)
-            {
-                object.pageprops.history.push('/');
-            }
-            else {
-                console.log('krivoo');
-                console.log(response);
-            }
-        })
-        .catch((error)=>{
-            console.log('Error in fetch function '+error);
-        });
-}
 
 
 function LoginForm(props){
@@ -77,16 +52,45 @@ function LoginForm(props){
         passwords:password,
     };
 
-    const pseudoPostLogin=(event,object)=>{
+    // const pseudoPostLogin=(event,object)=>{
+    //     event.preventDefault();
+    //     if((object.usernames==='admin')&&(object.passwords==='')){dispatch(adminLogIn())}
+    //     else if((object.usernames==='student')&&(object.passwords==='')){dispatch(studentLogIn())}
+    // };
+
+    const PostLogin=(event,object)=>{
         event.preventDefault();
-        if((object.usernames==='admin')&&(object.passwords==='')){dispatch(adminLogIn())}
-        else if((object.usernames==='student')&&(object.passwords==='')){dispatch(studentLogIn())}
-    };
+
+        console.log(JSON.stringify(object));
+
+        const requestOptions = {
+            method: 'POST',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({username:object.usernames, password:object.passwords})
+        };
+        fetch('http://localhost:3000/login', requestOptions)
+        .then((response)=>{
+            if(response.status===200)
+            {
+              Promise.resolve(response).then(response => response.json())
+                .then(data => {
+                        console.log('tu sam '+JSON.stringify(data)+data.role);
+                        if(data.role==1){{dispatch(adminLogIn())};object.pageprops.history.push('/')}
+                        else if(data.role==2){{dispatch(teacherLogIn())};object.pageprops.history.push('/')}
+                        else if(data.role==3){{dispatch(studentLogIn())};object.pageprops.history.push('/')}
+                })
+            }else  object.pageprops.history.push('/login')
+        })
+        .catch((error)=>{
+            console.log('Error in fetch function '+ error);
+    });
+    }
 
     return (
         <React.Fragment>
             <Typography color="primary" className={classes.loginHeadline}>Login </Typography>
-            <form onSubmit={(e)=>{pseudoPostLogin(e,object)}} className={classes.root} noValidate autoComplete="off" >
+            <form onSubmit={(e)=>{PostLogin(e,object)}} className={classes.root} noValidate autoComplete="off" >
                 <TextField onChange={(e)=>{setUsername(e.target.value)}} fullWidth className={classes.fields} type="email" label="E-mail" variant="filled" />
                 <TextField onChange={(e)=>{setPassword(e.target.value)}} fullWidth  className={classes.fields} type="password" label="Password" variant="filled" />
                 <Button variant="contained" className={classes.loginButton} style={{borderRadius: 25}} type="submit" color="primary" >

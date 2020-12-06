@@ -11,6 +11,12 @@ export const studentLogIn=()=>{
     };
 };
 
+export const teacherLogIn=()=>{
+    return{
+        type:'TEACHER_LOGGED_IN'
+    };
+};
+
 export const logOut=()=>{
     return{
         type:'LOGGED_OUT'

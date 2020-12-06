@@ -4,6 +4,8 @@ const loginStatusReducer=(state='admin', action)=>{
             return 'admin'
         case 'STUDENT_LOGGED_IN':
             return 'student'
+        case 'TEACHER_LOGGED_IN':
+            return 'teacher'
         case 'LOGGED_OUT':
             return 'guest'
         default:
