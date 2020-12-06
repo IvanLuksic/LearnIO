@@ -130,7 +130,7 @@ function AdminTopics(props){
         {field: "names", width: 200, type:'string', renderHeader: () => (<strong>{"Names"}</strong>)},
         {field: "topic", width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
         {field: "id", headerName:'ID',type:'string', valueGetter: (params) => `${params.getValue('id')}`,},
-        {field: "results", headerName: 'Results',hide:true, renderCell: (params) => (<Link to={`/topic/${params.getValue('id')}`} onClick={()=>{dispatch(topicSelected(params.getValue('id')))}}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>school_icon </Icon> </Button></Link>)},
+        {field: 'Results', valueGetter: (params) => `${params.getValue('results')}%`, sortComparator: (row1, row2) => row1.data.result - row2.data.result},
         {field: 'open', headerName: `${'Edit'}`,sortable: false , renderCell: (params) => (<Link to={`/admin-topic/${params.getValue('id')}`} onClick={()=>{dispatch(topicSelected(params.getValue('id')))}}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>)},
         {field: 'delete', headerName: `${'Delete '}` ,sortable: false , renderCell: (params) => (<Button onClick={()=>{Confirm(params.data.id)}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
         {field: 'add', headerName: `${'Add '}` ,sortable: false , renderHeader: () => (<Button onClick={()=>handleOpen()} className={classes.addButton} ><Icon style={{color:"white"}}>add_circle</Icon></Button>)},
@@ -158,3 +158,4 @@ function AdminTopics(props){
 export default AdminTopics;
 
 //onClick={() =>{handleDelete(params.data.id)}}
+//{field: "results", headerName: 'Results',hide:true, renderCell: (params) => (<Link to={`/topic/${params.getValue('id')}`} onClick={()=>{dispatch(topicSelected(params.getValue('id')))}}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>school_icon </Icon> </Button></Link>)},
