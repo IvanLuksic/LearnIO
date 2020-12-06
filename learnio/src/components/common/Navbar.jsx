@@ -61,6 +61,11 @@ function Navbar(){
         StudentFeatures=true;
         break;
       }
+      case 'teacher':{//privremeno rjesenje za prvu iteraciju jer nema razlike teachera i admina
+        AdminFeatures=true;
+        StudentFeatures=true;
+        break;
+      }
       case 'student':{
         AdminFeatures=false;
         StudentFeatures=true;
