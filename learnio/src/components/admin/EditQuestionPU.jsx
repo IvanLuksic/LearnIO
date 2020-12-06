@@ -87,15 +87,15 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonsInGroup:{
       backgroundColor:"#27AE60",
-      background: "#27AE60", 
       color:"white",
-      borderColor:"white",
+      '&:hover': {
+        backgroundColor: "#1f894b",
+     },
       [theme.breakpoints.down('sm')]: {
         paddingLeft:"5em",
         paddingRight:"5em",
         paddingTop:"0.5em",
         paddingBottom:"0.5em",
-
       },
       [theme.breakpoints.up('md')]: {
         paddingLeft:"7em",
@@ -146,6 +146,17 @@ const useStyles = makeStyles((theme) => ({
     },    
     toggleButton:{marginRight:"0 !important"},
     toggleButtonLabel:{fontSize:"0.9em !important"},
+    saveBtn: {
+      borderRadius: "7px",
+      background:"#EB4949",
+      color:"white",
+      paddingLeft:"3em",
+      paddingRight:"3em",
+      backgroundColor: "#EB4949",
+      '&:hover': {
+        backgroundColor: "#b81414",
+    },
+    },
   }));
 
 
@@ -219,13 +230,13 @@ function EditQuestionPU(props) {
       <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="flex-start" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
             <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
               <Grid item className={classes.grupaBotuna}>
-                <ButtonGroup orientation="vertical" size="small" aria-label="small outlined button group">
-                  <Button variant="contained" color="#27AE60" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>Question</Button>
-                  <Button variant="contained" color="#27AE60" onClick={() => [setShow1(false),setShow2(true)]} className={classes.buttonsInGroup}>Answers</Button>
+              <ButtonGroup orientation="vertical" variant="contained">
+                  <Button variant="contained" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>Question</Button>
+                  <Button variant="contained" onClick={() => [setShow1(false),setShow2(true)]} className={classes.buttonsInGroup}>Answers</Button>
                 </ButtonGroup>
               </Grid>
               <Grid item>          
-                <Button variant="contained" style={{borderRadius: "7px",background:"#EB4949",color:"white",paddingLeft:"3em",paddingRight:"3em"}} type="submit"  onClick={handleSave}>
+                <Button variant="contained" className={classes.saveBtn} type="submit"  onClick={handleSave}>
                     SAVE  
                 <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}} color="white">save_icon</Icon>
                 </Button>

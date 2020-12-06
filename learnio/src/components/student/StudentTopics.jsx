@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#EB4949",
       maxHeight: 30,
       '&:hover': {
-      backgroundColor: "#D54646",
+        backgroundColor: "#b81414",
     },},
     ColorButtonGreen: {
       border: 0,
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#27ae60",
       maxHeight: 30,
       '&:hover': {
-          backgroundColor: "rgb(41, 97, 65)",
+          backgroundColor: "#1f894b",
     },},
     ColorButtonBlue: {
       border: 0,
@@ -120,9 +120,9 @@ function StudentTopics(){
 
     function RenderStatusButton(id,status){
       if(status=='locked') return (<Button size="small" className={classes.ColorButtonGrey}> Locked </Button>);
-      else if(status=='unlocked') return (<Link to={`/topic/${id}`} onClick={()=>{dispatch(topicSelected(id))}}><Button size="small" className={classes.ColorButtonRed}> Start </Button></Link>);
-      else if(status=='continue') return (<Link to={`/topic/${id}`} onClick={()=>{dispatch(topicSelected(id))}}><Button size="small" className={classes.ColorButtonBlue}> Continue </Button></Link>);
-      else if(status=='revise') return (<Link to={`/topic/${id}`} onClick={()=>{dispatch(topicSelected(id))}}><Button size="small" className={classes.ColorButtonGreen}> Revise </Button></Link>);
+      else if(status=='unlocked') return (<Button onClick={()=>{dispatch(topicSelected(id))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonRed} component={Link} to={`/topic/${id}`} size="small"> Start </Button>);
+      else if(status=='continue') return (<Button onClick={()=>{dispatch(topicSelected(id))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonBlue} component={Link} to={`/topic/${id}`} size="small"> Continue </Button>);
+      else if(status=='revise') return (<Button onClick={()=>{dispatch(topicSelected(id))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonGreen} component={Link} to={`/topic/${id}`} size="small"> Revise </Button>);
       else return <p>sranje</p>;
     };
 
@@ -143,7 +143,7 @@ function StudentTopics(){
       valueGetter: (params) => `${params.getValue('ao3')}%`,
       sortComparator: (v1, v2, row1, row2) => row1.data.ao3 - row2.data.ao3,},
       { field: 'status', hide: true},
-      { field: 'open',sortable:false, headerName: `${' '}`, renderCell: (params) => (RenderStatusButton(params.getValue('id'),params.getValue('status'))) },
+      { field: 'open', sortable:false, headerName: `${' '}`, renderCell: (params) => (RenderStatusButton(params.getValue('id'),params.getValue('status'))) },
     ];
 
     return(  

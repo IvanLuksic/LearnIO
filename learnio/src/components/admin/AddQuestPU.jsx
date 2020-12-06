@@ -6,6 +6,10 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Icon from '@material-ui/core/Icon';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles((theme) => ({
   grupaBotuna:{
@@ -83,15 +87,15 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonsInGroup:{
       backgroundColor:"#27AE60",
-      background: "#27AE60", 
       color:"white",
-      borderColor:"white",
+      '&:hover': {
+        backgroundColor: "#1f894b",
+     },
       [theme.breakpoints.down('sm')]: {
         paddingLeft:"5em",
         paddingRight:"5em",
         paddingTop:"0.5em",
         paddingBottom:"0.5em",
-
       },
       [theme.breakpoints.up('md')]: {
         paddingLeft:"7em",
@@ -142,7 +146,35 @@ const useStyles = makeStyles((theme) => ({
     },    
     toggleButton:{marginRight:"0 !important"},
     toggleButtonLabel:{fontSize:"0.9em !important"},
+    saveBtn: {
+      borderRadius: "7px",
+      background:"#EB4949",
+      color:"white",
+      paddingLeft:"3em",
+      paddingRight:"3em",
+      backgroundColor: "#EB4949",
+      '&:hover': {
+        backgroundColor: "#b81414",
+    },
+    },
   }));
+
+  
+const ChipsArray=(props)=> {
+  const classes = useStyles();
+  return (
+    <Paper component="ul" className={classes.rootChips}>
+      {
+      props.wrongAnswers.map((data) => {
+        return (
+          <li key={data}>
+            <Chip style={{margin:"0 0.1em"}} label={data} onDelete={()=>{props.deleteWrongAnswer(data)}}/>
+          </li>
+        );
+      })}
+    </Paper>
+  );
+};
 
 
 function AddQuestPU(props) {
@@ -153,6 +185,10 @@ function AddQuestPU(props) {
   const [text, setText] = useState('');
   const [imageState, setimageState] = useState(null);
   const ID = props.nextID;
+  const [answerInput,setAnswerInput]=useState([]);
+  const [wrongAnswers, setWrongAnswers]=useState(()=>{ return []});
+  const [correctAnswer, setCorrectAnswers]=useState(()=>{ return "Točno"});
+  const [multipleAnswer, setMultipleAnswers]=useState(()=>{ return false});
 
   const quest = {id: 0, heading:"new head", secondary:"new something", photo:false, url:'', text:''};
 
@@ -161,6 +197,24 @@ function AddQuestPU(props) {
 
   const handleText = (event) => {
     setText(event.target.value);
+  };
+  const toggleMultiple = (event) => {  
+    setMultipleAnswers(!multipleAnswer);
+  };
+  const handleCorrect = (event) => {  
+    setCorrectAnswers(event.target.value);
+  };
+  const updateAnsweInput=(event)=>{
+    setAnswerInput(event.target.value);
+  };
+  const addWrongAnswer= (event)=>{
+    if(event.keyCode===13 && answerInput!==""){
+      setWrongAnswers([...wrongAnswers,answerInput]);
+      setAnswerInput("");
+    }
+  };
+  const deleteWrongAnswer= (answer)=>{
+    setWrongAnswers([...wrongAnswers.filter(item=>(item!==answer))]);
   };
 
   const handleSave= ()=>{
@@ -177,13 +231,13 @@ function AddQuestPU(props) {
     <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="flex-start" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
     <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
       <Grid item className={classes.grupaBotuna}>
-        <ButtonGroup orientation="vertical" size="small" aria-label="small outlined button group">
-          <Button variant="contained" color="#27AE60" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>Question</Button>
-          <Button variant="contained" color="#27AE60" onClick={() => [setShow1(false),setShow2(true)]} className={classes.buttonsInGroup}>Answers</Button>
+        <ButtonGroup orientation="vertical" variant="contained">
+          <Button variant="contained" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>Question</Button>
+          <Button variant="contained" onClick={() => [setShow1(false),setShow2(true)]} className={classes.buttonsInGroup}>Answers</Button>
         </ButtonGroup>
       </Grid>
       <Grid item>          
-        <Button variant="contained" style={{borderRadius: "7px",background:"#EB4949",color:"white",paddingLeft:"3em",paddingRight:"3em"}} type="submit"  onClick={handleSave}>
+        <Button variant="contained" type="submit" className={classes.saveBtn} onClick={handleSave}>
             SAVE  
         <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}} color="white">save_icon</Icon>
         </Button>
@@ -220,9 +274,32 @@ function AddQuestPU(props) {
            </Grid> 
       : null
       }{
-              show2 ? <p>hello world</p>
-              : null
-              }
+        show2 ? // second case - answer
+          <Grid container item className={classes.editText} xs={12} md={8} direction="column" justify="center" alignItems="center" spacing={5}> 
+            <Grid container item xs={12}  justify="center" alignItems="center" direction="row">
+                <Grid container item xs={12} md={8}  justify="center" alignItems="center">
+                  <TextField style={{width:"100%"}} id="outlined-multiline-static" label="Correct Answer" multiline rows={multipleAnswer?1:5} variant="outlined" value={correctAnswer} onChange={handleCorrect}/>
+                </Grid>
+              <Grid  className={classes.toggleMultiple} container item xs={12} md={4} justify="center" alignItems="center" direction="row">
+                <FormControlLabel className={classes.toggleButton} control={ <Checkbox checked={multipleAnswer} onChange={toggleMultiple} name="checkedB" color="primary" />} />
+                <p className={classes.toggleButtonLabel} > Mutiple choices</p>
+              </Grid>
+            </Grid>
+            { multipleAnswer && wrongAnswers &&
+              <Grid container item xs={12}  justify="center" alignItems="center" direction="row">
+                <ChipsArray wrongAnswers={wrongAnswers} deleteWrongAnswer={deleteWrongAnswer}/> 
+              </Grid>
+            }
+            {multipleAnswer&&
+            <Grid container item xs={12} justify="center" alignItems="center" direction="row">
+              <form onSubmit={(e)=>{e.preventDefault();}}>
+                <TextField style={{width:"100%"}} placeholder="Odgovor" value={answerInput} onChange={updateAnsweInput} onKeyDown={addWrongAnswer}/>
+              </form>
+            </Grid>
+            }
+          </Grid>
+          : null
+        }
   </Grid>
   );
 }
