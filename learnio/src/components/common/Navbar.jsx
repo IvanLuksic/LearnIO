@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "#4373ec",
         maxHeight: 35,
         '&:hover': {
-            backgroundColor: "#0e318b",
+        backgroundColor: "#0e318b",
       },
     },
   }));
