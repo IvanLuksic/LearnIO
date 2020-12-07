@@ -65,23 +65,26 @@ function Matrica(props)
     const [fields, setFields]=useState(data.Questions);
     const [aoSelected,setAoSelected]=useState(1);
     const [dSelected,setDSelected]=useState(1);
-    const [questionSelected,setQuestionSelected]=useState(data.Questions[0]);
+    const [questionSelected,setQuestionSelected]=useState(null);
     const [openPopup, setOpenPopup] = useState(false);
     const [matricaAO,setMatricaAO] = useState(()=>{return 3});
     const [matricaD,setMatricaD] = useState(()=>{return 3});
     const [assesment_objectives,setassesment_objectives]=useState();
     const id=props.id;
-    const topicID=useSelector(store=>store.studentTopic);
+    const topicID=useSelector(state=>state.studentTopic);
+    const loginStatus = useSelector(state=> state.login);
+    console.log(topicID,loginStatus);
 
     const GetQuestion=()=>{
 
         const requestOptions = {
-            method: 'GET',
+            method: 'POST',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({topic_id:topicID, course_id:1})
+            body: JSON.stringify({topic_id:topicID, course_id:1}),
+            credentials: 'same-origin'
         };
-
+        console.log(document.cookie);
         fetch('http://localhost:3000/question', requestOptions)
         .then(response => response.json())
                 .then(data => {  
@@ -97,16 +100,11 @@ function Matrica(props)
   }
   const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //     if (loading) {
-  //         doSomething();
-  //     }
-  // }, [loading]);
-  
-  // setLoading(true);
-  // // useEffect(() => {
-  // //   GetQuestion();
-  // // });
+
+   useEffect(() => {
+     console.log("saljem");
+     GetQuestion();
+   },[]);
 
    
    //function that is executed on matrix field select
@@ -120,11 +118,10 @@ function Matrica(props)
       };
    const changeQuestions=(field)=>{
       setFields(field);
+      console.log(field);
     };
 
-   const refreshFields=()=>{
-     setFields(newData);
-   }
+
 
 
 
@@ -133,7 +130,7 @@ function Matrica(props)
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         {
           <PopupDialog openPopup={openPopup} setOpenPopup={setOpenPopup} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
-            <QuestionPopup ao={matricaAO} d={matricaD} questionToDisplay={questionSelected} setOpenPopup={setOpenPopup} changeQuestions={changeQuestions} field={fields} onSave={refreshFields}/>
+            <QuestionPopup ao={matricaAO} d={matricaD} questionToDisplay={questionSelected} setOpenPopup={setOpenPopup} changeQuestions={changeQuestions} field={fields} setFields={changeQuestions}/>
           </PopupDialog>        
         }
         <Grid container direction="column" justify="flex-start" alignItems="center">

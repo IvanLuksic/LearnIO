@@ -1,5 +1,5 @@
 [
-{ "id": 1, "topic":"Trigonometry 1","grade":5, "ao1":70,"ao2":55, "ao3":66,"status":"locked"},
+{ "id": 1, "topic":"Trigonometry 1","grade":5, "ao1":70,"ao2":55, "ao3":66,"status":"unlocked"},
 { "id": 2, "topic":"Basic Calculus 2","grade":3, "ao1":90, "ao2":60, "ao3":69,"status":"unlocked"},
 { "id": 4, "topic":"Trigonometry 2","grade":4, "ao1":50,"ao2":30, "ao3":40,"status":"continue"},
 { "id": 5, "topic":"Geometry 1","grade":5, "ao1":80, "ao2":95, "ao3":46,"status":"revise"},

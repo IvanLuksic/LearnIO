@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import PopupDialog from '../common/PopupDialog';
 import WrongPU from './WrongPU';
 import Grid from '@material-ui/core/Grid';
+import {useSelector} from 'react-redux';
 
 
 
@@ -78,6 +79,8 @@ function QuestionPopup(props){
     const showABC = (props.questionToDisplay.question_type===1)?true:false;
     const imageDisplay =(props.questionToDisplay.question_image_path==null)?'none':'inline';
     const classes=useStyles();
+    const topicID=useSelector(state=>state.studentTopic);
+
     console.log(props.questionToDisplay,showABC,imageDisplay);
 
     const handleCloseWrongPU=()=>{
@@ -92,26 +95,26 @@ function QuestionPopup(props){
     setValue(event.target.value);
     };
 
-    const handleSave=()=>{ props.setOpenPopup(false); props.onSave();}
+    const handleSave=()=>{ props.setOpenPopup(false); //topic_id course_id question_id solution
 
-    //         let newFields1=[...props.field.filter(item=>(item.question_id!==props.questionToDisplay.question_id && item.question_id!==props.questionToDisplay.question_id+1 && item.question_id!==props.questionToDisplay.question_id+props.ao))];
-    //         let item1=props.questionToDisplay;
-    //         let item2=props.field[props.questionToDisplay.question_id];
-    //         let item3=props.field[props.questionToDisplay.question_id+props.ao-1];
-    //         if(value===item1.answerCorrect){
-    //             item1.status=1;
-    //             if(item2.status===3) item2.status=2;
-    //             if(item3.status===3) item3.status=2;
-    //             props.setOpenPopup(false);
-    //         }
-    //         // // else{
-    //         // //     item1.status="wrong";
-    //         // //     handleOpenWrongPU();
-    //         // } 
-    //         newFields1=[...newFields1,item1,item2,item3];
-    //         props.changeQuestions(newFields1);
-    //        // props.setOpenPopup(false);
-    // }
+        const requestOptions = {
+            method: 'POST',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({topic_id:topicID, course_id:1, question_id:props.questionToDisplay.question_id, solution: value}),
+            credentials: 'same-origin'
+        };
+        console.log(document.cookie);
+        fetch('http://localhost:3000/question/check', requestOptions)
+        .then(response => response.json())
+                .then(data => {  
+                  console.log(JSON.stringify(data));
+                  props.setFields(data.Questions);
+        })
+        .catch((error)=>{
+            console.log('Error in fetch function '+ error);
+    });
+  }
 
     return(
         <div> 

@@ -1,9 +1,9 @@
-const topicIDReducer=(state='null', action)=>{
+const topicIDReducer=(state=1, action)=>{
     switch(action.type){
         case 'TOPIC_SELECTED':
             return action.payload;
         default:
-            return null;
+            return 1;
     }
 }
 

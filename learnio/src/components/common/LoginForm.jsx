@@ -67,7 +67,8 @@ function LoginForm(props){
             method: 'POST',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({username:object.usernames, password:object.passwords})
+            body: JSON.stringify({username:object.usernames, password:object.passwords}),
+            credentials: 'same-origin'
         };
         fetch('http://localhost:3000/login', requestOptions)
         .then((response)=>{
