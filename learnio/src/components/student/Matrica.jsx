@@ -1,12 +1,14 @@
 import { Typography } from "@material-ui/core";
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../../images/learniobg10-15.png';
 import { makeStyles} from '@material-ui/core/styles';
 import DisplayMatrix from './DisplayMatrix';
-import data from './questions.json'
-import QuestionPopup from './QuestionPopup.jsx'
-import PopupDialog from '../common/PopupDialog.jsx'
+import data from './questions.json';
+import QuestionPopup from './QuestionPopup.jsx';
+import PopupDialog from '../common/PopupDialog.jsx';
+import {useSelector} from 'react-redux';
+
 
 const useStyles = makeStyles((theme) => ({
   background:{
@@ -59,14 +61,44 @@ const fieldToRows=(field,ao,d)=>{
 
 function Matrica(props)
 {
-   const [fields, setFields]=useState(data);
-   const [aoSelected,setAoSelected]=useState(1);
-   const [dSelected,setDSelected]=useState(1);
-   const [questionSelected,setQuestionSelected]=useState(null);
-   const [openPopup, setOpenPopup] = useState(false);
-   const aoLVL = 3;
-   const dLVL = 3;
-   const id=props.id;
+    const [fields, setFields]=useState(data);
+    const [aoSelected,setAoSelected]=useState(1);
+    const [dSelected,setDSelected]=useState(1);
+    const [questionSelected,setQuestionSelected]=useState(null);
+    const [openPopup, setOpenPopup] = useState(false);
+    const [matricaAO,setMatricaAO] = useState(()=>{return 3});
+    const [matricaD,setMatricaD] = useState(()=>{return 3});
+    const [assesment_objectives,setassesment_objectives]=useState();
+    const id=props.id;
+    const topicID=useSelector(store=>store.studentTopic);
+
+    const GetQuestion=()=>{
+
+        const requestOptions = {
+            method: 'GET',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({topic_id:topicID, course_id:1})
+        };
+
+        fetch('http://localhost:3000/question', requestOptions)
+        .then(response => response.json())
+                .then(data => {  
+                  console.log(JSON.stringify(data));
+                  setFields(data.Questions);
+                  setMatricaAO(data.Matrix.column_numbers);
+                  setMatricaD(data.Matrix.rows_D);
+                  setassesment_objectives(data.Matrix.asessments_array);
+        })
+        .catch((error)=>{
+            console.log('Error in fetch function '+ error);
+    });
+  }
+
+  useEffect(() => {
+    GetQuestion();
+  });
+
    
    //function that is executed on matrix field select
    const changeAoDSelected= (e,ao,d,quest)=>{
