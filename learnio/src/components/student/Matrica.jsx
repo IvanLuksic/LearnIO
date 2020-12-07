@@ -5,6 +5,7 @@ import backgroundIMG from '../../images/learniobg10-15.png';
 import { makeStyles} from '@material-ui/core/styles';
 import DisplayMatrix from './DisplayMatrix';
 import data from './questions.json';
+import newData from './refreshedQuestions.json';
 import QuestionPopup from './QuestionPopup.jsx';
 import PopupDialog from '../common/PopupDialog.jsx';
 import {useSelector} from 'react-redux';
@@ -44,8 +45,8 @@ const useStyles = makeStyles((theme) => ({
 
 const fieldToRows=(field,ao,d)=>{
   
-  var sorted= field.sort((a,b)=>(a.ao-b.ao));
-  sorted= field.sort((a,b)=>(a.d-b.d));
+  var sorted= field.sort((a,b)=>(a.column_A-b.column_A));
+  sorted= field.sort((a,b)=>(a.row_D-b.row_D));
   let arrayOfRows=[{   
               array: sorted.slice(0,(ao)),
               id: 1,
@@ -61,10 +62,10 @@ const fieldToRows=(field,ao,d)=>{
 
 function Matrica(props)
 {
-    const [fields, setFields]=useState(data);
+    const [fields, setFields]=useState(data.Questions);
     const [aoSelected,setAoSelected]=useState(1);
     const [dSelected,setDSelected]=useState(1);
-    const [questionSelected,setQuestionSelected]=useState(null);
+    const [questionSelected,setQuestionSelected]=useState(data.Questions[0]);
     const [openPopup, setOpenPopup] = useState(false);
     const [matricaAO,setMatricaAO] = useState(()=>{return 3});
     const [matricaD,setMatricaD] = useState(()=>{return 3});
@@ -94,33 +95,45 @@ function Matrica(props)
             console.log('Error in fetch function '+ error);
     });
   }
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    GetQuestion();
-  });
+  // useEffect(() => {
+  //     if (loading) {
+  //         doSomething();
+  //     }
+  // }, [loading]);
+  
+  // setLoading(true);
+  // // useEffect(() => {
+  // //   GetQuestion();
+  // // });
 
    
    //function that is executed on matrix field select
-   const changeAoDSelected= (e,ao,d,quest)=>{
+   const changeAoDSelected= (e,ao,d,quest,status)=>{
        e.preventDefault();
        setDSelected(d);
        setAoSelected(ao);
        setQuestionSelected(quest);
+       console.log(questionSelected);
+       if(status!=="LOCKED") setOpenPopup(true);
       };
    const changeQuestions=(field)=>{
       setFields(field);
     };
-  const handleChangeAndPopup = (event,ao,d,question,status)=>{
-    changeAoDSelected(event,ao,d,question);
-    if(status!=="LOCKED") setOpenPopup(true);
-  }
+
+   const refreshFields=()=>{
+     setFields(newData);
+   }
+
+
 
    const classes = useStyles();
     return(
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         {
           <PopupDialog openPopup={openPopup} setOpenPopup={setOpenPopup} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
-            <QuestionPopup ao={aoLVL} question={questionSelected} setOpenPopup={setOpenPopup} changeQuestions={changeQuestions} field={fields}/>
+            <QuestionPopup ao={matricaAO} d={matricaD} questionToDisplay={questionSelected} setOpenPopup={setOpenPopup} changeQuestions={changeQuestions} field={fields} onSave={refreshFields}/>
           </PopupDialog>        
         }
         <Grid container direction="column" justify="flex-start" alignItems="center">
@@ -130,7 +143,7 @@ function Matrica(props)
                     <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></Grid>
                 </Grid>
                 <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
-                    <DisplayMatrix changeSelected={handleChangeAndPopup} ar={fieldToRows(fields,aoLVL,dLVL)} aoSelected={aoSelected} dSelected={dSelected}/>
+                    <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
                 </Grid>
             </Grid>
         </Grid> 

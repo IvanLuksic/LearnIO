@@ -1,9 +1,4 @@
-{   "Matrix":{
-        "rows_D":5,
-        "column_numbers":3,
-        "assessments_array":[{"name":"nebitno"}]
-    },
-    "Questions":[
+[
     {
         "row_D":1,
         "column_A":1,
@@ -122,7 +117,7 @@
         "column_A":3,
         "status":2,
         "question_id":9,
-        "question_text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "question_text":"novo",
         "question_type":1,
         "question_image_path":null,
         "question_answer_a":"amet",
@@ -132,4 +127,3 @@
         "answerCorrect":"eiusmod"
     }
 ]
-}

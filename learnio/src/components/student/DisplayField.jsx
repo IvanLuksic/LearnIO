@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
         },
 }));
 
-//renders the field of the matrix element, takes changeSelected function, question = array of questions, AO and D of selected field as props
+//renders the field of the matrix element, takes changeSelected function, questionToDisplay = array of questions, AO and D of selected field as props
 
 function DisplayField(props){
     const classes=useStyles();
@@ -51,18 +51,18 @@ function DisplayField(props){
     });
     useEffect(()=>{
 
-        // if(props.question.length > 0) {
-            if(props.question.status==="solve") setStatus("UNLOCKED");
-            else if(props.question.status==="wrong") setStatus("WRONG");
-            else if(props.question.status==="done") setStatus("DONE");
+        // if(props.questionToDisplay.length > 0) {
+            if(props.questionToDisplay.status===2) setStatus("UNLOCKED");
+            //else if(props.questionToDisplay.status==="wrong") setStatus("WRONG");
+            else if(props.questionToDisplay.status===1) setStatus("DONE");
             else setStatus("LOCKED");
-            if(props.question.status==="solve") setColor("#4372ec");
-            else if(props.question.status==="wrong") setColor("#EB4949");
-            else if(props.question.status==="done") setColor("#27AE60");
+            if(props.questionToDisplay.status===2) setColor("#4372ec");
+            //else if(props.questionToDisplay.status==="wrong") setColor("#EB4949");
+            else if(props.questionToDisplay.status===1) setColor("#27AE60");
             else setColor("grey");
-            if(props.question.status==="solve") setIcon("lock_open_icon");
-            else if(props.question.status==="wrong") setIcon("cancel_icon");
-            else if(props.question.status==="done") setIcon("check_circle_out_icon");
+            if(props.questionToDisplay.status===2) setIcon("lock_open_icon");
+            //else if(props.questionToDisplay.status==="wrong") setIcon("cancel_icon");
+            else if(props.questionToDisplay.status===1) setIcon("check_circle_out_icon");
             else setIcon("lock_icon");
         // }
     });
@@ -70,7 +70,7 @@ function DisplayField(props){
     return (
 
             <Grid item> 
-                <Paper onClick={(event)=>{props.changeSelected(event,props.ao,props.d,props.question,status)}} className={classes.paper} style={{backgroundColor: color}}>
+                <Paper onClick={(event)=>{if(status!='LOCKED'){props.changeSelected(event,props.ao,props.d,props.questionToDisplay, status)}}} className={classes.paper} style={{backgroundColor: color}}>
                     <Grid container direction="column" justify="center" alignItems="center" style={{height: "100%"}}>
                         <Grid item><h1>AO={props.ao} D={props.d}</h1></Grid>
                         <Grid item><Icon className={classes.icons}>{icon}</Icon></Grid>

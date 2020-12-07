@@ -64,19 +64,21 @@ const useStyles=makeStyles(theme =>({
  
 }))
 
-function DisplayAnswers(props){
-    var counter=0;
-    const alphabet=["a","b","c","d","e","f","g","h","i","j","k","l","m"];
-    let answerRows= props.questions.map(quest=> <FormControlLabel key={quest} value={quest} control={<Radio />} label={alphabet[counter++] + ")  " +quest} />)
-    return answerRows;
-};
+// function DisplayAnswers(props){
+//     var counter=0;
+//     const alphabet=["a","b","c","d","e","f","g","h","i","j","k","l","m"];
+//     let answerRows= props.questions.map(quest=> <FormControlLabel key={quest} value={quest} control={<Radio />} label={alphabet[counter++] + ")  " +quest} />)
+//     return answerRows;
+// };
 
 
 function QuestionPopup(props){
     const [value, setValue] = React.useState('A');
     const [openWrongPU,setWrongPU]=useState(false);
-    const showABC = props.question.ABC;
+    const showABC = (props.questionToDisplay.question_type===1)?true:false;
+    const imageDisplay =(props.questionToDisplay.question_image_path==null)?'none':'inline';
     const classes=useStyles();
+    console.log(props.questionToDisplay,showABC,imageDisplay);
 
     const handleCloseWrongPU=()=>{
         setWrongPU(false);
@@ -90,26 +92,26 @@ function QuestionPopup(props){
     setValue(event.target.value);
     };
 
-    const handleSave=()=>{
+    const handleSave=()=>{ props.setOpenPopup(false); props.onSave();}
 
-            let newFields1=[...props.field.filter(item=>(item.id!==props.question.id && item.id!==props.question.id+1 && item.id!==props.question.id+props.ao))];
-            let item1=props.question;
-            let item2=props.field[props.question.id];
-            let item3=props.field[props.question.id+props.ao-1];
-            if(value===item1.answerCorrect){
-                item1.status="done";
-                if(item2.status==="locked") item2.status="solve";
-                if(item3.status==="locked") item3.status="solve";
-                props.setOpenPopup(false);
-            }
-            else{
-                item1.status="wrong";
-                handleOpenWrongPU();
-            } 
-            newFields1=[...newFields1,item1,item2,item3];
-            props.changeQuestions(newFields1);
-           // props.setOpenPopup(false);
-    }
+    //         let newFields1=[...props.field.filter(item=>(item.question_id!==props.questionToDisplay.question_id && item.question_id!==props.questionToDisplay.question_id+1 && item.question_id!==props.questionToDisplay.question_id+props.ao))];
+    //         let item1=props.questionToDisplay;
+    //         let item2=props.field[props.questionToDisplay.question_id];
+    //         let item3=props.field[props.questionToDisplay.question_id+props.ao-1];
+    //         if(value===item1.answerCorrect){
+    //             item1.status=1;
+    //             if(item2.status===3) item2.status=2;
+    //             if(item3.status===3) item3.status=2;
+    //             props.setOpenPopup(false);
+    //         }
+    //         // // else{
+    //         // //     item1.status="wrong";
+    //         // //     handleOpenWrongPU();
+    //         // } 
+    //         newFields1=[...newFields1,item1,item2,item3];
+    //         props.changeQuestions(newFields1);
+    //        // props.setOpenPopup(false);
+    // }
 
     return(
         <div> 
@@ -118,7 +120,7 @@ function QuestionPopup(props){
                     <div> 
                         <DialogTitle className={classes.dialogPart1}>
                             <div style={{display:'flex'}}>
-                                <Typography variant="h6" component="div" className={classes.questionName}>AO{props.question.ao} D{props.question.d}</Typography>
+                                <Typography variant="h6" component="div" className={classes.questionName}>AO{props.questionToDisplay.column_A} D{props.questionToDisplay.row_D}</Typography>
                             </div>
                         </DialogTitle>
                         <DialogContent className={classes.dialogPart2}>
@@ -127,10 +129,13 @@ function QuestionPopup(props){
                                 <Grid container direction="column" justify="center" alignItems="center">
                                     <Grid item xs={9}>
                                         <FormControl component="fieldset" >
-                                            <FormLabel component="legend" style={{color:"grey"}}>{props.question.text}</FormLabel>
+                                            <FormLabel component="legend" style={{color:"grey"}}>{props.questionToDisplay.question_text}</FormLabel>
                                             <div style={{display:'flex',margin: "2em auto"}}>
                                             <RadioGroup aria-label="answer" component="div" name="answer1" value={value} onChange={handleChange} className={classes.radioGroup}>
-                                                    <DisplayAnswers questions={props.question.answerABC}/>
+                                                <FormControlLabel value={props.questionToDisplay.question_answer_a} control={<Radio />} label={"a)  " + props.questionToDisplay.question_answer_a} />
+                                                <FormControlLabel value={props.questionToDisplay.question_answer_b} control={<Radio />} label={"b)  " + props.questionToDisplay.question_answer_b} />
+                                                <FormControlLabel value={props.questionToDisplay.question_answer_c} control={<Radio />} label={"c)  " + props.questionToDisplay.question_answer_c} />
+                                                <FormControlLabel value={props.questionToDisplay.question_answer_d} control={<Radio />} label={"d)  " + props.questionToDisplay.question_answer_d} />
                                             </RadioGroup>
                                             </div>
                                         </FormControl>
@@ -143,9 +148,9 @@ function QuestionPopup(props){
                                 <Grid container direction="column" justify="center" alignItems="center">
                                     <Grid item xs={7}>                                    
                                         <FormControl component="fieldset"> 
-                                            <FormLabel component="legend">{props.question.text}</FormLabel>
+                                            <FormLabel component="legend">{props.questionToDisplay.question_text}</FormLabel>
                                                 <div className={classes.imgWithText} >
-                                                <img src={props.question.url} className={classes.questionImg} style={{display:props.question.photo}} alt="slika zadatka"></img>
+                                                <img src={props.questionToDisplay.image_path} className={classes.questionImg} style={{display:imageDisplay}} alt="slika zadatka"></img>
                                                 <TextField id="standard-basic" className={classes.answerText} label="Unesi kratki odgovor" onChange={handleChange}/> 
                                                 </div>
                                         </FormControl>
