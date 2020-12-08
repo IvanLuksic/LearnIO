@@ -18,7 +18,8 @@
     "react-scripts": "^3.4.4",
     "reactjs-popup": "^2.0.4",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "proxy":"http://localhost:3000"
   },
   "scripts": {
     "start": "react-scripts start",

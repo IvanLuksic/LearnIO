@@ -65,12 +65,12 @@ function LoginForm(props){
 
         const requestOptions = {
             method: 'POST',
-            mode:'cors',
+           mode:'cors',
             headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify({username:object.usernames, password:object.passwords}),
-            credentials: 'same-origin'
+            credentials: 'include'
         };
-        fetch('http://localhost:3000/login', requestOptions)
+        fetch('http://127.0.0.1:3000/login', requestOptions)
         .then((response)=>{
             if(response.status===200)
             {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles,withStyles} from '@material-ui/core/styles';
 import { DataGrid} from '@material-ui/data-grid';
 import backgroundIMG from '../../images/learniobg10-15.png';
@@ -114,37 +114,99 @@ function CustomPagination(props) {
 
 
 function StudentTopics(){
-    const dispatch=useDispatch();
-    const [rows,setRows]=useState(fetchedTopics);
+    const dispatch=useDispatch();//rows su podaci
+    const [data,setData]=useState(()=>{return fetchedTopics});
     const classes = useStyles();
-
+   //red 1, blue 2, grey 3, green 4
     function RenderStatusButton(id,status){
-      if(status=='locked') return (<Button size="small" className={classes.ColorButtonGrey}> Locked </Button>);
-      else if(status=='unlocked') return (<Button onClick={()=>{dispatch(topicSelected(id))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonRed} component={Link} to={`/topic/${id}`} size="small"> Start </Button>);
-      else if(status=='continue') return (<Button onClick={()=>{dispatch(topicSelected(id))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonBlue} component={Link} to={`/topic/${id}`} size="small"> Continue </Button>);
-      else if(status=='revise') return (<Button onClick={()=>{dispatch(topicSelected(id))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonGreen} component={Link} to={`/topic/${id}`} size="small"> Revise </Button>);
+      if(status==1) return (<Button onClick={()=>{dispatch(topicSelected(id))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonRed} component={Link} to={`/topic/${id}`} size="small"> Start </Button>);
+      else if(status==2) return (<Button onClick={()=>{dispatch(topicSelected(id))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonBlue} component={Link} to={`/topic/${id}`} size="small"> Continue </Button>);
+      else if(status==4) return (<Button onClick={()=>{dispatch(topicSelected(id))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonGreen} component={Link} to={`/topic/${id}`} size="small"> Revise </Button>);
       else return <p>sranje</p>;
     };
 
+    const fetchData=()=>{
+      const requestOptions = {
+        method: 'POST',
+        mode:'cors',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify({ course_id:1, subject_id:1}),
+        credentials: 'include'
+      };
+
+      fetch('http://127.0.0.1:3000/topic', requestOptions)
+      .then(response => response.json())
+            .then(dataFetch => {  
+              console.log(JSON.stringify(dataFetch));
+              console.log(dataFetch[0].grade+dataFetch[0].result_array_by_columns);
+              setData(dataFetch);
+      })
+      .catch((error)=>{
+        console.log('Error in fetch function '+ error);
+      });
+    };
+
+    useEffect(() => {
+      console.log("saljem");
+      fetchData();
+    },[]);
+
+    let rows=[];
+    for(let j=0;j<data.length;j++){
+      let dataEdited={
+        id: data[j].topic_id,
+        name: data[j].name,
+        grade: data[j].grade,
+      };
+
+      let renderAOColumns=[];
+      for(let i=0; i<data[j].result_array_by_columns.length;i++){
+        renderAOColumns={...renderAOColumns,
+          [`ao${i+1}`]: data[j].result_array_by_columns[i]
+      }};
+      let dataEdited2={
+        status: data[j].status
+      };
+      rows=[...rows,{...dataEdited,...renderAOColumns,...dataEdited2}];
+    }
+
+    let renderAOColumnsDataGrid=[];
+    for(let i=0; i<data[0].result_array_by_columns.length;i++){
+      renderAOColumnsDataGrid=[...renderAOColumnsDataGrid,
+        { field: `ao${i+1}`, hide: false },
+        // { field: `ao${z}P`,headerName:`AO${z}`,
+        //   valueGetter: (params) => `${params.getValue(`ao${z}`)}`,
+        //   sortComparator: (v1, v2, row1, row2) => {
+        //   var a=`ao${z}`;
+        //   return(row1.data.a - row2.data.a)}
+        // }
+      ]
+    }
+
+
     const columns = [
-      { field: 'topic', width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
       { field: 'id', headerName:'ID'},
+      { field: 'name', width: 200, type:'string', renderHeader: () => (<strong>{"Topic"}</strong>),},
       { field: 'grade', headerName:'Grade'},
-      { field: 'ao1', hide: true},
-      { field: 'ao1P', headerName:'AO 1',
-        valueGetter: (params) => `${params.getValue('ao1')}%`,
-        sortComparator: (v1, v2, row1, row2) => row1.data.ao1 - row2.data.ao1,},
-      { field: 'ao2', hide: true},
-      { field: 'ao2P', headerName:'AO 2',
-      valueGetter: (params) => `${params.getValue('ao2')}%`,
-      sortComparator: (v1, v2, row1, row2) => row1.data.ao2 - row2.data.ao2,},
-      { field: 'ao3', hide: true},
-      { field: 'ao3P', headerName:'AO 3',
-      valueGetter: (params) => `${params.getValue('ao3')}%`,
-      sortComparator: (v1, v2, row1, row2) => row1.data.ao3 - row2.data.ao3,},
+      ...renderAOColumnsDataGrid,
+      // { field: 'ao1', hide: true},
+      // { field: 'ao1P', headerName:'AO 1',
+      //   valueGetter: (params) => `${params.getValue('ao1')}%`,
+      //   sortComparator: (v1, v2, row1, row2) => row1.data.ao1 - row2.data.ao1,},
+      // { field: 'ao2', hide: true},
+      // { field: 'ao2P', headerName:'AO 2',
+      // valueGetter: (params) => `${params.getValue('ao2')}%`,
+      // sortComparator: (v1, v2, row1, row2) => row1.data.ao2 - row2.data.ao2,},
+      // { field: 'ao3', hide: true},
+      // { field: 'ao3P', headerName:'AO 3',
+      // valueGetter: (params) => `${params.getValue('ao3')}%`,
+      // sortComparator: (v1, v2, row1, row2) => row1.data.ao3 - row2.data.ao3,},
       { field: 'status', hide: true},
       { field: 'open', sortable:false, headerName: `${' '}`, renderCell: (params) => (RenderStatusButton(params.getValue('id'),params.getValue('status'))) },
     ];
+
+    console.log(columns);
+    console.log(rows);
 
     return(  
     <div style={{display: "flex", flexDirection: "column", justifyContent:"none", alignItems:"center"}} className={classes.background} >

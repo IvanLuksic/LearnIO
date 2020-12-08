@@ -53,16 +53,16 @@ function DisplayField(props){
 
         // if(props.questionToDisplay.length > 0) {
             if(props.questionToDisplay.status===2) setStatus("UNLOCKED");
-            //else if(props.questionToDisplay.status==="wrong") setStatus("WRONG");
-            else if(props.questionToDisplay.status===1) setStatus("DONE");
+            else if(props.questionToDisplay.status===1) setStatus("WRONG");
+            else if(props.questionToDisplay.status===4) setStatus("DONE");
             else setStatus("LOCKED");
             if(props.questionToDisplay.status===2) setColor("#4372ec");
-            //else if(props.questionToDisplay.status==="wrong") setColor("#EB4949");
-            else if(props.questionToDisplay.status===1) setColor("#27AE60");
+            else if(props.questionToDisplay.status===1) setColor("#EB4949");
+            else if(props.questionToDisplay.status===4) setColor("#27AE60");
             else setColor("grey");
             if(props.questionToDisplay.status===2) setIcon("lock_open_icon");
-            //else if(props.questionToDisplay.status==="wrong") setIcon("cancel_icon");
-            else if(props.questionToDisplay.status===1) setIcon("check_circle_out_icon");
+            else if(props.questionToDisplay.status===1) setIcon("cancel_icon");
+            else if(props.questionToDisplay.status===4) setIcon("check_circle_out_icon");
             else setIcon("lock_icon");
         // }
     });

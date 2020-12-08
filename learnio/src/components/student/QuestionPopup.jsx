@@ -102,10 +102,10 @@ function QuestionPopup(props){
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify({topic_id:topicID, course_id:1, question_id:props.questionToDisplay.question_id, solution: value}),
-            credentials: 'same-origin'
+            credentials: 'include'
         };
         console.log(document.cookie);
-        fetch('http://localhost:3000/question/check', requestOptions)
+        fetch('http://127.0.0.1:3000/question/check', requestOptions)
         .then(response => response.json())
                 .then(data => {  
                   console.log(JSON.stringify(data));
