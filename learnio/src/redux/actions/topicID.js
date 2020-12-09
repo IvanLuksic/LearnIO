@@ -1,7 +1,8 @@
-export const topicSelected=(n)=>{
+export const topicSelected=(n,m)=>{
     return{
         type:'TOPIC_SELECTED',
-        payload: n
+        id: n,
+        name: m
     };
 };
 

@@ -53,9 +53,26 @@ const useStyles=makeStyles(theme =>({
           paddingRight:'20%',
         },
       },
+      button:{
+        margin:"1em 0 1.5em 0em",
+      },
+      pickButton:{
+        [theme.breakpoints.down('sm')]: {
+            margin:"0.5em 0.4em 2em 0.4em",
+            width:"5em"
+        },
+        [theme.breakpoints.up('md')]: {
+            margin:"2em 0.5em",     
+            width:"7em"     
+        },
+        fontSize:"1.2em",
+        padding:"0.5em 3em ",
+        fontFamily:"Lobster",
+        borderRadius:"25px",
+    },
 }))
-function WrongPU(props){
-
+function WrongPU(props){//uzima samo closePopup 
+ 
     const classes=useStyles();
     var linkage='contacts' ;
     const columns = [
@@ -75,13 +92,18 @@ function WrongPU(props){
             <Grid className={classes.title}>
                 <h1>WRONG ANSWER</h1>
             </Grid>
-            <Grid className={classes.subtitle}>
+            <Grid className={classes.subtitle} >
                 <p>You have answered that question wrong.</p>
-                <p>Go study these topics that will help you to understand that question better.</p>
+                <p>Go study connected topics.</p>
+                <p>That will help you to understand that question better.</p>
             </Grid>
-            <div className={classes.tabela}>
+            <Grid className={classes.button}>
+                <Button variant="contained" onClick={props.closePopup} className={classes.pickButton} style={{backgroundColor:"#EB4949", color:"white"}}>Close</Button>
+            </Grid>
+
+            {/* <div className={classes.tabela}>
                 <DataGrid onRowHover={(Row)=>{linkage=Row.data.id}} rows={rows} hideFooter={"true"} columns={columns} />
-            </div>
+            </div> */}
 
         </div>
     )
