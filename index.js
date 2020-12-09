@@ -29,8 +29,8 @@ const resultclass=require('./services/result');
 const {question,sequelize,topic,save,course,user,subject,result,asessment_objective,clas}=require('./models');
 const {nodelogger}=require('./loaders/logger');
 //instance=new questionclass(question,topic,save,course,user,nodelogger);
-instance=new topicclass(topic, asessment_objective,course,subject,result,nodelogger);
-//instance=new resultclass(result,user,subject,course,topic,asessment_objective,clas,nodelogger);
+//instance=new topicclass(topic, asessment_objective,course,subject,result,nodelogger);
+instance=new resultclass(result,user,subject,course,topic,asessment_objective,clas,nodelogger);
 async function DatabaseConnection ()
 {
     console.log('Connecting to database....');
@@ -56,7 +56,7 @@ async function init()
         //const x=await instance.associatedTopics(5);
        // nodelogger.info( await instance.isBlue(1,1,3));
         //const x=await instance.getQuestionsFromSave(1,1,3);
-       //await instance.getAllResults();
+       await instance.getAllResults();
         nodelogger.info('Uspjesno');
     } catch (error) {
         console.log('Greska pri citanju rezultata'+error);

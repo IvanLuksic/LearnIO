@@ -1,5 +1,3 @@
-const { QueryTypes } = require('sequelize');
-const {sequelize}=require('../models');
 module.exports= class result{
     constructor(result,student,subject,course,topic,assesment,clas,logger)
     {
@@ -29,25 +27,18 @@ module.exports= class result{
                                 through: { attributes: [] }
                                 }
                             },
-                            {model:this.Student,attributes:['name','surname']}
+                            {model:this.Student,attributes:['name','surname']},
+                            {model:this.Clas,attributes:['name','school_year']}
                         ]
-                })
+                });
                 this.Logger.info('Results succesfuly fetched from database');
-                //saznati razred za tog određenog studenta za taj odredeni kurs iz tog odredenog predmeta-> NAJLAKSE PRIKO RAW QUERYA
-                var clases=await sequelize.query('SELECT * FROM result JOIN class_student ON result.student_id=class_student.student_id JOIN class_course ON result.course_id=class_course.course_id JOIN class_subject ON result.subject_id=class_subject.subject_id JOIN clas ON class_subject.class_id=clas.id ',{
-                    raw:true,
-                    type: QueryTypes.SELECT
-                   })
-                this.Logger.info('Class fetched succesfuly');
-                for(let i=0;i<clases.length;i++)
-                this.Logger.info(JSON.stringify(clases[i]));
             } catch (error) {
                 this.Logger.error('Error in fetching results from database');
                 throw(error);
             }
             for(let i=0;i<results.length;i++)
                 this.Logger.info(JSON.stringify(results[i]));
-            /*var temp={};
+            var temp={};
             var format=[];//formatirat ih u niz
             for(let result of results)
             {
@@ -58,14 +49,21 @@ module.exports= class result{
                     topic:result.topic.name,
                     subject:result.subject.name,
                     columns:result.subject.column_number,
-                    assesments:result.Asessments_subject,
+                    assesments:result.subject.Asessments_subject,
                     name:result.user.name,
                     surname:result.user.surname,
-                    clas_name:result.classes_student.name,
-                    clas_year:result.classes_student.school_year
+                    class_name:result.cla.name,//SEQUELIZE IZBACUJE s KADA IME PROPERTYA ZAVRSAVA S NJIM-> class pretvori u cla
+                    class_year:result.cla.school_year
 
                 }
-            }*/
+                format.push(temp);
+                temp={};
+            }
+            for(let i=0;i<format.length;i++)
+            {
+                this.Logger.info(JSON.stringify(format[i]));
+            }
+            return format;
         } catch (error) {
             this.Logger.error('Error in function getResults' + error);
             throw(error);
