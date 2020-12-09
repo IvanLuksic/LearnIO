@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsToMany(models.subject,{through: 'teacher_subject',as:'subjects_teacher',foreignKey: 'teacher_id'});
       this.hasMany(models.result,{foreignKey: 'student_id'});
-      this.belongsToMany(models.clas,{through:' class_student',as:'classes_student',foreignKey: 'student_id'});
+      this.belongsToMany(models.clas,{through:'class_student',as:'classes_student',foreignKey: 'student_id'});
       this.hasMany(models.session,{foreignKey: 'user_id'});
       this.hasMany(models.save,{foreignKey: 'student_id'});
       this.belongsToMany(models.clas,{through:'class_of_teacher',as:'classes_teacher',foreignKey: 'teacher_id'});

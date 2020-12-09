@@ -4,7 +4,7 @@ const {authenticate_student,authenticate_admin,authenticate_teacher}=require('..
 const topic_controler=require('../controlers/topic-controler');
 module.exports=function (main_ruter){
     main_ruter.use('/',topic);
-    topic.get('/topic',authenticate_student,topic_controler.getTopics)
+    topic.post('/topic',authenticate_student,topic_controler.getTopics);
 }
 /*router.get('/', (req, res) => {
     console.log(req.query);

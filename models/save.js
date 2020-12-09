@@ -14,6 +14,8 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.topic,{foreignKey: 'topic_id'});
       this.belongsTo(models.user,{foreignKey: 'student_id'});
       this.belongsTo(models.question,{foreignKey: 'question_id'});
+      this.belongsTo(models.clas,{foreignKey: 'class_id'});
+      this.belongsTo(models.subject,{foreignKey: 'subject_id'});
     }
   };
   save.init({

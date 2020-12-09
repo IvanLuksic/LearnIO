@@ -10,12 +10,13 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.hasMany(models.topic,{foreignKey: 'subject_id'});
       this.belongsToMany(models.course,{through: 'course_subject',as:'courses_subject',foreignKey: 'subject_id'});
       this.belongsToMany(models.asessment_objective,{through: 'subject_assesment',as:'Asessments_subject',foreignKey: 'subject_id'});
       this.belongsToMany(models.clas,{through: 'class_subject',as:'classes_subject',foreignKey: 'subject_id'});
       this.belongsToMany(models.user,{through: 'teacher_subject',as:'Teachers_subject',foreignKey: 'subject_id'});
       this.hasMany(models.result,{foreignKey: 'subject_id'});
+      this.hasMany(models.save,{foreignKey: 'subject_id'});
+      this.belongsToMany(models.topic,{through:'topic_subject',as:'topic_subjects',foreignKey:'topic_id'});
     }
    
   }

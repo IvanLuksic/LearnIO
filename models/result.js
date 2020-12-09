@@ -1,4 +1,5 @@
 'use strict';
+const { DataType } = require('ajv/dist/compile/validate/dataType');
 const {
   Model
 } = require('sequelize');
@@ -14,12 +15,13 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.course,{foreignKey: 'course_id'});
       this.belongsTo(models.user, {foreignKey: 'student_id'});
       this.belongsTo(models.topic,{foreignKey: 'topic_id'});
+      this.belongsTo(models.clas,{foreignKey:'class_id'});
     }
   };
   result.init({
     grade: DataTypes.INTEGER,
     result_array_by_columns: DataTypes.ARRAY(DataTypes.DECIMAL),
-    booleanblue: DataTypes.BOOLEAN
+    status:DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'result',

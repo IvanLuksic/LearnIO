@@ -4,7 +4,7 @@ module.exports= class session{
         this.session=session_model;
         this.Logger=logger;
     }
-    async createsession(users_id)
+    async createSession(users_id)
     {
         try {
            await this.session.create({

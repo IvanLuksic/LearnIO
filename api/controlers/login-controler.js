@@ -12,32 +12,31 @@ module.exports={
                 req.session.user=user.id;//ako je loadan napravimo mu session id
                 req.session.user_type=user.user_type;
                 try {
-                    await Session_instance.createsession(user.id);//pohrani ga u sesiju za pracenje aktivnosti
+                    await Session_instance.createSession(user.id);//pohrani ga u sesiju za pracenje aktivnosti
                 } catch (error) {
                     throw(error);//idi na iduci catch handler-> ovi skroz doli
                 }
                 if(user.user_type == process.env.ADMIN)//admin->STAVI == JER JE ADMIN env varijabla string
                 {
-                nodelogger.info("Logging succesful tu smoo");
-                res.sendStatus(200);
+               res.json({role: process.env.ADMIN });
                 }
                 else if(user.user_type==process.env.TEACHER)//ucitelj
                 {
                 nodelogger.info("Logging succesful");
-                res.redirect('/teacher');
+                res.json({role: process.env.TEACHER });
                 }
                 else {//student
                 nodelogger.info("Logging succesful");
-                res.send('Login succesful');
+                res.json({role: process.env.STUDENT });
                 }
 
              } else if(!user) {
                 nodelogger.error('Login failed');
-               return res.status(401).send('Authnetication failed. username not found. Check your username');
+                res.status(401).json({role: null });
             }
             else {
                 nodelogger.error('Login failed');
-                return res.sendStatus(401).send('Authnetication failed. Incorrect pasword. Check your password');
+                res.status(401).json({role: null });
             }
         } catch (err) {
             nodelogger.error(err);

@@ -14,9 +14,9 @@ module.exports = {
       result_array_by_columns: {
         type: Sequelize.ARRAY(Sequelize.DECIMAL)
       },
-      booleanblue: {
-        type: Sequelize.BOOLEAN,
-        defaultValue:true
+      status: {//1-> Plavo,2-> Žuto,3->Zeleno(eventualno možemo to uvest)
+        type: Sequelize.INTEGER,
+        defaultValue:2//po defaultu žuti oni koji su tek stavljeni u tablicu
       },
      
     });

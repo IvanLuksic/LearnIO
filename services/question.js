@@ -1,6 +1,11 @@
 const { Op } = require("sequelize");//izvuc ga iz sequelizea koji vraca index.js file u modelsima
 const {sequelize}=require('../models');
 const queryInterface = sequelize.getQueryInterface();
+                        /*
+                        STATUS 1=CRVENO-> NETOCNO
+                        STATUS 2=PLAVO-> OTKLJUCANO
+                        STATUS 3=SIVO-> ZAKLJUCANO 
+                        STATUS 4=ZELENO->TOCNO*/
 module.exports=class question{
     constructor(question,topic,save,course,user,logger)//svi dependency modeli od ove klase
     {
@@ -12,7 +17,7 @@ module.exports=class question{
         this.User=user;
     }
     //JSON.stringify RADI STRING, JSON.parse VRAĆA OBJEKT U JSON TIPU
-     async getQuestionsFromSave(topics_id,courses_id,users_id)//za odredeni topic,usera i kurs izvuc pitanja iz tog topica i slozit ih po retcima i stupcima i vratit na frontend
+     async getQuestionsFromSave(topics_id,courses_id,users_id,clas_id,subjects_id)//za odredeni topic,usera kurs razred i predmet izvuc pitanja iz tog topica i slozit ih po retcima i stupcima i vratit na frontend
      {
         //1. vidit koliki je broj stupaca i redaka od tog topicA da znamo u for petlji izvlacit redom po retcima i stupcima ta pitanja i stavljat u json
         try {
@@ -33,9 +38,11 @@ module.exports=class question{
                 attributes:['row_D','column_A','status'],
                 include:{model:this.Question,attributes:['id','text','question_type','image_path','answer_a','answer_b','answer_c','answer_d']},
                 where:{
-                    topic_id : topics_id
+                    topic_id : topics_id,
+                    course_id:courses_id,
+                    class_id:clas_id,
+                    subject_id:subjects_id,
                 },
-                raw : true //da vrati instance kao normalne objekte a ne kao sequelize instance
             });
         } catch (error) {
             throw(error);
@@ -44,7 +51,7 @@ module.exports=class question{
         var matrica=[];//'1D matrica'-> niz koji predstavlja matricu-> slozeni po redu retci u matrici u 1 niz
        // nodelogger.info('questions array:\n'+questions[0]);
        
-
+        var temp={};
        for(let i=1;i<=rows_columns.topic.rows_D;i++) //jer se unutarquestion modela rows_columns nalazi includeani topic model-> ugniježđeni su
         {
             for(let j=1;j<=rows_columns.topic.column_numbers;j++)
@@ -53,12 +60,28 @@ module.exports=class question{
                 {
                     if(questions[k].row_D==i &&questions[k].column_A==j)//nasli to pitanje
                     {
-                        matrica.push(questions[k]);//stavi ga u niz matrice poredane po stupcu i retku
+                        temp={//formatirat za CLIENT STRANU-> INACE SEQUELIZE STAVI question.id-> TAJ DIO SE NA KLIJENT STRANI INTERPRETIRA KAO OBJEKT KOJI NE POSTOJI
+                            row_D: questions[k].row_D,
+                            column_A:questions[k].column_A,
+                            status:questions[k].status,
+                            question_id:questions[k].question.id,
+                            question_text:questions[k].question.text,
+                            question_question_type:questions[k].question.question_type,
+                            question_image_path:questions[k].question.image_path,
+                            question_answer_a:questions[k].question.answer_a,
+                            question_answer_b:questions[k].question.answer_b,
+                            question_answer_c:questions[k].question.answer_c,
+                            question_answer_d:questions[k].question.answer_d
+                        }
+                        matrica.push(temp);//stavi ga u niz matrice poredane po stupcu i retku
+                        temp={};
                         break;
                     }
                 }
             }
         }
+        for(let i=0;i<matrica.length;i++)
+        this.Logger.info(JSON.stringify(matrica[i]));
         return matrica;//nju vracamo-> U NJOJ BI TREBAO BITI ISPRAVAN REDOSLIJED PITANJA PO RETCIMA I STUPCIMA
     } catch (error) {
             this.Logger.error('error in readingquestions '+ error);
@@ -66,7 +89,7 @@ module.exports=class question{
         }
 
     }
-    async GenerateQuestions(students_id,topics_id,courses_id)//Za prvi ulazak korisnika u topic
+    async generateQuestions(students_id,topics_id,courses_id,clas_id,subjects_id)//Za prvi ulazak korisnika u topic
     {
         //1.Saznat retke i stupce od topica
         try {
@@ -112,12 +135,13 @@ module.exports=class question{
                     //dodati atribute objektu prije nego ga dodamo u niz-> sve atribute koji trebaju tablici save
                     if(i==1&&j==1)//prvo pitanje moramo otkljucat
                     {
-                        status_flag=2;//otkljucano-> 
-                        /*STATUS 1=ZELENO->RJESENO
-                        STATUS 2=ZUTO-> OTKLJUCANO
-                        STATUS 3=CRVENO-> ZAKLJUCANO */
+                        status_flag=process.env.BLUE;//otkljucano-> 
+                        /*STATUS 4=ZELENO->TOCNO
+                        STATUS 1=CRVENO-> NETOCNO
+                        STATUS 2=PLAVO-> OTKLJUCANO
+                        STATUS 3=SIVO-> ZAKLJUCANO */
                     }
-                   else status_flag=3;//zakljucani svi osim prvog
+                   else status_flag=process.env.GREY;//zakljucani svi osim prvog
                     temp={
                         row_D:i,
                         column_A:j,
@@ -125,6 +149,8 @@ module.exports=class question{
                         course_id:courses_id,
                         topic_id:topics_id,
                         student_id:students_id,
+                        class_id:clas_id,
+                        subject_id:subjects_id,
                        question_id:questions_ij[random].id//id od rnadomquestiona iz nizaquestiona
                     }
                     save_questions.push(temp);
@@ -149,17 +175,35 @@ module.exports=class question{
     //1)ako je funkcija check answer uspješna odma se poziva i funkcija otkljucaj->AKO JE KRIV ODGOVOR ZASAD 2 OPCIJE:1)VRATI MU NEKI KOD+ PONOVI MU SVA PITANJA pomoću getquestionsFromsave,2) SAMO VRATI STATUSNI KOD POMOCU KOJEG ON SKUZI DA NE MORA NISTA RENDERIRAT
     //2)NAKON funkcije otkljucaj se mijenjaju statusi onih koji se otkljucaju-> to radimo u LAGORITMU OTKLJUCAVANJA-> promjene se rade direktno u bazi nad njima poquestion_id
     //3)Nakon toga šaljemo u RESPONSE sve answere pomoću funkcije getquestionsFromsave koje će se ponovno renderirat na klijentu
-    async checkAnswer(question_id,answer)
-    /*answer moze biti:a) Slovo-> a,b,c,d
-                        b)Rjesenje-> string*/
+    async checkAnswer(questions_id,answer,students_id,topics_id,courses_id,clas_id,subjects_id)
+    /*answer moze biti:a) Slovo-> a,b,c,d-> type 1
+                        b)Rjesenje-> string-> type 2*/
     {
-        //1.Izvuci to pitanje iz baze
+        //1.Izvuci to pitanje iz baze AKO NIJE ZAKLJUCANO-> PROVJERI MU STATUS U TABLICI SAVE-> 
         try {
+            try {
+                var question_status=await this.Save.findOne({
+                    attributes:['status'],
+                    where:{
+                        question_id:questions_id,
+                        student_id:students_id,
+                        class_id:clas_id,
+                        topic_id:topics_id,
+                        course_id:courses_id,
+                        subject_id:subjects_id
+                    }
+                })
+            } catch (error) {
+                this.Logger.error('Errror in fetching status of question from save');
+                throw(error);
+            }
+            if(question_status.status==process.env.BLUE)//-> ako neko npr pomocu fetch api iz browsera ide sanzat otcno rjesenje pitanja koje je zakljucano
+            {//SAMO OTKLJUCANIM PITANJIMA MOZEMO PRIVHERAVAT ODGOVORE
             try {
                 var question=await this.Question.findOne({
                     attributes:['solution'],
                     where:{
-                        id:question_id
+                        id:questions_id
                     }
                 });
                 this.Logger.info('question fetched succesfully from database');
@@ -176,13 +220,17 @@ module.exports=class question{
                 this.Logger.info('Answer incorrect');
                 return 1;//netočan
             }
+        }else {
+            this.Logger.error('Cant check answer of locked question');
+            throw(new Error);
+        }//JAVI ERROR JER SE U NORMALNIM OKOLNOSTIMA NEBI SMILO DOC DO POZIVA CHECKANSWER ZA ZAKLJUCANO PITANJE
         } catch (error) {
             this.Logger.error('Error in checkAnswer '+error);
             throw(error);
         }
 
     }
-    async UnlockQuestions(students_id,topics_id,courses_id,questions_id)//promjena statusaquestiona u tablici save
+    async unlockQuestions(students_id,topics_id,courses_id,clas_id,subjects_id,questions_id)//promjena statusa questiona u tablici save
     {
         //1. saznaj poziciju u retku i stupcu od togquestiona
         try {
@@ -267,26 +315,28 @@ module.exports=class question{
             try {
                 for(let k=0;k<check_status.length;k++)
                 {
-                var questions_status=await this.Save.update({status:2},{//postavi status na 2
+                var questions_status=await this.Save.update({status:process.env.BLUE},{//postavi status na 2
                     where:{
                         row_D:check_status[k].cor_y,//probat nać kako usporedit s jednin pristupon bazi
                         column_A:check_status[k].cor_x,
                         course_id:courses_id,
                         topic_id:topics_id,
                         student_id:students_id,
-                        status:{
-                            [Op.eq]:3//ako su zakljucana promini in status
-                        }
+                        class_id:clas_id,
+                        subject_id:subjects_id,
+                        status:process.env.GREY//ako su zaklucana promini ih u otkljucane
                     }
                 });
                 }
-                var correct_question=await this.Save.update({status:1},{
+                var correct_question=await this.Save.update({status:process.env.GREEN},{
                     where:{
                         row_D:y,//koordinate tocno odgovorenog pitanja u bazi
                         column_A:x,
                         course_id:courses_id,
                         topic_id:topics_id,
                         student_id:students_id,
+                        class_id:clas_id,
+                        subject_id:subjects_id,
                        question_id:questions_id
                     }
                 });
@@ -300,16 +350,18 @@ module.exports=class question{
             throw(error);
         }
     }
-    async WrongAnswer(students_id,topics_id,courses_id,questions_id)//ALGORITAM KADA NETOCNO ODGOVORI->ova 4(dovoljna prva 3 ali kad imamo 4. iskoristimo ga) argumenta jedinstveno odreduju redak u tablici save-> samo mu promijenimo status
+    async wrongAnswer(students_id,topics_id,courses_id,clas_id,subjects_id,questions_id)//ALGORITAM KADA NETOCNO ODGOVORI->ova 4(dovoljna prva 3 ali kad imamo 4. iskoristimo ga) argumenta jedinstveno odreduju redak u tablici save-> samo mu promijenimo status
     {
         //+ DODAT U RESPONSE flag koji ce njima oznacit jeli tocno ili netocno
         try {
             try {
-               const wrong_question=await this.Save.update({status:3},{//zakljucaj prethodno otkljucano pitanje
+               const wrong_question=await this.Save.update({status:process.env.RED},{//zakljucaj prethodno otkljucano pitanje
                 where:{
                         course_id:courses_id,
                         topic_id:topics_id,
                         student_id:students_id,
+                        class_id:clas_id,
+                        subject_id:subjects_id,
                        question_id:questions_id
                 }
                });

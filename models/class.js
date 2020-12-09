@@ -10,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      this.hasMany(models.result,{foreignKey:'class_id'});
+      this.hasMany(models.save,{foreignKey:'class_id'});
       this.belongsToMany(models.subject,{through: 'class_subject',as: 'subject_class',foreignKey: 'class_id'});
       this.belongsToMany(models.user,{through: 'class_student',as:'Students_class',foreignKey: 'class_id'});
       this.belongsToMany(models.course,{through: 'class_course',as:'courses_class',foreignKey: 'class_id'});
