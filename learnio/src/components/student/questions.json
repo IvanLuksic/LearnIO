@@ -1,4 +1,5 @@
 {   "Matrix":{
+        "name":"Topic 1",
         "rows_D":5,
         "column_numbers":3,
         "assessments_array":[{"name":"nebitno"}]

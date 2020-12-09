@@ -113,7 +113,7 @@ function CustomPagination(props) {
 }
 
 
-function StudentTopics(){
+function StudentTopics(props){
     const dispatch=useDispatch();//rows su podaci
     const [data,setData]=useState(()=>{return fakeLoadingTopics});//koristi ove dok ne učita da ne bi bilo undefined
     const classes = useStyles();
@@ -124,6 +124,7 @@ function StudentTopics(){
       else if(status==4) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonGreen} component={Link} to={`/topic/${id}`} size="small"> Revise </Button>);
       else return <p>sranje</p>;
     };
+
 
     const fetchData=()=>{
       const requestOptions = {
@@ -149,7 +150,7 @@ function StudentTopics(){
     useEffect(() => {
       console.log("saljem");
       fetchData();
-    },[]);
+    });
 
     //podaci za datagrid se dobivaju restrukturiranjem fetchanih podataka tj. destrukturiranjem objekta niza stupaca u niz propertyja stupaca
     

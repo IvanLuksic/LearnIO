@@ -1,4 +1,4 @@
-export const topicSelected=(n,m)=>{
+ export  const topicSelected=(n,m)=>{
     return{
         type:'TOPIC_SELECTED',
         id: n,

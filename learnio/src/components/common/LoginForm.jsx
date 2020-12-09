@@ -36,8 +36,6 @@ const styles = {
   };
 
 
-
-
 function LoginForm(props){
     const [username, setUsername]=useState("");
     const [password, setPassword]=useState("");
@@ -45,6 +43,8 @@ function LoginForm(props){
 
     const loginStatus = useSelector(state=> state.login);
     const dispatch = useDispatch();
+
+    console.log(props.pageProps);
 
     let object={
         pageprops:props.pageProps,
@@ -65,7 +65,7 @@ function LoginForm(props){
 
         const requestOptions = {
             method: 'POST',
-           mode:'cors',
+            mode:'cors',
             headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify({username:object.usernames, password:object.passwords}),
             credentials: 'include'
