@@ -117,11 +117,12 @@ module.exports=class question{
                 {
                     try {
                        questions_ij=await this.Question.findAll({
-                            attributes:['id'],//trebat će nam jedino id od pitanja
+                            attributes:['id'],//trebat će nam jedino id od pitanja za spremanje u tablicu save
                             where:{
                                /*operator and*/ [Op.and]: [
                                     { row_D: i },
-                                    { column_A: j }
+                                    { column_A: j },
+                                    {topic_id:topics_id}//iz odabranog topica
                                   ]
                             },
                             raw:true//vrati niz objekata
@@ -171,6 +172,34 @@ module.exports=class question{
             throw(error);//za index.js
         }
        
+    }
+    async getQuestionsForA0D(topics_id,A0,D)//Vraća sva pitanja koja su definirana za određeni topic i koja se nalaze na poziciji A0 i D-> Pregled za onoga tko dodaje pitanja ili ih hoće editat
+    {
+        try {
+            try {
+                var questions_A0D=await this.Question.findAll({
+                    attributes:['id','text','question_type','row_D','column_A','image_path','answer_a','answer_b','answer_c','answer_c','answer_d'],//sve osim rjesenja i topic_id
+                    where:{
+                       /*operator and*/ [Op.and]: [
+                            { row_D: D},
+                            { column_A: A0 },
+                            {topic_id:topics_id}
+                          ]
+                    },
+                    raw:true
+                });
+                this.Logger.info('Questions fetched succesfully from database for A0 D');
+            } catch (error) {
+                this.Logger.error('Error in fetching questions for A0 and D');
+                throw(error);
+            }
+            for(let i=0;i<questions_A0D.length;i++)
+            this.Logger.info(JSON.stringify(questions_A0D[i]));
+            return questions_A0D;
+        } catch (error) {
+            this.Logger.error('Error in getQuestionsForA0D '+error);
+            throw(error);
+        }
     }
     //1)ako je funkcija check answer uspješna odma se poziva i funkcija otkljucaj->AKO JE KRIV ODGOVOR ZASAD 2 OPCIJE:1)VRATI MU NEKI KOD+ PONOVI MU SVA PITANJA pomoću getquestionsFromsave,2) SAMO VRATI STATUSNI KOD POMOCU KOJEG ON SKUZI DA NE MORA NISTA RENDERIRAT
     //2)NAKON funkcije otkljucaj se mijenjaju statusi onih koji se otkljucaju-> to radimo u LAGORITMU OTKLJUCAVANJA-> promjene se rade direktno u bazi nad njima poquestion_id

@@ -90,13 +90,19 @@ module.exports={
                 response.Questions=questions;
                 res.json(response);
              }
-             else {//netocno-> vrati response sa flagom correct:false
+             else {//netocno-> vrati response sa flagom correct:false + VRATI MU NIZ POVETZANIH TOPICA DA GA MOŽEMO ODVEST LINKOM NA NJIH
                 response.correct=false;
                 try {
                    await  Question_instance.wrongAnswer(student_id,topic_id,course_id,class_id,subject_id,question_id);
                 } catch (error) {
                     nodelogger.error('Error in locking question');
                 }
+                try {
+                    var association=Topic_instance.associatedTopics(topic_id);
+                } catch (error) {
+                    nodelogger.error('Error in fetching associated topics');
+                }
+                response.AssociatedTopics=association;
                 try {
                     var questions=await Question_instance.getQuestionsFromSave(topic_id,course_id,student_id,class_id,subject_id);
                 } catch (error) {

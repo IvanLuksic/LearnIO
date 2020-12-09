@@ -53,10 +53,19 @@ async function init()
          //const x=await instance.getTopicsForUserAndCourse(3,1,1);
       // const x=await instance.getAsesmentsForTopic(1,1);
        //nodelogger.info(JSON.stringify(x));
-        //const x=await instance.associatedTopics(5);
+        //const x=await instance.associatedTopics(2);
        // nodelogger.info( await instance.isBlue(1,1,3));
         //const x=await instance.getQuestionsFromSave(1,1,3);
-       await instance.getAllResults();
+      //await instance.insertIntoResults(1,1,1,1,4);
+      //await instance.getQuestionsForA0D(1,3,2);
+      //await instance.filterByStudent('Andi','Gunther');
+      //await instance.filterByClass('7.b','2017/2018');
+      //await instance.filterBySubject('Matematika');
+      //await instance.filterByCourse('Geometrija');
+     // await instance.filterByTopic('Mnozenje');
+     //await instance.filterBySchool_year('2019/2020');
+     await instance.filterByGrade(4);
+      //await instance.getAllResults();
         nodelogger.info('Uspjesno');
     } catch (error) {
         console.log('Greska pri citanju rezultata'+error);

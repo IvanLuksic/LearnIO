@@ -116,20 +116,33 @@ module.exports=class topic{
     {
         try {
             try {
-               var x=await sequelize.query('SELECT * FROM topic JOIN tags_of_topic ON topic.id=tags_of_topic.source_topic WHERE id= :topic_id ',{
+               var association=await sequelize.query('SELECT * FROM topic JOIN tags_of_topic ON topic.id=tags_of_topic.source_topic WHERE id= :topic_id ',{
                 raw:true,
                 replacements: { topic_id: topics_id },
                 type: QueryTypes.SELECT
                })
-                this.Logger.info('Fetched succesfuly');
+                this.Logger.info('Fetched asscoaited topics succesfuly');
             } catch (error) {
-                this.Logger.error('Error in joining ');
+                this.Logger.error('Error in fetching asscoaited topics ');
                 throw(error);
             }
-            for(let i=0;i<x.length;i++)
-            this.Logger.info(JSON.stringify(x[i]));
+            var temp={};
+            var format=[];
+            for(let assoc of association)
+            {
+                temp={
+                    topic_id:assoc.id,
+                    name:assoc.name,
+                    required_level:assoc.required_level
+                };
+                format.push(temp);
+                temp={};
+            }
+            for(let temp of format)
+            this.Logger.info(JSON.stringify(temp));
+            return format;
         } catch (error) {
-            this.Logger.error('Error in test function '+error);
+            this.Logger.error('Error in asscoaitedTopics function '+error);
             throw(error);
         }
     }
