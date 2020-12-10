@@ -2,14 +2,19 @@ import React from 'react';
 import { makeStyles} from '@material-ui/core/styles';
 import caveman from '../../images/404Caveman.gif';
 import Grid from '@material-ui/core/Grid';
+import backgroundIMG from '../../images/learniobg10-15.png'
 
 
 const useStyles = makeStyles((theme) => ({
     background:{
-        backgroundColor:"#ffffff",
         backgroundSize: "cover",
         minHeight:"100vh",
         maxHeight:"100vh",
+        backgroundImage:"url("+backgroundIMG+")",
+        backgroundSize: "cover",
+        backgroundPosition: "fixed",
+        backgroundAttachment: "fixed",
+        backgroundRepeat: "repeat-y",
 
     },
     Grid:{
