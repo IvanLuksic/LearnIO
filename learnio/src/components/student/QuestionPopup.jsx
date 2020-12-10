@@ -44,7 +44,12 @@ const useStyles=makeStyles(theme =>({
     saveButton:{
         display:"block",
         margin:"2em 0em",
-        padding:"0.5em 3em ",
+        [theme.breakpoints.down('md')]: {
+            padding:"0.5em 1em ",
+        },
+        [theme.breakpoints.up('md')]: {
+            padding:"0.5em 3em ",
+        },
         fontFamily:"Lobster"
     },
     imgWithText:{
@@ -75,28 +80,19 @@ const useStyles=makeStyles(theme =>({
 
 function QuestionPopup(props){
     const [value, setValue] = React.useState('A');
-    const [openWrongPU,setWrongPU]=useState(false);
-    const showABC = (props.questionToDisplay.question_type===1)?true:false;
-    const imageDisplay =(props.questionToDisplay.question_image_path==null)?'none':'inline';
+    const [showABC, setShowABC] =useState(()=>{return (props.questionToDisplay.question_type===1)?true:false});
+    const [imageDisplay, setImageDisplay] =useState(()=>{return (props.questionToDisplay.question_image_path==null)?'none':'inline'});
     const classes=useStyles();
-    const topicID=useSelector(state=>state.studentTopic);
-
-    console.log(props.questionToDisplay,showABC,imageDisplay);
-
-    const handleCloseWrongPU=()=>{
-        setWrongPU(false);
-        props.setOpenPopup(false);
-    }
-    const handleOpenWrongPU=()=>{
-        setWrongPU(true);
-    }
+    const topicID=useSelector(state=>state.studentTopic.id);
+    console.log(topicID);
 
     const handleChange = (event) => {
-    setValue(event.target.value);
+        setValue(event.target.value);
     };
 
-    const handleSave=()=>{ props.setOpenPopup(false); //topic_id course_id question_id solution
-
+    const handleSave=()=>{ 
+        props.setOpenPopup(false); //topic_id course_id question_id solution
+        props.setOpenPopupWrong(true);
         const requestOptions = {
             method: 'POST',
             mode:'cors',
@@ -104,12 +100,13 @@ function QuestionPopup(props){
             body: JSON.stringify({topic_id:topicID, course_id:1, question_id:props.questionToDisplay.question_id, solution: value}),
             credentials: 'include'
         };
-        console.log(document.cookie);
+
         fetch('http://127.0.0.1:3000/question/check', requestOptions)
         .then(response => response.json())
                 .then(data => {  
                   console.log(JSON.stringify(data));
                   props.setFields(data.Questions);
+                  if(data.Correct==false){props.setOpenPopupWrong(true)};
         })
         .catch((error)=>{
             console.log('Error in fetch function '+ error);
@@ -167,12 +164,6 @@ function QuestionPopup(props){
                     </div>
                 {/* </ClickAwayListener> */}
             {/* </Dialog> */}
-
-            <div>
-            <PopupDialog openPopup={openWrongPU} setOpenPopup={handleCloseWrongPU} clickAway={false} style={{minWidth:'40%',minHeight:'40%'}}>
-              <WrongPU closePopup={handleCloseWrongPU}/>
-            </PopupDialog>
-            </div>
         </div>
         );
 

@@ -90,6 +90,7 @@ li {
 }
 .MuiDataGrid-columnsContainer {
     border-radius: 25px;
+    /* width: max-content;ovo isto */
 }
 .MuiDataGrid-root {
     border: none !important;
@@ -109,6 +110,9 @@ li {
     font-weight: 500 !important;
     font-size: 1.05em;
 }
+/* .MuiDataGrid-root .MuiDataGrid-window{
+    width: fit-content;
+} */
 
 .Mui-even {
     background-color: #f7f5f5;
@@ -133,3 +137,5 @@ li {
     background: lightgrey !important;
 
 }
+
+

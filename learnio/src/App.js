@@ -11,6 +11,7 @@ import AddTopicPU from './components/admin/AddTopicPU';
 import AdminTopics from './components/admin/AdminTopics';
 import Matrica from './components/student/Matrica';
 import {useSelector} from 'react-redux';
+import Results from "./components/admin/Results";
 
 
 const theme = createMuiTheme({
@@ -63,10 +64,11 @@ function App() {
                     <Route exact path="/" component={Home}/>
                     <Route path="/login" component={Login}/>
                     {StudentFeatures&&<Route exact path="/topics"component={StudentTopics}/>}
-                    {StudentFeatures&&<Route path="/topic/:nesto" component={Matrica}/>}
-                    {AdminFeatures&&<Route path="/admin-topic/:id" component={MatricaAdmin}/>}
+                    {StudentFeatures&&<Route exact path="/topic/:id" component={Matrica}/>}
+                    {AdminFeatures&&<Route exact path="/admin-topic/:id" component={MatricaAdmin}/>}
                     {AdminFeatures&&<Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>}
-                    {AdminFeatures&&<Route exact path="/AdminTopic" component={AdminTopics}/>}
+                    {AdminFeatures&&<Route exact path="/AdminTopics" component={AdminTopics}/>}
+                    {AdminFeatures&&<Route exact path="/results" component={Results}/>}
               </div>
           </ThemeProvider>
         </div>

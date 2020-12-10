@@ -4,11 +4,12 @@ import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../../images/learniobg10-15.png';
 import { makeStyles} from '@material-ui/core/styles';
 import DisplayMatrix from './DisplayMatrix';
-import data from './questions.json';
-import newData from './refreshedQuestions.json';
+import fakeFetchResponse from './questions.json';
 import QuestionPopup from './QuestionPopup.jsx';
 import PopupDialog from '../common/PopupDialog.jsx';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {topicSelected} from '../../redux/actions/topicID';
+import WrongPU from './WrongPU';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 
@@ -72,22 +73,28 @@ const fieldToRows=(field,ao,d)=>{
 
 function Matrica(props)
 {
-    const [fields, setFields]=useState(data.Questions);
+    let dispatch=useDispatch();
+    if(Number(props.match.params.id)){dispatch(topicSelected(props.match.params.id,"Topic"))};
+    if(!Number(props.match.params.id)){props.history.push('/')};
+    const [fields, setFields]=useState(()=>{return fakeFetchResponse.Questions});//bilo data.Questions
     const [aoSelected,setAoSelected]=useState(1);
     const [dSelected,setDSelected]=useState(1);
     const [questionSelected,setQuestionSelected]=useState(null);
-    const [openPopup, setOpenPopup] = useState(false);
+    const [openPopupQuestion, setOpenPopupQuestion] = useState(()=>{return false});
+    const [openPopupWrong, setOpenPopupWrong] = useState(()=>{return false});
     const [matricaAO,setMatricaAO] = useState(()=>{return 3});
     const [matricaD,setMatricaD] = useState(()=>{return 3});
     const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
     const [assesment_objectives,setassesment_objectives]=useState();
-    const id=props.id;
-    const topicID=useSelector(state=>state.studentTopic);
-    const loginStatus = useSelector(state=> state.login);
-    console.log(topicID,loginStatus);
+    const topicName=useSelector(state=>state.studentTopic.name);
+    const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
+
+    console.log(props);
+
 
     const GetQuestion=()=>{
-
+        
+        setLoading(false);//komentar
         const requestOptions = {
             method: 'POST',
             mode:'cors',
@@ -112,9 +119,8 @@ function Matrica(props)
 
 
    useEffect(() => {
-     console.log("saljem");
-     GetQuestion();
-   },[]);
+     console.log("saljem" + topicID);
+   });
 
    
    //function that is executed on matrix field select
@@ -124,12 +130,10 @@ function Matrica(props)
        setAoSelected(ao);
        setQuestionSelected(quest);
        console.log(questionSelected);
-       if(status!=="LOCKED") setOpenPopup(true);
+       if(status!=="LOCKED") setOpenPopupQuestion(true);
+       console.log(openPopupQuestion)
       };
-   const changeQuestions=(field)=>{
-      setFields(field);
-      console.log(field);
-    };
+
 
 
 
@@ -141,14 +145,19 @@ function Matrica(props)
       {loading? (
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         {
-          <PopupDialog openPopup={openPopup} setOpenPopup={setOpenPopup} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
-            <QuestionPopup ao={matricaAO} d={matricaD} questionToDisplay={questionSelected} setOpenPopup={setOpenPopup} changeQuestions={changeQuestions} field={fields} setFields={changeQuestions}/>
+          <PopupDialog openPopup={openPopupQuestion} setOpenPopup={setOpenPopupQuestion} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
+            <QuestionPopup ao={matricaAO} d={matricaD} questionToDisplay={questionSelected} setOpenPopup={setOpenPopupQuestion} setOpenPopupWrong={setOpenPopupWrong} field={fields} setFields={setFields}/>
+          </PopupDialog>        
+        }
+        {
+          <PopupDialog openPopup={openPopupWrong} setOpenPopup={setOpenPopupWrong} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
+            <WrongPU closePopup={setOpenPopupWrong} setTopicID={setTopicID}/>
           </PopupDialog>        
         }
         <Grid container direction="column" justify="flex-start" alignItems="center">
             <Grid container item md={6} direction="row"  justify="center" alignItems="center" >
                 <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
-                    <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>Topic</Typography></Grid>
+                    <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName} {topicID}</Typography></Grid>
                     <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></Grid>
                 </Grid>
                 <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >

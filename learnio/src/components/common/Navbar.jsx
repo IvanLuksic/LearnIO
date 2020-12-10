@@ -63,7 +63,7 @@ function Navbar(){
       }
       case 'teacher':{//privremeno rjesenje za prvu iteraciju jer nema razlike teachera i admina
         AdminFeatures=true;
-        StudentFeatures=true;
+        StudentFeatures=false;
         break;
       }
       case 'student':{
@@ -91,7 +91,8 @@ function Navbar(){
                 <Hidden xsDown>
                     <Box ml={8} mr={8}><li><Link to="/">Home</Link></li></Box>
                     {StudentFeatures&&<Box mr={8}><li><Link to="/topics">Topics</Link></li></Box>}
-                    {AdminFeatures&&<Box mr={8}><li><Link to="/AdminTopic">AdminTopics</Link></li></Box>}
+                    {AdminFeatures&&<Box mr={8}><li><Link to="/AdminTopics">Admin-Topics</Link></li></Box>}
+                    {AdminFeatures&&<Box mr={8}><li><Link to="/results">Results</Link></li></Box>}
                 </Hidden>
                     {(!(AdminFeatures||StudentFeatures))&&                    
                         <Button size="small" className={classes.buttonGreen} >
