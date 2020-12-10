@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import backgroundIMG from '../../images/learniobg10-15.png';
 import { Typography } from '@material-ui/core';
@@ -98,6 +98,14 @@ const useStyles = makeStyles((theme) => ({
       fontWeight:"bold",
       borderRadius:"50%"
     },
+    whiteGrade:{
+      padding:"0 1.4em",
+      backgroundColor: "#FFFFFF",
+      color: "#000000",
+      fontSize:"1.1em",
+      fontWeight:"bold",
+      borderRadius:"50%"
+    },
     skeleton:{
       width:"80%",
       height:"100%",
@@ -126,14 +134,16 @@ function CustomPagination(props) {
 function AdminTopics(){
     const[data,setData]=useState(()=>{return fakeBackendResults});
     const classes=useStyles();
-    const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
+    const [loading,setLoading]=useState(false);//potrebno ga postavit na false da bi radilo
     
 
     const renderGrade=(value)=>{
       switch(value){
+        case 0:{
+          return <p className={classes.whiteGrade}>{value}</p>;//return <Icon className={classes.blueGrade}>looks_1</Icon>;
+        }
         case 1:{
           return <p className={classes.redGrade}>{value}</p>;//return <Icon className={classes.blueGrade}>looks_1</Icon>;
-
         }
         case 2:{
           return <p className={classes.greyGrade}>{value}</p>;
@@ -169,10 +179,10 @@ function AdminTopics(){
       });
     };
 
-    // useEffect(() => {
-    //   console.log("saljem");
-    //   fetchData();
-    // },[]);
+    useEffect(() => {
+      console.log("saljem");
+      fetchData();
+    },[]);
 
     //podaci za datagrid se dobivaju restrukturiranjem fetchanih podataka tj. destrukturiranjem objekta niza stupaca u niz propertyja stupaca
     

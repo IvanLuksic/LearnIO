@@ -92,7 +92,7 @@ function Matrica(props)
     const [openPopupWrong, setOpenPopupWrong] = useState(()=>{return false});
     const [matricaAO,setMatricaAO] = useState(()=>{return 3});
     const [matricaD,setMatricaD] = useState(()=>{return 3});
-    const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
+    const [loading,setLoading]=useState(false);//potrebno ga postavit na false da bi radilo
     const [assesment_objectives,setassesment_objectives]=useState();
     const topicName=useSelector(state=>state.studentTopic.name);
     const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
@@ -101,9 +101,7 @@ function Matrica(props)
 
 
     const GetQuestion=()=>{
-        
-        setLoading(false);//komentar
-        const requestOptions = {
+                const requestOptions = {
             method: 'POST',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
@@ -128,7 +126,8 @@ function Matrica(props)
 
    useEffect(() => {
      console.log("saljem" + topicID);
-   });
+     GetQuestion();
+   },[]);
 
    
    //function that is executed on matrix field select
