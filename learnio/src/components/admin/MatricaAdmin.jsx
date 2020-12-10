@@ -101,7 +101,7 @@ function MatricaAdmin(props)
             body: JSON.stringify({topic_id:topicID}),
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/question', requestOptions)
+        fetch('http://127.0.0.1:3000/admin/topics/edit', requestOptions)
         .then(response => response.json())
                 .then(data => {  
                   console.log(JSON.stringify(data));
@@ -118,9 +118,9 @@ function MatricaAdmin(props)
   }
 
 
-//    useEffect(() => {
-//      fetchRequest();
-//    },[]);
+   useEffect(() => {
+     fetchRequest();
+   },[]);
 
 
 

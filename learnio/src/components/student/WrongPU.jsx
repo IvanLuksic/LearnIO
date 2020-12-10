@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { makeStyles,withStyles} from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import {Link} from 'react-router-dom';
@@ -82,17 +82,18 @@ function WrongPU(props){//uzima samo closePopup
         props.closePopup(false);
     }
 
+
     const fetchAssociatedTopics=()=>{
 
         const requestOptions = {
             method: 'POST',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({topic_id:topicID, course_id:1}),
+            body: JSON.stringify({topic_id:topicID}),
             credentials: 'include'
         };
 
-        fetch('http://127.0.0.1:3000/NESTO-NAPISIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII', requestOptions)
+        fetch('http://127.0.0.1:3000/student/topics/associated', requestOptions)
         .then(response => response.json())
                 .then(data => {  
                   props.setData(data);
@@ -101,10 +102,10 @@ function WrongPU(props){//uzima samo closePopup
             console.log('Error in fetch function '+ error);
         });
     }
-
-    // useEffect(()=>{
-    //     fetchAssociatedTopics();
-    // })
+    console.log("krivo -popup");
+    useEffect(()=>{
+        fetchAssociatedTopics();
+    },[])
 
     const columns = [
         { field: 'id', type:'string',headerAlign:'center', align:'center', renderHeader: () => (<strong>ID</strong>)},

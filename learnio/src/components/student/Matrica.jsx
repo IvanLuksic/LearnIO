@@ -148,11 +148,6 @@ function Matrica(props)
                     <QuestionPopup ao={matricaAO} d={matricaD} questionToDisplay={questionSelected} setOpenPopup={setOpenPopupQuestion} setOpenPopupWrong={setOpenPopupWrong} field={fields} setFields={setFields}/>
                   </PopupDialog>        
                 }
-                {
-                  <PopupDialog openPopup={openPopupWrong} setOpenPopup={setOpenPopupWrong} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
-                    <WrongPU closePopup={setOpenPopupWrong} setTopicID={setTopicID}/>
-                  </PopupDialog>        
-                }
                 <Grid container direction="column" justify="flex-start" alignItems="center">
                     <Grid container item md={6} direction="row"  justify="center" alignItems="center" >
                         <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>

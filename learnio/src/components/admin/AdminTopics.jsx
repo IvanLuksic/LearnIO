@@ -107,7 +107,7 @@ function AdminTopics(props){
           credentials: 'include'
       };
 
-      fetch('http://127.0.0.1:3000/NESTO-NAPISIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII', requestOptions)
+      fetch('http://127.0.0.1:3000/admin/topics', requestOptions)
       .then(response => response.json())
       .then(data => {  
         setData(data.Topics);

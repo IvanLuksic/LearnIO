@@ -92,7 +92,6 @@ function QuestionPopup(props){
 
     const handleSave=()=>{ 
         props.setOpenPopup(false); //topic_id course_id question_id solution
-        props.setOpenPopupWrong(true);
         const requestOptions = {
             method: 'POST',
             mode:'cors',
@@ -104,9 +103,9 @@ function QuestionPopup(props){
         fetch('http://127.0.0.1:3000/question/check', requestOptions)
         .then(response => response.json())
                 .then(data => {  
+                  if(data.Correct==false){console.log("krivo");props.setOpenPopupWrong(true)};
                   console.log(JSON.stringify(data));
                   props.setFields(data.Questions);
-                  if(data.Correct==false){props.setOpenPopupWrong(true)};
         })
         .catch((error)=>{
             console.log('Error in fetch function '+ error);
@@ -132,10 +131,10 @@ function QuestionPopup(props){
                                             <FormLabel component="legend" style={{color:"grey"}}>{props.questionToDisplay.question_text}</FormLabel>
                                             <div style={{display:'flex',margin: "2em auto"}}>
                                             <RadioGroup aria-label="answer" component="div" name="answer1" value={value} onChange={handleChange} className={classes.radioGroup}>
-                                                <FormControlLabel value={props.questionToDisplay.question_answer_a} control={<Radio />} label={"a)  " + props.questionToDisplay.question_answer_a} />
-                                                <FormControlLabel value={props.questionToDisplay.question_answer_b} control={<Radio />} label={"b)  " + props.questionToDisplay.question_answer_b} />
-                                                <FormControlLabel value={props.questionToDisplay.question_answer_c} control={<Radio />} label={"c)  " + props.questionToDisplay.question_answer_c} />
-                                                <FormControlLabel value={props.questionToDisplay.question_answer_d} control={<Radio />} label={"d)  " + props.questionToDisplay.question_answer_d} />
+                                                <FormControlLabel value={'a'} control={<Radio />} label={"a)  " + props.questionToDisplay.question_answer_a} />
+                                                <FormControlLabel value={'b'} control={<Radio />} label={"b)  " + props.questionToDisplay.question_answer_b} />
+                                                <FormControlLabel value={'c'} control={<Radio />} label={"c)  " + props.questionToDisplay.question_answer_c} />
+                                                <FormControlLabel value={'d'} control={<Radio />} label={"d)  " + props.questionToDisplay.question_answer_d} />
                                             </RadioGroup>
                                             </div>
                                         </FormControl>
