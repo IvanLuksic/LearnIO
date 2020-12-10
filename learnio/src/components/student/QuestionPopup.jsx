@@ -6,8 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import TextField from '@material-ui/core/TextField';
-import PopupDialog from '../common/PopupDialog';
-import WrongPU from './WrongPU';
+import fetchedQuestions from './refreshedQuestions.json';
 import Grid from '@material-ui/core/Grid';
 import {useSelector} from 'react-redux';
 
@@ -91,7 +90,7 @@ function QuestionPopup(props){
     };
 
     const handleSave=()=>{ 
-        props.setOpenPopup(false); //topic_id course_id question_id solution
+        props.setOpenPopup(false);//topic_id course_id question_id solution
         const requestOptions = {
             method: 'POST',
             mode:'cors',
@@ -103,8 +102,7 @@ function QuestionPopup(props){
         fetch('http://127.0.0.1:3000/question/check', requestOptions)
         .then(response => response.json())
                 .then(data => {  
-                  if(data.Correct==false){console.log("krivo");props.setOpenPopupWrong(true)};
-                  console.log(JSON.stringify(data));
+                  if(data.correct==false){props.setOpenPopupWrong(true)};
                   props.setFields(data.Questions);
         })
         .catch((error)=>{

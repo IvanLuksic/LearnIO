@@ -88,7 +88,7 @@ function Matrica(props)
     const [openPopupWrong, setOpenPopupWrong] = useState(()=>{return false});
     const [matricaAO,setMatricaAO] = useState(()=>{return 3});
     const [matricaD,setMatricaD] = useState(()=>{return 3});
-    const [loading,setLoading]=useState(false);//potrebno ga postavit na false da bi radilo
+    const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
     const [assesment_objectives,setAssesment_objectives]=useState();
     const topicName=useSelector(state=>state.studentTopic.name);
     const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
@@ -146,6 +146,11 @@ function Matrica(props)
                 {
                   <PopupDialog openPopup={openPopupQuestion} setOpenPopup={setOpenPopupQuestion} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
                     <QuestionPopup ao={matricaAO} d={matricaD} questionToDisplay={questionSelected} setOpenPopup={setOpenPopupQuestion} setOpenPopupWrong={setOpenPopupWrong} field={fields} setFields={setFields}/>
+                  </PopupDialog>        
+                }
+                {
+                  <PopupDialog openPopup={openPopupWrong} setOpenPopup={setOpenPopupWrong} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
+                    <WrongPU closePopup={setOpenPopupWrong} setTopicID={setTopicID}/>
                   </PopupDialog>        
                 }
                 <Grid container direction="column" justify="flex-start" alignItems="center">
