@@ -6,7 +6,8 @@ import { makeStyles} from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import EditQuestion from './EditQuestion'; 
 import DisplayMatrix from './DisplayMatrix';
-import data from './questions.json'
+import data from './questions.json';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -50,8 +51,14 @@ const useStyles = makeStyles((theme) => ({
     questionsTable:{
         minHeight: "100vh",
         paddingTop:"14vh"
+    },
+    skeletonMatrica:{
+        paddingTop:"20vh",
+    },
+    skeletonTable:{
+        minHeight: "100vh",
+        paddingTop:"20vh"
     }
-
 }));
 
 function useForceUpdate() {
@@ -63,6 +70,7 @@ function MatricaAdmin(props)
 {
     const forceUpdate = useForceUpdate();
     const topicID = props.match.params.id;
+    const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
     const [aoSelected,setAoSelected]=useState(1);
     const [dSelected,setDSelected]=useState(1);
     const [expanded, setExpanded] = useState(false);
@@ -148,6 +156,9 @@ function MatricaAdmin(props)
     const classes = useStyles();
 
     return (
+        <div>
+        {loading?
+        (
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         <Grid container direction="row" justify="center" alignItems="center"  height="100%" >
             <Grid container item md={6} direction="row" justify="center" alignItems="center" >
@@ -165,7 +176,42 @@ function MatricaAdmin(props)
             </Grid>
         </Grid>
         </div>
-        );
+        )
+        :
+        (  
+            <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
+            <Grid container direction="row" justify="center" alignItems="center"  height="100%" >
+                <Grid container item md={6} direction="row" justify="center" alignItems="center" className={classes.skeletonMatrica}>
+                    <Grid item xs={11} md={8}  direction="row" justify="center" alignItems="flex-start"  container>
+                        <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200}/></Grid> 
+                        <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
+                        <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
+                    </Grid>
+                    <Grid item xs={11} md={8}  direction="row" justify="center" alignItems="flex-start"  container>
+                        <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200}/></Grid> 
+                        <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
+                        <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
+                    </Grid>
+                    <Grid item xs={11} md={8}  direction="row" justify="center" alignItems="flex-start"  container>
+                        <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200}/></Grid> 
+                        <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
+                        <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
+                    </Grid>
+                </Grid>
+                <Divider  orientation="vertical" className={classes.divider} flexItem/>
+                <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.skeletonTable}>
+                    <Grid item style={{margin:"5px"}}><Skeleton variant="text"  animation="wave"  height={60} width={600}/></Grid> 
+                    <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={400}  width={600} /></Grid>
+                    <Grid item style={{margin:"5px"}}><Skeleton variant="text"  animation="wave"  height={60} width={600}/></Grid>
+                </Grid>
+            </Grid>
+            </div>
+                
+          
+        )
+        }
+        </div>
+    );
 }
 
 
