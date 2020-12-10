@@ -75,7 +75,7 @@ const useStyles=makeStyles(theme =>({
 }))
 function WrongPU(props){//uzima samo closePopup 
     const topicID=useSelector(state=>state.studentTopic.id);
-    const [data,setData]=useState(fakeBackendAssociatedTopics);//fakeBackendAssociatedTopics
+    const [data,setData]=useState(()=>fakeBackendAssociatedTopics);//fakeBackendAssociatedTopics
     const classes=useStyles();
     const closePopup=(value)=>{
         if(Number.isInteger(value)){props.setTopicID(value)};
@@ -89,29 +89,36 @@ function WrongPU(props){//uzima samo closePopup
             method: 'POST',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({topic_id:topicID}),
+            body: JSON.stringify({topic_id:5}),
             credentials: 'include'
         };
 
         fetch('http://127.0.0.1:3000/student/topics/associated', requestOptions)
         .then(response => response.json())
-                .then(data => {  
-                  props.setData(data);
-        })
+        .then(data => { setData(data.Associated);})
         .catch((error)=>{
             console.log('Error in fetch function '+ error);
         });
     }
-    console.log("krivo -popup");
+
     useEffect(()=>{
         fetchAssociatedTopics();
     },[])
+
 
     const columns = [
         { field: 'id', type:'string',headerAlign:'center', align:'center', renderHeader: () => (<strong>ID</strong>)},
         { field: 'name', type:'string', width: 200,headerAlign:'center', align:'center', type:'string', renderHeader: () => (<strong>TOPIC</strong>)},//imaš required level
         { field: 'open', headerName: `${' '}`,headerAlign:'center', align:'center', renderCell: (params) => (<Link to={'/topic/'+ params.getValue('id')} onClick={()=>closePopup(params.getValue('id'))}><ColorButton size="small"> Open </ColorButton></Link>)}
     ]
+    let rows=[];
+    for(let i=0;i<data.length;i++){
+        rows=[...rows,{
+            id: data[i].topic_id,
+            name: data[i].name,
+            required_lvl: data[i].required_level,
+        }]
+    }
 
     let dataExists=(data!=null)?true:false;//nece radit data grid ako nema topica
     return(
@@ -126,7 +133,7 @@ function WrongPU(props){//uzima samo closePopup
             </Grid>
             {dataExists&&
              <div className={classes.tabela}>
-                <DataGrid disableSelectionOnClick={true} rows={data} hideFooter={"true"} columns={columns} />
+                <DataGrid disableSelectionOnClick={true} rows={rows} hideFooter={"true"} columns={columns} />
             </div>
             }
             <Grid className={classes.button}>
