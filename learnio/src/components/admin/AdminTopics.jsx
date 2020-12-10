@@ -66,11 +66,11 @@ const useStyles = makeStyles((theme) => ({
       minHeight: '40%'
     },
     skeleton:{
-      width:"20%",
+      width:"30%",
       //height:"100%",
-      paddingTop:"15vh",
-      paddingLeft:"40%",
-      paddingRight:"40%",
+      paddingTop:"25vh",
+      paddingLeft:"35%",
+      paddingRight:"35%",
       marginBottom:"0",
     }
 }))
@@ -194,8 +194,9 @@ function AdminTopics(props){
         </div> )
         :
           <div className={classes.skeleton}>
-            <Skeleton variant="text" style={{paddingBottom:"10vh"}} /> 
-            <Skeleton variant="reck"  height={400} />
+            <Skeleton variant="text" height={60} /> 
+            <Skeleton variant="reck"  height={350} />
+            <Skeleton variant="text" height={60} /> 
           </div>
       }
       </div>

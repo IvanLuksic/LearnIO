@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
     skeleton:{
       width:"50%",
       //height:"100%",
-      paddingTop:"15vh",
+      paddingTop:"25vh",
       paddingLeft:"25%",
       paddingRight:"25%",
       marginBottom:"0",
@@ -252,8 +252,9 @@ function StudentTopics(props){
       </div>)
     :
       <div className={classes.skeleton}>
-        <Skeleton variant="text" animation="wave" style={{paddingBottom:"10vh"}} /> 
-        <Skeleton variant="reck" animation="wave" height={500} />
+        <Skeleton variant="text" animation="wave" height={60} /> 
+        <Skeleton variant="reck" animation="wave" height={350} />
+        <Skeleton variant="text" animation="wave"  height={60}/>
       </div>
     }
     </div>
