@@ -119,7 +119,7 @@ function Matrica(props)
        console.log(questionSelected);
        if(status!=="LOCKED") setOpenPopupQuestion(true);
        console.log(openPopupQuestion)
-      };
+    };
 
 
 

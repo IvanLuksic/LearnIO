@@ -75,7 +75,7 @@ const useStyles=makeStyles(theme =>({
 }))
 function WrongPU(props){//uzima samo closePopup 
     const topicID=useSelector(state=>state.studentTopic.id);
-    const [data,setData]=useState(()=>fakeBackendAssociatedTopics);
+    const [data,setData]=useState(fakeBackendAssociatedTopics);//fakeBackendAssociatedTopics
     const classes=useStyles();
     const closePopup=(value)=>{
         if(Number.isInteger(value)){props.setTopicID(value)};
@@ -106,13 +106,13 @@ function WrongPU(props){//uzima samo closePopup
     //     fetchAssociatedTopics();
     // })
 
-    let linkage;
     const columns = [
         { field: 'id', type:'string',headerAlign:'center', align:'center', renderHeader: () => (<strong>ID</strong>)},
         { field: 'name', type:'string', width: 200,headerAlign:'center', align:'center', type:'string', renderHeader: () => (<strong>TOPIC</strong>)},
         { field: 'open', headerName: `${' '}`,headerAlign:'center', align:'center', renderCell: (params) => (<Link to={'/topic/'+ params.getValue('id')} onClick={()=>closePopup(params.getValue('id'))}><ColorButton size="small"> Open </ColorButton></Link>)}
     ]
 
+    let dataExists=(data!=null)?true:false;//nece radit data grid ako nema topica
     return(
         <div>
             <Grid className={classes.title}>
@@ -123,9 +123,11 @@ function WrongPU(props){//uzima samo closePopup
                 <p>Go study associated topics.</p>
                 <p>That will help you to understand that question better.</p>
             </Grid>
-            <div className={classes.tabela}>
+            {dataExists&&
+             <div className={classes.tabela}>
                 <DataGrid disableSelectionOnClick={true} rows={data} hideFooter={"true"} columns={columns} />
             </div>
+            }
             <Grid className={classes.button}>
                 <Button variant="contained" onClick={()=>closePopup(null)} className={classes.pickButton} style={{backgroundColor:"#EB4949", color:"white"}}>Close</Button>
             </Grid>
