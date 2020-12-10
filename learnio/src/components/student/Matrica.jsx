@@ -10,7 +10,11 @@ import PopupDialog from '../common/PopupDialog.jsx';
 import {useDispatch, useSelector} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
 import WrongPU from './WrongPU';
+<<<<<<< HEAD
 import Skeleton from '@material-ui/lab/Skeleton';
+=======
+import NotFound from '../common/NotFound';
+>>>>>>> c8eed3a0b01a0f7301082f059ab74f3b4a4655f6
 
 
 const useStyles = makeStyles((theme) => ({
@@ -72,10 +76,14 @@ const fieldToRows=(field,ao,d)=>{
 };
 
 function Matrica(props)
-{
+{    
+    const [noError,setNoError]=useState(()=> true);
+    const changeNoError=()=>{
+      if(noError===true) setNoError(false);
+    }
     let dispatch=useDispatch();
     if(Number(props.match.params.id)){dispatch(topicSelected(props.match.params.id,"Topic"))};
-    if(!Number(props.match.params.id)){props.history.push('/')};
+    if(!Number(props.match.params.id)){changeNoError()};
     const [fields, setFields]=useState(()=>{return fakeFetchResponse.Questions});//bilo data.Questions
     const [aoSelected,setAoSelected]=useState(1);
     const [dSelected,setDSelected]=useState(1);
@@ -132,12 +140,7 @@ function Matrica(props)
        console.log(questionSelected);
        if(status!=="LOCKED") setOpenPopupQuestion(true);
        console.log(openPopupQuestion)
-      };
-
-
-
-
-
+    };
 
    const classes = useStyles();
     return(

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Route } from "react-router-dom";
+import { Route ,Switch} from "react-router-dom";
 import Login from "./pages/login";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import "./App.css";
@@ -12,6 +12,7 @@ import AdminTopics from './components/admin/AdminTopics';
 import Matrica from './components/student/Matrica';
 import {useSelector} from 'react-redux';
 import Results from "./components/admin/Results";
+import NotFoundPage from './pages/NotFoundPage';
 
 
 const theme = createMuiTheme({
@@ -61,14 +62,17 @@ function App() {
               {/* <Button onClick={()=>{dispatch(studentLogIn());console.log(loginStatus);}}>Student </Button>
               <Button  onClick={()=>{dispatch(adminLogIn());console.log(loginStatus);}}>Admin </Button> */}
               <div className="App-intro">
+                <Switch>
                     <Route exact path="/" component={Home}/>
-                    <Route path="/login" component={Login}/>
+                    <Route exact path="/login" component={Login}/>
                     {StudentFeatures&&<Route exact path="/topics"component={StudentTopics}/>}
                     {StudentFeatures&&<Route exact path="/topic/:id" component={Matrica}/>}
                     {AdminFeatures&&<Route exact path="/admin-topic/:id" component={MatricaAdmin}/>}
-                    {AdminFeatures&&<Route path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>}
+                    {AdminFeatures&&<Route exact path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>}
                     {AdminFeatures&&<Route exact path="/AdminTopics" component={AdminTopics}/>}
                     {AdminFeatures&&<Route exact path="/results" component={Results}/>}
+                    <Route component={NotFoundPage}/>
+                </Switch>
               </div>
           </ThemeProvider>
         </div>
