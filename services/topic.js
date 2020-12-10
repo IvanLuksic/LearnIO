@@ -115,8 +115,8 @@ module.exports=class topic{
     async associatedTopics(topics_id)
     {
         try {
-            try {
-               var association=await sequelize.query('SELECT * FROM topic JOIN tags_of_topic ON topic.id=tags_of_topic.source_topic WHERE id= :topic_id ',{
+            try {//POTREBNO DEFINIRAT ALIAS ZA TABLICU TOOIC JER 2 PUTA JOINAMO PO NJOJ
+               var association=await sequelize.query('SELECT * FROM topic t1 JOIN tags_of_topic  ON t1.id=tags_of_topic.source_topic JOIN topic t2 ON tags_of_topic.associated_topic=t2.id WHERE t1.id= :topic_id ',{
                 raw:true,
                 replacements: { topic_id: topics_id },
                 type: QueryTypes.SELECT
@@ -126,6 +126,8 @@ module.exports=class topic{
                 this.Logger.error('Error in fetching asscoaited topics ');
                 throw(error);
             }
+            for(let i=0;i<association.length;i++)
+            this.Logger.info(JSON.stringify(association[i]));
             var temp={};
             var format=[];
             for(let assoc of association)
@@ -184,6 +186,80 @@ module.exports=class topic{
             else return 1;//vec se ulazilo u njega
         } catch (error) {
             this.Logger.error('error in isBlue function'+error);
+            throw(error);
+        }
+    }
+    async getAllTopicsForAdmin()
+    {
+        try {
+            try {
+                var topics=await this.Topic.findAll({
+                    attributes:['id','name'],
+                    include:{
+                         model:this.Course,
+                        as:'courses_topic',
+                        attributes:['name'],
+                        through: { attributes: []},
+                        include:{//nadi koji je to predmet
+                            model:this.Subject,
+                            as:'subjects_course',
+                            through: { attributes: []}
+                            }
+                    }
+                });
+            } catch (error) {
+                this.Logger.error('Error in fetching topics from database'+error);
+                throw(error);
+            }
+           let format=[];
+           let temp={};
+           for(let top of topics)//tu se nalaze svi topici povezani sa kursevima i predmetima u kojima se nalaze-> SVE KOMBINACIJE-> TOPIC KOJI NEMA NIJEDAN KURS ILI PREDMET NEĆE
+           //SE OVDJE POJAVITI-> TO I IMA SMISLA JER PRI UNOŠENJU MORAMO OGRANIČIT KORISNIKA DA UNESENI TOPIC POVEŽE S KURSOM I PREDMETOM
+           {
+               for(let i=0;i<top.courses_topic.length;i++)//za svaki kurs od topica
+               {
+                    for(let j=0;j<top.courses_topic[i].subjects_course.length;j++)//za svaki predmet kojem pripada taj kurs od tog topica
+                    {
+                        //formatiraj to sve u 1 objekt za ispis na frontendu
+                        temp={
+                            topic_id:top.id,
+                            topic_name:top.name,
+                            course:top.courses_topic[i].name,
+                            subject:top.courses_topic[i].subjects_course[j].name
+                        }
+                        format.push(temp);
+                        temp={};
+                    }
+               }
+           }
+           for(let i=0;i<format.length;i++)
+           this.Logger.info(JSON.stringify(format[i]));
+           return format;
+        } catch (error) {
+            this.Logger.error('Error in getAllTopics function'+error);
+            throw(error);
+        }
+    }
+    async getTopicInfo(topics_id)
+    {
+        try {
+            try {
+               var topic_info=await this.Topic.findOne({
+                    attributes:['name','rows_D','column_numbers'],
+                    where:{
+                        id:topics_id
+                    },
+                    raw:true
+                })
+            } catch (error) {
+                this.Logger.error('Error in fetching topic from databse'+error);
+                throw(error);
+            }
+            this.Logger.info('Topic info fetched succesfuly from database');
+            this.Logger.info(JSON.stringify(topic_info));
+            return topic_info;
+        } catch (error) {
+            this.Logger.error('Error in function getTopicInfo'+error);
             throw(error);
         }
     }

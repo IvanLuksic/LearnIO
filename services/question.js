@@ -66,7 +66,7 @@ module.exports=class question{
                             status:questions[k].status,
                             question_id:questions[k].question.id,
                             question_text:questions[k].question.text,
-                            question_question_type:questions[k].question.question_type,
+                            question_type:questions[k].question.question_type,
                             question_image_path:questions[k].question.image_path,
                             question_answer_a:questions[k].question.answer_a,
                             question_answer_b:questions[k].question.answer_b,
@@ -173,29 +173,42 @@ module.exports=class question{
         }
        
     }
-    async getQuestionsForA0D(topics_id,A0,D)//Vraća sva pitanja koja su definirana za određeni topic i koja se nalaze na poziciji A0 i D-> Pregled za onoga tko dodaje pitanja ili ih hoće editat
-    {
+    async getQuestionsForAllA0D(topics_id,rows,columns)//Vraća sva pitanja koja su definirana za određeni topic i koja se nalaze na poziciji A0 i D ZA SVAKI A0 I D MATRICE-> Pregled za onoga tko dodaje pitanja ili ih hoće editat
+    {//saljemo retke i stupce jer smo ih prethodno dohvatili u controleru pa da ne moramo opet
         try {
-            try {
-                var questions_A0D=await this.Question.findAll({
-                    attributes:['id','text','question_type','row_D','column_A','image_path','answer_a','answer_b','answer_c','answer_c','answer_d'],//sve osim rjesenja i topic_id
-                    where:{
-                       /*operator and*/ [Op.and]: [
-                            { row_D: D},
-                            { column_A: A0 },
-                            {topic_id:topics_id}
-                          ]
-                    },
-                    raw:true
-                });
-                this.Logger.info('Questions fetched succesfully from database for A0 D');
-            } catch (error) {
-                this.Logger.error('Error in fetching questions for A0 and D');
-                throw(error);
+            var format=[];
+            var temp={};
+            for(let i=1;i<=rows;i++)
+            {
+                for(let j=1;j<=columns;j++)
+                {
+                    try {
+                        var questions_A0D=await this.Question.findAll({
+                            attributes:['id','text','question_type','solution','row_D','column_A','image_path','answer_a','answer_b','answer_c','answer_c','answer_d'],//sve osim rjesenja i topic_id
+                            where:{
+                               /*operator and*/ [Op.and]: [
+                                    { row_D: i},
+                                    { column_A: j },
+                                    {topic_id:topics_id}
+                                  ]
+                            },
+                        });
+                    } catch (error) {
+                        this.Logger.error('Error in fetching questions for A: '+j+'D: '+ i);
+                        throw(error);
+                    }
+                    temp={
+                        ao:j,
+                        d:i,
+                        Questions:questions_A0D
+                    }
+                    format.push(temp);
+                }
             }
-            for(let i=0;i<questions_A0D.length;i++)
-            this.Logger.info(JSON.stringify(questions_A0D[i]));
-            return questions_A0D;
+            this.Logger.info('Questions fetched succesfully from database for all A0 D');
+            for(let i=0;i<format.length;i++)
+            this.Logger.info(JSON.stringify(format[i]));
+            return format;
         } catch (error) {
             this.Logger.error('Error in getQuestionsForA0D '+error);
             throw(error);

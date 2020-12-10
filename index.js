@@ -1,36 +1,11 @@
-// const express  = require('express');
-// const config = require('./config/config');
-// const database = require('./config/database');
-// const bodyParser = require('body-parser');
-
-// const router = express.Router();
-// database.authenticate()
-// .then( () => console.log("Database radi") )
-// .catch( (err) => console.log("Error: " + err));
-
-// const app = express();
-// const PORT = process.env.PORT || 3000;
-
-// app.use(bodyParser.json());
-
-// app.get ('/', (req, res) => res.send("hello world"));
-
-
-// app.use('/api/result', require('./api/routers/result'));
-// app.use('/api/topic', require('./api/routers/topic'));
-// app.use('/api/tagsoftopic', require('./api/routers/tags_of_topic'));
-
-
-// app.listen( PORT, console.log("radi") );
-
 const questionclass= require('./services/question');
 const topicclass= require('./services/topic');
 const resultclass=require('./services/result');
 const {question,sequelize,topic,save,course,user,subject,result,asessment_objective,clas}=require('./models');
 const {nodelogger}=require('./loaders/logger');
 //instance=new questionclass(question,topic,save,course,user,nodelogger);
-//instance=new topicclass(topic, asessment_objective,course,subject,result,nodelogger);
-instance=new resultclass(result,user,subject,course,topic,asessment_objective,clas,nodelogger);
+instance=new topicclass(topic, asessment_objective,course,subject,result,nodelogger);
+//instance=new resultclass(result,user,subject,course,topic,asessment_objective,clas,nodelogger);
 async function DatabaseConnection ()
 {
     console.log('Connecting to database....');
@@ -53,7 +28,7 @@ async function init()
          //const x=await instance.getTopicsForUserAndCourse(3,1,1);
       // const x=await instance.getAsesmentsForTopic(1,1);
        //nodelogger.info(JSON.stringify(x));
-        //const x=await instance.associatedTopics(2);
+        const x=await instance.associatedTopics(5);
        // nodelogger.info( await instance.isBlue(1,1,3));
         //const x=await instance.getQuestionsFromSave(1,1,3);
       //await instance.insertIntoResults(1,1,1,1,4);
@@ -64,8 +39,10 @@ async function init()
       //await instance.filterByCourse('Geometrija');
      // await instance.filterByTopic('Mnozenje');
      //await instance.filterBySchool_year('2019/2020');
-     await instance.filterByGrade(4);
+     ///await instance.filterByGrade(4);
       //await instance.getAllResults();
+     //await instance.getAllTopicsForAdmin();
+     //await instance.getTopicInfo(2);
         nodelogger.info('Uspjesno');
     } catch (error) {
         console.log('Greska pri citanju rezultata'+error);

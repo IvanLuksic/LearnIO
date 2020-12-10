@@ -1,5 +1,6 @@
 const { Question_instance,Topic_instance}=require('../../services');
 const {nodelogger}=require('../../loaders/logger');
+const { response } = require('express');
 module.exports={
     getQuestions: async (req,res,next)=>//ako je dosao do ovde onda je prosao provjere autentikacije
     {
