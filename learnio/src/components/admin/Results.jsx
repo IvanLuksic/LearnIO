@@ -266,8 +266,9 @@ function AdminTopics(){
       :
       (
         <div className={classes.skeleton}>
-          <Skeleton variant="text" animation="wave" style={{paddingBottom:"10vh"}} /> 
-          <Skeleton variant="reck" animation="wave" height={300} />
+          <Skeleton variant="text" animation="wave" height={60} /> 
+          <Skeleton variant="reck" animation="wave" height={350} />
+          <Skeleton variant="text" animation="wave" height={60} />
         </div>
       )
       }
