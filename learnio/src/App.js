@@ -12,7 +12,7 @@ import AdminTopics from './components/admin/AdminTopics';
 import Matrica from './components/student/Matrica';
 import {useSelector} from 'react-redux';
 import Results from "./components/admin/Results";
-import NotFoundPage from './pages/NotFoundPage';
+import NotFound from './components/common/NotFound';
 
 
 const theme = createMuiTheme({
@@ -71,7 +71,7 @@ function App() {
                     {AdminFeatures&&<Route exact path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>}
                     {AdminFeatures&&<Route exact path="/AdminTopics" component={AdminTopics}/>}
                     {AdminFeatures&&<Route exact path="/results" component={Results}/>}
-                    <Route component={NotFoundPage}/>
+                    <Route component={NotFound}/>
                 </Switch>
               </div>
           </ThemeProvider>

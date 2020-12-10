@@ -1,91 +1,53 @@
 [
     {
-        
-        "id":1,
-        "topic":"Trigonometry 1",
-        "description": "matematika",
-        "ao":2,
-        "d":4,
-        "tags": [
-            "tag item 1",
-            "tag item 2"
-        ]
+        "topic_id":1,
+        "topic_name":"Trigonometry 1",
+        "course": "Electrical engineering",
+        "subject":"Matematika 1"
     },
     {
-        "id":2,
-        "topic":"Trigonometry 2",
-        "description": "matematika",
-        "ao":3,
-        "d":8,
-        "tags": []
+        "topic_id":2,
+        "topic_name":"MOSFET",
+        "course": "Electrical engineering",
+        "subject":"Electronics 2"
     },
     {
-        "id":3,
-        "topic":"Trigonometry 3",
-        "description": "matematika",
-        "ao":4,
-        "d":9,
-        "tags": [
-            "tag item 1",
-            "tag item 2"
-        ]
+        "topic_id":3,
+        "topic_name":"Trigonometry 1",
+        "course": "Electrical engineering",
+        "subject":"Matematika 1"
     },
     {
-        "id":4,
-        "topic":"Basic Calculus 1",
-        "description": "matematika",
-        "ao":3,
-        "d":4,
-        "tags": [
-            "tag item 1",
-            "tag item 2"
-        ]
+        "topic_id":4,
+        "topic_name":"Multiplication",
+        "course": "Mechanical engineering",
+        "subject":"Matematika 1"
 
     },
     {
-        "id":5,
-        "topic":"Basic Calculus 2",
-        "description": "matematika",
-        "ao":4, 
-        "d":3,
-        "tags": [
-            "tag item 1",
-            "tag item 2"
-        ]
+        "topic_id":5,
+        "topic_name":"PN",
+        "course": "Electrical engineering",
+        "subject":"Electronics 1"
     },
     {
-        "id":6,
-        "topic":"Basic Calculus 3",
-        "description": "matematika",
-        "ao":4,
-        "d":7,
-        "tags": [
-            "tag item 1",
-            "tag item 2"
-        ]
+        "topic_id":6,
+        "topic_name":"Trigonometry 2",
+        "course": "Mechanical engineering",
+        "subject":"Matematika 1"
     },
     {
-        "id":7,
-        "topic":"Geometry 1",
-        "description": "matematika",
-        "ao":2,
-        "d":4,
-        "tags": [
-            "tag item 1",
-            "tag item 2"
-        ]
+        "topic_id":7,
+        "topic_name":"Logarithms",
+        "course": "Electrical engineering",
+        "subject":"Matematika 2"
 
     },
     {
-        "id":8,
-        "topic":"Geometry 2",
-        "description": "matematika",
-        "ao":2,
-        "d":9,
-        "tags": [
-            "tag item 1",
-            "tag item 2"
-        ]
+        "topic_id":8,
+        "topic_name":"Ebbers-Moll",
+        "course": "Electrical engineering",
+        "subject":"Electronics"
 
     }
   

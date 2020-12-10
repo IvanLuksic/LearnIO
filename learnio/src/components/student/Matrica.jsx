@@ -75,12 +75,8 @@ const fieldToRows=(field,ao,d)=>{
 function Matrica(props)
 {    
     const [noError,setNoError]=useState(()=> true);
-    const changeToError=()=>{
-      if(noError===true) setNoError(false);
-    }
-    const changeToNoError=()=>{
-      if(noError===false) setNoError(true);
-    }
+    const changeToError=()=>{if(noError===true) setNoError(false);}
+    const changeToNoError=()=>{if(noError===false) setNoError(true);}
     let dispatch=useDispatch();
     if(Number(props.match.params.id)){changeToNoError();dispatch(topicSelected(props.match.params.id,"Topic"))};
     if(!Number(props.match.params.id)){changeToError()};
@@ -93,11 +89,10 @@ function Matrica(props)
     const [matricaAO,setMatricaAO] = useState(()=>{return 3});
     const [matricaD,setMatricaD] = useState(()=>{return 3});
     const [loading,setLoading]=useState(false);//potrebno ga postavit na false da bi radilo
-    const [assesment_objectives,setassesment_objectives]=useState();
+    const [assesment_objectives,setAssesment_objectives]=useState();
     const topicName=useSelector(state=>state.studentTopic.name);
     const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
 
-    console.log(props);
 
 
     const GetQuestion=()=>{
@@ -115,7 +110,7 @@ function Matrica(props)
                   setFields(data.Questions);
                   setMatricaAO(data.Matrix.column_numbers);
                   setMatricaD(data.Matrix.rows_D);
-                  setassesment_objectives(data.Matrix.asessments_array);
+                  setAssesment_objectives(data.Matrix.asessments_array);
                   setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
         })
         .catch((error)=>{
