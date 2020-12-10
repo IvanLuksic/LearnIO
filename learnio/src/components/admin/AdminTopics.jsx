@@ -13,6 +13,8 @@ import PopupDialog from '../common/PopupDialog';
 import ConfirmDialog from '../common/ConfirmDialog';
 import {useSelector, useDispatch} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
+import Skeleton from '@material-ui/lab/Skeleton';
+
 
 const useStyles = makeStyles((theme) => ({
 
@@ -61,6 +63,14 @@ const useStyles = makeStyles((theme) => ({
     popupStyle:{
       minWidth:'60%',
       minHeight: '40%'
+    },
+    skeleton:{
+      width:"50%",
+      //height:"100%",
+      paddingTop:"15vh",
+      paddingLeft:"25%",
+      paddingRight:"25%",
+      marginBottom:"0",
     }
 }))
 
@@ -81,6 +91,7 @@ function CustomPagination(props) {
 
 function AdminTopics(props){
     const dispatch=useDispatch();
+    const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
     const[rows,setRows]=useState(topici);
     const[open,setOpen]=useState(false); 
     const[openPopup,setOpenPopup]=useState(false);
@@ -140,9 +151,11 @@ function AdminTopics(props){
 
     return(
       <div>
-      <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this question?" functionToConfirm={DeleteTopic}/>
-      {
-        <div style={{display: "flex", flexDirection: "column",justifyContent:"none", alignItems:"center"}} className={classes.background}>
+      { loading?(
+        <div>
+          <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this question?" functionToConfirm={DeleteTopic}/>
+          {
+          <div style={{display: "flex", flexDirection: "column",justifyContent:"none", alignItems:"center"}} className={classes.background}>
             <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
             <div className={classes.tabela}>
                 <DataGrid disableSelectionOnClick={true} onRowHover={(Row)=>{linkage=Row.data.id}} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
@@ -150,7 +163,14 @@ function AdminTopics(props){
             <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
               <AddTopicPU closePopup={handleClose} addTopic={addQuestion}/>
             </PopupDialog>
-        </div>
+          </div>
+          }
+        </div> )
+        :
+          <div className={classes.skeleton}>
+            <Skeleton variant="text" style={{paddingBottom:"10vh"}} /> 
+            <Skeleton variant="reck"  height={500} />
+          </div>
       }
       </div>
     )

@@ -8,7 +8,8 @@ import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
-import fetchedTopics from './fetchedTopics.json'
+import fetchedTopics from './fetchedTopics.json';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -95,6 +96,14 @@ const useStyles = makeStyles((theme) => ({
       '&:hover': {
           backgroundColor: "#0e318b",
     },},
+    skeleton:{
+      width:"50%",
+      //height:"100%",
+      paddingTop:"15vh",
+      paddingLeft:"25%",
+      paddingRight:"25%",
+      marginBottom:"0",
+    }
   }));
 
 function CustomPagination(props) {
@@ -116,6 +125,7 @@ function CustomPagination(props) {
 function StudentTopics(){
     const dispatch=useDispatch();//rows su podaci
     const [data,setData]=useState(()=>{return fetchedTopics});
+    const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
     const classes = useStyles();
    //red 1, blue 2, grey 3, green 4
     function RenderStatusButton(id,status){
@@ -124,6 +134,7 @@ function StudentTopics(){
       else if(status==4) return (<Button onClick={()=>{dispatch(topicSelected(id))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonGreen} component={Link} to={`/topic/${id}`} size="small"> Revise </Button>);
       else return <p>sranje</p>;
     };
+    
 
     const fetchData=()=>{
       const requestOptions = {
@@ -133,18 +144,19 @@ function StudentTopics(){
         body: JSON.stringify({ course_id:1, subject_id:1}),
         credentials: 'include'
       };
-
       fetch('http://127.0.0.1:3000/topic', requestOptions)
       .then(response => response.json())
             .then(dataFetch => {  
               console.log(JSON.stringify(dataFetch));
               console.log(dataFetch[0].grade+dataFetch[0].result_array_by_columns);
               setData(dataFetch);
+              setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
       })
       .catch((error)=>{
         console.log('Error in fetch function '+ error);
       });
     };
+      
 
     useEffect(() => {
       console.log("saljem");
@@ -208,15 +220,24 @@ function StudentTopics(){
     console.log(columns);
     console.log(rows);
 
-    return(  
-    <div style={{display: "flex", flexDirection: "column", justifyContent:"none", alignItems:"center"}} className={classes.background} >
+    return( 
+    <div>
+    {loading?(
+      <div style={{display: "flex", flexDirection: "column", justifyContent:"none", alignItems:"center"}} className={classes.background} >
         <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
         <div className={classes.tabela}>
-          <DataGrid disableSelectionOnClick={true} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />
-        </div>
-
+            <DataGrid disableSelectionOnClick={true} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />
+        </div>   
+      </div>)
+    :
+      <div className={classes.skeleton}>
+        <Skeleton variant="text" animation="wave" style={{paddingBottom:"10vh"}} /> 
+        <Skeleton variant="reck" animation="wave" height={500} />
+      </div>
+    }
     </div>
     );
+
 };
 
 export default StudentTopics;

@@ -9,6 +9,7 @@ import newData from './refreshedQuestions.json';
 import QuestionPopup from './QuestionPopup.jsx';
 import PopupDialog from '../common/PopupDialog.jsx';
 import {useSelector} from 'react-redux';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -40,6 +41,15 @@ const useStyles = makeStyles((theme) => ({
     lobster: {
         fontFamily: "Lobster"
     },
+    skeleton:{
+      //width:"50%",
+      //height:"100%",
+      paddingTop:"15vh",
+      paddingLeft:"25%",
+      paddingRight:"25%",
+      margin:"2px",
+      justifyContent:"center"
+    },
 
 }));
 
@@ -69,6 +79,7 @@ function Matrica(props)
     const [openPopup, setOpenPopup] = useState(false);
     const [matricaAO,setMatricaAO] = useState(()=>{return 3});
     const [matricaD,setMatricaD] = useState(()=>{return 3});
+    const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
     const [assesment_objectives,setassesment_objectives]=useState();
     const id=props.id;
     const topicID=useSelector(state=>state.studentTopic);
@@ -92,6 +103,7 @@ function Matrica(props)
                   setMatricaAO(data.Matrix.column_numbers);
                   setMatricaD(data.Matrix.rows_D);
                   setassesment_objectives(data.Matrix.asessments_array);
+                  setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
         })
         .catch((error)=>{
             console.log('Error in fetch function '+ error);
@@ -125,6 +137,8 @@ function Matrica(props)
 
    const classes = useStyles();
     return(
+      <div>
+      {loading? (
         <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         {
           <PopupDialog openPopup={openPopup} setOpenPopup={setOpenPopup} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
@@ -142,7 +156,30 @@ function Matrica(props)
                 </Grid>
             </Grid>
         </Grid> 
+        </div> )
+      :
+      (
+        <div className={classes.skeleton}>
+       
+          <Grid container  direction="row"  justify="center" alignItems="center" style={{marginBottom:"5px"}}>
+            <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200}/></Grid> 
+            <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
+            <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
+          </Grid>
+          <Grid container direction="row"  justify="center" alignItems="center" style={{marginBottom:"5px"}}>
+            <Grid item style={{margin:"5px"}}><Skeleton variant="reck" animation="wave" height={200}  width={200} /></Grid> 
+            <Grid item style={{margin:"5px"}} ><Skeleton variant="reck" animation="wave" height={200}  width={200} /></Grid> 
+            <Grid item style={{margin:"5px"}}><Skeleton variant="reck" animation="wave" height={200}  width={200} /></Grid> 
+          </Grid>
+          <Grid container  direction="row"  justify="center" alignItems="center" style={{marginBottom:"5px"}}>
+            <Grid item style={{margin:"5px"}}><Skeleton variant="reck" animation="wave" height={200}  width={200} /></Grid> 
+            <Grid item style={{margin:"5px"}}><Skeleton variant="reck" animation="wave" height={200}  width={200} /></Grid> 
+            <Grid item style={{margin:"5px"}}><Skeleton variant="reck" animation="wave" height={200}  width={200} /></Grid> 
+          </Grid>
         </div>
+      )
+    }
+      </div>
     )
 }
 export default Matrica;
