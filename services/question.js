@@ -459,7 +459,7 @@ module.exports=class question{
     async addQuestion(request_body)
     {
         try {
-            await this.Question.create({
+            const question=await this.Question.create({
                 text:request_body.text,
                 solution:request_body.solution,
                 question_type:request_body.question_type,
@@ -472,6 +472,7 @@ module.exports=class question{
                 answer_d:request_body.answer_d,
                 topic_id:request_body.topic_id
             });
+            return question.id;
         } catch (error) {
             this.Logger.error('Error in function addQuestion '+error);
             throw(error);

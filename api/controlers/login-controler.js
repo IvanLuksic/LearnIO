@@ -68,6 +68,7 @@ module.exports={
     logout: async(req,res,next)=>{
         try {
             req.session.destroy();//tribalo bi izbrisat sesiju iz memory storea
+            res.sendStatus(200);
         } catch (error) {
             nodelogger.info('Error in session deleting');
             next(error);

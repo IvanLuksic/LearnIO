@@ -3,11 +3,10 @@ const {nodelogger}=require('../../loaders/logger');
 module.exports={
     getTopics:async (req,res,next)=>{//da bi dosaoo do ovde morao je proci autentikaciju-> ne treba se brinuti o tome ovde
         try {
-        const {course_id=1,subject_id=1,class_id=1}=req.body;//stavi default 1 zasad ako oni ne budu mogli poslat s forntenda
         const student_id= req.session.user;//u cookie se nalazi user id
-        nodelogger.info('Parametri: '+course_id+' '+subject_id+' '+student_id);
+        nodelogger.info('Parametri: '+req.params.course_id+' '+req.params.subject_id+' '+student_id+' '+req.params.class_id);
         try {
-            var topics=await Topic_instance.getTopicsForUserAndCourse(student_id,course_id,subject_id,class_id);
+            var topics=await Topic_instance.getTopicsForUserAndCourse(student_id,req.params.course_id,req.params.subject_id,req.params.class_id);
         } catch (error) {
             nodelogger.error('Error in fetching topics frrom database '+error);
             throw(error);
@@ -39,10 +38,9 @@ module.exports={
     getAdminTopicsEdit:async(req,res,next)=>//Dohvati mu ime topica retke i stupce + niz svih pitanja za svako polje u matrici
     {
         try {
-            const {topic_id=1}=req.body;
-            nodelogger.info("parametar: "+topic_id);
+            nodelogger.info("parametar: "+req.params.topic_id);
             try {
-                var topic_info=await Topic_instance.getTopicInfo(topic_id);
+                var topic_info=await Topic_instance.getTopicInfo(req.params.topic_id);
             } catch (error) {
                 nodelogger.error('Error in fetching topic info froma database');
                 throw(error);
@@ -54,7 +52,7 @@ module.exports={
                 columns:topic_info.column_numbers
             };
             try {
-               var questions=await Question_instance.getQuestionsForAllA0D(topic_id,response.rows,response.columns);
+               var questions=await Question_instance.getQuestionsForAllA0D(req.params.topic_id,response.rows,response.columns);
             } catch (error) {
                 nodelogger.error('Error in fetching questions arrays');
                 throw(error);
@@ -70,10 +68,9 @@ module.exports={
     associated: async (req,res,next)=>
     {
         try {
-            const {topic_id=5}=req.body;
-            nodelogger.info("parametar: "+topic_id);
+            nodelogger.info("parametar: "+req.params.topic_id);
             try {
-                var associated=await Topic_instance.associatedTopics(topic_id);
+                var associated=await Topic_instance.associatedTopics(req.params.topic_id);
             } catch (error) {
                 nodelogger.error('Error in fetching asscoaited topics from database');
                 throw(error);

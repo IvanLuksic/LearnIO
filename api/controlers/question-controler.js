@@ -7,14 +7,12 @@ module.exports={
     {
         try {
               //1.provjeri jeli se u zadani topic ulazi prvi put-> AKO JE ONDA MU GENERIRAJ PITANJA U BAZU PA ONDA TEK ŠALJI
-        nodelogger.info(JSON.stringify(req.body));
-        const {course_id=1,topic_id=1,class_id=1,subject_id=1}=req.body;
         const student_id=req.session.user;
-        nodelogger.info('Parametri: '+course_id+' '+topic_id+' '+student_id);
+        nodelogger.info('Parametri: '+req.params.course_id+' '+req.params.topic_id+' '+req.params.student_id);
         var response={};//u njega ćemo stavit objekte pitanja i objekt naziva assesment objectivea za taj topic
         //1. Vidi jeli se u zadani topic u bazi NIKAD NIJE UŠLO-> AKO JEST ONDA JE PLAV->NE TREBA GENEIRAT PITANJA
             try {
-                var blue=await Topic_instance.isBlue(topic_id,course_id,student_id,class_id,subject_id)
+                var blue=await Topic_instance.isBlue(req.params.topic_id,req.params.course_id,student_id,req.params.class_id,req.params.subject_id)
                 nodelogger.info(blue);
             } catch (error) {
                 nodelogger.error('Error in fetching status of topic');
@@ -23,7 +21,7 @@ module.exports={
             if(blue)
             {
                 try {
-                    var questions=await Question_instance.getQuestionsFromSave(topic_id,course_id,student_id,class_id,subject_id);
+                    var questions=await Question_instance.getQuestionsFromSave(req.params.topic_id,req.params.course_id,student_id,req.params.class_id,req.params.subject_id);
                 } catch (error) {
                     nodelogger.error('Errro in fetching from database '+error);
                     throw(error);
@@ -33,14 +31,14 @@ module.exports={
             }
             else {//generiraj pitanja pa ih onda dohvati
                 try {
-                    var questions=await Question_instance.generateQuestions(student_id,topic_id,course_id,class_id,subject_id);
+                    var questions=await Question_instance.generateQuestions(student_id,req.params.topic_id,req.params.course_id,req.params.class_id,req.params.subject_id);
                 } catch (error) {
                     nodelogger.error('Error in generating questions');
                     throw(error);
                 }
                 //Kad si izgenerira onda ih dohvati i pošalji
                 try {
-                    var questions=await Question_instance.getQuestionsFromSave(topic_id,course_id,student_id,class_id,subject_id);
+                    var questions=await Question_instance.getQuestionsFromSave(req.params.topic_id,req.params.course_id,student_id,req.params.class_id,req.params.subject_id);
                 } catch (error) {
                     nodelogger.error('Errro in fetching from database '+error);
                     throw(error);
@@ -49,7 +47,7 @@ module.exports={
                 response.Questions=questions;
             }
             try {
-                matrica=await Topic_instance.getAsesmentsForTopic(topic_id,subject_id);
+                matrica=await Topic_instance.getAsesmentsForTopic(req.params.topic_id,req.params.subject_id);
                 response.Matrix=matrica;
             } catch (error) {
                 nodelogger.error('Error in fetching assemsents');
@@ -138,9 +136,12 @@ module.exports={
     addQuestions: async (req,res,next)=>
     {
         try {
-            await Question_instance.addQuestion(req.body);
+           question_id= await Question_instance.addQuestion(req.body);
             nodelogger.info('Question succesfuly added to database');
-            res.sendStatus(200);
+            let response={
+                id:question_id
+            };
+            res.json(response);
         } catch (error) {
             nodelogger.error('Error in adding questions '+error);
             next(error);

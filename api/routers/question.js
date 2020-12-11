@@ -7,7 +7,7 @@ const {authenticate_student,authenticate_admin,authenticate_teacher}=require('..
 const question_controler=require('../controlers/question-controler');
 module.exports=function (main_ruter){
     main_ruter.use('/',question);
-    question.post('/question',authenticate_student,question_controler.getQuestions);
+    question.get('/question/:class_id/:subject_id/:course_id/:topic_id',authenticate_student,question_controler.getQuestions);
     question.post('/question/check',authenticate_student,question_controler.checkAnswer);
     question.delete('/question/delete/:questionID',authenticate_admin,question_controler.deleteQuestionByID);
     question.put('/question/update',ShemaValidator.validate('updateQuestion'),authenticate_admin,question_controler.updateQuestions);

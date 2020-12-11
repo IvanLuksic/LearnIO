@@ -11,4 +11,5 @@ module.exports= function (main_router)//module.expots nece vise biti objekt nego
     //dodat login.get koja će prikazat zadanu stranicu
     login.get('/login',authenticate_login,login_controler.restoresesion);
     login.post('/login',ShemaValidator.validate('login'),login_controler.login);
+    login.head('/logout',login_controler.logout);//head request jer ne vraca ništa nazad pa da ne bude get
 }

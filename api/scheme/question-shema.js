@@ -10,22 +10,22 @@ module.exports={
             answer_a:{
                 type:["number", "string"],
                 isNotEmpty: true,//definiran keyword u shema validatoru
-                maxLength:10
+                maxLength:1000
             },
             answer_b:{
                 type:["number", "string"],
                 isNotEmpty: true,
-                maxLength:10
+                maxLength:1000
             },
             answer_c:{
                 type:["number", "string"],
                 isNotEmpty: true,
-                maxLength:10
+                maxLength:1000
             },
             answer_d:{
                 type:["number", "string"],
                 isNotEmpty: true,
-                maxLength:10
+                maxLength:1000
             },
             row_D:{
                 type:"number",
@@ -69,22 +69,22 @@ module.exports={
             answer_a:{
                 type:["number", "string"],
                 isNotEmpty: true,
-                maxLength:10
+                maxLength:1000
             },
             answer_b:{
                 type:["number", "string"],
                 isNotEmpty: true,
-                maxLength:10
+                maxLength:1000
             },
             answer_c:{
                 type:["number", "string"],
                 isNotEmpty: true,
-                maxLength:10
+                maxLength:1000
             },
             answer_d:{
                 type:["number", "string"],
                 isNotEmpty: true,
-                maxLength:10
+                maxLength:1000
             },
             row_D:{
                 type:"number",
