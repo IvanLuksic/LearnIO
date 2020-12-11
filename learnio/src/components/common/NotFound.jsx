@@ -11,7 +11,6 @@ const useStyles = makeStyles((theme) => ({
         minHeight:"100vh",
         maxHeight:"100vh",
         backgroundImage:"url("+backgroundIMG+")",
-        backgroundSize: "cover",
         backgroundPosition: "fixed",
         backgroundAttachment: "fixed",
         backgroundRepeat: "repeat-y",
@@ -52,7 +51,7 @@ function NotFound() {
                     <strong className={classes.text}>404</strong>
                 </Grid>
                 <Grid item  xs={12} >
-                    <img src={caveman} className={classes.Caveman}></img>
+                    <img src={caveman} alt={"Oops, even the 404 image got 404-ed..."}className={classes.Caveman}></img>
                 </Grid>
             </Grid>
         // </div>

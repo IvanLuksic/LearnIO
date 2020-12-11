@@ -1,7 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { makeStyles,withStyles} from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
-import {Link} from 'react-router-dom';
 import { DataGrid} from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button';
 import {useSelector} from 'react-redux';
@@ -74,7 +73,6 @@ const useStyles=makeStyles(theme =>({
     },
 }))
 function WrongPU(props){//uzima samo closePopup 
-    const topicID=useSelector(state=>state.studentTopic.id);
     const [data,setData]=useState(()=>fakeBackendAssociatedTopics);//fakeBackendAssociatedTopics
     const classes=useStyles();
     const closePopup=(value)=>{

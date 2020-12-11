@@ -11,7 +11,7 @@ import Icon from '@material-ui/core/Icon';
 import fakeBackendTopics from './topics.json';
 import PopupDialog from '../common/PopupDialog';
 import ConfirmDialog from '../common/ConfirmDialog';
-import {useSelector, useDispatch} from 'react-redux';
+import { useDispatch} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
 import Skeleton from '@material-ui/lab/Skeleton';
 
@@ -153,8 +153,19 @@ function AdminTopics(props){
       setOpenPopup(true); 
       setItem(data);
     };
-    const DeleteTopic=()=>{
-      handleDelete(item);
+    const requestDeleteTopic=()=>{
+      console.log("ZAHTJEV ZA Brisanjem: ");
+      console.log({id:item});
+      const requestOptions = {
+          method: 'POST',
+          mode:'cors',
+          headers: { 'Content-Type': 'application/json'},
+          body: JSON.stringify({id:item}),
+          credentials: 'include'
+      };
+      fetch('http://127.0.0.1:3000/', requestOptions)
+      .then(() =>{handleDelete(item);})
+      .catch((error)=>{console.log('Error in fetch function '+ error);});
     }
 
     let rows=[];
@@ -173,14 +184,14 @@ function AdminTopics(props){
         {field: "course", width: 200,headerName:'Course',type:'string',headerAlign:'center', align:'center'},                                                                                                                          
         {field: "subject", width: 200, headerName:'Subject',type:'string',headerAlign:'center', align:'center'},
         {field: 'open', headerName: 'Edit',headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Link to={`/admin-topic/${params.getValue('id')}`} onClick={()=>{dispatch(topicSelected(params.getValue('id')))}}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>)},
-        {field: 'delete', headerName: 'Delete ' ,headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Button /*onClick={()=>{Confirm(params.data.id)}}*/><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
+        {field: 'delete', headerName: 'Delete ' ,headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Button onClick={()=>{Confirm(params.data.id)}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
     ];
 
     return(
       <div>
       { loading?(
         <div>
-          <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this question?" functionToConfirm={DeleteTopic}/>
+          <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this question?" functionToConfirm={requestDeleteTopic}/>
           {
           <div style={{display: "flex", flexDirection: "column",justifyContent:"none", alignItems:"center"}} className={classes.background}>
             <Typography color="primary" className={classes.topicTitle}>Topics</Typography>

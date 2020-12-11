@@ -182,14 +182,14 @@ function EditQuestionPU(props) {
   //states of elements-------------------
   const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(false);
-  const [showIMG, setIMG] = useState(props.prop.photo);
+  const [showIMG, setIMG] = useState(()=>{return ((props.prop.image_path!==null)?true:false)});
   const [text, setText] = useState(props.prop.text);
-  const quest = props.prop;
+  const quest = {...props.prop};
   const [answerInput,setAnswerInput]=useState("");
-  const [imageState, setimageState] = useState(null);
-  const [wrongAnswers, setWrongAnswers]=useState(()=>{ return ["halo","svijete","čipsa"]});
-  const [correctAnswer, setCorrectAnswers]=useState(()=>{ return "Točno"});
-  const [multipleAnswer, setMultipleAnswers]=useState(()=>{ return false});
+  const [imageState, setimageState] = useState(()=>props.prop.image_path);
+  const [wrongAnswers, setWrongAnswers]=useState(()=>{ return ((props.prop.answer_a!==null||props.prop.answer_b!==null||props.prop.answer_c!==null||props.prop.answer_d!==null)?[props.prop.answer_a,props.prop.answer_b,props.prop.answer_c,props.prop.answer_d]:[])});
+  const [correctAnswer, setCorrectAnswers]=useState(()=>{ return props.prop.solution});
+  const [multipleAnswer, setMultipleAnswers]=useState(()=>{return ((props.prop.question_type===1)?true:false)});
 
 
 
@@ -206,11 +206,16 @@ function EditQuestionPU(props) {
   const handleText = (event) => {
     setText(event.target.value);
   };
-  const updateAnsweInput=(event)=>{
+  const updateAnswerInput=(event)=>{
     setAnswerInput(event.target.value);
   };
+  const checkUnique=(validate)=>{
+    let val=true;
+    for(let i=0;i<wrongAnswers.length;i++){if(validate===wrongAnswers[i])val=false;}
+    return val;
+  }
   const addWrongAnswer= (event)=>{
-    if(event.keyCode===13 && answerInput!==""){
+    if(event.keyCode===13 && answerInput!=="" && wrongAnswers.length!==4 && checkUnique(answerInput)===true){
       setWrongAnswers([...wrongAnswers,answerInput]);
       setAnswerInput("");
     }
@@ -219,9 +224,20 @@ function EditQuestionPU(props) {
     setWrongAnswers([...wrongAnswers.filter(item=>(item!==answer))]);
   };
   const handleSave= ()=>{
-    quest.text=text;
-    props.questChange(quest);
-    props.changeText(text);
+    let send={
+      text:text,
+      question_type:(multipleAnswer?1:2),
+      image_path:imageState,
+      row_D:quest.row_D,
+      column_A:quest.column_A,
+      answer_a:((wrongAnswers.length>0)?wrongAnswers[0]:null),
+      answer_b:((wrongAnswers.length>1)?wrongAnswers[1]:null),
+      answer_c:((wrongAnswers.length>2)?wrongAnswers[2]:null),
+      answer_d:((wrongAnswers.length>3)?wrongAnswers[3]:null),
+      solution:correctAnswer
+    }
+
+    props.questChange(send);
     props.popUpClose(false);
   }
 //------------------------
@@ -238,7 +254,7 @@ function EditQuestionPU(props) {
               <Grid item>          
                 <Button variant="contained" className={classes.saveBtn} type="submit"  onClick={handleSave}>
                     SAVE  
-                <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}} color="white">save_icon</Icon>
+                <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}} >save_icon</Icon>
                 </Button>
               </Grid>
             </Grid>
@@ -296,7 +312,7 @@ function EditQuestionPU(props) {
                   {multipleAnswer&&
                   <Grid container item xs={12} justify="center" alignItems="center" direction="row">
                     <form onSubmit={(e)=>{e.preventDefault();}}>
-                      <TextField style={{width:"100%"}} placeholder="Odgovor" value={answerInput} onChange={updateAnsweInput} onKeyDown={addWrongAnswer}/>
+                      <TextField style={{width:"100%"}} placeholder="Odgovor" value={answerInput} onChange={updateAnswerInput} onKeyDown={addWrongAnswer}/>
                     </form>
                   </Grid>
                   }

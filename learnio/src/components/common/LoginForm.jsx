@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import {useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import { useDispatch} from 'react-redux';
 import {studentLogIn, adminLogIn, teacherLogIn} from '../../redux/actions/loginStatus';
 
 const styles = {
@@ -41,7 +41,6 @@ function LoginForm(props){
     const [password, setPassword]=useState("");
     let classes=props.classes;
 
-    const loginStatus = useSelector(state=> state.login);
     const dispatch = useDispatch();
 
     console.log(props.pageProps);

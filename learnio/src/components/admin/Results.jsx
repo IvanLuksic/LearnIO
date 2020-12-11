@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
       color: "#ffffff",
       fontSize:"1.1em",
       fontWeight:"bold",
-      color: "#ffffff",
       borderRadius:"50%"
     },
     greyGrade:{
@@ -79,7 +78,6 @@ const useStyles = makeStyles((theme) => ({
       color: "#ffffff",
       fontSize:"1.1em",
       fontWeight:"bold",
-      color: "#ffffff",
       borderRadius:"50%"
     },
     greenGrade:{
@@ -139,9 +137,7 @@ function AdminTopics(){
 
     const renderGrade=(value)=>{
       switch(value){
-        case 0:{
-          return <p className={classes.whiteGrade}>{value}</p>;//return <Icon className={classes.blueGrade}>looks_1</Icon>;
-        }
+
         case 1:{
           return <p className={classes.redGrade}>{value}</p>;//return <Icon className={classes.blueGrade}>looks_1</Icon>;
         }
@@ -156,6 +152,9 @@ function AdminTopics(){
         }
         case 5:{
           return <div className={classes.goldGrade}>{value}</div>;
+        }
+        default:{
+          return <p className={classes.whiteGrade}>{value}</p>;//return <Icon className={classes.blueGrade}>looks_1</Icon>;
         }
       }
     }

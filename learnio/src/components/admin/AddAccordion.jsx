@@ -68,8 +68,9 @@ function AddAccordion(props) {
       props.questions.slice(props.topQ,props.topQ+6).map((question, index) =>{
         let questionHeading=`Q${question.id}`;
         let questionSecondary='';
-        for(let i=0;i<30;i++){questionSecondary=questionSecondary + question.text[i]};
-        questionSecondary=questionSecondary+'...';
+        let n=(question.text.length>30)?30:question.text.length;
+        for(let i=0;i<n;i++){questionSecondary=questionSecondary + question.text[i]};
+        if(n===30){questionSecondary=questionSecondary+'...'};
         return (
         <div key={question.id}>
           <Accordion style={{marginTop:'2px'}} expanded={props.expanded === question.id} onChange={props.handleChange(question)}>

@@ -157,15 +157,19 @@ function MatricaAdmin(props)
     };
     //deletes value=question from selected field's array of questions
     const deleteQuestion=(value)=>{
+        console.log("pozvana delete");
+
         var polje=fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)];
         setFetchedData(
             [ ...fetchedData.filter(question=> ((question.ao!==aoSelected)&&(question.d!==dSelected)))]
         );
-        polje.question= [...polje.question.filter(question=>(question.id!==value.id))];//question_id
+        polje.Questions= [...polje.Questions.filter(question=>(question.id!==value.id))];//question_id
         setFetchedData([...fetchedData, polje]);
     };
     //adds a value=question to the selected field's array of questions
     const addQuestion=(value)=>{
+        console.log("pozvana add");
+
         var polja=fetchedData;
         polja.map(polje=>{
             if(polje.ao===aoSelected && polje.d===dSelected){
@@ -179,6 +183,51 @@ function MatricaAdmin(props)
     const changeQuestion = (value)=>{
         deleteQuestion(value);
         addQuestion(value);
+    };
+    const requestDeleteQuestion=(Ques)=>{
+        console.log("ZAHTJEV ZA Brisanjem: ");
+        console.log({id:Ques.id});
+        const requestOptions = {
+            method: 'POST',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({id:Ques.id}),
+            credentials: 'include'
+        };
+        fetch('http://127.0.0.1:3000/', requestOptions)
+        .then(() =>{deleteQuestion(Ques);})
+        .catch((error)=>{console.log('Error in fetch function '+ error);});
+    };
+    const requestChangeQuestion=(Ques)=>{
+        console.log("ZAHTJEV ZA IZMJENOM: ");
+        console.log({...Ques});
+        const requestOptions = {
+            method: 'POST',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify(),
+            credentials: 'include'
+        };
+        fetch('http://127.0.0.1:3000/', requestOptions)
+        .then(() =>{changeQuestion(Ques);props.changeText(Ques.text);
+        })
+        .catch((error)=>{console.log('Error in fetch function '+ error);});
+    };
+    const requestAddQuestion=(Ques,ID)=>{
+        console.log("ZAHTJEV ZA DODAVANJE: ");
+        console.log({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:topicID});
+        const requestOptions = {
+            method: 'POST',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:topicID}),
+            credentials: 'include'
+        };
+        fetch('http://127.0.0.1:3000/', requestOptions)
+        .then(response => response.json())
+        .then(data => {addQuestion({id:data.id,...Ques});changePage(ID);forceUpdate();})
+        .catch((error)=>{console.log('Error in fetch function '+ error);});
+
     };
     //
     const getIndex = (value)=>{
@@ -217,7 +266,7 @@ function MatricaAdmin(props)
                     </Grid>
                     <Divider  orientation="vertical" className={classes.divider} flexItem/>
                     <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
-                        <EditQuestion forceUpdate={forceUpdate} page={page} jumpToPage={getIndex} changePage={changePage} questChange={changeQuestion} questAdd={addQuestion} questDelete={deleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions.length!==0) ? fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions : null }/>
+                        <EditQuestion forceUpdate={forceUpdate} page={page} jumpToPage={getIndex} changePage={changePage} questChange={requestChangeQuestion} questAdd={requestAddQuestion} questDelete={requestDeleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions.length!==0) ? fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions : null }/>
                     </Grid>
                 </Grid>
             </div>

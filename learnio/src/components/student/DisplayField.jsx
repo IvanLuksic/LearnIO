@@ -70,7 +70,7 @@ function DisplayField(props){
     return (
 
             <Grid item> 
-                <Paper onClick={(event)=>{if(status!='LOCKED'){props.changeSelected(event,props.ao,props.d,props.questionToDisplay, status)}}} className={classes.paper} style={{backgroundColor: color}}>
+                <Paper onClick={(event)=>{if(status!=='LOCKED'){props.changeSelected(event,props.ao,props.d,props.questionToDisplay, status)}}} className={classes.paper} style={{backgroundColor: color}}>
                     <Grid container direction="column" justify="center" alignItems="center" style={{height: "100%"}}>
                         <Grid item><h1>AO={props.ao} D={props.d}</h1></Grid>
                         <Grid item><Icon className={classes.icons}>{icon}</Icon></Grid>

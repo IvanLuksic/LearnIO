@@ -190,7 +190,6 @@ function AddQuestPU(props) {
   const [correctAnswer, setCorrectAnswers]=useState(()=>{ return "Točno"});
   const [multipleAnswer, setMultipleAnswers]=useState(()=>{ return false});
 
-  const quest = {id: 0, heading:"new head", secondary:"new something", photo:false, url:'', text:''};
 
   const classes = useStyles();
 //dropdown button---------------------
@@ -207,8 +206,13 @@ function AddQuestPU(props) {
   const updateAnsweInput=(event)=>{
     setAnswerInput(event.target.value);
   };
+  const checkUnique=(validate)=>{
+    let val=true;
+    for(let i=0;i<wrongAnswers.length;i++){if(validate===wrongAnswers[i])val=false;}
+    return val;
+  };
   const addWrongAnswer= (event)=>{
-    if(event.keyCode===13 && answerInput!==""){
+    if(event.keyCode===13 && answerInput!=="" && wrongAnswers.length!==4 && checkUnique(answerInput)===true){
       setWrongAnswers([...wrongAnswers,answerInput]);
       setAnswerInput("");
     }
@@ -218,12 +222,19 @@ function AddQuestPU(props) {
   };
 
   const handleSave= ()=>{
-    quest.text=text;
-    quest.id = ID;
-    props.questAdd(quest);
-    props.popUpClose();
-    props.changePage(ID);
-    props.forceUpdate();
+    let send={
+      text:text,
+      question_type:(multipleAnswer?1:2),
+      image_path:imageState,
+      answer_a:((wrongAnswers.length>0)?wrongAnswers[0]:null),
+      answer_b:((wrongAnswers.length>1)?wrongAnswers[1]:null),
+      answer_c:((wrongAnswers.length>2)?wrongAnswers[2]:null),
+      answer_d:((wrongAnswers.length>3)?wrongAnswers[3]:null),
+      solution:correctAnswer
+    }
+
+    props.questAdd(send,ID);
+    props.popUpClose(false);
   }
 //------------------------
 
@@ -239,7 +250,7 @@ function AddQuestPU(props) {
       <Grid item>          
         <Button variant="contained" type="submit" className={classes.saveBtn} onClick={handleSave}>
             SAVE  
-        <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}} color="white">save_icon</Icon>
+        <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}}>save_icon</Icon>
         </Button>
       </Grid>
     </Grid>
