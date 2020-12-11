@@ -225,6 +225,7 @@ function EditQuestionPU(props) {
   };
   const handleSave= ()=>{
     let send={
+      id:quest.id,
       text:text,
       question_type:(multipleAnswer?1:2),
       image_path:imageState,

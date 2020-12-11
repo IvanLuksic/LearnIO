@@ -163,7 +163,7 @@ function AdminTopics(props){
           body: JSON.stringify({id:item}),
           credentials: 'include'
       };
-      fetch('http://127.0.0.1:3000/', requestOptions)
+      fetch(`http://127.0.0.1:3000/admin/topics/delete/${item}`, requestOptions)
       .then(() =>{handleDelete(item);})
       .catch((error)=>{console.log('Error in fetch function '+ error);});
     }
@@ -180,7 +180,7 @@ function AdminTopics(props){
 
     const columns=[
         {field: "id", headerName:'ID',type:'string',headerAlign:'center', align:'center'},
-        {field: "name", width: 200, type:'string',headerAlign:'center', align:'center', renderHeader: () => (<div ><strong>{"Topic"}</strong><Button /*onClick={()=>handleOpen()}*/ className={classes.addButton} ><Icon style={{color:"white"}}>add_circle</Icon></Button></div>),},
+        {field: "name", width: 200, type:'string',headerAlign:'center', align:'center', renderHeader: () => (<div ><strong>{"Topic"}</strong><Button onClick={()=>handleOpen()} className={classes.addButton} ><Icon style={{color:"white"}}>add_circle</Icon></Button></div>),},
         {field: "course", width: 200,headerName:'Course',type:'string',headerAlign:'center', align:'center'},                                                                                                                          
         {field: "subject", width: 200, headerName:'Subject',type:'string',headerAlign:'center', align:'center'},
         {field: 'open', headerName: 'Edit',headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Link to={`/admin-topic/${params.getValue('id')}`} onClick={()=>{dispatch(topicSelected(params.getValue('id')))}}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>)},

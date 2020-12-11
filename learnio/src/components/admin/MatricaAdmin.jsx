@@ -188,13 +188,12 @@ function MatricaAdmin(props)
         console.log("ZAHTJEV ZA Brisanjem: ");
         console.log({id:Ques.id});
         const requestOptions = {
-            method: 'POST',
+            method: 'DELETE',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({id:Ques.id}),
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/', requestOptions)
+        fetch(`http://127.0.0.1:3000/question/delete/${Ques.id}`, requestOptions)
         .then(() =>{deleteQuestion(Ques);})
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
@@ -202,13 +201,13 @@ function MatricaAdmin(props)
         console.log("ZAHTJEV ZA IZMJENOM: ");
         console.log({...Ques});
         const requestOptions = {
-            method: 'POST',
+            method: 'PUT',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify(),
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/', requestOptions)
+        fetch('http://127.0.0.1:3000/question/update', requestOptions)
         .then(() =>{changeQuestion(Ques);props.changeText(Ques.text);
         })
         .catch((error)=>{console.log('Error in fetch function '+ error);});
@@ -223,9 +222,9 @@ function MatricaAdmin(props)
             body: JSON.stringify({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:topicID}),
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/', requestOptions)
+        fetch('http://127.0.0.1:3000/question/add', requestOptions)
         .then(response => response.json())
-        .then(data => {addQuestion({id:data.id,...Ques});changePage(ID);forceUpdate();})
+        .then(data => {addQuestion({id:data.id,...Ques,row_D:dSelected,column_A:aoSelected});changePage(ID);forceUpdate();})
         .catch((error)=>{console.log('Error in fetch function '+ error);});
 
     };

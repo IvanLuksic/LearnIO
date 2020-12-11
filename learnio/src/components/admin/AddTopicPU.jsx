@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme)=>({
     grupaBotuna:{
       [theme.breakpoints.down('sm')]: {
         marginBottom: "2em",
-        marginTop:"1em"
       },
       [theme.breakpoints.up('md')]: {
         marginBottom: "5em",
@@ -68,16 +67,18 @@ const useStyles = makeStyles((theme)=>({
       },
       [theme.breakpoints.up('sm')]: {
         padding:"2em 0 3em 0",
-    }},
+    }
+    },
     divider:{
         [theme.breakpoints.down('sm')]: {
           display:"none",
     }},
     buttonsInGroup:{
       backgroundColor:"#27AE60",
-      background: "#27AE60", 
       color:"white",
-      borderColor:"white",
+      '&:hover': {
+        backgroundColor: "#1f894b",
+     },
       [theme.breakpoints.down('sm')]: {
         paddingLeft:"5em",
         paddingRight:"5em",
@@ -85,8 +86,8 @@ const useStyles = makeStyles((theme)=>({
         paddingBottom:"0.5em",
       },
       [theme.breakpoints.up('md')]: {
-        paddingLeft:"4em",
-        paddingRight:"4em",
+        paddingLeft:"7em",
+        paddingRight:"7em",
       },
     },
     rightSide:{
@@ -106,7 +107,18 @@ const useStyles = makeStyles((theme)=>({
       [theme.breakpoints.up('md')]: {
         paddingLeft:"2em !important",
       }
-    }
+    },
+    saveBtn: {
+      borderRadius: "7px",
+      background:"#EB4949",
+      color:"white",
+      paddingLeft:"3em",
+      paddingRight:"3em",
+      backgroundColor: "#EB4949",
+      '&:hover': {
+        backgroundColor: "#b81414",
+    },
+    },
 }));
 
 const tagNames = [
@@ -189,23 +201,19 @@ function AddTopicPU(props){
     const classes=useStyles();
     return(
         <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="center" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
-            <Grid container item className={classes.popupMenu} direction="column" justify="space-evenly" alignItems="center"  xs={12} md={4} > 
-                <Grid item className={classes.grupaBotuna}>
-                    <ButtonGroup orientation="vertical" size="small" aria-label="small outlined button group">
-                        <Button className={classes.buttonsInGroup} onClick={
-                            () => [setShow1(true),setShow2(false)]
-                            } >Information</Button>
-                        <Button className={classes.buttonsInGroup} onClick={
-                            () => [setShow1(false),setShow2(true)]
-                            }>Tags</Button>
-                    </ButtonGroup>
-                </Grid>
-                <Grid item>          
-                <Button variant="contained" style={{borderRadius: "7px",background:"#EB4949",color:"white",paddingLeft:"3em",paddingRight:"3em"}} type="submit"  onClick={handleSave}>
+            <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
+              <Grid item className={classes.grupaBotuna}>
+              <ButtonGroup orientation="vertical" variant="contained">
+                  <Button variant="contained" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>Topic information</Button>
+                  <Button variant="contained" onClick={() => [setShow1(false),setShow2(true)]} className={classes.buttonsInGroup}>Connections</Button>
+                </ButtonGroup>
+              </Grid>
+              <Grid item>          
+                <Button variant="contained" className={classes.saveBtn} type="submit"  onClick={handleSave}>
                     SAVE  
-                <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}} color="white">save_icon</Icon>
+                <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}} >save_icon</Icon>
                 </Button>
-                </Grid>
+              </Grid>
             </Grid>
             <Divider orientation="vertical" flexItem className={classes.divider}/>
             {
@@ -224,7 +232,7 @@ function AddTopicPU(props){
                                     <p className={classes.dropText}>Select levels of AO :</p>                            
                                     <InputLabel id="demo-simple-select-label-AO"></InputLabel>
                                     <Select style={{width:"20%"}} labelId="demo-simple-select-label" id="demo-simple-select" value={valueAO} onChange={handleChangeAO}>
-                                      {[1, 2, 3, 4].map((valuesAO) => (
+                                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((valuesAO) => (
                                       <MenuItem key={valuesAO} value={valuesAO}><ListItemText primary={valuesAO} /></MenuItem>))}                                   
                                     </Select>
                                   </Grid>
@@ -232,7 +240,7 @@ function AddTopicPU(props){
                                       <p className={classes.dropText}>Select levels of D : </p>
                                       <InputLabel id="demo-simple-select-label-d"></InputLabel>
                                       <Select style={{width:"20%"}} labelId="demo-simple-select-label" id="demo-simple-select" value={valueD} onChange={handleChangeD}>
-                                        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((valuesD) => (
+                                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((valuesD) => (
                                         <MenuItem key={valuesD} value={valuesD}><ListItemText primary={valuesD} /></MenuItem>))}
                                       </Select>
                                   </Grid>
@@ -243,8 +251,8 @@ function AddTopicPU(props){
                         show2?
                               <Grid container item direction="column" justify="center" alignItems="center" xs={12} md={8} spacing={2} className={classes.rightSide}>
                                   <FormControl className={classes.formControl}>
-                                    <InputLabel id="demo-mutiple-checkbox-label">Tag</InputLabel>
-                                    <Select labelId="demo-mutiple-checkbox-label" id="demo-mutiple-checkbox" multiple value={tagName} onChange={handleChangeTag} input={<Input />} renderValue={(selected) => selected.join(', ')} MenuProps={MenuProps}>
+                                    <InputLabel >Associated topics</InputLabel>
+                                    <Select  multiple value={tagName} onChange={handleChangeTag} input={<Input />} renderValue={(selected) => selected.join(', ')} MenuProps={MenuProps}>
                                       {tagNames.map((name) => (
                                         <MenuItem key={name} value={name}>
                                           <Checkbox checked={tagName.indexOf(name) > -1} />
