@@ -2,7 +2,13 @@
 const Ajv = require("ajv");//instalirat ovaj validator
 //VALIDATOR KOJI PROVJERAVA JESU LI DANI PODACI U SKLADU SA SHEMOM
 const ajv = new Ajv({ allErrors: true, removeAdditional: true });
-
+ajv.addKeyword('isNotEmpty', {//SPRJEČAVA DA NE UNSEE PRAZAN STRING JER AKO STAVIMO minlength 1 onda prolazi prazan string sa space samo
+  type: 'string',//SPRJEČAVA SVE VRSTE PRAZNIH STRINGOVA/SPACEOVA BILO KOJE DULJINE
+  validate: function (schema, data) {
+    return typeof data === 'string' && data.trim() !== ''
+  },
+  errors: false
+})
 module.exports= {
    addSchemas: (schemas)=> {/*šaljemo objekt unutar module.exports objekta koji se dodaju u for in petlji u sheme -> schemas nam predstavlja module.exports objekt koji smo 
     requirali u controleru a unutar nje se nalazi OBJEKT login koji sadrži shemu*/
