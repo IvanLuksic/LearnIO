@@ -1,4 +1,4 @@
-import React from'react';
+import React, { useState } from'react';
 import {Button, TextField}from'@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -121,40 +121,69 @@ const useStyles = makeStyles((theme)=>({
     },
 }));
 
-const tagNames = [
+const associatedTopics = [
     'tag item 1',
     'tag item 2',
     'tag item 3',
-    'tag item 4',
-    'tag item 5',
-    'tag item 6',
+
   ];
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
     PaperProps: {
       style: {
-        maxHeight: ITEM_HEIGHT * 4 + ITEM_PADDING_TOP,
+        maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
         width: 200,
       },
     },
 };
+const subjectCoursePairs=[
+  {
+    subject_id: 1,
+    subject_name:"Matematika 1",
+    course_id:140,
+    course_name:"Elektrotehnika"
+  },
+  {
+    subject_id: 3,
+    subject_name:"Fizika 1",
+    course_id:120,
+    course_name:"Računarstvo"
+  },
+  {
+    subject_id: 2,
+    subject_name:"Elektronika 2",
+    course_id:180,
+    course_name:"Elektrotehnika"
+  },
+  {
+    subject_id: 4,
+    subject_name:"Engleski 2",
+    course_id:160,
+    course_name:"Elektrotehnika"
+  }
+]
 
 
 function AddTopicPU(props){
-    const [valueAO, setValueAO] = React.useState(1);
-    const [valueD, setValueD] = React.useState(1);
-    const [valueText,setValueText]=React.useState(' ');
-    const [desc,setDesc]=React.useState(' ');
-    const [show1, setShow1] = React.useState(true);
-    const [show2, setShow2] = React.useState(false);
-    const [tagName, setTagName] = React.useState([]);
+
+    const [valueAO, setValueAO] = useState(1);
+    const [valueD, setValueD] = useState(1);
+    const [valueText,setValueText]= useState(' ');
+    const [desc,setDesc]= useState(' ');
+    const [show1, setShow1] = useState(true);
+    const [show2, setShow2] = useState(false);
+    const [associatedTopic, setAssociatedTopic] = useState([]);
+    const [subjectAndCourse, setSubjectAndCourse]=useState();
     const topic = {topic: ' ',description: ' ', ao: 0, d: 0, tags: []};
 
 
     const handleChangeTag = (event) => {
-        setTagName(event.target.value);
+        setAssociatedTopic(event.target.value);
     };
+    const handleChangePair = (event) => {
+      setSubjectAndCourse(event.target.value);
+  };
     const handleChangeDesc=(event) => {
       setDesc(event.target.value);
   };
@@ -174,7 +203,7 @@ function AddTopicPU(props){
         topic.description=desc;
         topic.ao=valueAO;
         topic.d=valueD;
-        topic.tags=tagName;
+        topic.tags=associatedTopic;
         props.addTopic(topic);
         props.closePopup();
         //neznan jel uvik ovo radi closePopUp();
@@ -184,7 +213,7 @@ function AddTopicPU(props){
         setValueAO(1);
         setValueD(1);
         setValueText(' ');
-        setTagName([]);*/
+        setAssociatedTopic([]);*/
     };
     // prilikom zatvaranja popupa da postavi sve na pocetne vrijednosti
     // const closePopUp=()=>{
@@ -192,7 +221,7 @@ function AddTopicPU(props){
     //     setValueAO(1);
     //     setValueD(1);
     //     setValueText(' ');
-    //     setTagName([]);
+    //     setAssociatedTopic([]);
     //     setShow1(true);
     //     setShow2(false);
     //     setShow3(false);
@@ -219,12 +248,9 @@ function AddTopicPU(props){
             {
                         show1 ? 
                             <Grid container item direction="column" justify="space-between" alignItems="flex-start" xs={12} md={8} spacing={2} className={classes.rightSide}>
-                                <Grid container item direction="row" xs={12} md={12} spacing={3}>
-                                  <Grid item xs={12} md={6}>
-                                    <TextField style={{marginTop: "1em", marginBottom: "1em"}} multiline rows={2} id="outlined-basic" variant="outlined" label="Topic name" value={valueText} onChange={handleChangeText}/>
-                                  </Grid>
-                                  <Grid item xs={12} md={6}>
-                                    <TextField style={{marginTop: "1em", marginBottom: "1em"}} multiline rows={2} id="outlined-basic" variant="outlined" label="Description" value={desc} onChange={handleChangeDesc}/>
+                                <Grid container item direction="row" xs={12}  spacing={3}>
+                                  <Grid item xs={12} md={12}>
+                                    <TextField style={{marginTop: "1em", marginBottom: "1em", width:"90%"}} multiline rows={2} id="outlined-basic" variant="outlined" label="Topic name" value={valueText} onChange={handleChangeText}/>
                                   </Grid>
                                 </Grid>
                                 <Grid className={classes.dropMenus} container item direction="row" xs={12} spacing={3}>
@@ -250,17 +276,31 @@ function AddTopicPU(props){
                         }{
                         show2?
                               <Grid container item direction="column" justify="center" alignItems="center" xs={12} md={8} spacing={2} className={classes.rightSide}>
-                                  <FormControl className={classes.formControl}>
+                                <Grid item xs={12} style={{width:"100%"}}>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel >Subject and course</InputLabel>
+                                    <Select  value={subjectAndCourse} onChange={handleChangePair} input={<Input />}  renderValue={(selected) => `${selected.course_id}-${selected.course_name}: ${selected.subject_name}`} MenuProps={MenuProps}>
+                                      {subjectCoursePairs.map((pair) => (
+                                        <MenuItem key={pair.course_id, pair.subject_id} value={pair}>
+                                          <ListItemText primary={`${pair.course_id}-${pair.course_name}: ${pair.subject_name}`} />
+                                        </MenuItem>
+                                      ))}
+                                    </Select>
+                                </FormControl>
+                                </Grid>
+                                <Grid item xs={12} style={{width:"100%"}}>
+                                <FormControl className={classes.formControl}>
                                     <InputLabel >Associated topics</InputLabel>
-                                    <Select  multiple value={tagName} onChange={handleChangeTag} input={<Input />} renderValue={(selected) => selected.join(', ')} MenuProps={MenuProps}>
-                                      {tagNames.map((name) => (
+                                    <Select  multiple value={associatedTopic} onChange={handleChangeTag} input={<Input />} renderValue={(selected) => selected.join(', ')} MenuProps={MenuProps}>
+                                      {associatedTopics.map((name) => (
                                         <MenuItem key={name} value={name}>
-                                          <Checkbox checked={tagName.indexOf(name) > -1} />
+                                          <Checkbox checked={associatedTopic.indexOf(name) > -1} />
                                           <ListItemText primary={name} />
                                         </MenuItem>
                                       ))}
                                     </Select>
                                 </FormControl>
+                                </Grid>
                             </Grid>
                             :null
                         }
