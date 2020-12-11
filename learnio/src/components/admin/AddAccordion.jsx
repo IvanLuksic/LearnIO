@@ -58,19 +58,25 @@ function AddAccordion(props) {
       props.handlePages();
     });
 
+    console.log(props);
+
   
     return(
       <div>
       <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this question?" functionToConfirm={props.handleDelete}/>
       {
-      props.questions.slice(props.topQ,props.topQ+6).map((question, index) =>(
+      props.questions.slice(props.topQ,props.topQ+6).map((question, index) =>{
+        let questionHeading=`Q${question.id}`;
+        let questionSecondary='';
+        for(let i=0;i<30;i++){questionSecondary=questionSecondary + question.text[i]};
+        questionSecondary=questionSecondary+'...';
+        return (
         <div key={question.id}>
           <Accordion style={{marginTop:'2px'}} expanded={props.expanded === question.id} onChange={props.handleChange(question)}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
-            <Typography className={classes.accHeading}>{question.heading}</Typography>
+            <Typography className={classes.accHeading}>{questionHeading}</Typography>
             {question.id!==props.expanded && 
-            <Typography className={classes.accSecondaryHeading}>{question.secondary}</Typography>}
-  
+            <Typography className={classes.accSecondaryHeading}>{questionSecondary}</Typography>}
           </AccordionSummary>
           <AccordionDetails>
             <Grid  container direction="row" justify="center" alignItems="center" spacing={1}>
@@ -88,7 +94,7 @@ function AddAccordion(props) {
           </AccordionDetails>
         </Accordion>
         </div>
-      ))}
+      )})}
       <div className={classes.pagin}>
         <p className={classes.accHeading} style={{float: 'left', margin: '10px'}}>Total questions: {props.questions.length}</p>
         <Pagination style={{display: 'flex', justifyContent:'flex-end'}} count={props.pageCount} page={props.page} onChange={changePage} color="primary" />
