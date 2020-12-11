@@ -2,10 +2,15 @@ const {Login_instance, Session_instance}=require('../../services');//object dest
 const {nodelogger}=require('../../loaders/logger');//-> cacheano je
 module.exports={
     login:async (req,res,next)=>{
-        nodelogger.info(req.body);
-        const {username,password}=req.body;//object destrucutiring,uz preptostavku da saljemo JSON body pa ne parsiramo
         try {
-            const user=await Login_instance.getUser(username);
+            nodelogger.info(req.body);
+            const {username,password}=req.body;//object destrucutiring,uz preptostavku da saljemo JSON body pa ne parsiramo
+            try {
+                var user=await Login_instance.getUser(username);
+            } catch (error) {
+                nodelogger.error('Error in fetching user from database');
+                throw(error);
+            }
             if(user && user.password===password)//ako je user =NULL -> vratit ce NULL i nece uci u if
             {   
                
@@ -39,7 +44,7 @@ module.exports={
                 res.status(401).json({role: null });
             }
         } catch (err) {
-            nodelogger.error(err);
+            nodelogger.error('Error in login controler'+err);
             next(err);//idii na error middleware handler
         }
     },

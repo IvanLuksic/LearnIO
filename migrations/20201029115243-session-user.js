@@ -7,7 +7,6 @@ module.exports = {
       "user_id", // name of the key to be added
       {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
           model: "user", // name of the Target model/table
           key: "id", // key/field in the Target table

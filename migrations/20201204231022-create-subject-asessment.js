@@ -5,7 +5,6 @@ module.exports = {
       subject_id:{
         type: Sequelize.INTEGER,
         primaryKey:true,
-        foreignkey:true,
         references:{
           model: 'subject',
           key: 'id',
@@ -16,7 +15,6 @@ module.exports = {
      asessment_id:{
         type: Sequelize.INTEGER,
         primaryKey:true,
-        foreign_key:true,
         references:{
           model: 'asessment_objective',
           key: 'id',

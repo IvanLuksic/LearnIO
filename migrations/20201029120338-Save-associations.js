@@ -7,8 +7,6 @@ module.exports = {
       'subject_id', // name of the key to be added
       {
         type: Sequelize.INTEGER,
-        allowNull: false,
-      
         references: {
           model: "subject", // name of the Target model/table
           key: "id", // key/field in the Target table
@@ -22,8 +20,6 @@ module.exports = {
       'course_id', // name of the key to be added
       {
         type: Sequelize.INTEGER,
-        allowNull: false,
-      
         references: {
           model: "course", // name of the Target model/table
           key: "id", // key/field in the Target table
@@ -37,8 +33,6 @@ module.exports = {
       "topic_id", // name of the key to be added
       {
         type: Sequelize.INTEGER,
-        allowNull: false,
-       
         references: {
           model: "topic", // name of the Target model/table
           key: "id", // key/field in the Target table
@@ -52,7 +46,6 @@ module.exports = {
       "class_id", // name of the key to be added
       {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
           model: "clas", // name of the Target model/table
           key: "id", // key/field in the Target table
@@ -66,8 +59,6 @@ module.exports = {
       "student_id", // name of the key to be added
       {
         type: Sequelize.INTEGER,
-        allowNull: false,
-    
         references: {
           model: "user", // name of the Target model/table
           key: "id", // key/field in the Target table
@@ -81,7 +72,6 @@ module.exports = {
       "question_id", // name of the key to be added
       {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
           model: "question", // name of the Target model/table
           key: "id", // key/field in the Target table

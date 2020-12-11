@@ -417,5 +417,65 @@ module.exports=class question{
             throw(error);
         }
     }
+    async deleteQuestion(questions_id)
+    {
+        try {
+            await this.Question.destroy({
+                where:{
+                    id:questions_id
+                }
+            });
+            this.Logger.info('Questiopn deleted succesffuly from database');
+        } catch (error) {
+            this.Logger.error('Error in function deleteQuestion '+error);
+            throw(error);
+        }
+    }
+    async updateQuestion(request_body)//dogovoreni format request bodya
+    {
+        try {
+           const question= await this.Question.findOne({
+                where:{
+                    id:request_body.id
+                }
+            });
+            question.text=request_body.text;
+            question.solution=request_body.solution;
+            question.question_type=request_body.question_type;
+            question.row_D=request_body.row_D;
+            question.column_A=request_body.column_A;
+            question.image_path=request_body.image_path;
+            question.answer_a=request_body.answer_a;
+            question.answer_b=request_body.answer_b;
+            question.answer_c=request_body.answer_c;
+            question.answer_d=request_body.answer_d;
+            await question.save();
+            this.Logger.info('question updated succsefully');
+        } catch (error) {
+            this.Logger.error('Error in function updateQuestion in dataabse '+error);
+            throw(error);
+        }
+    }
+    async addQuestion(request_body)
+    {
+        try {
+            await this.Question.create({
+                text:request_body.text,
+                solution:request_body.solution,
+                question_type:request_body.question_type,
+                row_D:request_body.row_D,
+                column_A:request_body.column_A,
+                image_path:request_body.image_path,
+                answer_a:request_body.answer_a,
+                answer_b:request_body.answer_b,
+                answer_c:request_body.answer_c,
+                answer_d:request_body.answer_d,
+                topic_id:request_body.topic_id
+            });
+        } catch (error) {
+            this.Logger.error('Error in function addQuestion '+error);
+            throw(error);
+        }
+    }
 
 }

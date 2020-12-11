@@ -31,7 +31,7 @@ validate : (schemaName) => {
   return (req, res, next) => {
     let valid = ajv.validate(schemaName, req.body);
     if (!valid) {
-      return res.status(400).send(errorResponse(ajv.errors));
+      return res.status(400).send(errorResponse(ajv.errors));//VRAĆA STATUSNI KOD 400 U SLUČAJU LOŠE SHEME
     }
     next();//zovnit ce controller midleware funkciju kod rutera AKO JE SHEMA U REDU-> ONDA CE DOCI DOTUD INACE CE return error prije nego dode dotud
   };

@@ -8,4 +8,5 @@ module.exports=function (main_ruter){
     topic.get('/admin/topics',authenticate_admin,topic_controler.getAdminTopics);
     topic.post('/admin/topics/edit',authenticate_admin, topic_controler.getAdminTopicsEdit);
     topic.post('/student/topics/associated',authenticate_student,topic_controler.associated);
+    topic.delete('/admin/topics/delete/:topicID',authenticate_admin,topic_controler.deleteTopic);
 }

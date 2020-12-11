@@ -1,17 +1,18 @@
 const { Question_instance,Topic_instance}=require('../../services');
 const {nodelogger}=require('../../loaders/logger');
 const { response } = require('express');
+const { transport } = require('winston');
 module.exports={
     getQuestions: async (req,res,next)=>//ako je dosao do ovde onda je prosao provjere autentikacije
     {
-        //1.provjeri jeli se u zadani topic ulazi prvi put-> AKO JE ONDA MU GENERIRAJ PITANJA U BAZU PA ONDA TEK ŠALJI
+        try {
+              //1.provjeri jeli se u zadani topic ulazi prvi put-> AKO JE ONDA MU GENERIRAJ PITANJA U BAZU PA ONDA TEK ŠALJI
         nodelogger.info(JSON.stringify(req.body));
         const {course_id=1,topic_id=1,class_id=1,subject_id=1}=req.body;
         const student_id=req.session.user;
         nodelogger.info('Parametri: '+course_id+' '+topic_id+' '+student_id);
         var response={};//u njega ćemo stavit objekte pitanja i objekt naziva assesment objectivea za taj topic
         //1. Vidi jeli se u zadani topic u bazi NIKAD NIJE UŠLO-> AKO JEST ONDA JE PLAV->NE TREBA GENEIRAT PITANJA
-        try {
             try {
                 var blue=await Topic_instance.isBlue(topic_id,course_id,student_id,class_id,subject_id)
                 nodelogger.info(blue);
@@ -61,11 +62,11 @@ module.exports={
         }
     },
     checkAnswer: async (req,res,next)=>{
-        const {topic_id=1,course_id=1,class_id=1,subject_id=1,question_id=5,solution='d'}=req.body;
-        const student_id=req.session.user;
-        nodelogger.info('Parametri: '+course_id+' '+topic_id+' '+student_id+' '+question_id+subject_id+class_id+'Solution '+solution);
-        var response={};//formatirat resposne-> sadržavat će flag correct i niz pitanja-> ako je kriv odgovor onda je on prazan
         try {
+            const {topic_id=1,course_id=1,class_id=1,subject_id=1,question_id=7,solution='d'}=req.body;
+            const student_id=req.session.user;
+            nodelogger.info('Parametri: '+course_id+' '+topic_id+' '+student_id+' '+question_id+subject_id+class_id+'Solution '+solution);
+            var response={};//formatirat resposne-> sadržavat će flag correct i niz pitanja-> ako je kriv odgovor onda je on prazan
              //1. provjeri jeli dobar odgovor
              try {
                  var correct=await Question_instance.checkAnswer(question_id,solution,student_id,topic_id,course_id,class_id,subject_id);
@@ -99,12 +100,6 @@ module.exports={
                     nodelogger.error('Error in locking question');
                 }
                 try {
-                    var association=Topic_instance.associatedTopics(topic_id);
-                } catch (error) {
-                    nodelogger.error('Error in fetching associated topics');
-                }
-                response.AssociatedTopics=association;
-                try {
                     var questions=await Question_instance.getQuestionsFromSave(topic_id,course_id,student_id,class_id,subject_id);
                 } catch (error) {
                     nodelogger.error('Errro in fetching from database '+error);
@@ -115,6 +110,39 @@ module.exports={
              }
          } catch (error) {
             nodelogger.error('Error in checking answer');
+            next(error);
+        }
+    },
+    deleteQuestionByID: async(req,res,next)=>//QUERY URL PARAMETRI SU DOSTUPNI PREKO req.params objekta
+    {
+        try {
+            await Question_instance.deleteQuestion(req.params.questionID);
+            nodelogger.info('Questipn deleted from database');
+            res.sendStatus(200);
+        } catch (error) {
+            nodelogger.error('Error in deleting question from database');
+            next(error);
+        }
+    },
+    updateQuestions: async (req,res,next)=>
+    {
+        try {
+           await Question_instance.updateQuestion(req.body);//pošalji mu sve iz request body
+           nodelogger.info('Question updated succesfully');
+           res.sendStatus(200);
+        } catch (error) {
+            nodelogger.error('Error in updating question '+error);
+            next(error);
+        }
+    },
+    addQuestions: async (req,res,next)=>
+    {
+        try {
+            await Question_instance.addQuestion(req.body);
+            nodelogger.info('Question succesfuly added to database');
+            res.sendStatus(200);
+        } catch (error) {
+            nodelogger.error('Error in adding questions '+error);
             next(error);
         }
     }

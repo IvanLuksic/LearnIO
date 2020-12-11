@@ -1,10 +1,11 @@
 //kada ude u topic pa da zna renderirat na matrici imena i znacenje stupaca i koliko ima redova-> vrati objekt 
 //Izlistaj sve topice studenta na stranici
 //Dodaj topic u tablicu rezulati kad ga otkljuca-> BOOLEANBLUE ZNACI DA NIJE JOS NITI JEDNAPUT OTKLJUCAN-> TO TREBAM ZNATI JER AKO JE flase onda ga TREBA PROMIJNEITI u true i GENERIAT MU PITANJA U TABLICU save
-const { QueryTypes, json } = require('sequelize');
+const { QueryTypes } = require('sequelize');
+const { Op } = require("sequelize");
 const {sequelize}=require('../models');
 module.exports=class topic{
-    constructor(topic,assesment,course,subject,result,logger)//svi mogući dependenciesi, ako se neki ne budu korstili maknit
+    constructor(topic,assesment,course,subject,result,save,question,topic_subject,tags_of_topic,course_topic,logger)//svi mogući dependenciesi, ako se neki ne budu korstili maknit
     {
         this.Topic=topic,
         this.Logger=logger;
@@ -12,6 +13,11 @@ module.exports=class topic{
         this.Course=course;
         this.Subject=subject;
         this.Result=result;
+        this.Save=save;
+        this.Topic_subject=topic_subject;
+        this.Tags_of_topic=tags_of_topic;
+        this.Course_topic=course_topic;
+        this.Question=question;
     }
     async getTopicsForUserAndCourse(students_id,subjects_id,courses_id,clas_id)//svi topici koji se nalaze u tablici rezultati-> oni su trenutno otkljucani za tog korisnika
     {
@@ -260,6 +266,56 @@ module.exports=class topic{
             return topic_info;
         } catch (error) {
             this.Logger.error('Error in function getTopicInfo'+error);
+            throw(error);
+        }
+    }
+    async deleteTopicFromEverywhere(topics_id)// izbrisati topic iz svih tablica u kojima se pijavljuje
+    {
+        try {
+           await this.Topic_subject.destroy({
+                where:{
+                    topic_id:topics_id
+                }
+            });
+            await this.Tags_of_topic.destroy({
+                where:{
+                    [Op.or]:[
+                        {
+                        source_topic:topics_id
+                        },
+                        {
+                            associated_topic:topics_id
+                        }
+                ]
+                }
+            });
+            await this.Course_topic.destroy({
+                where:{
+                    topic_id:topics_id
+                }
+            });
+            await this.Result.destroy({
+                where:{
+                    topic_id:topics_id
+                }
+            });
+            await this.Save.destroy({
+                where:{
+                    topic_id:topics_id
+                }
+            });
+            await this.Question.destroy({
+                where:{
+                    topic_id:topics_id
+                }
+            });
+            await this.Topic.destroy({
+                where:{
+                    id:topics_id
+                }
+            });
+        } catch (error) {
+            this.Logger.error('Error in function deleteTopicFromEverywhere '+error);
             throw(error);
         }
     }
