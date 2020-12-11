@@ -95,15 +95,14 @@ function MatricaAdmin(props)
 
     const fetchRequest=()=>{
             const requestOptions = {
-            method: 'POST',
+            method: 'GET',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({topic_id:topicID}),
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/admin/topics/edit', requestOptions)
+        fetch(`http://127.0.0.1:3000/admin/topics/edit/${topicID}`, requestOptions)//topic id
         .then(response => response.json())
-                .then(data => {  
+        .then(data => {  
                   console.log(JSON.stringify(data));
                   setFetchedData(data.fields);
                   setMatricaAO(data.columns);
@@ -204,11 +203,11 @@ function MatricaAdmin(props)
             method: 'PUT',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify(),
+            body: JSON.stringify({...Ques}),
             credentials: 'include'
         };
         fetch('http://127.0.0.1:3000/question/update', requestOptions)
-        .then(() =>{changeQuestion(Ques);props.changeText(Ques.text);
+        .then(() =>{changeExpanded(false);changeQuestion(Ques);
         })
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
@@ -219,7 +218,7 @@ function MatricaAdmin(props)
             method: 'POST',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:topicID}),
+            body: JSON.stringify({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:Number(topicID)}),
             credentials: 'include'
         };
         fetch('http://127.0.0.1:3000/question/add', requestOptions)

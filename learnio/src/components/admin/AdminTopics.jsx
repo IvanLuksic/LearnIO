@@ -157,10 +157,9 @@ function AdminTopics(props){
       console.log("ZAHTJEV ZA Brisanjem: ");
       console.log({id:item});
       const requestOptions = {
-          method: 'POST',
+          method: 'DELETE',
           mode:'cors',
           headers: { 'Content-Type': 'application/json'},
-          body: JSON.stringify({id:item}),
           credentials: 'include'
       };
       fetch(`http://127.0.0.1:3000/admin/topics/delete/${item}`, requestOptions)

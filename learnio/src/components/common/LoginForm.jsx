@@ -91,7 +91,7 @@ function LoginForm(props){
         <React.Fragment>
             <Typography color="primary" className={classes.loginHeadline}>Login </Typography>
             <form onSubmit={(e)=>{PostLogin(e,object)}} className={classes.root} noValidate autoComplete="off" >
-                <TextField onChange={(e)=>{setUsername(e.target.value)}} fullWidth className={classes.fields} type="email" label="E-mail" variant="filled" />
+                <TextField onChange={(e)=>{setUsername(e.target.value)}} fullWidth className={classes.fields} type="email" label="Username" variant="filled" />
                 <TextField onChange={(e)=>{setPassword(e.target.value)}} fullWidth  className={classes.fields} type="password" label="Password" variant="filled" />
                 <Button variant="contained" className={classes.loginButton} style={{borderRadius: 25}} type="submit" color="primary" >
                     Prijavi se
