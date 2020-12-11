@@ -91,6 +91,7 @@ function CustomPagination(props) {
 }
 
 function AdminTopics(props){
+    console.log(props);
     const dispatch=useDispatch();
     const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
     const[data,setData]=useState(()=>fakeBackendTopics);

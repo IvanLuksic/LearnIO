@@ -94,9 +94,8 @@ function Matrica(props)
     const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
 
 
-
     const GetQuestion=()=>{
-                const requestOptions = {
+            const requestOptions = {
             method: 'POST',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
@@ -150,7 +149,7 @@ function Matrica(props)
                 }
                 {
                   <PopupDialog openPopup={openPopupWrong} setOpenPopup={setOpenPopupWrong} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
-                    <WrongPU closePopup={setOpenPopupWrong} setTopicID={setTopicID}/>
+                    <WrongPU closePopup={setOpenPopupWrong} setTopicID={setTopicID} pageProps={props}/>
                   </PopupDialog>        
                 }
                 <Grid container direction="column" justify="flex-start" alignItems="center">

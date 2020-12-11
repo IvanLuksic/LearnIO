@@ -90,6 +90,7 @@ function QuestionPopup(props){
     };
 
     const handleSave=()=>{ 
+        props.setOpenPopupWrong(true)
         props.setOpenPopup(false);//topic_id course_id question_id solution
         const requestOptions = {
             method: 'POST',

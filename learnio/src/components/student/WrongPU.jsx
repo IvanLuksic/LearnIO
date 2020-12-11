@@ -78,7 +78,10 @@ function WrongPU(props){//uzima samo closePopup
     const [data,setData]=useState(()=>fakeBackendAssociatedTopics);//fakeBackendAssociatedTopics
     const classes=useStyles();
     const closePopup=(value)=>{
-        if(Number.isInteger(value)){props.setTopicID(value)};
+        if(Number.isInteger(value)){
+            props.setTopicID(value);
+            props.pageProps.history.push(`/topic/${value}`);
+        };
         props.closePopup(false);
     }
 
@@ -109,7 +112,7 @@ function WrongPU(props){//uzima samo closePopup
     const columns = [
         { field: 'id', type:'string',headerAlign:'center', align:'center', renderHeader: () => (<strong>ID</strong>)},
         { field: 'name', type:'string', width: 200,headerAlign:'center', align:'center', type:'string', renderHeader: () => (<strong>TOPIC</strong>)},//imaš required level
-        { field: 'open', headerName: `${' '}`,headerAlign:'center', align:'center', renderCell: (params) => (<Link to={'/topic/'+ params.getValue('id')} onClick={()=>closePopup(params.getValue('id'))}><ColorButton size="small"> Open </ColorButton></Link>)}
+        { field: 'open', headerName: `${' '}`,headerAlign:'center', align:'center', renderCell: (params) => <ColorButton size="small" onClick={()=>closePopup(params.getValue('id'))}> Open </ColorButton>}
     ]
     let rows=[];
     for(let i=0;i<data.length;i++){
