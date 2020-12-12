@@ -66,11 +66,11 @@ const useStyles = makeStyles((theme) => ({
       minHeight: '40%'
     },
     skeleton:{
-      width:"30%",
+      width:"50%",
       //height:"100%",
       paddingTop:"25vh",
-      paddingLeft:"35%",
-      paddingRight:"35%",
+      paddingLeft:"25%",
+      paddingRight:"25%",
       marginBottom:"0",
     }
 }))
@@ -93,11 +93,11 @@ function CustomPagination(props) {
 function AdminTopics(props){
     console.log(props);
     const dispatch=useDispatch();
-    const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
-    const[data,setData]=useState(()=>fakeBackendTopics);
-    const[open,setOpen]=useState(false); 
-    const[openPopup,setOpenPopup]=useState(false);
-    const[item,setItem]=useState(0);
+    const [loading,setLoading]=useState(false);//OFFLINE:true
+    const [data,setData]=useState(()=>fakeBackendTopics);
+    const [open,setOpen]=useState(false); 
+    const [openPopup,setOpenPopup]=useState(false);
+    const [item,setItem]=useState(0);
     const classes=useStyles();
 
     const fetchTopics=()=>{
@@ -112,6 +112,7 @@ function AdminTopics(props){
       .then(response => response.json())
       .then(data => {  
         setData(data.Topics);
+        setLoading(true);
       })
       .catch((error)=>{
           console.log('Error in fetch function '+ error);
@@ -130,7 +131,7 @@ function AdminTopics(props){
     // brisanje topica iz liste
     const handleDelete=(id)=>{
       setData(
-          [ ...data.filter(polje=> ((polje.topic_id!==id)))]
+          [ ...data.filter(polje=> (polje.topic_id!==id))]
       ); 
     };
     // dodavanje novog topica u listu i id tom topicu
@@ -138,9 +139,6 @@ function AdminTopics(props){
    const addQuestion=(value)=>{
       console.log(value);
       var polje=data;
-      let nextID;
-      nextID=polje.length+1;
-      value.topic_id=nextID;
       polje=[...polje,value];
       polje=polje.sort((a,b)=>(a.id-b.id));
       
@@ -154,6 +152,7 @@ function AdminTopics(props){
       setItem(data);
     };
     const requestDeleteTopic=()=>{
+      //OFFLINE: handleDelete(item);
       console.log("ZAHTJEV ZA Brisanjem: ");
       console.log({id:item});
       const requestOptions = {
@@ -172,8 +171,8 @@ function AdminTopics(props){
       rows=[...rows,{
         id: data[i].topic_id,
         name: data[i].topic_name,
-        course: data[i].course,
-        subject: data[i].subject
+        course: data[i].course_name,
+        subject: data[i].subject_name
       }]
     };
 
@@ -198,7 +197,7 @@ function AdminTopics(props){
                 <DataGrid disableSelectionOnClick={true}  pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
             </div>
             <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
-              <AddTopicPU closePopup={handleClose} addTopic={addQuestion}/>
+              <AddTopicPU closePopup={handleClose} addTopic={addQuestion}  fetchedTopics={data}/>
             </PopupDialog>
           </div>
           }

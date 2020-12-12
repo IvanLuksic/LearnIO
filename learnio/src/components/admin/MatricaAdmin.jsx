@@ -83,9 +83,10 @@ function MatricaAdmin(props)
     const [fetchedData, setFetchedData]=useState(()=>fakeBackendQuestions.fields);
     const [matricaAO,setMatricaAO] = useState(()=>{return 3});
     const [matricaD,setMatricaD] = useState(()=>{return 3});
-    const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
-    const [topicName,setTopicName]=useState(()=>fakeBackendQuestions.name);
+    const [loading,setLoading]=useState(false);//OFFLINE:potrebno ga postavit na false da bi radilo
+    const [topicName,setTopicName]=useState(()=>fakeBackendQuestions.topic_name);
     const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
+    const [topicDescription,setTopicDescription]=useState(()=>fakeBackendQuestions.topic_description);
     const forceUpdate = useForceUpdate();
 
 
@@ -105,7 +106,8 @@ function MatricaAdmin(props)
                   setFetchedData(data.fields);
                   setMatricaAO(data.columns);
                   setMatricaD(data.rows);
-                  setTopicName(data.name);
+                  setTopicName(data.topic_name);
+                  setTopicDescription(data.topic_description)
                   dispatch(topicSelected(topicID,topicName));
                   setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
         })
@@ -153,19 +155,30 @@ function MatricaAdmin(props)
         return arrayOfRows;
     };
     //deletes value=question from selected field's array of questions
-    const deleteQuestion=(value)=>{
+    const deleteQuestion=(value,aoNOW,dNOW)=>{
         console.log("pozvana delete");
-
         var polje=fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)];
-        setFetchedData(
-            [ ...fetchedData.filter(question=> ((question.ao!==aoSelected)&&(question.d!==dSelected)))]
-        );
-        polje.Questions= [...polje.Questions.filter(question=>(question.id!==value.id))];//question_id
-        setFetchedData([...fetchedData, polje]);
+        let deleted=fetchedData.filter((question)=> {if((question.ao!==aoSelected)||(question.d!==dSelected)){return question;}})
+        setFetchedData(deleted);
+        console.log(deleted);
+        polje.Questions= [...polje.Questions.filter((question)=>(question.id!==value.id))];//question_id
+        deleted=[...deleted, polje];
+        console.log(deleted);
+        deleted=deleted.sort((a,b)=>(a.d-b.d));
+        let array=[];
+        for(let i=0;i<matricaD;i++){
+            var subarray=deleted.slice(i*matricaD,i*matricaD+matricaAO);
+            console.log(subarray);
+            subarray=subarray.sort((a,b)=>(a.ao-b.ao));
+            array=[...array,...subarray];
+        }
+        console.log(array);
+        setFetchedData(array);
+
     };
     //adds a value=question to the selected field's array of questions
     const addQuestion=(value)=>{
-        console.log("pozvana add");
+        // console.log("pozvana add");
 
         var polja=fetchedData;
         polja.map(polje=>{
@@ -182,6 +195,7 @@ function MatricaAdmin(props)
         addQuestion(value);
     };
     const requestDeleteQuestion=(Ques)=>{
+        deleteQuestion(Ques,aoSelected,dSelected);
         console.log("ZAHTJEV ZA Brisanjem: ");
         console.log({id:Ques.id});
         const requestOptions = {
@@ -195,6 +209,7 @@ function MatricaAdmin(props)
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
     const requestChangeQuestion=(Ques)=>{
+        //OFFLINE: changeExpanded(false);changeQuestion(Ques);
         console.log("ZAHTJEV ZA IZMJENOM: ");
         console.log({...Ques});
         const requestOptions = {
@@ -210,8 +225,9 @@ function MatricaAdmin(props)
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
     const requestAddQuestion=(Ques,ID)=>{
-        console.log("ZAHTJEV ZA DODAVANJE: ");
-        console.log({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:topicID});
+        //OFFLINE:addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});changePage(ID);forceUpdate();
+        // console.log("ZAHTJEV ZA DODAVANJE: ");
+        // console.log({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:topicID});
         const requestOptions = {
             method: 'POST',
             mode:'cors',
@@ -253,8 +269,8 @@ function MatricaAdmin(props)
                 <Grid container direction="row" justify="center" alignItems="center"  height="100%" >
                     <Grid container item md={6} direction="row" justify="center" alignItems="center" >
                         <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
-                            <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>Topic {topicID}</Typography></Grid>
-                            <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></Grid>
+                            <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName}</Typography></Grid>
+                            <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
                         </Grid>
                         <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
                             <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fetchedData,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
