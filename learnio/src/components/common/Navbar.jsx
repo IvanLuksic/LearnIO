@@ -82,6 +82,17 @@ function Navbar(){
       }
     }
 
+    const headLogout=()=>{
+      const requestOptions = {
+        method: 'HEAD',
+        mode:'cors',
+        headers: { 'Content-Type': 'application/json'},
+        credentials: 'include'
+      };
+      fetch(`http://127.0.0.1:3000/logout`, requestOptions)
+      .catch((error)=>{console.log('Error in fetch function '+ error);});
+    };
+
     return(
     <div className={classes.root} >
         <AppBar elevation={3} position="fixed" style={{background: '#FFFFFF'}}>
@@ -99,7 +110,7 @@ function Navbar(){
                             <Link to="/login" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Login</Link>
                         </Button>}
                     {(AdminFeatures||StudentFeatures)&&
-                        <Button size="small" className={classes.buttonBlue} onClick={()=>{dispatch(logOut())}}>
+                        <Button size="small" className={classes.buttonBlue} onClick={()=>{dispatch(logOut());headLogout();}}>
                             <Link to="/login" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Log Out</Link>
                         </Button>
                     }

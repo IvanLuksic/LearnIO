@@ -36,7 +36,7 @@ function App() {
     }
     case 'teacher':{//privremeno rjesenje za prvu iteraciju jer nema razlike teachera i admina
       AdminFeatures=true;
-      StudentFeatures=true;
+      StudentFeatures=false;
       break;      
     }
     case 'student':{

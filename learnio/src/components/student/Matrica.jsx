@@ -86,29 +86,32 @@ function Matrica(props)
     const [questionSelected,setQuestionSelected]=useState(null);
     const [openPopupQuestion, setOpenPopupQuestion] = useState(()=>{return false});
     const [openPopupWrong, setOpenPopupWrong] = useState(()=>{return false});
-    const [matricaAO,setMatricaAO] = useState(()=>{return 3});
-    const [matricaD,setMatricaD] = useState(()=>{return 3});
+    const [matricaAO,setMatricaAO] = useState(()=>fakeFetchResponse.Matrix.column_numbers);
+    const [matricaD,setMatricaD] = useState(()=>fakeFetchResponse.Matrix.rows_D);
     const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
     const [assesment_objectives,setAssesment_objectives]=useState();
-    const topicName=useSelector(state=>state.studentTopic.name);
+    const [topicName,setTopicName]=useState(()=>fakeFetchResponse.Matrix.topic_name);
+    const [topicDescription,setTopicDescription]=useState(()=>fakeFetchResponse.Matrix.topic_description);
+
     const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
 
 
     const GetQuestion=()=>{
             const requestOptions = {
-            method: 'POST',
+            method: 'GET',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({topic_id:topicID, course_id:1}),
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/question', requestOptions)
+        fetch(`http://127.0.0.1:3000/question/${1}/${1}/${1}/${topicID}`, requestOptions)//class_id subject_id course_id topic_id
         .then(response => response.json())
                 .then(data => {  
                   console.log(JSON.stringify(data));
                   setFields(data.Questions);
                   setMatricaAO(data.Matrix.column_numbers);
                   setMatricaD(data.Matrix.rows_D);
+                  setTopicName(data.Matrix.topic_name);
+                  setTopicDescription(data.Matrix.topic_description);
                   setAssesment_objectives(data.Matrix.asessments_array);
                   setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
         })
@@ -155,8 +158,8 @@ function Matrica(props)
                 <Grid container direction="column" justify="flex-start" alignItems="center">
                     <Grid container item md={6} direction="row"  justify="center" alignItems="center" >
                         <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
-                            <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName} {topicID}</Typography></Grid>
-                            <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></Grid>
+                            <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName} </Typography></Grid>
+                            <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
                         </Grid>
                         <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
                             <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>

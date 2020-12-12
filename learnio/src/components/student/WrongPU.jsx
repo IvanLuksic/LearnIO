@@ -87,14 +87,13 @@ function WrongPU(props){//uzima samo closePopup
     const fetchAssociatedTopics=()=>{
 
         const requestOptions = {
-            method: 'POST',
+            method: 'GET',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({topic_id:5}),
             credentials: 'include'
         };
 
-        fetch('http://127.0.0.1:3000/student/topics/associated', requestOptions)
+        fetch(`http://127.0.0.1:3000/student/topics/associated/${5}`, requestOptions)//topic id
         .then(response => response.json())
         .then(data => { setData(data.Associated);})
         .catch((error)=>{
