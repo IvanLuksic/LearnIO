@@ -203,11 +203,15 @@ function AddTopicPU(props){
       };
       let array=[];
       props.fetchedTopics.map((topic)=>{
-        if(topic.course_name===event.target.value.course_name){array=[...array,topic]}
+        if(topic.course_name===event.target.value.course_name){array=[...array,{topic_name:topic.topic_name,topic_id:topic.topic_id}]}
       });
-      console.log(array);
+      let unique=[];
+      let map=new Map();
+      for(const item of array){
+        if(!map.has(item.topic_id)){map.set(item.topic_id,true);unique.push(item);}
+      }
       if(array.length>0) setAssociatedTopicVisible(true);
-      setAssociatedTopicsPossible(array);
+      setAssociatedTopicsPossible(unique);
     };
     const handleChangeText=(event)=>{
       setValueText(event.target.value); 
