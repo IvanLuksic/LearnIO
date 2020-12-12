@@ -1,5 +1,6 @@
 {
-    "name":"Zadaci 1",
+    "topic_name":"Zadaci 1",
+    "topic_description":"Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     "rows":3,
     "columns":3,
     "fields":[
@@ -133,7 +134,7 @@
 			"d": 1,
             "Questions":[
                 {
-                    "id":1,
+                    "id":10,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -146,7 +147,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":2,
+                    "id":212,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -159,7 +160,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":3,
+                    "id":3123,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -172,7 +173,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":4,
+                    "id":68784,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -185,7 +186,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":5,
+                    "id":59789,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -198,7 +199,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":16786,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -211,7 +212,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":198087,
                     "row_D":1,
                     "column_A":1,
                     "status":2,
@@ -225,7 +226,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":1568,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -238,7 +239,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":143621,
                     "row_D":1,
                     "column_A":1,
                     "id":9,
@@ -258,7 +259,7 @@
 			"d": 1,
             "Questions":[
                 {
-                    "id":1,
+                    "id":17685,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -271,7 +272,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":2,
+                    "id":245,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -284,7 +285,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":3,
+                    "id":353425,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -297,7 +298,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":4,
+                    "id":4532,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -310,7 +311,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":5,
+                    "id":5325,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -323,7 +324,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":1235,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -336,7 +337,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":18970,
                     "row_D":1,
                     "column_A":1,
                     "status":2,
@@ -350,7 +351,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":1563,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -363,7 +364,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":1346876,
                     "row_D":1,
                     "column_A":1,
                     "id":9,
@@ -383,7 +384,7 @@
 			"d": 2,
             "Questions":[
                 {
-                    "id":1,
+                    "id":165568,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -396,7 +397,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":2,
+                    "id":21354908,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -409,7 +410,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":3,
+                    "id":3788590,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -422,7 +423,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":4,
+                    "id":4768,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -435,7 +436,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":5,
+                    "id":532456,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -448,7 +449,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":18748,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -461,7 +462,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":1658675,
                     "row_D":1,
                     "column_A":1,
                     "status":2,
@@ -475,7 +476,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":143786511,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -488,7 +489,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":15432674731,
                     "row_D":1,
                     "column_A":1,
                     "id":9,
@@ -508,7 +509,7 @@
 			"d": 2,
             "Questions":[
                 {
-                    "id":1,
+                    "id":4561,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -521,7 +522,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":2,
+                    "id":42612,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -534,7 +535,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":3,
+                    "id":32143654,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -547,7 +548,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":4,
+                    "id":125314354,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -560,7 +561,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":5,
+                    "id":5134534,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -573,7 +574,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":1214512,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -586,7 +587,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":121587,
                     "row_D":1,
                     "column_A":1,
                     "status":2,
@@ -600,7 +601,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":180760,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -613,7 +614,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":1,
+                    "id":16568,
                     "row_D":1,
                     "column_A":1,
                     "id":9,
@@ -633,7 +634,7 @@
 			"d": 2,
             "Questions":[
                 {
-                    "id":1,
+                    "id":1786079,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -646,102 +647,9 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":2,
+                    "id":27589758,
                     "row_D":1,
                     "column_A":1,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":1,
-                    "image_path":null,
-                    "answer_a":"amet",
-                    "answer_b":"tempor",
-                    "answer_c":"eiusmod",
-                    "answer_d":"faert",
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":3,
-                    "row_D":1,
-                    "column_A":1,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":1,
-                    "image_path":null,
-                    "answer_a":"amet",
-                    "answer_b":"tempor",
-                    "answer_c":"eiusmod",
-                    "answer_d":"faert",
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":4,
-                    "row_D":1,
-                    "column_A":1,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":1,
-                    "image_path":null,
-                    "answer_a":"amet",
-                    "answer_b":"tempor",
-                    "answer_c":"eiusmod",
-                    "answer_d":"faert",
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":5,
-                    "row_D":1,
-                    "column_A":1,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":1,
-                    "image_path":null,
-                    "answer_a":"amet",
-                    "answer_b":"tempor",
-                    "answer_c":"eiusmod",
-                    "answer_d":"faert",
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":1,
-                    "row_D":1,
-                    "column_A":1,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":1,
-                    "image_path":null,
-                    "answer_a":"amet",
-                    "answer_b":"tempor",
-                    "answer_c":"eiusmod",
-                    "answer_d":"faert",
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":1,
-                    "row_D":1,
-                    "column_A":1,
-                    "status":2,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":1,
-                    "image_path":null,
-                    "answer_a":"amet",
-                    "answer_b":"tempor",
-                    "answer_c":"eiusmod",
-                    "answer_d":"faert",
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":1,
-                    "row_D":1,
-                    "column_A":1,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":2,
-                    "image_path":"https://cdn.jpegmini.com/user/images/slider_puffin_before_mobile.jpg",
-                    "answer_a":null,
-                    "answer_b":null,
-                    "answer_c":null,
-                    "answer_d":null,
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":1,
-                    "row_D":1,
-                    "column_A":1,
-                    "id":9,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                     "question_type":1,
                     "image_path":null,
@@ -751,6 +659,7 @@
                     "answer_d":"faert",
                     "solution":"eiusmod"
                 }
+                
                 ]
         },
         {
@@ -763,7 +672,7 @@
 			"d": 3,
             "Questions":[
                 {
-                    "id":1,
+                    "id":23545641,
                     "row_D":1,
                     "column_A":1,
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -776,99 +685,7 @@
                     "solution":"eiusmod"
                 },
                 {
-                    "id":2,
-                    "row_D":1,
-                    "column_A":1,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":1,
-                    "image_path":null,
-                    "answer_a":"amet",
-                    "answer_b":"tempor",
-                    "answer_c":"eiusmod",
-                    "answer_d":"faert",
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":3,
-                    "row_D":1,
-                    "column_A":1,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":1,
-                    "image_path":null,
-                    "answer_a":"amet",
-                    "answer_b":"tempor",
-                    "answer_c":"eiusmod",
-                    "answer_d":"faert",
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":4,
-                    "row_D":1,
-                    "column_A":1,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":1,
-                    "image_path":null,
-                    "answer_a":"amet",
-                    "answer_b":"tempor",
-                    "answer_c":"eiusmod",
-                    "answer_d":"faert",
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":5,
-                    "row_D":1,
-                    "column_A":1,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":1,
-                    "image_path":null,
-                    "answer_a":"amet",
-                    "answer_b":"tempor",
-                    "answer_c":"eiusmod",
-                    "answer_d":"faert",
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":1,
-                    "row_D":1,
-                    "column_A":1,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":1,
-                    "image_path":null,
-                    "answer_a":"amet",
-                    "answer_b":"tempor",
-                    "answer_c":"eiusmod",
-                    "answer_d":"faert",
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":1,
-                    "row_D":1,
-                    "column_A":1,
-                    "status":2,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":1,
-                    "image_path":null,
-                    "answer_a":"amet",
-                    "answer_b":"tempor",
-                    "answer_c":"eiusmod",
-                    "answer_d":"faert",
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":1,
-                    "row_D":1,
-                    "column_A":1,
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":2,
-                    "image_path":"https://cdn.jpegmini.com/user/images/slider_puffin_before_mobile.jpg",
-                    "answer_a":null,
-                    "answer_b":null,
-                    "answer_c":null,
-                    "answer_d":null,
-                    "solution":"eiusmod"
-                },
-                {
-                    "id":1,
+                    "id":8795571,
                     "row_D":1,
                     "column_A":1,
                     "id":9,
