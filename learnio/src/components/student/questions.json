@@ -1,5 +1,6 @@
 {   "Matrix":{
-        "name":"Topic 1",
+        "topic_name":"Lorem 1",
+        "topic_description":"Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         "rows_D":5,
         "column_numbers":3,
         "assessments_array":[{"name":"nebitno"}]

@@ -2,52 +2,77 @@
     {
         "topic_id":1,
         "topic_name":"Trigonometry 1",
-        "course": "Electrical engineering",
-        "subject":"Matematika 1"
+        "course_id":12379,
+        "course_name": "Electrical engineering",
+        "subject_id":244568,
+        "subject_name":"Matematika 1",
+        "topic_description":"Jako dobra tema."
     },
     {
         "topic_id":2,
         "topic_name":"MOSFET",
-        "course": "Electrical engineering",
-        "subject":"Electronics 2"
+        "course_name": "Electrical engineering",
+        "course_id":143523,
+        "subject_id":248904,
+        "subject_name":"Electronics 2",
+        "topic_description":"Jako dobra tema."
     },
     {
         "topic_id":3,
         "topic_name":"Trigonometry 1",
-        "course": "Electrical engineering",
-        "subject":"Matematika 1"
+        "course_id":123,
+        "course_name": "Electrical engineering",
+        "topic_id":12030,
+        "subject_id":245674,
+        "subject_name":"Matematika 1",
+        "topic_description":"Jako dobra tema."
     },
     {
         "topic_id":4,
         "topic_name":"Multiplication",
-        "course": "Mechanical engineering",
-        "subject":"Matematika 1"
+        "course_id":123678,
+        "course_name": "Mechanical engineering",
+        "subject_id":24414,
+        "subject_name":"Matematika 1",
+        "topic_description":"Jako dobra tema."
 
     },
     {
         "topic_id":5,
         "topic_name":"PN",
-        "course": "Electrical engineering",
-        "subject":"Electronics 1"
+        "course_id":124353,
+        "course_name": "Electrical engineering",
+        "subject_id":14244,
+        "subject_name":"Electronics 1",
+        "topic_description":"Jako dobra tema."
     },
     {
         "topic_id":6,
         "topic_name":"Trigonometry 2",
-        "course": "Mechanical engineering",
-        "subject":"Matematika 1"
+        "course_id":1278643,
+        "course_name": "Mechanical engineering",
+        "subject_id":12244,
+        "subject_name":"Matematika 1",
+        "topic_description":"Jako dobra tema."
     },
     {
         "topic_id":7,
         "topic_name":"Logarithms",
-        "course": "Electrical engineering",
-        "subject":"Matematika 2"
-
+        "course_id":12768793,
+        "course_name": "Electrical engineering",
+        "subject_id":223424344,
+        "subject_name":"Matematika 2",
+        "topic_description":"Jako dobra tema."
     },
     {
         "topic_id":8,
         "topic_name":"Ebbers-Moll",
-        "course": "Electrical engineering",
-        "subject":"Electronics"
+        "course_id":123,
+        "course_name": "Electrical engineering",
+        "course_id":123,
+        "subject_id":2443453,
+        "subject_name":"Electronics",
+        "topic_description":"Jako dobra tema."
 
     }
   

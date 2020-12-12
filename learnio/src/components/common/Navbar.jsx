@@ -58,7 +58,7 @@ function Navbar(){
     switch(loginStatus){
       case 'admin':{
         AdminFeatures=true;
-        StudentFeatures=false;
+        StudentFeatures=true;
         break;
       }
       case 'teacher':{//privremeno rjesenje za prvu iteraciju jer nema razlike teachera i admina

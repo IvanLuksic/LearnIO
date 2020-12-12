@@ -1,4 +1,4 @@
-import React, { useState } from'react';
+import React, { useState, useEffect } from'react';
 import {Button, TextField}from'@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -20,6 +20,8 @@ const useStyles = makeStyles((theme)=>({
     grupaBotuna:{
       [theme.breakpoints.down('sm')]: {
         marginBottom: "2em",
+        marginTop: "2em",
+
       },
       [theme.breakpoints.up('md')]: {
         marginBottom: "5em",
@@ -117,28 +119,26 @@ const useStyles = makeStyles((theme)=>({
       backgroundColor: "#EB4949",
       '&:hover': {
         backgroundColor: "#b81414",
+    },},
+    textField1:{
+      marginTop: "1em",
+      marginBottom: "0.25em",
+      width:"100%",
+      [theme.breakpoints.up('md')]: {
+        marginLeft:"1em",
+      }
     },
-    },
+    textField2:{
+      marginTop: "0em",
+      marginBottom: "1em",
+      width:"100%",
+      [theme.breakpoints.up('md')]: {
+        marginLeft:"1em",
+      }
+    }
 }));
 
-const associatedTopics = [
-  {
-    name:"Topic 1",
-    id:123
-  },
-  {
-    name:"Topic 2",
-    id:1242
-  },
-  {
-    name:"Topic 3",
-    id:9320
-  },
-  {
-    name:"Topic 4",
-    id:891
-  }
-  ];
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -166,7 +166,7 @@ const subjectCoursePairs=[
     subject_id: 2,
     subject_name:"Elektronika 2",
     course_id:180,
-    course_name:"Elektrotehnika"
+    course_name:"Electrical engineering"
   },
   {
     subject_id: 4,
@@ -181,46 +181,123 @@ function AddTopicPU(props){
 
     const [valueAO, setValueAO] = useState(1);
     const [valueD, setValueD] = useState(1);
-    const [valueText,setValueText]= useState(' ');
-    const [desc,setDesc]= useState(' ');
+    const [valueText,setValueText]= useState('');
     const [show1, setShow1] = useState(true);
     const [show2, setShow2] = useState(false);
-    const [associatedTopic, setAssociatedTopic] = useState([]);
-    const [subjectAndCourse, setSubjectAndCourse]=useState();
-    const topic = {topic: ' ',description: ' ', ao: 0, d: 0, tags: []};
+    const [valueDesc,setValueDesc]=useState();
+    const [associatedTopic, setAssociatedTopic] = useState([null]);
+    const [associatedTopicVisible, setAssociatedTopicVisible] = useState(false);
+    const [associatedTopicsPossible, setAssociatedTopicsPossible] = useState([null]);
+    const [subjectAndCourseList, setSubjectAndCourseList]=useState(()=>subjectCoursePairs);
+    const [subjectAndCourse, setSubjectAndCourse]=useState(null);
 
 
     const handleChangeTag = (event) => {
-      console.log(event.target.value);
-        setAssociatedTopic(event.target.value);
+      setAssociatedTopic(event.target.value);
     };
     const handleChangePair = (event) => {
-      console.log(event.target.value)
-      setSubjectAndCourse(event.target.value);
-  };
-    const handleChangeDesc=(event) => {
-      setDesc(event.target.value);
-  };
+      if(event.target.value!==subjectAndCourse){
+        setAssociatedTopicVisible(false);
+        setAssociatedTopic([]);
+        setSubjectAndCourse(event.target.value);
+      };
+      let array=[];
+      props.fetchedTopics.map((topic)=>{
+        if(topic.course_name===event.target.value.course_name){array=[...array,topic]}
+      });
+      console.log(array);
+      if(array.length>0) setAssociatedTopicVisible(true);
+      setAssociatedTopicsPossible(array);
+    };
     const handleChangeText=(event)=>{
-        setValueText(event.target.value); 
+      setValueText(event.target.value); 
+    };
+    const handleChangeDesc=(event)=>{
+      setValueDesc(event.target.value); 
     };
     const handleChangeAO = (event) => {
-    setValueAO(event.target.value); 
+      setValueAO(event.target.value); 
     };
     const handleChangeD = (event) => {
-    setValueD(event.target.value); 
+      setValueD(event.target.value); 
     };
+    const getSubjectCoursePairs=()=>{
+      const requestOptions = {
+        method: 'GET',
+        mode:'cors',
+        headers: { 'Content-Type': 'application/json'},
+        credentials: 'include'
+      };
+      fetch(`http://127.0.0.1:3000/NESTO`, requestOptions)
+      .then(response => response.json())
+      .then(data => {  
+        setSubjectAndCourseList(data);
+      })
+      .catch((error)=>{
+      console.log('Error in fetch function '+ error);
+      });
+    }
 
     //submit botun sprema vrijednosti i poziva closePopUp
     const handleSave= ()=>{
-        topic.topic=valueText;
-        topic.description=desc;
-        topic.ao=valueAO;
-        topic.d=valueD;
-        topic.tags=associatedTopic;
-        props.addTopic(topic);
+      if(subjectAndCourse!==null){
+        let array=[];
+        if(associatedTopic!==[null]){associatedTopic.map((topic)=>array=[...array,topic.topic_id])};
+        let send={
+          topic_name: valueText,
+          columns_AO:valueAO,
+          rows_D: valueD,
+          subject_id: subjectAndCourse.subject_id,
+          course_id:subjectAndCourse.course_id,
+          associated_topics_id: array,
+          topic_description:valueDesc
+
+        };
+        console.log(send);
+        const requestOptions = {
+          method: 'POST',
+          mode:'cors',
+          headers: { 'Content-Type': 'application/json'},
+          body: JSON.stringify(send),
+          credentials: 'include'
+        };
+        props.addTopic({
+          topic_id:Math.floor(Math.random()*10000),
+          topic_name:valueText,
+          course_id:subjectAndCourse.course_id,
+          course_name:subjectAndCourse.course_name,
+          subject_id:subjectAndCourse.subject_id,
+          subject_name:subjectAndCourse.subject_name,
+          topic_description:valueDesc
+        });
         props.closePopup();
-        //neznan jel uvik ovo radi closePopUp();
+        fetch(`http://127.0.0.1:3000/NESTO`, requestOptions)
+        .then(response => response.json())
+        .then(data => {  
+          props.addTopic({
+            topic_id:data.topic_id,
+            topic_name:valueText,
+            course_id:subjectAndCourse.course_id,
+            course_name:subjectAndCourse.course_name,
+            subject_id:subjectAndCourse.subject_id,
+            subject_name:subjectAndCourse.subject_name,
+            topic_description:valueDesc
+          });
+          props.closePopup();
+        })
+        .catch((error)=>{
+        console.log('Error in fetch function '+ error);
+        });
+      }
+    };
+
+        // topic.topic=valueText;
+        // topic.description=desc;
+        // topic.ao=valueAO;
+        // topic.d=valueD;
+        // topic.tags=associatedTopic;
+        // props.addTopic(topic);
+        // props.closePopup();
         //closePopUp();
         //pa san stavia ovo u komentar jer sigurno radi
         /*setOpenAddTopic(false);
@@ -228,7 +305,7 @@ function AddTopicPU(props){
         setValueD(1);
         setValueText(' ');
         setAssociatedTopic([]);*/
-    };
+    // };
     // prilikom zatvaranja popupa da postavi sve na pocetne vrijednosti
     // const closePopUp=()=>{
     //     setOpenAddTopic(false);
@@ -252,7 +329,7 @@ function AddTopicPU(props){
                 </ButtonGroup>
               </Grid>
               <Grid item>          
-                <Button variant="contained" className={classes.saveBtn} type="submit"  onClick={handleSave}>
+                <Button variant="contained" className={classes.saveBtn} type="submit" onClick={handleSave} >
                     SAVE  
                 <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}} >save_icon</Icon>
                 </Button>
@@ -261,14 +338,17 @@ function AddTopicPU(props){
             <Divider orientation="vertical" flexItem className={classes.divider}/>
             {
                         show1 ? 
-                            <Grid container item direction="column" justify="space-between" alignItems="flex-start" xs={12} md={8} spacing={2} className={classes.rightSide}>
-                                <Grid container item direction="row" xs={12}  spacing={3}>
-                                  <Grid item xs={12} md={12}>
-                                    <TextField style={{marginTop: "1em", marginBottom: "1em", width:"90%"}} multiline rows={2} id="outlined-basic" variant="outlined" label="Topic name" value={valueText} onChange={handleChangeText}/>
+                            <Grid container item direction="column" justify="space-between" alignItems="flex-start" xs={12} md={8} spacing={1} className={classes.rightSide}>
+                                <Grid container item direction="column"  xs={12} md={12} spacing={3}>
+                                  <Grid item xs={12}>
+                                    <TextField className={classes.textField1} multiline rows={1} id="outlined-basic" variant="outlined" label="Topic name" value={valueText} onChange={handleChangeText}/>
+                                  </Grid>
+                                  <Grid item xs={12} >
+                                    <TextField className={classes.textField2} multiline rows={3} id="outlined-basic" variant="outlined" label="Description" value={valueDesc} onChange={handleChangeDesc}/>
                                   </Grid>
                                 </Grid>
-                                <Grid className={classes.dropMenus} container item direction="row" xs={12} spacing={3}>
-                                  <Grid container item diredtion="row" xs={12} md={6} alignItems="center">
+                                <Grid className={classes.dropMenus} container item direction="row" justify="space-evenly" alignItems="center" xs={12} spacing={3}>
+                                  <Grid container item diredtion="row" justify="center" alignItems="center"  xs={12} md={6} >
                                     <p className={classes.dropText}>Select levels of AO :</p>                            
                                     <InputLabel id="demo-simple-select-label-AO"></InputLabel>
                                     <Select style={{width:"20%"}} labelId="demo-simple-select-label" id="demo-simple-select" value={valueAO} onChange={handleChangeAO}>
@@ -276,7 +356,7 @@ function AddTopicPU(props){
                                       <MenuItem key={valuesAO} value={valuesAO}><ListItemText primary={valuesAO} /></MenuItem>))}                                   
                                     </Select>
                                   </Grid>
-                                  <Grid container item diredtion="row" xs={12} md={6} alignItems="center">
+                                  <Grid container item diredtion="row" xs={12} md={6} justify="center" alignItems="center">
                                       <p className={classes.dropText}>Select levels of D : </p>
                                       <InputLabel id="demo-simple-select-label-d"></InputLabel>
                                       <Select style={{width:"20%"}} labelId="demo-simple-select-label" id="demo-simple-select" value={valueD} onChange={handleChangeD}>
@@ -294,7 +374,7 @@ function AddTopicPU(props){
                                 <FormControl className={classes.formControl}>
                                     <InputLabel >Subject and course</InputLabel>
                                     <Select  value={subjectAndCourse} onChange={handleChangePair}  renderValue={(selected) => `${selected.course_id} - ${selected.course_name}: ${selected.subject_name}`} MenuProps={MenuProps}>
-                                      {subjectCoursePairs.map((pair) => (
+                                      {subjectAndCourseList.map((pair) => (
                                         <MenuItem key={pair.course_id, pair.subject_id} value={pair}>
                                           <ListItemText primary={`${pair.course_id} - ${pair.course_name}: ${pair.subject_name}`} />
                                         </MenuItem>
@@ -302,19 +382,19 @@ function AddTopicPU(props){
                                     </Select>
                                 </FormControl>
                                 </Grid>
-                                <Grid item xs={12} style={{width:"100%"}}>
+                                {associatedTopicVisible&&<Grid item xs={12} style={{width:"100%"}}>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel >Associated topics</InputLabel>
-                                    <Select  multiple value={associatedTopic} onChange={handleChangeTag} input={<Input />} renderValue={(selected) =>{let array= selected.map((top_selected)=>{return top_selected.name}); return array.join(', ')}} MenuProps={MenuProps}>
-                                      {associatedTopics.map((topic) => (
-                                        <MenuItem key={topic.id} value={topic}>
+                                    <Select  multiple value={associatedTopic} onChange={handleChangeTag}  renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.topic_id} - ${selTop.topic_name}`); return array.join(`, `);} } MenuProps={MenuProps}>
+                                      {associatedTopicsPossible.map((topic) => (
+                                        <MenuItem key={topic.topic_id} value={topic}>
                                           <Checkbox checked={associatedTopic.indexOf(topic) > -1} />
-                                          <ListItemText primary={`${topic.id} - ${topic.name}`} />
+                                          <ListItemText primary={`${topic.topic_id} - ${topic.topic_name}`} />
                                         </MenuItem>
                                       ))}
                                     </Select>
                                 </FormControl>
-                                </Grid>
+                                </Grid>}
                             </Grid>
                             :null
                         }
