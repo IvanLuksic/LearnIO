@@ -66,11 +66,11 @@ const useStyles = makeStyles((theme) => ({
       minHeight: '40%'
     },
     skeleton:{
-      width:"30%",
+      width:"50%",
       //height:"100%",
       paddingTop:"25vh",
-      paddingLeft:"35%",
-      paddingRight:"35%",
+      paddingLeft:"25%",
+      paddingRight:"25%",
       marginBottom:"0",
     }
 }))
@@ -112,6 +112,7 @@ function AdminTopics(props){
       .then(response => response.json())
       .then(data => {  
         setData(data.Topics);
+        setLoading(true);
       })
       .catch((error)=>{
           console.log('Error in fetch function '+ error);
