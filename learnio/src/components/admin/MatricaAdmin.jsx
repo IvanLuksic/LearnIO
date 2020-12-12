@@ -11,8 +11,6 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import NotFound from '../common/NotFound';
 import {useDispatch, useSelector} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
-
-
 const useStyles = makeStyles((theme) => ({
     background:{
         backgroundImage:"url("+backgroundIMG+")",
