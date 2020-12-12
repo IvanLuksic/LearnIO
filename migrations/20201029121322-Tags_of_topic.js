@@ -5,6 +5,12 @@ module.exports = {
     await queryInterface.createTable(
       'tags_of_topic',//ime tablice isto kao ono u through
       {
+        id: {//POTREBNO DODAT id jer nije VEZNA TABLICA(nije definirana preko through)
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+          type: Sequelize.INTEGER
+        },
       source_topic:{
           type: Sequelize.INTEGER,
           primaryKey:true,
@@ -27,7 +33,6 @@ module.exports = {
         },
         required_level:{
           type:Sequelize.SMALLINT
-
         }
       }
     )

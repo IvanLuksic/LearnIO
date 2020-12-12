@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
   };
   tags_of_topic.init({
     source_topic: DataTypes.INTEGER,
-    associated_topic: DataTypes.INTEGER
+    associated_topic: DataTypes.INTEGER,
+    required_level:DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'tags_of_topic',

@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
   topic.init({
     name: DataTypes.STRING,
     rows_D: DataTypes.INTEGER,
-    column_numbers: DataTypes.INTEGER
+    column_numbers: DataTypes.INTEGER,
+    description:DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'topic',

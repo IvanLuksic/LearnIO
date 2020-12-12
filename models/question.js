@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
  question.init({
-    text: DataTypes.STRING,
+    text: DataTypes.TEXT,
     solution: DataTypes.STRING,
    question_type: DataTypes.SMALLINT,
     row_D: DataTypes.SMALLINT,

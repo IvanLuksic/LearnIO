@@ -17,6 +17,9 @@ module.exports = {
       column_numbers: {
         type: Sequelize.INTEGER
       },
+      description:{
+        type:Sequelize.TEXT
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {

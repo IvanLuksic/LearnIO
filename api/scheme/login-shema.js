@@ -6,11 +6,13 @@ login:{
         username:{
             title:"username od korisnika",
             type:"string",
+            isNotEmpty: true,
             minLength:1
         },
         password:{
             title:"Password od korosnika",
             type:"string",
+            isNotEmpty: true,
             minLength: 7
         }
     },

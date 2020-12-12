@@ -47,9 +47,10 @@ module.exports={
             }
             nodelogger.info('Topic info succesfuly fetched from database');
             var response={//formatirat za client stranu
-                name:topic_info.name,
+                topic_name:topic_info.name,
                 rows:topic_info.rows_D,
-                columns:topic_info.column_numbers
+                columns:topic_info.column_numbers,
+                topic_description:topic_info.description
             };
             try {
                var questions=await Question_instance.getQuestionsForAllA0D(req.params.topic_id,response.rows,response.columns);
@@ -91,6 +92,37 @@ module.exports={
             res.sendStatus(200);
         } catch (error) {
             nodelogger.error('Error in deleting topic form databaase'+error);
+            next(error);
+        }
+    },
+    getSubject_Courses:async (req,res,next)=>
+    {
+        try {
+            try {
+                var subject_course= await Topic_instance.getSubject_CoursePairs();
+            } catch (error) {
+                nodelogger.error('Error in fetching subject course pairs from databaase');
+                throw(error);
+            }
+            res.json(subject_course);
+        } catch (error) {
+            nodelogger.error('Error in getting subject courses pairs '+error);
+            next(error);
+        }
+    },
+    addTopics: async (req,res,next)=>
+    {
+        try {
+            const {associated_topics_id,columns_AO,rows_D,course_id,subject_id,topic_name,topic_description}=req.body;
+            try {
+                var topic_id=await Topic_instance.addTopic(associated_topics_id,columns_AO,rows_D,course_id,subject_id,topic_name,topic_description);
+            } catch (error) {
+                nodelogger.info('Error in adding topic to database');
+                throw(error);
+            }
+            res.json(topic_id);
+        } catch (error) {
+            nodelogger.error('Error in adding topic '+error);
             next(error);
         }
     }

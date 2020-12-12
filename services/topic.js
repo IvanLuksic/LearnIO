@@ -68,7 +68,6 @@ module.exports=class topic{
         try {
             try {
                 var assesments=await this.Topic.findAll({
-                    attributes:['id','rows_D','column_numbers'],
                     include:{
                         model:this.Subject,//JOIN sa predmetima od tog topica
                         attributes:['id'],
@@ -108,6 +107,8 @@ module.exports=class topic{
                 format={};
             }
             matrica={//TU SU SVI PODACI ZA RENDERIRAT MATRICU OSIM PITANJA
+                topic_name:assesments[0].name,
+                topic_description:assesments[0].description,
                 rows_D:assesments[0].rows_D,
                 column_numbers:assesments[0].column_numbers,
                 asessments_array:assesments_niz
@@ -204,7 +205,6 @@ module.exports=class topic{
                     include:{
                          model:this.Course,
                         as:'courses_topic',
-                        attributes:['name'],
                         through: { attributes: []},
                         include:{//nadi koji je to predmet
                             model:this.Subject,
@@ -230,8 +230,10 @@ module.exports=class topic{
                         temp={
                             topic_id:top.id,
                             topic_name:top.name,
-                            course:top.courses_topic[i].name,
-                            subject:top.courses_topic[i].subjects_course[j].name
+                            course_id:top.courses_topic[i].id,
+                            course_name:top.courses_topic[i].name,
+                            subject_id:top.courses_topic[i].subjects_course[j].id,
+                            subject_name:top.courses_topic[i].subjects_course[j].name
                         }
                         format.push(temp);
                         temp={};
@@ -251,7 +253,7 @@ module.exports=class topic{
         try {
             try {
                var topic_info=await this.Topic.findOne({
-                    attributes:['name','rows_D','column_numbers'],
+                    attributes:['name','rows_D','column_numbers','description'],
                     where:{
                         id:topics_id
                     },
@@ -316,6 +318,79 @@ module.exports=class topic{
             });
         } catch (error) {
             this.Logger.error('Error in function deleteTopicFromEverywhere '+error);
+            throw(error);
+        }
+    }
+    async getSubject_CoursePairs()//za dodavanje topica da možemo odabrat kojem ćemo ga paru subject course dodat
+    {
+        try {
+            try {
+                var subject_course=await this.Course.findAll({
+                    include:[
+                        {model:this.Subject,
+                        as:'subjects_course',
+                        through: { attributes: []}}
+                    ]
+                });
+                this.Logger.info('Subject courses pairs succesfuly fetched from database');
+            } catch (error) {
+                this.Logger.error('Error in ftching subject cpourse pairs from database');
+                throw(error);
+            }
+            let format=[];
+            let temp={};
+            for(let i=0;i<subject_course.length;i++)
+            {
+                for(let j=0;j<subject_course[i].subjects_course.length;j++)
+                {
+                    temp={
+                        subject_id:subject_course[i].subjects_course[j].id,
+                        subject_name:subject_course[i].subjects_course[j].name,
+                        course_id:subject_course[i].id,
+                        course_name:subject_course[i].name
+                    };
+                    format.push(temp);
+                    temp={};
+                }
+            }
+            for(let i=0;i<format.length;i++)
+            this.Logger.info(JSON.stringify(format[i]));
+            return format;
+        } catch (error) {
+            this.Logger.error('Errro in function getSubject_CoursePairs '+error);
+            throw(error);
+        }
+    }
+    async addTopic(associated_topics_id,columns_AO,row_D,courses_id,subjects_id,topic_name,topic_description)
+    {
+        //Dodat u topic tablicu u subject topic course topic i tagsoftopic
+        try {
+           const new_topic= await this.Topic.create({
+                name:topic_name,
+                rows_D:row_D,
+                column_numbers:columns_AO,
+                description:topic_description
+            });
+            await this.Topic_subject.create({
+                topic_id:new_topic.id,
+                subject_id:subjects_id
+            });
+            await this.Course_topic.create({
+                topic_id:new_topic.id,
+                course_id:courses_id
+            });
+            for(let i=0;i<associated_topics_id.length;i++)//associated topcis je NIZ koji sadrži idove povezanih topica
+            {
+                await this.Tags_of_topic.create({
+                    source_topic:new_topic.id,
+                    associated_topic:associated_topics_id[i],
+                    required_level:3//zasasd spremamio po defaultu na 3
+                });
+            }
+            this.Logger.info('New topic succesfuly added to dataabase');
+            return new_topic.id;            
+        } catch (error) {
+            this.Logger.error('Error in saving topic to database tables'+error);
             throw(error);
         }
     }
