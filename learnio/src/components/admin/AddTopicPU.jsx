@@ -228,7 +228,7 @@ function AddTopicPU(props){
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
-      fetch(`http://127.0.0.1:3000/NESTO`, requestOptions)
+      fetch(`http://127.0.0.1:3000/admin/topics/subject/course/pairs`, requestOptions)
       .then(response => response.json())
       .then(data => {  
         setSubjectAndCourseList(data);
@@ -237,7 +237,7 @@ function AddTopicPU(props){
       console.log('Error in fetch function '+ error);
       });
     }
-
+    useEffect(()=>{getSubjectCoursePairs();},[]);
     //submit botun sprema vrijednosti i poziva closePopUp
     const handleSave= ()=>{
       if(subjectAndCourse!==null){
@@ -271,7 +271,8 @@ function AddTopicPU(props){
         //   topic_description:valueDesc
         // });
         // props.closePopup();
-        fetch(`http://127.0.0.1:3000/NESTO`, requestOptions)
+
+        fetch(`http://127.0.0.1:3000/admin/add/topic`, requestOptions)
         .then(response => response.json())
         .then(data => {  
           props.addTopic({

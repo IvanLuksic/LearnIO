@@ -31,7 +31,7 @@ function App() {
   switch(loginStatus){
     case 'admin':{
       AdminFeatures=true;
-      StudentFeatures=true;
+      StudentFeatures=false;
       break;      
     }
     case 'teacher':{//privremeno rjesenje za prvu iteraciju jer nema razlike teachera i admina

@@ -130,8 +130,10 @@ function AdminTopics(props){
     };
     // brisanje topica iz liste
     const handleDelete=(id)=>{
+      var array= [ ...data.filter(polje=> (polje.topic_id!==id))];
+      console.log(array);
       setData(
-          [ ...data.filter(polje=> (polje.topic_id!==id))]
+        array
       ); 
     };
     // dodavanje novog topica u listu i id tom topicu
