@@ -122,10 +122,22 @@ const useStyles = makeStyles((theme)=>({
 }));
 
 const associatedTopics = [
-    'tag item 1',
-    'tag item 2',
-    'tag item 3',
-
+  {
+    name:"Topic 1",
+    id:123
+  },
+  {
+    name:"Topic 2",
+    id:1242
+  },
+  {
+    name:"Topic 3",
+    id:9320
+  },
+  {
+    name:"Topic 4",
+    id:891
+  }
   ];
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -179,9 +191,11 @@ function AddTopicPU(props){
 
 
     const handleChangeTag = (event) => {
+      console.log(event.target.value);
         setAssociatedTopic(event.target.value);
     };
     const handleChangePair = (event) => {
+      console.log(event.target.value)
       setSubjectAndCourse(event.target.value);
   };
     const handleChangeDesc=(event) => {
@@ -233,8 +247,8 @@ function AddTopicPU(props){
             <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
               <Grid item className={classes.grupaBotuna}>
               <ButtonGroup orientation="vertical" variant="contained">
-                  <Button variant="contained" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>Topic information</Button>
-                  <Button variant="contained" onClick={() => [setShow1(false),setShow2(true)]} className={classes.buttonsInGroup}>Connections</Button>
+                  <Button variant="contained" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>{show1&&<Icon>keyboard_arrow_right</Icon>}  Topic      </Button>
+                  <Button variant="contained" onClick={() => [setShow1(false),setShow2(true)]} className={classes.buttonsInGroup}>{show2&&<Icon>keyboard_arrow_right</Icon>}  Connections</Button>
                 </ButtonGroup>
               </Grid>
               <Grid item>          
@@ -279,10 +293,10 @@ function AddTopicPU(props){
                                 <Grid item xs={12} style={{width:"100%"}}>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel >Subject and course</InputLabel>
-                                    <Select  value={subjectAndCourse} onChange={handleChangePair} input={<Input />}  renderValue={(selected) => `${selected.course_id}-${selected.course_name}: ${selected.subject_name}`} MenuProps={MenuProps}>
+                                    <Select  value={subjectAndCourse} onChange={handleChangePair}  renderValue={(selected) => `${selected.course_id} - ${selected.course_name}: ${selected.subject_name}`} MenuProps={MenuProps}>
                                       {subjectCoursePairs.map((pair) => (
                                         <MenuItem key={pair.course_id, pair.subject_id} value={pair}>
-                                          <ListItemText primary={`${pair.course_id}-${pair.course_name}: ${pair.subject_name}`} />
+                                          <ListItemText primary={`${pair.course_id} - ${pair.course_name}: ${pair.subject_name}`} />
                                         </MenuItem>
                                       ))}
                                     </Select>
@@ -291,11 +305,11 @@ function AddTopicPU(props){
                                 <Grid item xs={12} style={{width:"100%"}}>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel >Associated topics</InputLabel>
-                                    <Select  multiple value={associatedTopic} onChange={handleChangeTag} input={<Input />} renderValue={(selected) => selected.join(', ')} MenuProps={MenuProps}>
-                                      {associatedTopics.map((name) => (
-                                        <MenuItem key={name} value={name}>
-                                          <Checkbox checked={associatedTopic.indexOf(name) > -1} />
-                                          <ListItemText primary={name} />
+                                    <Select  multiple value={associatedTopic} onChange={handleChangeTag} input={<Input />} renderValue={(selected) =>{let array= selected.map((top_selected)=>{return top_selected.name}); return array.join(', ')}} MenuProps={MenuProps}>
+                                      {associatedTopics.map((topic) => (
+                                        <MenuItem key={topic.id} value={topic}>
+                                          <Checkbox checked={associatedTopic.indexOf(topic) > -1} />
+                                          <ListItemText primary={`${topic.id} - ${topic.name}`} />
                                         </MenuItem>
                                       ))}
                                     </Select>
