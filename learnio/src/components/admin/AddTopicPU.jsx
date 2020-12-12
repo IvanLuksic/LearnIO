@@ -261,16 +261,16 @@ function AddTopicPU(props){
           body: JSON.stringify(send),
           credentials: 'include'
         };
-        props.addTopic({
-          topic_id:Math.floor(Math.random()*10000),
-          topic_name:valueText,
-          course_id:subjectAndCourse.course_id,
-          course_name:subjectAndCourse.course_name,
-          subject_id:subjectAndCourse.subject_id,
-          subject_name:subjectAndCourse.subject_name,
-          topic_description:valueDesc
-        });
-        props.closePopup();
+        // OFFLINE:props.addTopic({
+        //   topic_id:Math.floor(Math.random()*10000),
+        //   topic_name:valueText,
+        //   course_id:subjectAndCourse.course_id,
+        //   course_name:subjectAndCourse.course_name,
+        //   subject_id:subjectAndCourse.subject_id,
+        //   subject_name:subjectAndCourse.subject_name,
+        //   topic_description:valueDesc
+        // });
+        // props.closePopup();
         fetch(`http://127.0.0.1:3000/NESTO`, requestOptions)
         .then(response => response.json())
         .then(data => {  

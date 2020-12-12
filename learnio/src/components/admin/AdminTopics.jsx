@@ -66,11 +66,11 @@ const useStyles = makeStyles((theme) => ({
       minHeight: '40%'
     },
     skeleton:{
-      width:"30%",
+      width:"50%",
       //height:"100%",
       paddingTop:"25vh",
-      paddingLeft:"35%",
-      paddingRight:"35%",
+      paddingLeft:"25%",
+      paddingRight:"25%",
       marginBottom:"0",
     }
 }))
@@ -93,11 +93,11 @@ function CustomPagination(props) {
 function AdminTopics(props){
     console.log(props);
     const dispatch=useDispatch();
-    const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
-    const[data,setData]=useState(()=>fakeBackendTopics);
-    const[open,setOpen]=useState(false); 
-    const[openPopup,setOpenPopup]=useState(false);
-    const[item,setItem]=useState(0);
+    const [loading,setLoading]=useState(false);//OFFLINE:true
+    const [data,setData]=useState(()=>fakeBackendTopics);
+    const [open,setOpen]=useState(false); 
+    const [openPopup,setOpenPopup]=useState(false);
+    const [item,setItem]=useState(0);
     const classes=useStyles();
 
     const fetchTopics=()=>{
@@ -112,6 +112,7 @@ function AdminTopics(props){
       .then(response => response.json())
       .then(data => {  
         setData(data.Topics);
+        setLoading(true);
       })
       .catch((error)=>{
           console.log('Error in fetch function '+ error);
@@ -151,7 +152,7 @@ function AdminTopics(props){
       setItem(data);
     };
     const requestDeleteTopic=()=>{
-      handleDelete(item);
+      //OFFLINE: handleDelete(item);
       console.log("ZAHTJEV ZA Brisanjem: ");
       console.log({id:item});
       const requestOptions = {
