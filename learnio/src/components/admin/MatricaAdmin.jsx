@@ -85,7 +85,7 @@ function MatricaAdmin(props)
     const [fetchedData, setFetchedData]=useState(()=>fakeBackendQuestions.fields);
     const [matricaAO,setMatricaAO] = useState(()=>{return 3});
     const [matricaD,setMatricaD] = useState(()=>{return 3});
-    const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
+    const [loading,setLoading]=useState(false);//OFFLINE:potrebno ga postavit na false da bi radilo
     const [topicName,setTopicName]=useState(()=>fakeBackendQuestions.topic_name);
     const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
     const [topicDescription,setTopicDescription]=useState(()=>fakeBackendQuestions.topic_description);
@@ -180,7 +180,7 @@ function MatricaAdmin(props)
     };
     //adds a value=question to the selected field's array of questions
     const addQuestion=(value)=>{
-        console.log("pozvana add");
+        // console.log("pozvana add");
 
         var polja=fetchedData;
         polja.map(polje=>{
@@ -211,7 +211,7 @@ function MatricaAdmin(props)
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
     const requestChangeQuestion=(Ques)=>{
-        changeExpanded(false);changeQuestion(Ques);
+        //OFFLINE: changeExpanded(false);changeQuestion(Ques);
         console.log("ZAHTJEV ZA IZMJENOM: ");
         console.log({...Ques});
         const requestOptions = {
@@ -227,9 +227,9 @@ function MatricaAdmin(props)
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
     const requestAddQuestion=(Ques,ID)=>{
-        addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});changePage(ID);forceUpdate();
-        console.log("ZAHTJEV ZA DODAVANJE: ");
-        console.log({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:topicID});
+        //OFFLINE:addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});changePage(ID);forceUpdate();
+        // console.log("ZAHTJEV ZA DODAVANJE: ");
+        // console.log({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:topicID});
         const requestOptions = {
             method: 'POST',
             mode:'cors',

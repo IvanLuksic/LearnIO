@@ -88,7 +88,7 @@ function Matrica(props)
     const [openPopupWrong, setOpenPopupWrong] = useState(()=>{return false});
     const [matricaAO,setMatricaAO] = useState(()=>fakeFetchResponse.Matrix.column_numbers);
     const [matricaD,setMatricaD] = useState(()=>fakeFetchResponse.Matrix.rows_D);
-    const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
+    const [loading,setLoading]=useState(false);//OFFLINE:true
     const [assesment_objectives,setAssesment_objectives]=useState();
     const [topicName,setTopicName]=useState(()=>fakeFetchResponse.Matrix.topic_name);
     const [topicDescription,setTopicDescription]=useState(()=>fakeFetchResponse.Matrix.topic_description);

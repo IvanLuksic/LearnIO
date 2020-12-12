@@ -89,8 +89,8 @@ function QuestionPopup(props){
     };
 
     const handleSave=()=>{ 
-        props.setOpenPopupWrong(true)
-        props.setOpenPopup(false);//topic_id course_id question_id solution
+        // OFFLINE: props.setOpenPopupWrong(true)
+        // OFFLINE:props.setOpenPopup(false);//topic_id course_id question_id solution
         const requestOptions = {
             method: 'POST',
             mode:'cors',
@@ -106,9 +106,9 @@ function QuestionPopup(props){
                   props.setFields(data.Questions);
         })
         .catch((error)=>{
-            console.log('Error in fetch function '+ error);
-    });
-  }
+            console.log('Error in fetch function '+ error);});
+        props.setOpenPopup(false);
+    }
 
     return(
         <div> 

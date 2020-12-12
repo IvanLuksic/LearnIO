@@ -124,7 +124,7 @@ function CustomPagination(props) {
 function StudentTopics(props){
     const dispatch=useDispatch();//rows su podaci
     const [data,setData]=useState(()=>{return fakeLoadingTopics});//koristi ove dok ne učita da ne bi bilo undefined
-    const [loading,setLoading]=useState(true);//potrebno ga postavit na false da bi radilo
+    const [loading,setLoading]=useState(false);//OFFLINE:true
     const classes = useStyles();
    //red 1, blue 2, grey 3, green 4 - ovo je mislavova signalizacija iz APIja
     function RenderStatusButton(id,status,name){
