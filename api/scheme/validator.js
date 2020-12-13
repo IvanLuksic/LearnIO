@@ -1,7 +1,7 @@
 // Source: https://gist.github.com/CacheControl/79dd9f5c7e7f798f368e#file-medium-api-parameters-middleware-js
 const Ajv = require("ajv");//instalirat ovaj validator
 //VALIDATOR KOJI PROVJERAVA JESU LI DANI PODACI U SKLADU SA SHEMOM
-const ajv = new Ajv({ allErrors: true, removeAdditional: true });
+const ajv = new Ajv.default({ allErrors: true, removeAdditional: true });
 ajv.addKeyword('isNotEmpty', {//SPRJEČAVA DA NE UNSEE PRAZAN STRING JER AKO STAVIMO minlength 1 onda prolazi prazan string sa space samo
   type: 'string',//SPRJEČAVA SVE VRSTE PRAZNIH STRINGOVA/SPACEOVA BILO KOJE DULJINE
   validate: function (schema, data) {
