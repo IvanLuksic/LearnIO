@@ -108,7 +108,7 @@ function MatricaAdmin(props)
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch(`http://127.0.0.1:3000/admin/topics/edit/${topicID}`, requestOptions)//topic id
+        fetch(`https://learn1o.herokuapp.com:3000/admin/topics/edit/${topicID}`, requestOptions)//topic id
         .then(response => response.json())
         .then(data => {  
                   console.log(JSON.stringify(data));
@@ -239,7 +239,7 @@ function MatricaAdmin(props)
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch(`http://127.0.0.1:3000/question/delete/${Ques.id}`, requestOptions)
+        fetch(`https://learn1o.herokuapp.com:3000/question/delete/${Ques.id}`, requestOptions)
         .then(() =>{deleteQuestion(Ques,aoSelected,dSelected);})
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
@@ -254,7 +254,7 @@ function MatricaAdmin(props)
             body: JSON.stringify({...Ques}),
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/question/update', requestOptions)
+        fetch('https://learn1o.herokuapp.com:3000/question/update', requestOptions)
         .then(() =>{changeExpanded(false);changeQuestion(Ques);
         })
         .catch((error)=>{console.log('Error in fetch function '+ error);});
@@ -270,7 +270,7 @@ function MatricaAdmin(props)
             body: JSON.stringify({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:Number(topicID)}),
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/question/add', requestOptions)
+        fetch('https://learn1o.herokuapp.com:3000/question/add', requestOptions)
         .then(response => response.json())
         .then(data => {addQuestion({id:data.id,...Ques,row_D:dSelected,column_A:aoSelected});forceUpdate();})
         .catch((error)=>{console.log('Error in fetch function '+ error);});

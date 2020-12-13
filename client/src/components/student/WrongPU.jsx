@@ -93,7 +93,7 @@ function WrongPU(props){//uzima samo closePopup
             credentials: 'include'
         };
 
-        fetch(`http://127.0.0.1:3000/student/topics/associated/${5}`, requestOptions)//topic id
+        fetch(`https://learn1o.herokuapp.com:3000/student/topics/associated/${5}`, requestOptions)//topic id
         .then(response => response.json())
         .then(data => { setData(data.Associated);})
         .catch((error)=>{

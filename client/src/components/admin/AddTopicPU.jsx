@@ -232,7 +232,7 @@ function AddTopicPU(props){
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
-      fetch(`http://127.0.0.1:3000/admin/topics/subject/course/pairs`, requestOptions)
+      fetch(`https://learn1o.herokuapp.com:3000/admin/topics/subject/course/pairs`, requestOptions)
       .then(response => response.json())
       .then(data => {  
         setSubjectAndCourseList(data);
@@ -276,7 +276,7 @@ function AddTopicPU(props){
         // });
         // props.closePopup();
 
-        fetch(`http://127.0.0.1:3000/admin/add/topic`, requestOptions)
+        fetch(`https://learn1o.herokuapp.com:3000/admin/add/topic`, requestOptions)
         .then(response => response.json())
         .then(data => {  
           props.addTopic({

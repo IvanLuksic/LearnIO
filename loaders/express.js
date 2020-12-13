@@ -4,7 +4,7 @@ const session=require('express-session');
 var PostgreSqlStore = require('connect-pg-simple')(session);
 var cors = require('cors')
 var corsOptions = {
-    origin: 'http://localhost:3001',
+    origin: '*',
     credentials: true };
 
 module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcija
