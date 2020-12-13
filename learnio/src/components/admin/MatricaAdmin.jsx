@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
             paddingTop:"12vh",
           },
           [theme.breakpoints.up('md')]: {
-            paddingTop:"6vh",
+            paddingTop:"12vh",
           },
           paddingBottom:'9px', 
       },
@@ -156,23 +156,18 @@ function MatricaAdmin(props)
     };
     //deletes value=question from selected field's array of questions
     const deleteQuestion=(value,aoNOW,dNOW)=>{
-        console.log("pozvana delete");
-        var polje=fetchedData[(aoNOW+matricaAO*(dNOW-1)-1)];
-        let deleted=fetchedData.filter((question)=> {if((question.ao!==aoNOW)||(question.d!==dNOW)){return question;}})
-        setFetchedData(deleted);
-        console.log(deleted);
+        let polje=fetchedData[(aoNOW+matricaAO*(dNOW-1)-1)];
+        let poljaBezDeleted=[];
+        fetchedData.map((question)=> {if((question.ao!==aoNOW)||(question.d!==dNOW)){poljaBezDeleted.push(question)};})
         polje.Questions= [...polje.Questions.filter((question)=>(question.id!==value.id))];//question_id
-        deleted=[...deleted, polje];
-        console.log(deleted);
-        deleted=deleted.sort((a,b)=>(a.d-b.d));
+        poljaBezDeleted=[...poljaBezDeleted, polje];
+        poljaBezDeleted=poljaBezDeleted.sort((a,b)=>(a.d-b.d));
         let array=[];
         for(let i=0;i<matricaD;i++){
-            var subarray=deleted.slice(i*matricaD,i*matricaD+matricaAO);
-            console.log(subarray);
+            var subarray=poljaBezDeleted.slice(i*matricaAO,i*matricaAO+matricaAO);
             subarray=subarray.sort((a,b)=>(a.ao-b.ao));
             array=[...array,...subarray];
         }
-        console.log(array);
         setFetchedData(array);
 
     };
@@ -195,9 +190,9 @@ function MatricaAdmin(props)
         addQuestion(value);
     };
     const requestDeleteQuestion=(Ques)=>{
-        deleteQuestion(Ques,aoSelected,dSelected);
-        console.log("ZAHTJEV ZA Brisanjem: ");
-        console.log({id:Ques.id});
+        // deleteQuestion(Ques,aoSelected,dSelected);
+        // console.log("ZAHTJEV ZA Brisanjem: ");
+        // console.log({id:Ques.id});
         const requestOptions = {
             method: 'DELETE',
             mode:'cors',
@@ -205,13 +200,13 @@ function MatricaAdmin(props)
             credentials: 'include'
         };
         fetch(`http://127.0.0.1:3000/question/delete/${Ques.id}`, requestOptions)
-        .then(() =>{deleteQuestion(Ques);})
+        .then(() =>{deleteQuestion(Ques,aoSelected,dSelected);})
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
     const requestChangeQuestion=(Ques)=>{
         //OFFLINE: changeExpanded(false);changeQuestion(Ques);
-        console.log("ZAHTJEV ZA IZMJENOM: ");
-        console.log({...Ques});
+        // console.log("ZAHTJEV ZA IZMJENOM: ");
+        // console.log({...Ques});
         const requestOptions = {
             method: 'PUT',
             mode:'cors',

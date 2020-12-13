@@ -52,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
       margin:"2px",
       justifyContent:"center"
     },
+    WholeGrid:{
+      padding:"5em 0 0 0"
+    }
 
 }));
 
@@ -155,7 +158,7 @@ function Matrica(props)
                     <WrongPU closePopup={setOpenPopupWrong} setTopicID={setTopicID} pageProps={props}/>
                   </PopupDialog>        
                 }
-                <Grid container direction="column" justify="flex-start" alignItems="center">
+                <Grid container direction="column" justify="flex-start" alignItems="center" className={classes.WholeGrid}>
                     <Grid container item md={6} direction="row"  justify="center" alignItems="center" >
                         <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
                             <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName} </Typography></Grid>
