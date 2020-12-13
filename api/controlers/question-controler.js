@@ -76,7 +76,7 @@ module.exports={
              {
                 response.correct=true;
                 try {
-                    await Question_instance.unlockQuestions(student_id,topic_id,course_id,class_id,subject_id,question_id);
+                    await Question_instance.unlockQuestionsAndUpdateResults(student_id,topic_id,course_id,class_id,subject_id,question_id);
                 } catch (error) {
                     nodelogger.error('Error in unlocking questions ');
                     throw(error);

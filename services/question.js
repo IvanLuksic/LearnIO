@@ -1,13 +1,15 @@
 const { Op } = require("sequelize");//izvuc ga iz sequelizea koji vraca index.js file u modelsima
 const {sequelize}=require('../models');
 const queryInterface = sequelize.getQueryInterface();
+const { QueryTypes } = require('sequelize');
+
                         /*
                         STATUS 1=CRVENO-> NETOCNO
                         STATUS 2=PLAVO-> OTKLJUCANO
                         STATUS 3=SIVO-> ZAKLJUCANO 
                         STATUS 4=ZELENO->TOCNO*/
 module.exports=class question{
-    constructor(question,topic,save,course,user,logger)//svi dependency modeli od ove klase
+    constructor(question,topic,save,course,user,result,logger)//svi dependency modeli od ove klase
     {
         this.Question=question;
         this.Logger=logger;
@@ -15,6 +17,7 @@ module.exports=class question{
         this.Save=save;
         this.Course=course;
         this.User=user;
+        this.Result=result;
     }
     //JSON.stringify RADI STRING, JSON.parse VRAĆA OBJEKT U JSON TIPU
      async getQuestionsFromSave(topics_id,courses_id,users_id,clas_id,subjects_id)//za odredeni topic,usera kurs razred i predmet izvuc pitanja iz tog topica i slozit ih po retcima i stupcima i vratit na frontend
@@ -272,7 +275,7 @@ module.exports=class question{
         }
 
     }
-    async unlockQuestions(students_id,topics_id,courses_id,clas_id,subjects_id,questions_id)//promjena statusa questiona u tablici save
+    async unlockQuestionsAndUpdateResults(students_id,topics_id,courses_id,clas_id,subjects_id,questions_id)//promjena statusa questiona u tablici save
     {
         //1. saznaj poziciju u retku i stupcu od togquestiona
         try {
@@ -303,6 +306,17 @@ module.exports=class question{
             const rows=topic.rows_D;
             const columns=topic.column_numbers;
             this.Logger.info('Broj redaka i stupaca matrice: '+rows+columns);
+            //update rezultat-> povećaj vrijednost od tog stupca za 1 u tablici rezultati
+            try {//KORISTILI RAW QUERY JER SA UPDATE NE RADI KO ZNA ZAŠTO
+                //U POSTGRESU SE ARRAY BROJI OD INDEKSA 1-> ako je x=2 onda je to drugi član niza
+                const result=await sequelize.query('UPDATE result SET result_array_by_columns[:pos]=result_array_by_columns[:pos]+1 WHERE student_id=:student_id AND topic_id=:topic_id AND course_id=:course_id AND class_id=:class_id AND subject_id=:subject_id ',{
+                    raw:true,
+                    replacements: {pos:x,student_id:students_id,course_id:courses_id,subject_id:subjects_id,class_id:clas_id, topic_id: topics_id },
+                    type: QueryTypes.SELECT
+                   });//POS:X-> X JE STUPAC TOCNO ODGOVORENOG PITANJA -> TAJ ČLAN NIZA UVEĆAVAMO ZA 1
+            } catch (error) {
+                this.Logger.error('Error in updating results');
+            }
             //za pocetak otkljucaj susjedne-> otkljucaj livo desno i dole i gore ako postoje
             //vidit koji sve postoje pa onda citat iz baze a ne da citamo za svako pitanje-> bolje performanse i manje pristupa bazi
             //spremamo koordinate u niz objekata od kojih svaki objkt sadrzi x i y koordinate pitanja kojeg trebamo otkljucat

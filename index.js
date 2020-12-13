@@ -1,17 +1,17 @@
 const questionclass= require('./services/question');
 const topicclass= require('./services/topic');
 const resultclass=require('./services/result');
-//const {question,sequelize,topic,save,course,user,subject,result,asessment_objective,clas}=require('./models');
+const {question,sequelize,topic,save,course,user,subject,result,asessment_objective,clas}=require('./models');
 const {nodelogger}=require('./loaders/logger');
-const models=require('./models');
-//instance=new questionclass(question,topic,save,course,user,nodelogger);
-instance=new topicclass(models.topic,models.asessment_objective,models.course,models.subject,models.result,models.save,models.question,models.topic_subject,models.tags_of_topic,models.course_topic,nodelogger);
+//const models=require('./models');
+instance=new questionclass(question,topic,save,course,user,result,nodelogger);
+//instance=new topicclass(models.topic,models.asessment_objective,models.course,models.subject,models.result,models.save,models.question,models.topic_subject,models.tags_of_topic,models.course_topic,nodelogger);
 //instance=new resultclass(result,user,subject,course,topic,asessment_objective,clas,nodelogger);
 async function DatabaseConnection ()
 {
     console.log('Connecting to database....');
     try {
-        await models.sequelize.authenticate();
+        await sequelize.authenticate();
         console.log('Connected to database.');
     } catch (error) {
         console.log('Error in database connection '+error);
@@ -42,7 +42,7 @@ async function init()
      //await instance.filterBySchool_year('2019/2020');
      ///await instance.filterByGrade(4);
       //await instance.getAllResults();
-     await instance.getAllTopicsForAdmin();
+     //await instance.getAllTopicsForAdmin();
      //await instance.getTopicInfo(2);
      //await instance.getSubject_CoursePairs();
         nodelogger.info('Uspjesno');

@@ -115,12 +115,14 @@ module.exports={
         try {
             const {associated_topics_id,columns_AO,rows_D,course_id,subject_id,topic_name,topic_description}=req.body;
             try {
-                var topic_id=await Topic_instance.addTopic(associated_topics_id,columns_AO,rows_D,course_id,subject_id,topic_name,topic_description);
+                var added_topic_id=await Topic_instance.addTopic(associated_topics_id,columns_AO,rows_D,course_id,subject_id,topic_name,topic_description);
             } catch (error) {
                 nodelogger.info('Error in adding topic to database');
                 throw(error);
             }
-            res.json(topic_id);
+            var response={};
+            response.topic_id=added_topic_id;
+            res.json(response);
         } catch (error) {
             nodelogger.error('Error in adding topic '+error);
             next(error);
