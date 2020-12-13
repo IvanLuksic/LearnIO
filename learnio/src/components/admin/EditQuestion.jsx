@@ -95,7 +95,6 @@ function EditQuestion(props) {
   };
   const handleAdd= (value) => {
     props.questAdd(value);
-    props.changePage(pageCount);
   };
   const resetExpanded=()=>{
     setExpandedQuestion(false);

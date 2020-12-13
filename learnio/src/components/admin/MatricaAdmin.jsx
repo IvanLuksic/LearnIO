@@ -128,6 +128,7 @@ function MatricaAdmin(props)
 
    useEffect(() => {
      fetchRequest();
+     console.log(page);
    },[]);
 
 
@@ -166,6 +167,11 @@ function MatricaAdmin(props)
     //deletes value=question from selected field's array of questions
     const deleteQuestion=(value,aoNOW,dNOW)=>{
         let polje=fetchedData[(aoNOW+matricaAO*(dNOW-1)-1)];
+
+        let previousPage=page;//Provjera jesmo li izbrisali sve s te stranice
+        //console.log("stranica prethodna: "+previousPage +" izracunata zadnja: "+(((polje.Questions.length-1)+(6-((polje.Questions.length-1)%6)))/6)+" izracunata zadnja nakon brisanja: "+((polje.Questions.length-2)+(6-((polje.Questions.length-2)%6)))/6);
+        if( (((polje.Questions.length-1)+(6-((polje.Questions.length-1)%6)))/6==previousPage) && (((polje.Questions.length-2)+(6-((polje.Questions.length-2)%6)))/6!=previousPage)){console.log("minjam stranicu");changePage(previousPage-1)};
+
         let poljaBezDeleted=[];
         fetchedData.map((question)=> {if((question.ao!==aoNOW)||(question.d!==dNOW)){poljaBezDeleted.push(question)};})
         polje.Questions= [...polje.Questions.filter((question)=>(question.id!==value.id))];//question_id
@@ -185,10 +191,18 @@ function MatricaAdmin(props)
         // console.log("pozvana add");
 
         var polja=fetchedData;
+        var index=1;
         polja.map(polje=>{
             if(polje.ao===aoSelected && polje.d===dSelected){
                 polje.Questions=[...polje.Questions,value];
                 polje.Questions=polje.Questions.sort((a,b)=>(a.id-b.id));
+                for(var i = 0; i < polje.Questions.length; i++){
+                    if(polje.Questions[i]===value){
+                        index = (i+(6-((i)%6)))/6;
+                        // console.log(index+"INDEX"+i);
+                        changePage(index);
+                    }
+                }
             }
         });
         setFetchedData(polja);
@@ -198,8 +212,25 @@ function MatricaAdmin(props)
         deleteQuestion(value);
         addQuestion(value);
     };
+    //
+    const getIndex = (value)=>{
+        var polja=fetchedData;
+        var index;
+        polja.map(polje=>{
+            if(polje.ao===aoSelected && polje.d===dSelected){
+                for(var i = 0; i < polje.length; i++){
+                    if(polje.Questions[i]===value){
+                        index = (i+(6-((i)%6)))/6;
+                        console.log(index+""+i);
+                        changePage(index);
+                    }
+                }
+            }
+        });
+    };
+
     const requestDeleteQuestion=(Ques)=>{
-        // deleteQuestion(Ques,aoSelected,dSelected);
+        deleteQuestion(Ques,aoSelected,dSelected);
         // console.log("ZAHTJEV ZA Brisanjem: ");
         // console.log({id:Ques.id});
         const requestOptions = {
@@ -229,7 +260,7 @@ function MatricaAdmin(props)
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
     const requestAddQuestion=(Ques,ID)=>{
-        //OFFLINE:addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});changePage(ID);forceUpdate();
+        addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});forceUpdate();
         // console.log("ZAHTJEV ZA DODAVANJE: ");
         // console.log({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:topicID});
         const requestOptions = {
@@ -241,26 +272,11 @@ function MatricaAdmin(props)
         };
         fetch('http://127.0.0.1:3000/question/add', requestOptions)
         .then(response => response.json())
-        .then(data => {addQuestion({id:data.id,...Ques,row_D:dSelected,column_A:aoSelected});changePage(ID);forceUpdate();})
+        .then(data => {addQuestion({id:data.id,...Ques,row_D:dSelected,column_A:aoSelected});forceUpdate();})
         .catch((error)=>{console.log('Error in fetch function '+ error);});
 
     };
-    //
-    const getIndex = (value)=>{
-        var polja=fetchedData;
-        var index;
-        polja.map(polje=>{
-            if(polje.ao===aoSelected && polje.d===dSelected){
-                for(var i = 0; i < polje.length; i++){
-                    if(polje.Questions[i]===value){
-                        index = (i+(6-((i)%6)))/6;
-                        console.log(index);
-                        changePage(index);
-                    }
-                }
-            }
-        });
-    };
+
 
     const classes = useStyles();
 
