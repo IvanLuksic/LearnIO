@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     },
     questionsTable:{
         minHeight: "100vh",
-        paddingTop:"14vh"
+        paddingTop:"200px"
     },
     skeletonMatrica:{
         paddingTop:"20vh",
@@ -59,6 +59,15 @@ const useStyles = makeStyles((theme) => ({
     skeletonTable:{
         minHeight: "100vh",
         paddingTop:"20vh"
+    },
+    wholeLeftGrid:{
+        [theme.breakpoints.down('sm')]: {
+          padding:"100px 0 0 0",
+        },
+        [theme.breakpoints.up('md')]: {
+          padding:"150px 0 0 0",
+        },
+        
     }
 }));
 
@@ -81,9 +90,9 @@ function MatricaAdmin(props)
     const [expanded, setExpanded] = useState(false);
     const [page, setPage] = useState(1);
     const [fetchedData, setFetchedData]=useState(()=>fakeBackendQuestions.fields);
-    const [matricaAO,setMatricaAO] = useState(()=>{return 3});
-    const [matricaD,setMatricaD] = useState(()=>{return 3});
-    const [loading,setLoading]=useState(false);//OFFLINE:potrebno ga postavit na false da bi radilo
+    const [matricaAO,setMatricaAO] = useState(()=>fakeBackendQuestions.columns);
+    const [matricaD,setMatricaD] = useState(()=>fakeBackendQuestions.rows);
+    const [loading,setLoading]=useState(true);//OFFLINE:potrebno ga postavit na false da bi radilo
     const [topicName,setTopicName]=useState(()=>fakeBackendQuestions.topic_name);
     const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
     const [topicDescription,setTopicDescription]=useState(()=>fakeBackendQuestions.topic_description);
@@ -156,23 +165,18 @@ function MatricaAdmin(props)
     };
     //deletes value=question from selected field's array of questions
     const deleteQuestion=(value,aoNOW,dNOW)=>{
-        console.log("pozvana delete");
-        var polje=fetchedData[(aoNOW+matricaAO*(dNOW-1)-1)];
-        let deleted=fetchedData.filter((question)=> {if((question.ao!==aoNOW)||(question.d!==dNOW)){return question;}})
-        setFetchedData(deleted);
-        console.log(deleted);
+        let polje=fetchedData[(aoNOW+matricaAO*(dNOW-1)-1)];
+        let poljaBezDeleted=[];
+        fetchedData.map((question)=> {if((question.ao!==aoNOW)||(question.d!==dNOW)){poljaBezDeleted.push(question)};})
         polje.Questions= [...polje.Questions.filter((question)=>(question.id!==value.id))];//question_id
-        deleted=[...deleted, polje];
-        console.log(deleted);
-        deleted=deleted.sort((a,b)=>(a.d-b.d));
+        poljaBezDeleted=[...poljaBezDeleted, polje];
+        poljaBezDeleted=poljaBezDeleted.sort((a,b)=>(a.d-b.d));
         let array=[];
         for(let i=0;i<matricaD;i++){
-            var subarray=deleted.slice(i*matricaD,i*matricaD+matricaAO);
-            console.log(subarray);
+            var subarray=poljaBezDeleted.slice(i*matricaAO,i*matricaAO+matricaAO);
             subarray=subarray.sort((a,b)=>(a.ao-b.ao));
             array=[...array,...subarray];
         }
-        console.log(array);
         setFetchedData(array);
 
     };
@@ -195,9 +199,9 @@ function MatricaAdmin(props)
         addQuestion(value);
     };
     const requestDeleteQuestion=(Ques)=>{
-        deleteQuestion(Ques,aoSelected,dSelected);
-        console.log("ZAHTJEV ZA Brisanjem: ");
-        console.log({id:Ques.id});
+        // deleteQuestion(Ques,aoSelected,dSelected);
+        // console.log("ZAHTJEV ZA Brisanjem: ");
+        // console.log({id:Ques.id});
         const requestOptions = {
             method: 'DELETE',
             mode:'cors',
@@ -205,13 +209,13 @@ function MatricaAdmin(props)
             credentials: 'include'
         };
         fetch(`http://127.0.0.1:3000/question/delete/${Ques.id}`, requestOptions)
-        .then(() =>{deleteQuestion(Ques);})
+        .then(() =>{deleteQuestion(Ques,aoSelected,dSelected);})
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
     const requestChangeQuestion=(Ques)=>{
         //OFFLINE: changeExpanded(false);changeQuestion(Ques);
-        console.log("ZAHTJEV ZA IZMJENOM: ");
-        console.log({...Ques});
+        // console.log("ZAHTJEV ZA IZMJENOM: ");
+        // console.log({...Ques});
         const requestOptions = {
             method: 'PUT',
             mode:'cors',
@@ -266,8 +270,8 @@ function MatricaAdmin(props)
         <div>
         {loading?
             <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
-                <Grid container direction="row" justify="center" alignItems="center"  height="100%" >
-                    <Grid container item md={6} direction="row" justify="flex-start" alignItems="flex-start" >
+                <Grid container direction="row" justify="center" alignItems="flex-start"  height="100%" >
+                    <Grid container item md={6} direction="row" justify="flex-start" alignItems="flex-start" className={classes.wholeLeftGrid}>
                         <Grid item xs={11} md={11} className={classes.topicTitle} direction="column" justify="flex-start" alignItems="flex-start"  container>
                             <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName}</Typography></Grid>
                             <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>

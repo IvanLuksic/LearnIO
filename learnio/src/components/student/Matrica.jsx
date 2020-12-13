@@ -128,8 +128,6 @@ function Matrica(props)
             console.log('Error in fetch function '+ error);
     });
   }
-
-
    useEffect(() => {
      console.log("saljem" + topicID);
      GetQuestion();
