@@ -25,26 +25,26 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.up('md')]: {
           minHeight: "100vh",
         },
-      },
-      topicTitle:{
+    },
+    topicTitle:{
           fontSize:'6vh',
           marginBottom: '1em',
-          [theme.breakpoints.down('sm')]: {
-            paddingTop:"12vh",
-          },
-          [theme.breakpoints.up('md')]: {
-            paddingTop:"6vh",
-          },
+        //   [theme.breakpoints.down('sm')]: {
+        //     paddingTop:"12vh",
+        //   },
+        //   [theme.breakpoints.up('md')]: {
+        //     paddingTop:"6vh",
+        //   },
           paddingBottom:'9px', 
-      },
-      lobster: {
+    },
+    lobster: {
           fontFamily: "Lobster"
-      },
+    },
     divider:{
         [theme.breakpoints.down('sm')]: {
             height: "0vh",
           },
-          [theme.breakpoints.up('md')]: {
+        [theme.breakpoints.up('md')]: {
             marginTop:"12vh",
             height: "85vh",
           },

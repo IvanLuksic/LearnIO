@@ -21,7 +21,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundPosition: "fixed",
       backgroundAttachment: "fixed",
       backgroundRepeat: "repeat-y",
-      maxWidth: " 100%",
+      height:"auto",
+      maxWidth: "100%",
       [theme.breakpoints.down('sm')]: {
         minHeight: "100vh",
       },
@@ -32,12 +33,12 @@ const useStyles = makeStyles((theme) => ({
     topicTitle:{
         fontSize:'6vh',
         marginBottom: '1em',
-        [theme.breakpoints.down('sm')]: {
-          paddingTop:"10vh",
-        },
-        [theme.breakpoints.up('md')]: {
-          paddingTop:"4vh",
-        },
+        // [theme.breakpoints.down('sm')]: {
+        //   paddingTop:"10vh",
+        // },
+        // [theme.breakpoints.up('md')]: {
+        //   paddingTop:"4vh",
+        // },
         paddingBottom:'9px', 
     },
     lobster: {
@@ -52,6 +53,15 @@ const useStyles = makeStyles((theme) => ({
       margin:"2px",
       justifyContent:"center"
     },
+    wholeGrid:{
+      [theme.breakpoints.down('sm')]: {
+        padding:"100px 0 0 0",
+      },
+      [theme.breakpoints.up('md')]: {
+        padding:"100px 0 0 0",
+      },
+      
+    }
 
 }));
 
@@ -88,11 +98,10 @@ function Matrica(props)
     const [openPopupWrong, setOpenPopupWrong] = useState(()=>{return false});
     const [matricaAO,setMatricaAO] = useState(()=>fakeFetchResponse.Matrix.column_numbers);
     const [matricaD,setMatricaD] = useState(()=>fakeFetchResponse.Matrix.rows_D);
-    const [loading,setLoading]=useState(false);//OFFLINE:true
+    const [loading,setLoading]=useState(true);//OFFLINE:true
     const [assesment_objectives,setAssesment_objectives]=useState();
     const [topicName,setTopicName]=useState(()=>fakeFetchResponse.Matrix.topic_name);
     const [topicDescription,setTopicDescription]=useState(()=>fakeFetchResponse.Matrix.topic_description);
-
     const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
 
 
@@ -124,6 +133,7 @@ function Matrica(props)
    useEffect(() => {
      console.log("saljem" + topicID);
      GetQuestion();
+     window.scrollTo(0, 0)
    },[topicID]);
 
    
@@ -155,7 +165,7 @@ function Matrica(props)
                     <WrongPU closePopup={setOpenPopupWrong} setTopicID={setTopicID} pageProps={props}/>
                   </PopupDialog>        
                 }
-                <Grid container direction="column" justify="flex-start" alignItems="center">
+                <Grid container direction="column" justify="flex-start" alignItems="center" className={classes.wholeGrid}>
                     <Grid container item md={6} direction="row"  justify="center" alignItems="center" >
                         <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
                             <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName} </Typography></Grid>
