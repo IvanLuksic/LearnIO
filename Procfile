@@ -1,1 +1,1 @@
-web : npm run star
+web : node app.js

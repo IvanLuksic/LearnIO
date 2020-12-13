@@ -4,13 +4,12 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": ">=12.x",
-    "npm": ">=6.0.0"
+    "node": "16.0.4."
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "sequelize db:migrate && nodemon server.js",
-    "heroku-postbuild":"cd client && npm install && npm run build"
+    "start": "nodemon app.js",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
