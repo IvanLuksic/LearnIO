@@ -30,10 +30,10 @@ const useStyles = makeStyles((theme) => ({
           fontSize:'6vh',
           marginBottom: '1em',
           [theme.breakpoints.down('sm')]: {
-            paddingTop:"10vh",
+            paddingTop:"12vh",
           },
           [theme.breakpoints.up('md')]: {
-            paddingTop:"4vh",
+            paddingTop:"6vh",
           },
           paddingBottom:'9px', 
       },
@@ -267,12 +267,12 @@ function MatricaAdmin(props)
         {loading?
             <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
                 <Grid container direction="row" justify="center" alignItems="center"  height="100%" >
-                    <Grid container item md={6} direction="row" justify="center" alignItems="center" >
-                        <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
+                    <Grid container item md={6} direction="row" justify="flex-start" alignItems="flex-start" >
+                        <Grid item xs={11} md={11} className={classes.topicTitle} direction="column" justify="flex-start" alignItems="flex-start"  container>
                             <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName}</Typography></Grid>
                             <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
                         </Grid>
-                        <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
+                        <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="flex-start" alignItems="flex-start" >
                             <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fetchedData,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
                         </Grid>
                     </Grid>
