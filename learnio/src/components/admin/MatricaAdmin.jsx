@@ -92,7 +92,7 @@ function MatricaAdmin(props)
     const [fetchedData, setFetchedData]=useState(()=>fakeBackendQuestions.fields);
     const [matricaAO,setMatricaAO] = useState(()=>fakeBackendQuestions.columns);
     const [matricaD,setMatricaD] = useState(()=>fakeBackendQuestions.rows);
-    const [loading,setLoading]=useState(true);//OFFLINE:potrebno ga postavit na false da bi radilo
+    const [loading,setLoading]=useState(false);//OFFLINE:potrebno ga postavit na false da bi radilo
     const [topicName,setTopicName]=useState(()=>fakeBackendQuestions.topic_name);
     const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
     const [topicDescription,setTopicDescription]=useState(()=>fakeBackendQuestions.topic_description);
@@ -118,7 +118,7 @@ function MatricaAdmin(props)
                   setTopicName(data.topic_name);
                   setTopicDescription(data.topic_description)
                   dispatch(topicSelected(topicID,topicName));
-                  setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
+                  setLoading(false);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
         })
         .catch((error)=>{
             console.log('Error in fetch function '+ error);
@@ -230,7 +230,7 @@ function MatricaAdmin(props)
     };
 
     const requestDeleteQuestion=(Ques)=>{
-        deleteQuestion(Ques,aoSelected,dSelected);
+        // deleteQuestion(Ques,aoSelected,dSelected);
         // console.log("ZAHTJEV ZA Brisanjem: ");
         // console.log({id:Ques.id});
         const requestOptions = {
@@ -260,7 +260,7 @@ function MatricaAdmin(props)
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
     const requestAddQuestion=(Ques,ID)=>{
-        addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});forceUpdate();
+        // addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});forceUpdate();
         // console.log("ZAHTJEV ZA DODAVANJE: ");
         // console.log({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:topicID});
         const requestOptions = {
