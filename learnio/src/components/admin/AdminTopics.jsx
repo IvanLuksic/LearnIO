@@ -130,9 +130,9 @@ function AdminTopics(props){
     };
     // brisanje topica iz liste
     const handleDelete=(id)=>{
-      setData(
-          [ ...data.filter(polje=> (polje.topic_id!==id))]
-      ); 
+      let array=[];
+      data.map(polje=>{if(polje.topic_id!==id){array.push(polje)};});
+      setData(array); 
     };
     // dodavanje novog topica u listu i id tom topicu
     // problem s id kad se izbrise jedan i ide dodat novi ne radi!!!
@@ -152,7 +152,7 @@ function AdminTopics(props){
       setItem(data);
     };
     const requestDeleteTopic=()=>{
-      //OFFLINE: handleDelete(item);
+      //OFFLINE:handleDelete(item);
       console.log("ZAHTJEV ZA Brisanjem: ");
       console.log({id:item});
       const requestOptions = {
@@ -169,7 +169,8 @@ function AdminTopics(props){
     let rows=[];
     for(let i=0;i<data.length;i++){
       rows=[...rows,{
-        id: data[i].topic_id,
+        id: ''+data[i].topic_id+data[i].course_id+data[i].subject_id,
+        topic_id:data[i].topic_id,
         name: data[i].topic_name,
         course: data[i].course_name,
         subject: data[i].subject_name
@@ -177,12 +178,13 @@ function AdminTopics(props){
     };
 
     const columns=[
-        {field: "id", headerName:'ID',type:'string',headerAlign:'center', align:'center'},
+        {field: "id", hide:true},
+        {field: "topic_id",headerName:'ID',headerAlign:'center', align:'center'},
         {field: "name", width: 200, type:'string',headerAlign:'center', align:'center', renderHeader: () => (<div ><strong>{"Topic"}</strong><Button onClick={()=>handleOpen()} className={classes.addButton} ><Icon style={{color:"white"}}>add_circle</Icon></Button></div>),},
         {field: "course", width: 200,headerName:'Course',type:'string',headerAlign:'center', align:'center'},                                                                                                                          
         {field: "subject", width: 200, headerName:'Subject',type:'string',headerAlign:'center', align:'center'},
-        {field: 'open', headerName: 'Edit',headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Link to={`/admin-topic/${params.getValue('id')}`} onClick={()=>{dispatch(topicSelected(params.getValue('id')))}}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>)},
-        {field: 'delete', headerName: 'Delete ' ,headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Button onClick={()=>{Confirm(params.data.id)}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
+        {field: 'open', headerName: 'Edit',headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Link to={`/admin-topic/${params.getValue('topic_id')}`} onClick={()=>{dispatch(topicSelected(params.getValue('topic_id')))}}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>)},
+        {field: 'delete', headerName: 'Delete ' ,headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Button onClick={()=>{Confirm(params.data.topic_id)}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
     ];
 
     return(

@@ -11,8 +11,6 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import NotFound from '../common/NotFound';
 import {useDispatch, useSelector} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
-
-
 const useStyles = makeStyles((theme) => ({
     background:{
         backgroundImage:"url("+backgroundIMG+")",
@@ -159,8 +157,8 @@ function MatricaAdmin(props)
     //deletes value=question from selected field's array of questions
     const deleteQuestion=(value,aoNOW,dNOW)=>{
         console.log("pozvana delete");
-        var polje=fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)];
-        let deleted=fetchedData.filter((question)=> {if((question.ao!==aoSelected)||(question.d!==dSelected)){return question;}})
+        var polje=fetchedData[(aoNOW+matricaAO*(dNOW-1)-1)];
+        let deleted=fetchedData.filter((question)=> {if((question.ao!==aoNOW)||(question.d!==dNOW)){return question;}})
         setFetchedData(deleted);
         console.log(deleted);
         polje.Questions= [...polje.Questions.filter((question)=>(question.id!==value.id))];//question_id

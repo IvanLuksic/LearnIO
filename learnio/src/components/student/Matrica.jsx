@@ -124,7 +124,7 @@ function Matrica(props)
    useEffect(() => {
      console.log("saljem" + topicID);
      GetQuestion();
-   },[]);
+   },[topicID]);
 
    
    //function that is executed on matrix field select
