@@ -112,7 +112,7 @@ function Matrica(props)
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch(`https://learn1o.herokuapp.com:3000/question/${1}/${1}/${1}/${topicID}`, requestOptions)//class_id subject_id course_id topic_id
+        fetch(`https://learn1o.herokuapp.com/question/${1}/${1}/${1}/${topicID}`, requestOptions)//class_id subject_id course_id topic_id
         .then(response => response.json())
                 .then(data => {  
                   console.log(JSON.stringify(data));

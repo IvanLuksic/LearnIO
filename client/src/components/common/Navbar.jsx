@@ -89,7 +89,7 @@ function Navbar(){
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
-      fetch(`https://learn1o.herokuapp.com:3000/logout`, requestOptions)
+      fetch(`https://learn1o.herokuapp.com/logout`, requestOptions)
       .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
 

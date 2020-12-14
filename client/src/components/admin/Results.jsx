@@ -167,7 +167,7 @@ function AdminTopics(){
         credentials: 'include'
       };
 
-      fetch('https://learn1o.herokuapp.com:3000/results', requestOptions)
+      fetch('https://learn1o.herokuapp.com/results', requestOptions)
       .then(response => response.json())
             .then(dataFetch => {  
               setData(dataFetch);

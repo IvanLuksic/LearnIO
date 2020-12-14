@@ -108,7 +108,7 @@ function AdminTopics(props){
           credentials: 'include'
       };
 
-      fetch('/https://learn1o.herokuapp.com:3000/admin/topics', requestOptions)
+      fetch('/https://learn1o.herokuapp.com/admin/topics', requestOptions)
       .then(response => response.json())
       .then(data => {  
         setData(data.Topics);
@@ -161,7 +161,7 @@ function AdminTopics(props){
           headers: { 'Content-Type': 'application/json'},
           credentials: 'include'
       };
-      fetch(`https://learn1o.herokuapp.com:3000/admin/topics/delete/${item}`, requestOptions)
+      fetch(`https://learn1o.herokuapp.com/admin/topics/delete/${item}`, requestOptions)
       .then(() =>{handleDelete(item);})
       .catch((error)=>{console.log('Error in fetch function '+ error);});
     }
