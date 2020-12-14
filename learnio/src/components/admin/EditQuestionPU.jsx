@@ -237,7 +237,7 @@ function EditQuestionPU(props) {
       answer_d:((wrongAnswers.length>3)?wrongAnswers[3]:null),
       solution:correctAnswer
     }
-
+    console.log(send);
     props.questChange(send);
     props.popUpClose(false);
   }

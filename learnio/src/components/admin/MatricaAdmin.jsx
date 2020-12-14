@@ -118,7 +118,7 @@ function MatricaAdmin(props)
                   setTopicName(data.topic_name);
                   setTopicDescription(data.topic_description)
                   dispatch(topicSelected(topicID,topicName));
-                  setLoading(false);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
+                  setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
         })
         .catch((error)=>{
             console.log('Error in fetch function '+ error);
@@ -209,7 +209,7 @@ function MatricaAdmin(props)
     };
     //combination of latter functions for editQuestion component
     const changeQuestion = (value)=>{
-        deleteQuestion(value);
+        deleteQuestion(value,aoSelected,dSelected);
         addQuestion(value);
     };
     //
@@ -272,7 +272,7 @@ function MatricaAdmin(props)
         };
         fetch('http://127.0.0.1:3000/question/add', requestOptions)
         .then(response => response.json())
-        .then(data => {addQuestion({id:data.id,...Ques,row_D:dSelected,column_A:aoSelected});forceUpdate();})
+        .then(data => {if(data.id!=undefined){addQuestion({id:data.id,...Ques,row_D:dSelected,column_A:aoSelected});forceUpdate();}})
         .catch((error)=>{console.log('Error in fetch function '+ error);});
 
     };

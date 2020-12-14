@@ -142,13 +142,13 @@ function Home(){
         </Grid>
         <Grid item xs={12} md={6} className={classes.block2} >
             <span className={classes.txtS}>Welcome to LearnIO </span>
-            <p className={classes.txtP} >LearnIO is a semi-intelligent WebApp that will help you learn only things you need to learn. LearnIO is a half-intelligent WebApp that will help you learn only things you need to learn.</p> 
+            <p className={classes.txtP} >LearnIO is a new way of going about learning. It helps students and teachers alike by allowing students to learn only what they need to learn. How does it work? Find out!</p> 
         </Grid>
       </Grid>
       <Grid container justify="center" alignItems="center" className={classes.cont2} >
       <Grid item xs={12} md={6} className={classes.block3} >
-          <span className={classes.txtS}>Welcome to LearnIO </span>
-          <p className={classes.txtP}>LearnIO is a half-intelligent WebApp that will help you learn only things you need to learn. LearnIO is a half-intelligent WebApp that will help you learn only things you need to learn.</p> 
+          <span className={classes.txtS}>Coming soon.... </span>
+          <p className={classes.txtP}>Learnio is a semi-intelligent online learning service being developed using technologies such as ReactJS, NodeJS, expressJS and PostgresSQL. It will be ready soon, and you are the first ones seeeing it!</p> 
         </Grid>
         <Grid item xs={12} md={6} className={classes.block4}>
           <Carousel navButtonsAlwaysInvisible={true} animation={"slide"} autoPlay={true} interval={2500} timeout={400} className={classes.carousel}>

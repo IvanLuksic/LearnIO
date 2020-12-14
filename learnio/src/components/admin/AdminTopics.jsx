@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
         width:"58%",
       },
       [theme.breakpoints.up('xl')]: {
-        width:"50%",
+        width:"53%",
       },
     },
     topicTitle:{

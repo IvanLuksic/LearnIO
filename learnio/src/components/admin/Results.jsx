@@ -169,7 +169,7 @@ function AdminTopics(){
 
       fetch('http://127.0.0.1:3000/results', requestOptions)
       .then(response => response.json())
-            .then(dataFetch => {  
+      .then(dataFetch => {  
               setData(dataFetch);
               setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
       })
@@ -193,7 +193,8 @@ function AdminTopics(){
     let rows=[];
     for(let j=0;j<data.length;j++){
       let fetchedDataRestructured={
-        id: data[j].topic_id,
+        id: ""+data[j].topic_id+data[j].student_id+data[j].course_id + data[j].class_name,
+        topic_id: data[j].topic_id,
         topic: data[j].topic,
         course: data[j].course,
         subject: data[j].subject,
@@ -239,7 +240,8 @@ function AdminTopics(){
     }
 
     const columns=[
-        {field: "id", type:'number',headerAlign:'center', align:'center', renderHeader: () => (<strong>{"ID"}</strong>)},
+        {field: "id", hide:true},
+        {field: "topic_id", type:'number',headerAlign:'center', align:'center', renderHeader: () => (<strong>{"ID"}</strong>)},
         {field: "topic",width:150 ,type:'string',headerAlign:'center', align:'center', renderHeader: () => (<div ><strong>{"Topic"}</strong></div>),},
         {field: "course",width:150, headerName:'Course',type:'string',headerAlign:'center', align:'center'},
         {field: "subject",width:150, headerName:'Subject',type:'string',headerAlign:'center', align:'center'},

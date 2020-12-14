@@ -1,5 +1,7 @@
 [
     {
+        "student_id":1,
+        "course_id":45,
         "topic_id":1,
         "topic":"Trigonometry 1",
         "course": "Machine engineering",
@@ -15,6 +17,8 @@
         "class_year":"2019/2020"
     },
     {      
+        "student_id":3,
+        "course_id":425,
         "topic_id":2,
         "topic":"Trigonometry 1",
         "course": "Electric engineering",
@@ -30,6 +34,8 @@
         "class_year":"2019/2020"
     },
     {
+        "course_id":145,
+        "student_id":2,
         "topic_id":3,
         "topic":"Trigonometry 1",
         "course": "Economics",

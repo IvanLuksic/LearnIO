@@ -111,7 +111,7 @@ function Navbar(){
                         </Button>}
                     {(AdminFeatures||StudentFeatures)&&
                         <Button size="small" className={classes.buttonBlue} onClick={()=>{dispatch(logOut());headLogout();}}>
-                            <Link to="/login" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Log Out</Link>
+                            <Link to="/" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Log Out</Link>
                         </Button>
                     }
             </Toolbar>
