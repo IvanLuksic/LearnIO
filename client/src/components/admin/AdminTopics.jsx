@@ -108,7 +108,7 @@ function AdminTopics(props){
           credentials: 'include'
       };
 
-      fetch('/https://learn1o.herokuapp.com/admin/topics', requestOptions)
+      fetch('https://learn1o.herokuapp.com/admin/topics', requestOptions)
       .then(response => response.json())
       .then(data => {  
         setData(data.Topics);
