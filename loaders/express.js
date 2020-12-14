@@ -12,6 +12,7 @@ module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcij
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(cors(corsOptions));
+    app.disable('etag');//OVO SMO ISLJUČILI ZBOG CACHEANJA PODATAKA KADA BROWSER VRAĆA STATUS 304 UMJESTO 200
     app.options("/*", function(req, res, next){// regularni izraz /*-> ovo se odnosi na sve rute koji pocinju sa /-> TO SU ZAPRAVO SVE RUTE
      res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
       res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
@@ -37,7 +38,7 @@ module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcij
       prunesessionInterval:60//svako 60 sekundi brise sesije koje se expireale
     }),
     cookie:{
-     path: '/', httpOnly: true, secure: false, maxAge: 1000*60*60*60 //60 sec, POSTAVTI NA NEKI RAZUMNI BROJ->defulte vrijednosti-> maxage null znaci da se brise kada izade iz browsera,BROJ MILISKEUNDI KOLIKO TRAJE COOKIE
+     path: '/', httpOnly: false,sameSite:"none", secure:false, maxAge: 1000*60*60*60 //60 sec, POSTAVTI NA NEKI RAZUMNI BROJ->defulte vrijednosti-> maxage null znaci da se brise kada izade iz browsera,BROJ MILISKEUNDI KOLIKO TRAJE COOKIE
     }//PROBLEM S maxage=null je sta se nece pruneat nikako u bazi pa bolje postavti na neko odredeno vrijeme->DOGOVORIT SE
   }))
   app.use('/',Main_ruter);//>VEŽEMO Main_ruter NA ROOT PATH-> KADA URL BUDE / ili bilo koji drugi ->SVI POČINJU SA / onda će aplikacija gledati u Main_ruter i ako je tamo definiran get request za / izvršit će taj request-> RUTE SE U Main_ruter definiraju u odnosu prema / ruti-> ako imamo /foo rutu u Main_ruteru onda će to predstavljat /foo rutu APLIKACIJE

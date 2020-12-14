@@ -59,7 +59,7 @@ module.exports= class result{
             try {
                 var results=await this.Result.findAll({
                     attributes:['grade','result_array_by_columns'],
-                    include:[{model:this.Course,attributes:['name']},
+                    include:[{model:this.Course,attributes:['id','name']},
                             {model:this.Topic,attributes:['name','id','rows_D']},
                             {model:this.Subject,attributes:['name','column_number'],
                                 include:{
@@ -69,7 +69,7 @@ module.exports= class result{
                                 through: { attributes: [] }
                                 }
                             },
-                            {model:this.Student,attributes:['name','surname']},
+                            {model:this.Student,attributes:['id','name','surname']},
                             {model:this.Clas,attributes:['name','school_year']}
                         ]
                 });
@@ -87,6 +87,7 @@ module.exports= class result{
                 temp={
                     grade:result.grade,
                     result_array_by_columns:result.result_array_by_columns,
+                    course_id:result.course.id,
                     course:result.course.name,
                     topic:result.topic.name,
                     topic_id:result.topic.id,
@@ -94,6 +95,7 @@ module.exports= class result{
                     columns:result.subject.column_number,
                     rows:result.topic.rows_D,
                     assesments:result.subject.Asessments_subject,
+                    student_id:result.user.id,
                     name:result.user.name,
                     surname:result.user.surname,
                     class_name:result.cla.name,//SEQUELIZE IZBACUJE s KADA IME PROPERTYA ZAVRSAVA S NJIM-> class pretvori u cla
