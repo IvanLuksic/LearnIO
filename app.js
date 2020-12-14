@@ -1,6 +1,7 @@
 const express=require('express');
 const loaders=require('./loaders');//ucitamo sve loadere-> trebamo im poslat app
 const {nodelogger}=require('./loaders/logger');
+const path = require('path');
 const app=express();
 async function start()
 {
