@@ -17,5 +17,11 @@ async function start()
 
 
 start(); 
-const buildPath = path.join(__dirname, '..', 'build');
-app.use(express.static(buildPath));
+
+app.get('/admin/*', (req,res) => {})
+app.get('/student/*', (req,res) => {})
+app.get('/teacher/*', (req,res) => {})
+app.use(express.static(path.join(__dirname, '/client/build')))
+    app.get('*', (req,res) => {
+      res.sendFile(path.join(__dirname, '/client/build', 'index.html'))
+    })
