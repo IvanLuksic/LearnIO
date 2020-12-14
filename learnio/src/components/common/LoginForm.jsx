@@ -43,8 +43,6 @@ function LoginForm(props){
 
     const dispatch = useDispatch();
 
-    console.log(props.pageProps);
-
     let object={
         pageprops:props.pageProps,
         usernames:username,
