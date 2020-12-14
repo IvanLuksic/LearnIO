@@ -17,3 +17,5 @@ async function start()
 
 
 start(); 
+const buildPath = path.join(__dirname, '..', 'build');
+app.use(express.static(buildPath));
