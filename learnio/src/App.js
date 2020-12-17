@@ -6,7 +6,7 @@ import "./App.css";
 import Home from "./components/common/Home"
 import Navbar from './components/common/Navbar';
 import StudentTopics from "./components/student/StudentTopics";
-import MatricaAdmin from"./components/admin/MatricaAdmin";
+import AdminMatrix from"./components/admin/AdminMatrix";
 import AddTopicPU from './components/admin/AddTopicPU';
 import AdminTopics from './components/admin/AdminTopics';
 import Matrica from './components/student/Matrica';
@@ -67,7 +67,7 @@ function App() {
                     <Route exact path="/login" component={Login}/>
                     {StudentFeatures&&<Route exact path="/topics"component={StudentTopics}/>}
                     {StudentFeatures&&<Route exact path="/topic/:id" component={Matrica}/>}
-                    {AdminFeatures&&<Route exact path="/admin-topic/:id" component={MatricaAdmin}/>}
+                    {AdminFeatures&&<Route exact path="/admin-topic/:id" component={AdminMatrix}/>}
                     {AdminFeatures&&<Route exact path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>}
                     {AdminFeatures&&<Route exact path="/AdminTopics" component={AdminTopics}/>}
                     {AdminFeatures&&<Route exact path="/results" component={Results}/>}

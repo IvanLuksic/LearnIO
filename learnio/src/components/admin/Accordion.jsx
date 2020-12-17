@@ -8,7 +8,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Pagination from '@material-ui/lab/Pagination';
 import Button from '@material-ui/core/Button';
 import 'reactjs-popup/dist/index.css';
-import EditQuestionPU from './EditQuestionPU';
+import EditQuestionPU from './editComponents/EditQuestionPU';
 import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
 import ConfirmDialog from "../common/ConfirmDialog";
