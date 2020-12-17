@@ -168,8 +168,12 @@ function AdminTopics(props){
 
     let rows=[];
     for(let i=0;i<data.length;i++){
+      let topic_dig=Math.pow(10,(4-data[i].topic_id.toString().length))*data[i].topic_id;
+      let subject_dig=Math.pow(10,(4-data[i].subject_id.toString().length))*data[i].subject_id;
+      let course_dig=Math.pow(10,(4-data[i].course_id.toString().length))*data[i].course_id;
+
       rows=[...rows,{
-        id: ''+data[i].topic_id+data[i].course_id+data[i].subject_id,
+        id: ''+subject_dig+topic_dig+course_dig,
         topic_id:data[i].topic_id,
         name: data[i].topic_name,
         course: data[i].course_name,

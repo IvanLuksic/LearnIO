@@ -189,11 +189,16 @@ function AdminTopics(){
     for(let j=0;j<data.length;j++){
       if(maxNumberOfColumns<data[j].columns) maxNumberOfColumns=data[j].columns;
     };
+    
 
     let rows=[];
     for(let j=0;j<data.length;j++){
+      let topic_dig=Math.pow(10,(4-data[j].topic_id.toString().length))*data[j].topic_id;
+      let student_dig=Math.pow(10,(4-data[j].student_id.toString().length))*data[j].student_id;
+      let course_dig=Math.pow(10,(4-data[j].course_id.toString().length))*data[j].course_id;
+
       let fetchedDataRestructured={
-        id: ""+data[j].topic_id+data[j].student_id+data[j].course_id + data[j].class_name,
+        id: ""+topic_dig+student_dig+course_dig+ data[j].class_name,
         topic_id: data[j].topic_id,
         topic: data[j].topic,
         course: data[j].course,

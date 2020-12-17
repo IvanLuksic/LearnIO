@@ -102,7 +102,55 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft:"25%",
       paddingRight:"25%",
       marginBottom:"0",
-    }
+    },
+    redGrade:{
+      backgroundColor: "#EB4949",
+      padding:"0 1.4em",
+      color: "#ffffff",
+      fontSize:"1.1em",
+      fontWeight:"bold",
+      borderRadius:"50%"
+    },
+    greyGrade:{
+      backgroundColor: "#8f8e8b",
+      padding:"0 1.4em",
+      color: "#ffffff",
+      fontSize:"1.1em",
+      fontWeight:"bold",
+      borderRadius:"50%"
+    },
+    blueGrade:{
+      backgroundColor: "#4373ec",
+      padding:"0 1.4em",
+      color: "#ffffff",
+      fontSize:"1.1em",
+      fontWeight:"bold",
+      borderRadius:"50%"
+    },
+    greenGrade:{
+      backgroundColor: "#27ae60",
+      padding:"0 1.4em",
+      color: "#ffffff",
+      fontSize:"1.1em",
+      fontWeight:"bold",
+      borderRadius:"50%"
+    },
+    goldGrade:{
+      padding:"0 1.4em",
+      backgroundColor: "#DAA520",
+      color: "#ffffff",
+      fontSize:"1.1em",
+      fontWeight:"bold",
+      borderRadius:"50%"
+    },
+    whiteGrade:{
+      padding:"0 1.4em",
+      backgroundColor: "#FFFFFF",
+      color: "#000000",
+      fontSize:"1.1em",
+      fontWeight:"bold",
+      borderRadius:"50%"
+    },
   }));
 
 function CustomPagination(props) {
@@ -133,6 +181,31 @@ function StudentTopics(props){
       else if(status==4) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonGreen} component={Link} to={`/topic/${id}`} size="small"> Revise </Button>);
       else return <p>sranje</p>;
     };
+
+    
+    const renderGrade=(value)=>{
+      switch(value){
+
+        case 1:{
+          return <p className={classes.redGrade}>{value}</p>;//return <Icon className={classes.blueGrade}>looks_1</Icon>;
+        }
+        case 2:{
+          return <p className={classes.greyGrade}>{value}</p>;
+        }
+        case 3:{
+          return <p className={classes.blueGrade}>{value}</p>;
+        }
+        case 4:{
+          return <p className={classes.greenGrade}>{value}</p>;
+        }
+        case 5:{
+          return <div className={classes.goldGrade}>{value}</div>;
+        }
+        default:{
+          return <p className={classes.whiteGrade}>{value}</p>;//return <Icon className={classes.blueGrade}>looks_1</Icon>;
+        }
+      }
+    }
     
 
 
@@ -206,7 +279,7 @@ function StudentTopics(props){
           valueGetter: (params) => {
              var val=params.getValue(`ao${i+1}`);
              if(val===-1) return `∅`;
-             else return `${val}%`;
+             else return `${val}`;
           },
           sortComparator: (v1, v2, row1, row2) => {
           var c=`ao${i+1}`;
@@ -219,7 +292,7 @@ function StudentTopics(props){
     const columns = [
       { field: 'id', headerName:'ID',headerAlign:'center', align:'center', renderHeader: () => (<strong>{"ID"}</strong>)},
       { field: 'name',width:200, type:'string',headerAlign:'center', align:'center', renderHeader: () => (<strong>{"Topic"}</strong>),},
-      { field: 'grade',headerAlign:'center', align:'center', headerName:'Grade'},
+      { field: 'grade',headerAlign:'center', align:'center', headerName:'Grade',renderCell:(params)=>renderGrade(params.getValue('grade'))},
       ...destructuredColumnsDataGrid,
       // { field: 'ao1', hide: true},
       // { field: 'ao1P', headerName:'AO 1',
