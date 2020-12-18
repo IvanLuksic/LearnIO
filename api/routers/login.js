@@ -9,7 +9,7 @@ module.exports= function (main_router)//module.expots nece vise biti objekt nego
 {
     main_router.use('/',login);//koristi ga od roota-> sve routeve koje cemo pisati u ovom fileu se odnose s obizrom na root / ruter-> app.use(/login)-> odnosi se na rutu /login
     //dodat login.get koja će prikazat zadanu stranicu
-    login.get('/login',authenticate_login,login_controler.restoresesion);
+    login.get('/login',authenticate_login,login_controler.login);//ovdi stavit samo da vrati u response rolu i status pa ce se na frontendu presumjerit ovisno o roli
     login.post('/login',ShemaValidator.validate('login'),login_controler.login);
     login.head('/logout',login_controler.logout);//head request jer ne vraca ništa nazad pa da ne bude get
 }

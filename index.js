@@ -1,12 +1,18 @@
 const questionclass= require('./services/question');
 const topicclass= require('./services/topic');
 const resultclass=require('./services/result');
+const clasclass=require('./services/class');
+const courseclass=require('./services/course');
+const subject_class=require('./services/subject');
 const {question,sequelize,topic,save,course,user,subject,result,asessment_objective,clas}=require('./models');
 const {nodelogger}=require('./loaders/logger');
 //const models=require('./models');
-instance=new questionclass(question,topic,save,course,user,result,nodelogger);
+//instance=new questionclass(question,topic,save,course,user,result,nodelogger);
 //instance=new topicclass(models.topic,models.asessment_objective,models.course,models.subject,models.result,models.save,models.question,models.topic_subject,models.tags_of_topic,models.course_topic,nodelogger);
 //instance=new resultclass(result,user,subject,course,topic,asessment_objective,clas,nodelogger);
+//instance=new clasclass(clas,user,nodelogger);
+//instance=new courseclass(course,clas,subject,nodelogger);
+instance=new subject_class(subject,clas,user,nodelogger);
 async function DatabaseConnection ()
 {
     console.log('Connecting to database....');
@@ -45,6 +51,10 @@ async function init()
      //await instance.getAllTopicsForAdmin();
      //await instance.getTopicInfo(2);
      //await instance.getSubject_CoursePairs();
+    // await instance.getAllClassForStudent(5);
+    //await instance.getAllClassForTeacher(2);
+    //await instance. getAllCoursesForSubject(2);
+    await instance.getAllSubjectsForClass(1);
         nodelogger.info('Uspjesno');
     } catch (error) {
         console.log('Greska pri citanju rezultata'+error);

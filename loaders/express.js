@@ -40,8 +40,8 @@ module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcij
     cookie:{
      path: '/', httpOnly: false,sameSite:"none", secure:false, maxAge: 1000*60*60*60 //60 sec, POSTAVTI NA NEKI RAZUMNI BROJ->defulte vrijednosti-> maxage null znaci da se brise kada izade iz browsera,BROJ MILISKEUNDI KOLIKO TRAJE COOKIE
     }//PROBLEM S maxage=null je sta se nece pruneat nikako u bazi pa bolje postavti na neko odredeno vrijeme->DOGOVORIT SE
-  }))
-  app.use('/',Main_ruter);//>VEŽEMO Main_ruter NA ROOT PATH-> KADA URL BUDE / ili bilo koji drugi ->SVI POČINJU SA / onda će aplikacija gledati u Main_ruter i ako je tamo definiran get request za / izvršit će taj request-> RUTE SE U Main_ruter definiraju u odnosu prema / ruti-> ako imamo /foo rutu u Main_ruteru onda će to predstavljat /foo rutu APLIKACIJE
+  }))//SVE RUTE U MAINRUTERU SSE ODNOSE RELATIVNO U ODNOSU NA /ovajstringiz.enva, KAO DA IM NA POCETAK SVAKOG PATHA DODAMO /ovajstringiz.enva
+  app.use(`/${process.env.ROOTPATH}`,Main_ruter);//>VEŽEMO Main_ruter NA NEKI PATH IZ ENV KOJI MOZMO PODESAVATI> KADA URL BUDE TAJ PATH ili bilo koji drugi ->onda će aplikacija gledati u Main_ruter i ako je tamo definiran get request za / izvršit će taj request-> RUTE SE U Main_ruter definiraju u odnosu prema / ruti-> ako imamo /foo rutu u Main_ruteru onda će to predstavljat /foo rutu APLIKACIJE
       //DA SMO OVDE STAVILI /foo ONDA BI U Main_ruteru ruta / zapravo bilo ruta foo/ od aplikacije-> NA SVE RUTE U Main_ruteru na početak dodajemo /foo
   //next(err) kada bude pozvan ce odma ici do prve error midleware funkcije-> to je ova naša ulitmate error handler
   app.use((err, req, res, next) => {//midleware error handler-> ima 4 argumenta-> bit ce zadnja u midleware stacku i pozivom nexta u slucaju errora ce greska sigurno doci do nje i biti handleana i dobit cemo resposne
