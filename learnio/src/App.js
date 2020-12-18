@@ -1,15 +1,15 @@
 import React, {useState} from "react";
 import { Route ,Switch} from "react-router-dom";
 import Login from "./pages/login";
+import StudentMatrix from "./pages/StudentMatrix";
+import AdminMatrix from "./pages/AdminMatrix";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import "./App.css";
 import Home from "./components/common/Home"
 import Navbar from './components/common/Navbar';
 import StudentTopics from "./components/student/StudentTopics";
-import AdminMatrix from"./components/admin/AdminMatrix";
-import AddTopicPU from './components/admin/AddTopicPU';
+import AddTopicPU from './components/admin/addComponents/AddTopicPU';
 import AdminTopics from './components/admin/AdminTopics';
-import Matrica from './components/student/Matrica';
 import {useSelector} from 'react-redux';
 import Results from "./components/admin/Results";
 import NotFound from './components/common/NotFound';
@@ -66,7 +66,7 @@ function App() {
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/login" component={Login}/>
                     {StudentFeatures&&<Route exact path="/topics"component={StudentTopics}/>}
-                    {StudentFeatures&&<Route exact path="/topic/:id" component={Matrica}/>}
+                    {StudentFeatures&&<Route exact path="/topic/:id" component={StudentMatrix}/>}
                     {AdminFeatures&&<Route exact path="/admin-topic/:id" component={AdminMatrix}/>}
                     {AdminFeatures&&<Route exact path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>}
                     {AdminFeatures&&<Route exact path="/AdminTopics" component={AdminTopics}/>}

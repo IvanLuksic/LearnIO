@@ -6,12 +6,13 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Icon from '@material-ui/core/Icon';
 import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
+import { useSelector} from 'react-redux';
+
 
 const useStyles = makeStyles((theme)=>({
     dialogWrapper:{
@@ -179,6 +180,7 @@ const subjectCoursePairs=[
 
 function AddTopicPU(props){
 
+    const offline= useSelector(state=>state.offline);
     const [valueAO, setValueAO] = useState(1);
     const [valueD, setValueD] = useState(1);
     const [valueText,setValueText]= useState('');
@@ -257,7 +259,7 @@ function AddTopicPU(props){
           topic_description:valueDesc
 
         };
-        console.log(send);
+
         const requestOptions = {
           method: 'POST',
           mode:'cors',
@@ -265,16 +267,17 @@ function AddTopicPU(props){
           body: JSON.stringify(send),
           credentials: 'include'
         };
-        // OFFLINE:props.addTopic({
-        //   topic_id:Math.floor(Math.random()*10000),
-        //   topic_name:valueText,
-        //   course_id:subjectAndCourse.course_id,
-        //   course_name:subjectAndCourse.course_name,
-        //   subject_id:subjectAndCourse.subject_id,
-        //   subject_name:subjectAndCourse.subject_name,
-        //   topic_description:valueDesc
-        // });
-        // props.closePopup();
+
+        offline&&props.addTopic({
+          topic_id:Math.floor(Math.random()*10000),
+          topic_name:valueText,
+          course_id:subjectAndCourse.course_id,
+          course_name:subjectAndCourse.course_name,
+          subject_id:subjectAndCourse.subject_id,
+          subject_name:subjectAndCourse.subject_name,
+          topic_description:valueDesc
+        });
+        offline&&props.closePopup();
 
         fetch(`http://127.0.0.1:3000/admin/add/topic`, requestOptions)
         .then(response => response.json())

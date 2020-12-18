@@ -4,13 +4,13 @@ import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../../images/learniobg10-15.png';
 import { makeStyles} from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
-import EditQuestion from './EditQuestion'; 
-import DisplayMatrix from './DisplayMatrix';
-import fakeBackendQuestions from './backendQuestions.json';
-import Skeleton from '@material-ui/lab/Skeleton';
-import NotFound from '../common/NotFound';
+import EditQuestion from './editComponents/EditQuestion'; 
+import DisplayMatrix from './matrixComponents/DisplayMatrix';
+import fakeBackendQuestions from '../../sampleData/admin/allQuestionsOfTopic.json';
+import MatrixSkeleton from './matrixComponents/MatrixSkeleton';
 import {useDispatch, useSelector} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
+
 const useStyles = makeStyles((theme) => ({
     background:{
         backgroundImage:"url("+backgroundIMG+")",
@@ -78,21 +78,16 @@ function useForceUpdate() {
 
 function MatricaAdmin(props)
 {
-    const [noError,setNoError]=useState(()=> true);
-    const changeToError=()=>{if(noError===true) setNoError(false);}
-    const changeToNoError=()=>{if(noError===false) setNoError(true);}
+    const offline= useSelector(state=>state.offline);
     let dispatch=useDispatch();
-    if(Number(props.match.params.id)){changeToNoError();dispatch(topicSelected(props.match.params.id,"Topic"))};
-    if(!Number(props.match.params.id)){changeToError()};
     const [aoSelected,setAoSelected]=useState(1);
     const [dSelected,setDSelected]=useState(1);
-    const [questionSelected,setQuestionSelected]=useState(null);
     const [expanded, setExpanded] = useState(false);
     const [page, setPage] = useState(1);
     const [fetchedData, setFetchedData]=useState(()=>fakeBackendQuestions.fields);
     const [matricaAO,setMatricaAO] = useState(()=>fakeBackendQuestions.columns);
     const [matricaD,setMatricaD] = useState(()=>fakeBackendQuestions.rows);
-    const [loading,setLoading]=useState(false);//OFFLINE:potrebno ga postavit na false da bi radilo
+    const [loading,setLoading]=useState(offline);//OFFLINE:potrebno ga postavit na false da bi radilo
     const [topicName,setTopicName]=useState(()=>fakeBackendQuestions.topic_name);
     const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
     const [topicDescription,setTopicDescription]=useState(()=>fakeBackendQuestions.topic_description);
@@ -127,8 +122,7 @@ function MatricaAdmin(props)
 
 
    useEffect(() => {
-     fetchRequest();
-     console.log(page);
+     (!offline)&&fetchRequest();
    },[]);
 
 
@@ -221,7 +215,6 @@ function MatricaAdmin(props)
                 for(var i = 0; i < polje.length; i++){
                     if(polje.Questions[i]===value){
                         index = (i+(6-((i)%6)))/6;
-                        console.log(index+""+i);
                         changePage(index);
                     }
                 }
@@ -230,7 +223,7 @@ function MatricaAdmin(props)
     };
 
     const requestDeleteQuestion=(Ques)=>{
-        // deleteQuestion(Ques,aoSelected,dSelected);
+        offline&&deleteQuestion(Ques,aoSelected,dSelected);
         // console.log("ZAHTJEV ZA Brisanjem: ");
         // console.log({id:Ques.id});
         const requestOptions = {
@@ -244,7 +237,8 @@ function MatricaAdmin(props)
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
     const requestChangeQuestion=(Ques)=>{
-        //OFFLINE: changeExpanded(false);changeQuestion(Ques);
+        offline&&changeExpanded(false);
+        offline&&changeQuestion(Ques);
         // console.log("ZAHTJEV ZA IZMJENOM: ");
         // console.log({...Ques});
         const requestOptions = {
@@ -260,7 +254,8 @@ function MatricaAdmin(props)
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
     const requestAddQuestion=(Ques,ID)=>{
-        // addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});forceUpdate();
+        offline&&addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});
+        offline&&forceUpdate();
         // console.log("ZAHTJEV ZA DODAVANJE: ");
         // console.log({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:topicID});
         const requestOptions = {
@@ -281,64 +276,28 @@ function MatricaAdmin(props)
     const classes = useStyles();
 
     return (
-        <div>
-        {noError?
-        <div>
+        <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         {loading?
-            <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
-                <Grid container direction="row" justify="center" alignItems="flex-start"  height="100%" >
-                    <Grid container item md={6} direction="row" justify="flex-start" alignItems="flex-start" className={classes.wholeLeftGrid}>
-                        <Grid item xs={11} md={11} className={classes.topicTitle} direction="column" justify="flex-start" alignItems="flex-start"  container>
-                            <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName}</Typography></Grid>
-                            <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
-                        </Grid>
-                        <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="flex-start" alignItems="flex-start" >
-                            <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fetchedData,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
-                        </Grid>
+            <Grid container direction="row" justify="center" alignItems="flex-start"  height="100%" >
+                <Grid container item md={6} direction="row" justify="flex-start" alignItems="flex-start" className={classes.wholeLeftGrid}>
+                    <Grid item xs={11} md={11} className={classes.topicTitle} direction="column" justify="flex-start" alignItems="flex-start"  container>
+                        <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName}</Typography></Grid>
+                        <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
                     </Grid>
-                    <Divider  orientation="vertical" className={classes.divider} flexItem/>
-                    <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
-                        <EditQuestion forceUpdate={forceUpdate} page={page} jumpToPage={getIndex} changePage={changePage} questChange={requestChangeQuestion} questAdd={requestAddQuestion} questDelete={requestDeleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions.length!==0) ? fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions : null }/>
+                    <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="flex-start" alignItems="flex-start" >
+                        <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fetchedData,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
                     </Grid>
                 </Grid>
-            </div>
+                <Divider  orientation="vertical" className={classes.divider} flexItem/>
+                <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
+                    <EditQuestion forceUpdate={forceUpdate} page={page} jumpToPage={getIndex} changePage={changePage} questChange={requestChangeQuestion} questAdd={requestAddQuestion} questDelete={requestDeleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions.length!==0) ? fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions : null }/>
+                </Grid>
+            </Grid>
             :
-            <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
-                <Grid container direction="row" justify="center" alignItems="center"  height="100%" >
-                    <Grid container item md={6} direction="row" justify="center" alignItems="center" className={classes.skeletonMatrica}>
-                        <Grid item xs={11} md={8}  direction="row" justify="center" alignItems="flex-start"  container>
-                            <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200}/></Grid> 
-                            <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
-                            <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
-                        </Grid>
-                        <Grid item xs={11} md={8}  direction="row" justify="center" alignItems="flex-start"  container>
-                            <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200}/></Grid> 
-                            <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
-                            <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
-                        </Grid>
-                        <Grid item xs={11} md={8}  direction="row" justify="center" alignItems="flex-start"  container>
-                            <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200}/></Grid> 
-                            <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
-                            <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
-                        </Grid>
-                    </Grid>
-                    <Divider  orientation="vertical" className={classes.divider} flexItem/>
-                    <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.skeletonTable}>
-                        <Grid item style={{margin:"5px"}}><Skeleton variant="text"  animation="wave"  height={60} width={600}/></Grid> 
-                        <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={400}  width={600} /></Grid>
-                        <Grid item style={{margin:"5px"}}><Skeleton variant="text"  animation="wave"  height={60} width={600}/></Grid>
-                    </Grid>
-                </Grid>
-            </div>
+            <MatrixSkeleton/>
         }
         </div>
-        :
-        <div>
-            <NotFound/>
-        </div>
-    }
-  </div>
-    );
+);
 }
 
 

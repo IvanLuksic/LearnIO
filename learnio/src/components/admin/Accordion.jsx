@@ -58,8 +58,6 @@ function AddAccordion(props) {
       props.handlePages();
     });
 
-    console.log(props);
-
   
     return(
       <div>

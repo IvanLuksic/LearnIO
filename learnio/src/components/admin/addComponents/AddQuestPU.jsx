@@ -184,7 +184,6 @@ function AddQuestPU(props) {
   const [showIMG, setIMG] = useState(false);
   const [text, setText] = useState('');
   const [imageState, setimageState] = useState(null);
-  const ID = props.nextID;
   const [answerInput,setAnswerInput]=useState([]);
   const [wrongAnswers, setWrongAnswers]=useState(()=>{ return []});
   const [correctAnswer, setCorrectAnswers]=useState(()=>{ return "Točno"});
@@ -233,7 +232,7 @@ function AddQuestPU(props) {
       solution:correctAnswer
     }
 
-    props.questAdd(send,ID);
+    props.questAdd(send);
     props.popUpClose(false);
   }
 //------------------------

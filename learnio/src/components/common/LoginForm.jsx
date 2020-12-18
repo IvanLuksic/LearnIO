@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import {useState} from 'react';
 import { useDispatch} from 'react-redux';
 import {studentLogIn, adminLogIn, teacherLogIn} from '../../redux/actions/loginStatus';
+import { useSelector} from 'react-redux';
 
 const styles = {
     root: {
@@ -37,6 +38,7 @@ const styles = {
 
 
 function LoginForm(props){
+    const offline= useSelector(state=>state.offline);
     const [username, setUsername]=useState("");
     const [password, setPassword]=useState("");
     let classes=props.classes;
@@ -49,11 +51,13 @@ function LoginForm(props){
         passwords:password,
     };
 
-    // const pseudoPostLogin=(event,object)=>{
-    //     event.preventDefault();
-    //     if((object.usernames==='admin')&&(object.passwords==='')){dispatch(adminLogIn())}
-    //     else if((object.usernames==='student')&&(object.passwords==='')){dispatch(studentLogIn())}
-    // };
+    const pseudoPostLogin=(event,object)=>{
+        event.preventDefault();
+        if((object.usernames==='admin')&&(object.passwords==='')){dispatch(adminLogIn());object.pageprops.history.push('/');}
+        else if((object.usernames==='student')&&(object.passwords==='')){dispatch(studentLogIn());object.pageprops.history.push('/');}
+        else if((object.usernames==='teacher')&&(object.passwords==='')){{dispatch(teacherLogIn())};object.pageprops.history.push('/')}
+
+    };
 
     const PostLogin=(event,object)=>{
         event.preventDefault();
@@ -73,7 +77,7 @@ function LoginForm(props){
             {
               Promise.resolve(response).then(response => response.json())
                 .then(data => {
-                        console.log('tu sam '+JSON.stringify(data)+data.role);
+                        console.log(JSON.stringify(data)+data.role);
                         if(data.role==1){{dispatch(adminLogIn())};object.pageprops.history.push('/')}
                         else if(data.role==2){{dispatch(teacherLogIn())};object.pageprops.history.push('/')}
                         else if(data.role==3){{dispatch(studentLogIn())};object.pageprops.history.push('/')}
@@ -88,7 +92,7 @@ function LoginForm(props){
     return (
         <React.Fragment>
             <Typography color="primary" className={classes.loginHeadline}>Login </Typography>
-            <form onSubmit={(e)=>{PostLogin(e,object)}} className={classes.root} noValidate autoComplete="off" >
+            <form onSubmit={(e)=>{(!offline)&&PostLogin(e,object);offline&&pseudoPostLogin(e,object)}} className={classes.root} noValidate autoComplete="off" >
                 <TextField onChange={(e)=>{setUsername(e.target.value)}} fullWidth className={classes.fields} type="email" label="Username" variant="filled" />
                 <TextField onChange={(e)=>{setPassword(e.target.value)}} fullWidth  className={classes.fields} type="password" label="Password" variant="filled" />
                 <Button variant="contained" className={classes.loginButton} style={{borderRadius: 25}} type="submit" color="primary" >

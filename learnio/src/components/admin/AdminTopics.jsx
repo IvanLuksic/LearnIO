@@ -6,14 +6,15 @@ import { DataGrid } from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
 import Pagination from '@material-ui/lab/Pagination';
-import AddTopicPU from './AddTopicPU';
+import AddTopicPU from './addComponents/AddTopicPU';
 import Icon from '@material-ui/core/Icon';
-import fakeBackendTopics from './topics.json';
+import fakeBackendTopics from '../../sampleData/admin/allTopics.json';
 import PopupDialog from '../common/PopupDialog';
 import ConfirmDialog from '../common/ConfirmDialog';
 import { useDispatch} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { useSelector} from 'react-redux';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -91,9 +92,9 @@ function CustomPagination(props) {
 }
 
 function AdminTopics(props){
-    console.log(props);
+    const offline= useSelector(state=>state.offline);
     const dispatch=useDispatch();
-    const [loading,setLoading]=useState(false);//OFFLINE:true
+    const [loading,setLoading]=useState(offline);//OFFLINE:true
     const [data,setData]=useState(()=>fakeBackendTopics);
     const [open,setOpen]=useState(false); 
     const [openPopup,setOpenPopup]=useState(false);
@@ -137,7 +138,6 @@ function AdminTopics(props){
     // dodavanje novog topica u listu i id tom topicu
     // problem s id kad se izbrise jedan i ide dodat novi ne radi!!!
    const addQuestion=(value)=>{
-      console.log(value);
       var polje=data;
       polje=[...polje,value];
       polje=polje.sort((a,b)=>(a.id-b.id));
@@ -152,9 +152,8 @@ function AdminTopics(props){
       setItem(data);
     };
     const requestDeleteTopic=()=>{
-      //OFFLINE:handleDelete(item);
-      console.log("ZAHTJEV ZA Brisanjem: ");
-      console.log({id:item});
+      offline&&handleDelete(item);
+
       const requestOptions = {
           method: 'DELETE',
           mode:'cors',
@@ -195,7 +194,7 @@ function AdminTopics(props){
       <div>
       { loading?(
         <div>
-          <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this question?" functionToConfirm={requestDeleteTopic}/>
+          <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this topic?" functionToConfirm={requestDeleteTopic}/>
           {
           <div style={{display: "flex", flexDirection: "column",justifyContent:"none", alignItems:"center"}} className={classes.background}>
             <Typography color="primary" className={classes.topicTitle}>Topics</Typography>

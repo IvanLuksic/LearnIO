@@ -4,8 +4,9 @@ import backgroundIMG from '../../images/learniobg10-15.png';
 import { Typography } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
-import fakeBackendResults from './backendResults.json';
+import fakeBackendResults from '../../sampleData/admin/allResults.json';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { useSelector} from 'react-redux';
 
 
 
@@ -130,9 +131,10 @@ function CustomPagination(props) {
 }
 
 function AdminTopics(){
+    const offline= useSelector(state=>state.offline);
     const[data,setData]=useState(()=>{return fakeBackendResults});
     const classes=useStyles();
-    const [loading,setLoading]=useState(false);//potrebno ga postavit na false da bi radilo
+    const [loading,setLoading]=useState(offline);//potrebno ga postavit na false da bi radilo
     
 
     const renderGrade=(value)=>{
@@ -179,8 +181,7 @@ function AdminTopics(){
     };
 
     useEffect(() => {
-      console.log("saljem");
-      fetchData();
+      (!offline)&&fetchData();
     },[]);
 
     //podaci za datagrid se dobivaju restrukturiranjem fetchanih podataka tj. destrukturiranjem objekta niza stupaca u niz propertyja stupaca
@@ -224,7 +225,6 @@ function AdminTopics(){
 
       rows=[...rows,{...fetchedDataRestructured,...destructuredColumns}];
     }
-    console.log(rows);
 
     //ovo koristimo za tamplate u datagridu
     let destructuredColumnsDataGrid=[];

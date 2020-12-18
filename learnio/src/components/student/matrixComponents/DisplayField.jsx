@@ -30,27 +30,10 @@ const useStyles = makeStyles((theme) => ({
 
 function DisplayField(props){
     const classes=useStyles();
-    const [status,setStatus] = useState(()=>{
-        // if(props.test.result==="solve") return ("SOLVE");
-        // else if(props.test.result==="failed") return ("WRONG");
-        // else if(props.test.result==="passed") return ("DONE");
-        return ("LOCKED");
-        
-    });
-    const [color,setColor]= useState(()=>{
-        // if(props.test.result==="solve") return ("#27AE60");
-        // else if(props.test.result==="failed") return ("#EB4949");
-        // else if(props.test.result==="passed") return ("#4372ec");
-        return ("grey");
-    });
-    const [icon,setIcon]= useState(()=>{      
-        // if(props.test.result==="solve") return ("lock_open_icon");
-        // else if(props.test.result==="failed") return ("cancel_icon");
-        // else if(props.test.result==="passed") return ("check_circle_out_icon");
-        return ("lock_icon");
-    });
+    const [status,setStatus] = useState(()=>{return ("LOCKED");});
+    const [color,setColor]= useState(()=>{ return ("grey");});
+    const [icon,setIcon]= useState(()=>{ return ("lock_icon");});
     useEffect(()=>{
-
         // if(props.questionToDisplay.length > 0) {
             if(props.questionToDisplay.status===2) setStatus("UNLOCKED");
             else if(props.questionToDisplay.status===1) setStatus("WRONG");
