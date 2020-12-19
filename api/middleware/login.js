@@ -61,5 +61,19 @@ module.exports={
                 res.sendStatus(404);
             }else next();   //pozovi sljedeci middleware za taj request za tu rutu
         }
+    },
+    authenticate_student_or_teacher:(req,res,next)=>
+    {
+        if(!req.session.user)//nije ulogiran
+        {
+            res.sendStatus(401);
+        }
+        else //provjeri jeli teacher ili admin
+        {
+            if(req.session.user_type!=parseInt(process.env.TEACHER,10)&&req.session.user_type!=parseInt(process.env.STUDENT,10))
+            {
+                res.sendStatus(404);
+            }else next();   //pozovi sljedeci middleware za taj request za tu rutu
+        }
     }
 }

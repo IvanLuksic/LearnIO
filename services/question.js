@@ -275,7 +275,7 @@ module.exports=class question{
         }
 
     }
-    async unlockQuestionsAndUpdateResults(students_id,topics_id,courses_id,clas_id,subjects_id,questions_id)//promjena statusa questiona u tablici save
+    async unlockQuestionsAndUpdateResultsAndGrade(students_id,topics_id,courses_id,clas_id,subjects_id,questions_id)//promjena statusa questiona u tablici save
     {
         //1. saznaj poziciju u retku i stupcu od togquestiona
         try {
@@ -306,7 +306,7 @@ module.exports=class question{
             const rows=topic.rows_D;
             const columns=topic.column_numbers;
             this.Logger.info('Broj redaka i stupaca matrice: '+rows+columns);
-            //update rezultat-> povećaj vrijednost od tog stupca za 1 u tablici rezultati
+            //UPDATE REZULTAT-> povećaj vrijednost od tog stupca za 1 u tablici rezultati
             try {//KORISTILI RAW QUERY JER SA UPDATE NE RADI KO ZNA ZAŠTO
                 //U POSTGRESU SE ARRAY BROJI OD INDEKSA 1-> ako je x=2 onda je to drugi član niza
                 const result=await sequelize.query('UPDATE result SET result_array_by_columns[:pos]=result_array_by_columns[:pos]+1 WHERE student_id=:student_id AND topic_id=:topic_id AND course_id=:course_id AND class_id=:class_id AND subject_id=:subject_id ',{
@@ -316,6 +316,57 @@ module.exports=class question{
                    });//POS:X-> X JE STUPAC TOCNO ODGOVORENOG PITANJA -> TAJ ČLAN NIZA UVEĆAVAMO ZA 1
             } catch (error) {
                 this.Logger.error('Error in updating results');
+            }
+            //UPDATE OCJENA->
+            try {
+                let results=await this.Result.findOne({
+                    attributes:['result_array_by_columns'],
+                    where:{
+                        student_id:students_id,
+                        class_id:clas_id,
+                        topic_id:topics_id,
+                        subject_id:subjects_id,
+                        course_id:courses_id
+                    }
+                });
+                let points=0;//zbroj svih bodova
+                //zbroji sve bodove pa onda vidi koliko je to % u odnosu na broj redaka i stupaca->NJIH IMAMO SPREMLJENE U ROWS I COLUMNS VARIJABLAMA
+                for(let i=0;i<results.result_array_by_columns.length;i++)
+                points+=parseInt(results.result_array_by_columns[i],10);
+               this.Logger.info('Points: '+points);
+                let grade=0;
+                const percent=points*100/(rows*columns);//ukupni broj polja u matrici je broj redaka*broj stupaca
+                this.Logger.info(percent+'%');
+                if(percent<50)
+                {
+                    grade=1;
+                }
+                else if(percent>=50 && percent<60)
+                {
+                    grade=2;
+                }
+                else if(percent>=60 && percent <75)
+                {
+                    grade=3;
+                }
+                else if(percent>=75 &&percent<90)
+                {
+                    grade=4;
+                }
+                else grade=5;
+                this.Logger.info('Grade: '+grade);
+                await this.Result.update({grade:grade},{
+                    where:{
+                        student_id:students_id,
+                        class_id:clas_id,
+                        topic_id:topics_id,
+                        subject_id:subjects_id,
+                        course_id:courses_id
+                    }
+                });
+            } catch (error) {
+                this.Logger.error('Error in reading results or updating grade');
+                throw(error);
             }
             //za pocetak otkljucaj susjedne-> otkljucaj livo desno i dole i gore ako postoje
             //vidit koji sve postoje pa onda citat iz baze a ne da citamo za svako pitanje-> bolje performanse i manje pristupa bazi

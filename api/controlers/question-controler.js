@@ -61,7 +61,7 @@ module.exports={
     },
     checkAnswer: async (req,res,next)=>{
         try {
-            const {topic_id=1,course_id=1,class_id=1,subject_id=1,question_id=7,solution='d'}=req.body;
+            const {topic_id=1,course_id=1,class_id=1,subject_id=1,question_id=20,solution='a'}=req.body;
             const student_id=req.session.user;
             nodelogger.info('Parametri: '+course_id+' '+topic_id+' '+student_id+' '+question_id+subject_id+class_id+'Solution '+solution);
             var response={};//formatirat resposne-> sadržavat će flag correct i niz pitanja-> ako je kriv odgovor onda je on prazan
@@ -76,7 +76,7 @@ module.exports={
              {
                 response.correct=true;
                 try {
-                    await Question_instance.unlockQuestionsAndUpdateResults(student_id,topic_id,course_id,class_id,subject_id,question_id);
+                    await Question_instance.unlockQuestionsAndUpdateResultsAndGrade(student_id,topic_id,course_id,class_id,subject_id,question_id);
                 } catch (error) {
                     nodelogger.error('Error in unlocking questions ');
                     throw(error);

@@ -66,6 +66,8 @@ module.exports= class clas{
                 throw(error);
             }
             this.Logger.info('Classes succesfuly fetched from database');
+            let format=[];
+            let temp={};
             for(let clas of classes)
             {
                 temp={

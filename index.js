@@ -4,20 +4,21 @@ const resultclass=require('./services/result');
 const clasclass=require('./services/class');
 const courseclass=require('./services/course');
 const subject_class=require('./services/subject');
-const {question,sequelize,topic,save,course,user,subject,result,asessment_objective,clas}=require('./models');
+//const {question,sequelize,topic,save,course,user,subject,result,asessment_objective,clas}=require('./models');
 const {nodelogger}=require('./loaders/logger');
-//const models=require('./models');
+const models=require('./models');
 //instance=new questionclass(question,topic,save,course,user,result,nodelogger);
-//instance=new topicclass(models.topic,models.asessment_objective,models.course,models.subject,models.result,models.save,models.question,models.topic_subject,models.tags_of_topic,models.course_topic,nodelogger);
+let result_instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger)
+let instance=new topicclass(models.topic,models.asessment_objective,models.course,models.subject,models.result,models.save,models.question,models.topic_subject,models.tags_of_topic,models.course_topic,result_instance, nodelogger);
 //instance=new resultclass(result,user,subject,course,topic,asessment_objective,clas,nodelogger);
 //instance=new clasclass(clas,user,nodelogger);
 //instance=new courseclass(course,clas,subject,nodelogger);
-instance=new subject_class(subject,clas,user,nodelogger);
+//instance=new subject_class(subject,clas,user,nodelogger);
 async function DatabaseConnection ()
 {
     console.log('Connecting to database....');
     try {
-        await sequelize.authenticate();
+        await models.sequelize.authenticate();
         console.log('Connected to database.');
     } catch (error) {
         console.log('Error in database connection '+error);
@@ -54,7 +55,8 @@ async function init()
     // await instance.getAllClassForStudent(5);
     //await instance.getAllClassForTeacher(2);
     //await instance. getAllCoursesForSubject(2);
-    await instance.getAllSubjectsForClass(1);
+   // await instance.getAllSubjectsForClass(1);
+        await instance.unlockAssociatedTopics(3,1,1,1);
         nodelogger.info('Uspjesno');
     } catch (error) {
         console.log('Greska pri citanju rezultata'+error);

@@ -5,7 +5,7 @@ const { QueryTypes } = require('sequelize');
 const { Op } = require("sequelize");
 const {sequelize}=require('../models');
 module.exports=class topic{
-    constructor(topic,assesment,course,subject,result,save,question,topic_subject,tags_of_topic,course_topic,logger)//svi mogući dependenciesi, ako se neki ne budu korstili maknit
+    constructor(topic,assesment,course,subject,result,save,question,topic_subject,tags_of_topic,course_topic,result_instance,logger)//svi mogući dependenciesi, ako se neki ne budu korstili maknit
     {
         this.Topic=topic,
         this.Logger=logger;
@@ -18,6 +18,7 @@ module.exports=class topic{
         this.Tags_of_topic=tags_of_topic;
         this.Course_topic=course_topic;
         this.Question=question;
+        this.Result_instance=result_instance;//kod otključavanja topica nam treba kada spremamo otključani topic u tablicu results
     }
     async getTopicsForUserAndCourse(students_id,subjects_id,courses_id,clas_id)//svi topici koji se nalaze u tablici rezultati-> oni su trenutno otkljucani za tog korisnika
     {
@@ -391,6 +392,99 @@ module.exports=class topic{
             return new_topic.id;            
         } catch (error) {
             this.Logger.error('Error in saving topic to database tables'+error);
+            throw(error);
+        }
+    }
+    async unlockAssociatedTopics(students_id,clas_id,courses_id,subjects_id)
+    {
+        try {
+            //1. Izvuc sve POLOZENEtopice iz tablice rezultati za tog korisnika i pridruzit im njihovu ocjenu -> niz objekata
+            try {
+                var passed_topics=await this.Result.findAll({
+                    attributes:['topic_id','grade'],
+                    where:{
+                        subject_id:subjects_id,
+                        student_id:students_id,
+                        course_id:courses_id,
+                        class_id:clas_id,
+                        grade:{
+                            [Op.gt]:1//moraju biti polozeni
+                        }
+                    }
+                });
+            } catch (error) {
+                this.Logger.error('Error in fetching topic and grades from dattaabse');
+                throw(error);
+            }
+            this.Logger.info('Topic id and grades succesguly fetched from datatabse');
+            for(let i=0;i<passed_topics.length;i++)
+            this.Logger.info(JSON.stringify(passed_topics[i]));
+            //2. IZVUC SE source topice KOJI SU U TABLICI TAGS_OF_TOPIC A KOJI SU ZAKLJUCANI-> NISU U TABLICI REZULTATIT-> LEFT JOIN
+            try {//u source topics se nalaze id-ovi svih ZAKLJUCANIH TOPICS
+                var source_topics=await sequelize.query('SELECT DISTINCT source_topic  FROM tags_of_topic LEFT JOIN result ON tags_of_topic.source_topic=result.topic_id WHERE topic_id IS null' ,{//ONI TOPICI IZ TAGS_OF_TOPIC KOJI NISU U TABLICI REZULTATI ĆE IMATI ATRIBUTE IZ TABLICE REZULTATI POSTAVLJENE NA NULL A SAMO NAS ONI ZANIMAJU PA KORISTIMO WHERE topic_id IS null
+                    raw:true,
+                    type: QueryTypes.SELECT
+                   });
+            } catch (error) {
+                this.Logger.error('Error in left joining tags of topic with results table')
+                throw(error);
+            }
+            this.Logger.info('Locked topics succesfuly fetched from database');
+            for(let i=0;i<source_topics.length;i++)
+            this.Logger.info(JSON.stringify(source_topics[i]));
+            //3. Za svaki topic iz liste zakjucanih topica spremamo sve njegove povezane topice u niz objekata [{associated_id: required_level:}....]
+            this.Logger.info('Associated');
+            for(let source of source_topics)
+            {
+                try {
+                    var associated=await this.Tags_of_topic.findAll({
+                        attributes:['associated_topic','required_level'],
+                        where:{
+                            source_topic:source.source_topic
+                        }
+                    });
+                } catch (error) {
+                    this.Logger.error('Error in fetching asscoaited topics and required level');
+                    throw(error);
+                }
+
+                for(let i=0;i<associated.length;i++)
+                this.Logger.info(JSON.stringify(associated[i]));
+                //4. Za SVAKI povezani topic iz gornje dobivenog niza associated gledamo:
+                //a)JELI SE NALAZI U NIZU POLOZENIH
+                //b)JELI grade>=required_level
+                let temp=0;//flag koji ce se postavit na 1 ako za neki od povezanih topica NE zadovoljimo oba uvjeta
+                for(let assoc of associated)
+                {
+                    for(let pass of passed_topics )//gleda jeli se nalazi u polozenima
+                    {
+                        if(assoc.associated_topic==pass.topic_id && pass.grade>=assoc.required_level)//ako za NEKI povezani topic ovo ne vrijedi-> NISMO GA NASLIO U LISTI POLOZENIH ILI NIJE DOVOLJNA OCJENA-> break->MORA VRIJEDIT ZA SVE-> IZADI IZ PETLJE associated topoica i idi na listu povezanih topica od iduceg source topica
+                        {
+                            this.Logger.info('nasli ga');
+                            temp=1;
+                            break;//izadi iz petlje-> NASLI SMO GA I IMA ODGOVORAJUCU OCJENU-> PROVJERAVAMO TO ZA IDUCI ASSOCIATED
+                        }
+                    }
+                    if(temp==0)//ako nije postavljen u 1 odnosno ako je osta na 0 onda NIJE zadovoljen uvjet za taj povezani topic-> NISMO GA NASLIO U LISTI POLOZENIH ILI NIJE DOVOLJNA OCJENA-> UVJET MORA BITI ZADOVOLJEN ZA SVE POVEZABE TOPICE-> PREKINI PETLJU I IDI NA NOVI NIZ POVEZANIH TOPICA
+                    {
+                        temp=1;//signaliziraj vanjskoj petlji da NE MOZE OTKLJUCATI TAJ SOURCE TOPIC
+                        break;//temp ce izac vanka s vrijdnosti 1 ako nisu zadovoljeni uvjeti
+                    }
+                    else temp=0;//nastavi provjeravat iduce associated topice i vrti temp na 0
+                }
+                if(temp==0)//MOZE SE OTKLJUCATI-> UBACI GA U TABLICU REZULTATI->DA NE MOZE BIO BI temp=1!!!!
+                {
+                    try {
+                        this.Result_instance.insertIntoResults(subjects_id,courses_id,source.source_topic,clas_id,students_id);//spremi u tabliocu rezultati preko funkcije definirane u result serviceima
+                    } catch (error) {
+                        this.Logger.error('Error in inserting into results table');
+                        throw(error);
+                    }
+                }
+            temp=0;//vrati na 0 neovisno o tome moze li se ili ne moze otkljucati-> za iduci source topic pregled
+        }
+        } catch (error) {
+            this.Logger.error('Error in function unlockAsscoiatedTopics '+error);
             throw(error);
         }
     }
