@@ -7,8 +7,17 @@ module.exports={
             let subjects=await Subject_instance.getAllSubjectsForClass(req.params.class_ID);
             res.json(subjects);
         } catch (error) {
-            nodelogger.error('Error in fetching subjects for specific class');
+            nodelogger.error('Error in getAllSubjects');
             next(error);
         }
-    }
+    },
+    /*insertSubject:async (req,res,next)=>
+    {
+        try {
+            
+        } catch (error) {
+            nodelogger.error('Error in inserting subject');
+            next(error);
+        }
+    }*/
 }

@@ -1,3 +1,5 @@
+const { noExtendLeft } = require("sequelize/types/lib/operators");
+
 module.exports= class session{
     constructor(session_model,logger)
     {
@@ -13,7 +15,8 @@ module.exports= class session{
                 user_id:users_id
             })
         } catch (error) {
-           this.Logger(error);
+          this.Logger.info('Error in function createSession'+error);
+         throw(error);
         }
     }
 }

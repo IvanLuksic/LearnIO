@@ -8,13 +8,13 @@ module.exports={
         try {
             var topics=await Topic_instance.getTopicsForUserAndCourse(student_id,req.params.course_id,req.params.subject_id,req.params.class_id);
         } catch (error) {
-            nodelogger.error('Error in fetching topics frrom database '+error);
+            nodelogger.error('Error in fetching topics frrom database ');
             throw(error);
         }
         nodelogger.info('Fetched succesfuly from database');
         res.json(topics);//dodaj u resposne objekt-> RESPOSNE NEMA BODY OBJEKT-> OVAKO ŠALJEMO JSON OBJEKT U RESPOSNE BODYU
     } catch (error) {
-            nodelogger.error('Error in geting topics '+error);
+            nodelogger.error('Error in getTopics ');
             next(error);//idi na error midleware hadler-> on ce vratiti resposne i koja je greska
     }
     },
@@ -31,7 +31,7 @@ module.exports={
             response.Topics=topics;
             res.json(response);
         } catch (error) {
-            nodelogger.error('Error in fetching admin topics from database');
+            nodelogger.error('Error in getAdminTopics');
             next(error);
         }
     },
@@ -62,7 +62,7 @@ module.exports={
             response.fields=questions;
             res.json(response);
         } catch (error) {
-            nodelogger.error('Error in fetching topic info for admin');
+            nodelogger.error('Error in  getAdminTopicsEdit');
             next(error);
         }
     },
@@ -80,7 +80,7 @@ module.exports={
             response.Associated=associated;
             res.json(response);
         } catch (error) {
-            nodelogger.error('Error in getting associated topics');
+            nodelogger.error('Error in getting associated topics-associated');
             next(error);
         }
     },
@@ -91,7 +91,7 @@ module.exports={
             nodelogger.info('Topic succesfuly deleted from database');
             res.sendStatus(200);
         } catch (error) {
-            nodelogger.error('Error in deleting topic form databaase'+error);
+            nodelogger.error('Error in deleteTopic');
             next(error);
         }
     },
@@ -106,7 +106,7 @@ module.exports={
             }
             res.json(subject_course);
         } catch (error) {
-            nodelogger.error('Error in getting subject courses pairs '+error);
+            nodelogger.error('Error in  getSubject_Courses');
             next(error);
         }
     },
@@ -124,7 +124,7 @@ module.exports={
             response.topic_id=added_topic_id;
             res.json(response);
         } catch (error) {
-            nodelogger.error('Error in adding topic '+error);
+            nodelogger.error('Error in addTopics');
             next(error);
         }
     }

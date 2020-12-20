@@ -14,12 +14,14 @@ module.exports={
             columns_A:{
                 type:"number",
                 minimum:1,
-                maximum:15
+                maximum:15,
+                isNotEmpty: true,
             },
             rows_D:{
                 type:"number",
                 minimum:1,
-                maximum:15
+                maximum:15,
+                isNotEmpty: true,
             },
             subject_id: {
                 type:"number",

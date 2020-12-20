@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");//izvuc ga iz sequelizea koji vraca index.js file u modelsima
+const { Op, LOCK } = require("sequelize");//izvuc ga iz sequelizea koji vraca index.js file u modelsima
 const {sequelize}=require('../models');
 const queryInterface = sequelize.getQueryInterface();
 const { QueryTypes } = require('sequelize');
@@ -9,8 +9,8 @@ const { QueryTypes } = require('sequelize');
                         STATUS 3=SIVO-> ZAKLJUCANO 
                         STATUS 4=ZELENO->TOCNO*/
 module.exports=class question{
-    constructor(question,topic,save,course,user,result,logger)//svi dependency modeli od ove klase
-    {
+    constructor(question,topic,save,course,user,result,topic_instance,logger)//svi dependency modeli od ove klase
+    {//topic instance nam treba kod otkljucavanja povezanih topic nakon tocno odgovorenig pitanja
         this.Question=question;
         this.Logger=logger;
         this.Topic=topic;
@@ -18,6 +18,7 @@ module.exports=class question{
         this.Course=course;
         this.User=user;
         this.Result=result;
+        this.Topic_instance=topic_instance;
     }
     //JSON.stringify RADI STRING, JSON.parse VRAĆA OBJEKT U JSON TIPU
      async getQuestionsFromSave(topics_id,courses_id,users_id,clas_id,subjects_id)//za odredeni topic,usera kurs razred i predmet izvuc pitanja iz tog topica i slozit ih po retcima i stupcima i vratit na frontend
@@ -32,6 +33,7 @@ module.exports=class question{
                 }
             });
         } catch (error) {
+            this.Logger.error('Error in fetching topic number of rows and columns');
             throw(error);//idi na vanjski error handler-> OVO RADIMO ZATO JER BI SE ODI HANDLEA ERROR I DALJE BI SE SVE NASTAVILO RADIT NORMALNO A MI ZELIMO SVE PREKINUTI I IZACI IZ FUNKCIJE PA IDEMO SKROZ DO VANJSKOG ERROR HANDLEARA
         }
         this.Logger.info(rows_columns.topic.rows_D+' '+rows_columns.topic.column_numbers);
@@ -48,6 +50,7 @@ module.exports=class question{
                 },
             });
         } catch (error) {
+            this.Logger.error('Error in fetching questions from table save');
             throw(error);
         }
         //3. soritraj pitanja po retcima i stupcima sa 2 for petlje-> matrica json objekata sa podacima od pitanja 
@@ -87,8 +90,8 @@ module.exports=class question{
         this.Logger.info(JSON.stringify(matrica[i]));
         return matrica;//nju vracamo-> U NJOJ BI TREBAO BITI ISPRAVAN REDOSLIJED PITANJA PO RETCIMA I STUPCIMA
     } catch (error) {
-            this.Logger.error('error in readingquestions '+ error);
-            throw(error);//za index.js catch
+            this.Logger.error('error in function getQuestionsFromSave'+ error);
+            throw(error);//za express error midleware
         }
 
     }
@@ -132,7 +135,7 @@ module.exports=class question{
                         });
                         this.Logger.info('Succesfully readquestions');
                     } catch (error) {
-                        this.Logger.error('Error in readingquestions fromquestionS table');
+                        this.Logger.error('Error in readingquestions from questions table');
                         throw(error);
                     }
                     random=Math.floor(Math.random() *questions_ij.length);//random broj izmedu 0 i duljine niza -1
@@ -171,7 +174,7 @@ module.exports=class question{
             }
 
         } catch (error) {
-            this.Logger.error('Error in generatingquestions '+error);
+            this.Logger.error('Error in function generateQuestions '+error);
             throw(error);//za index.js
         }
        
@@ -213,7 +216,7 @@ module.exports=class question{
             this.Logger.info(JSON.stringify(format[i]));
             return format;
         } catch (error) {
-            this.Logger.error('Error in getQuestionsForA0D '+error);
+            this.Logger.error('Error in function getQuestionsForAllA0D '+error);
             throw(error);
         }
     }
@@ -270,7 +273,7 @@ module.exports=class question{
             throw(new Error);
         }//JAVI ERROR JER SE U NORMALNIM OKOLNOSTIMA NEBI SMILO DOC DO POZIVA CHECKANSWER ZA ZAKLJUCANO PITANJE
         } catch (error) {
-            this.Logger.error('Error in checkAnswer '+error);
+            this.Logger.error('Error in function checkAnswer '+error);
             throw(error);
         }
 
@@ -295,7 +298,7 @@ module.exports=class question{
                  } );
                 this.Logger.info('topic fetched succesfully from database');
             } catch (error) {
-                this.Logger.error('error in fetchingquestion from database '+error);
+                this.Logger.error('error in fetchingquestion from database ');
                 throw(error);
             }
             //koordinate tocnog pitanja u matrici
@@ -316,6 +319,7 @@ module.exports=class question{
                    });//POS:X-> X JE STUPAC TOCNO ODGOVORENOG PITANJA -> TAJ ČLAN NIZA UVEĆAVAMO ZA 1
             } catch (error) {
                 this.Logger.error('Error in updating results');
+                throw(error);
             }
             //UPDATE OCJENA->
             try {
@@ -367,6 +371,15 @@ module.exports=class question{
             } catch (error) {
                 this.Logger.error('Error in reading results or updating grade');
                 throw(error);
+            }
+            if(grade>2)//VIDI JELI SE MOGU OTKLJUCAT NEKI TOPICI KOJIMA JE OVAJ TOPIC UVJET JER JE ZADOVLJEN MINIMALNI UVJET OCJENA=2,NEMA SMISLA PROVJERAVAT AKO JE OCJENA=1
+            {
+                try {
+                    await this.Topic_instance.unlockAssociatedTopics(students_id,clas_id,courses_id,subjects_id);
+                } catch (error) {
+                    this.Logger.error('Error in unlocking associated topics');
+                    throw(error);
+                }
             }
             //za pocetak otkljucaj susjedne-> otkljucaj livo desno i dole i gore ako postoje
             //vidit koji sve postoje pa onda citat iz baze a ne da citamo za svako pitanje-> bolje performanse i manje pristupa bazi
@@ -449,11 +462,11 @@ module.exports=class question{
                 });
                 this.Logger.info('question status changed succesfully');
             } catch (error) {
-                this.Logger.error('Error in updating status ofquestions '+error);
+                this.Logger.error('Error in updating status of questions');
                 throw(error);
             }
         } catch (error) {
-            this.Logger.error('Error in unlockingquestions '+error);
+            this.Logger.error('Error in function unlockQuestionsAndUpdateResultsAndGrade '+error);
             throw(error);
         }
     }
@@ -478,7 +491,7 @@ module.exports=class question{
                 throw(error);
             }
         } catch (error) {
-            this.Logger.error('Error in changing wrong answer status '+error);
+            this.Logger.error('Error in function wrongAnswer '+error);
             throw(error);
         }
     }
@@ -515,7 +528,7 @@ module.exports=class question{
             question.answer_c=request_body.answer_c;
             question.answer_d=request_body.answer_d;
             await question.save();
-            this.Logger.info('question updated succsefully');
+            this.Logger.info('question updated succesfully');
         } catch (error) {
             this.Logger.error('Error in function updateQuestion in dataabse '+error);
             throw(error);

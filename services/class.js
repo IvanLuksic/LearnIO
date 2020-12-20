@@ -22,7 +22,7 @@ module.exports= class clas{
                     }
                 });
             } catch (error) {
-                this.Logger.error('Errro in fetching classes from dataabse');
+                this.Logger.error('Error in fetching classes from dataabse');
                 throw(error);
             }
             this.Logger.info('Classes succesfuly fetched from database');
@@ -85,4 +85,5 @@ module.exports= class clas{
             throw(error);
         }
     }
+  
 }

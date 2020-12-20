@@ -175,6 +175,7 @@ module.exports= class result{
             return format;
         } catch (error) {
             this.Logger.error('Error in function filterByStudent'+error);
+            throw(error);
         }
     }
     //4. FILTAR po RAZREDU
@@ -205,7 +206,7 @@ module.exports= class result{
                 });
                 this.Logger.info('Results filtered by class succesfuly fetched from database');
             } catch (error) {
-                this.Logger.error('Error in fetching results from database'+error);
+                this.Logger.error('Error in fetching results from database');
                 throw(error);
             }
             var temp={};
@@ -238,6 +239,7 @@ module.exports= class result{
             return format;
         } catch (error) {
             this.Logger.error('Error in function filterByClass'+error);
+            throw(error);
         }
     }
     //5. FILTAR po PREDMETU
@@ -268,7 +270,7 @@ module.exports= class result{
                 });
                 this.Logger.info('Results filtered by subject succesfuly fetched from database');
             } catch (error) {
-                this.Logger.error('Error in fetching results from database'+error);
+                this.Logger.error('Error in fetching results from database');
                 throw(error);
             }
             var temp={};
@@ -301,6 +303,7 @@ module.exports= class result{
             return format;
         } catch (error) {
             this.Logger.error('Error in function filterBySubject'+error);
+            throw(error);
         }
     }
     //6. FILTAR po KURSU
@@ -332,7 +335,7 @@ module.exports= class result{
                 });
                 this.Logger.info('Results filtered by course succesfuly fetched from database');
             } catch (error) {
-                this.Logger.error('Error in fetching results from database'+error);
+                this.Logger.error('Error in fetching results from database');
                 throw(error);
             }
             var temp={};
@@ -365,6 +368,7 @@ module.exports= class result{
             return format;
         } catch (error) {
             this.Logger.error('Error in function filterByCourse'+error);
+            throw(error);
         }
     }
     //7. FILTAR po TOPICU
@@ -396,7 +400,7 @@ module.exports= class result{
                 });
                 this.Logger.info('Results filtered by topic succesfuly fetched from database');
             } catch (error) {
-                this.Logger.error('Error in fetching results from database'+error);
+                this.Logger.error('Error in fetching results from database');
                 throw(error);
             }
             var temp={};
@@ -429,6 +433,7 @@ module.exports= class result{
             return format;
         } catch (error) {
             this.Logger.error('Error in function filterByTopic'+error);
+            throw(error);
         }
     }
     //8. FILTAR PO SKOLSKOJ GODINI
@@ -459,7 +464,7 @@ module.exports= class result{
                 });
                 this.Logger.info('Results filtered by school year succesfuly fetched from database');
             } catch (error) {
-                this.Logger.error('Error in fetching results from database'+error);
+                this.Logger.error('Error in fetching results from database');
                 throw(error);
             }
             var temp={};
@@ -492,6 +497,7 @@ module.exports= class result{
             return format;
         } catch (error) {
             this.Logger.error('Error in function filterBySchool_year'+error);
+            throw(error);
         }
     }
     //9. FILTAR PO OCJENI
@@ -521,7 +527,7 @@ module.exports= class result{
                 });
                 this.Logger.info('Results filtered by grade year succesfuly fetched from database');
             } catch (error) {
-                this.Logger.error('Error in fetching results from database'+error);
+                this.Logger.error('Error in fetching results from database');
                 throw(error);
             }
             var temp={};
@@ -554,6 +560,7 @@ module.exports= class result{
             return format;
         } catch (error) {
             this.Logger.error('Error in function filterByGrade'+error);
+            throw(error);
         }
     }
 }

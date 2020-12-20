@@ -59,7 +59,7 @@ module.exports=class topic{
                 throw(error);
             }
         } catch (error) {
-            this.Logger.error('Error in geting topics for user and course '+error);
+            this.Logger.error('Error in function getTopicsForUserAndCourse '+error);
             throw(error);
         }
     }
@@ -91,7 +91,7 @@ module.exports=class topic{
                 });
                 this.Logger.info('Assesments succesfully fetched from database');
             } catch (error) {
-                this.Logger.error('Error in etching assesment objectives ');
+                this.Logger.error('Error in etching assesment objectives');
                 throw(error);
             }
            for(let i=0;i<assesments.length;i++)
@@ -116,7 +116,7 @@ module.exports=class topic{
             };
             return matrica;//vrati fomratiranu matricu
         } catch (error) {
-            this.Logger.error('Error in getAsesmentsForTopic '+error);
+            this.Logger.error('Error in function getAsesmentsForTopic '+error);
             throw(error);
         }
     }
@@ -152,7 +152,7 @@ module.exports=class topic{
             this.Logger.info(JSON.stringify(temp));
             return format;
         } catch (error) {
-            this.Logger.error('Error in asscoaitedTopics function '+error);
+            this.Logger.error('Error in function asscoaitedTopics'+error);
             throw(error);
         }
     }
@@ -193,7 +193,7 @@ module.exports=class topic{
             }
             else return 1;//vec se ulazilo u njega
         } catch (error) {
-            this.Logger.error('error in isBlue function'+error);
+            this.Logger.error('error in function isBlue'+error);
             throw(error);
         }
     }
@@ -215,7 +215,7 @@ module.exports=class topic{
                     }
                 });
             } catch (error) {
-                this.Logger.error('Error in fetching topics from database'+error);
+                this.Logger.error('Error in fetching topics from database');
                 throw(error);
             }
            let format=[];
@@ -245,7 +245,7 @@ module.exports=class topic{
            this.Logger.info(JSON.stringify(format[i]));
            return format;
         } catch (error) {
-            this.Logger.error('Error in getAllTopics function'+error);
+            this.Logger.error('Error in function getAllTopics'+error);
             throw(error);
         }
     }
@@ -261,7 +261,7 @@ module.exports=class topic{
                     raw:true
                 })
             } catch (error) {
-                this.Logger.error('Error in fetching topic from databse'+error);
+                this.Logger.error('Error in fetching topic from databse');
                 throw(error);
             }
             this.Logger.info('Topic info fetched succesfuly from database');
@@ -335,7 +335,7 @@ module.exports=class topic{
                 });
                 this.Logger.info('Subject courses pairs succesfuly fetched from database');
             } catch (error) {
-                this.Logger.error('Error in ftching subject cpourse pairs from database');
+                this.Logger.error('Error in fetching subject cpourse pairs from database');
                 throw(error);
             }
             let format=[];
@@ -391,7 +391,7 @@ module.exports=class topic{
             this.Logger.info('New topic succesfuly added to dataabase');
             return new_topic.id;            
         } catch (error) {
-            this.Logger.error('Error in saving topic to database tables'+error);
+            this.Logger.error('Error in function addTopic'+error);
             throw(error);
         }
     }

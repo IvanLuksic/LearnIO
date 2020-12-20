@@ -15,7 +15,8 @@ module.exports= class LoginService{//exportanje klasa na ovaj način-> module.ex
              } )
              return user;
         } catch (error) {
-            this.Logger.error("Error in fetching user from database. "+error);
+            this.Logger.error("Error in function getUser. "+error);
+            throw(error);
         }
     }
     async getUserByID(user_id)
@@ -29,7 +30,8 @@ module.exports= class LoginService{//exportanje klasa na ovaj način-> module.ex
              } )
              return user;
         } catch (error) {
-            this.Logger.error("Error in fetching user from database. "+error);
+            this.Logger.error("Error in function getUserByID. "+error);
+            throw(error);
         }
     }
 }

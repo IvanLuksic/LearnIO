@@ -44,7 +44,7 @@ module.exports={
                 res.status(401).json({role: null });
             }
         } catch (err) {
-            nodelogger.error('Error in login controler'+err);
+            nodelogger.error('Error in login controler-login');
             next(err);//idii na error middleware handler
         }
     },
@@ -70,7 +70,7 @@ module.exports={
             req.session.destroy();//tribalo bi izbrisat sesiju iz memory storea
             res.sendStatus(200);
         } catch (error) {
-            nodelogger.info('Error in session deleting');
+            nodelogger.info('Error in session deleting-logout');
             next(error);
         }
     }

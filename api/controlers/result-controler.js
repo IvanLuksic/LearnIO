@@ -12,7 +12,7 @@ module.exports={
             }
             res.json(results);
         } catch (error) {
-            nodelogger.error(error);
+            nodelogger.error('Error in getResults');
             next(error);//idii na error middleware handler
         }
     }
