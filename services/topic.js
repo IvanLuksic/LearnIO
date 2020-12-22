@@ -5,7 +5,7 @@ const { QueryTypes } = require('sequelize');
 const { Op } = require("sequelize");
 const {sequelize}=require('../models');
 module.exports=class topic{
-    constructor(topic,assesment,course,subject,result,save,question,topic_subject,tags_of_topic,course_topic,result_instance,logger)//svi mogući dependenciesi, ako se neki ne budu korstili maknit
+    constructor(topic,assesment,course,subject,result,save,question,tags_of_topic,course_topic,result_instance,logger)//svi mogući dependenciesi, ako se neki ne budu korstili maknit
     {
         this.Topic=topic,
         this.Logger=logger;
@@ -14,7 +14,6 @@ module.exports=class topic{
         this.Subject=subject;
         this.Result=result;
         this.Save=save;
-        this.Topic_subject=topic_subject;
         this.Tags_of_topic=tags_of_topic;
         this.Course_topic=course_topic;
         this.Question=question;
@@ -63,58 +62,49 @@ module.exports=class topic{
             throw(error);
         }
     }
-    async getAsesmentsForTopic(topic_id,subject_id)// Za određeni topic i određeni predmet pornaći assesmente-> TOPIC MOZE PIRPADATI VIŠE ASSESMENTA PA JE ONDA POTREBNO NAVESTI O KOJEM PREDEMTU JE RIJEC DA ZNAMO KOJE NAZIVE ASSESMENTA KORISTIIT-> SVAKI PREDMET MOZE IMAT DRUKCIJE NAZIVE ASSESMENTA
-    //JOIN topic s predmetom preko predmet_id i onda predmet sa Asesmentsubject tablicom pa to sa AseesmentObjective
+    async getAsesmentsForTopic(topic_id)// Za određeni topic pronaći assesmente->Povezani su preko tablice topic_assesment
     {
         try {
             try {
                 var assesments=await this.Topic.findAll({
+                    attributes:['id','name','description','rows_D','column_numbers'],
                     include:{
-                        model:this.Subject,//JOIN sa predmetima od tog topica
-                        attributes:['id'],
-                        as:'subject_topics',
-                        where:{
-                            id:subject_id// id od subjecta jednak id koji smo primili u funkciju
-                        },
+                        model:this.Assesment,//JOIN sa predmetima od tog topica
+                        attributes:['id','name'],
+                        as:'assesments_topic',
                         through: { attributes: [] },
-                        include:{
-                            model:this.Assesment,
-                            attributes:['name'],
-                           as:'Asessments_subject',//OBAVEZNO ALIAS NAVEST-> ON OZNACAVA ALIAS OD Assesmenta!!! KOJI SE KORISTI KOD DEFINIRANJE ASOCIJACIJE N:M i kod upita
-                           through: { attributes: [] }//!!!!!!!!DA NE UKLJUCUJE NIKOJE ATRIBUTE IZ JOIN TABLICA!!!!!!
-                        }
                     },
                 where:{
                    id:topic_id//za topic ciji smo id primili
-                },
-                    //raw:true->BEZ RAW:TRUE LAKŠE FOMATRIANJE
+                }
                 });
                 this.Logger.info('Assesments succesfully fetched from database');
             } catch (error) {
                 this.Logger.error('Error in etching assesment objectives');
                 throw(error);
             }
-           for(let i=0;i<assesments.length;i++)
-            this.Logger.info(JSON.stringify(assesments[i]));
-           var matrica={};//formatirat za response
+            var matrica={};//formatirat za response
             var format={};
             var assesments_niz=[];//tu cemo stavit sve asesmente
-            for(let i=0;i<assesments[0].subject_topics[0].Asessments_subject.length;i++)
+            for(let i=0;i<assesments[0].assesments_topic.length;i++)
             {
                 format={
-                    name:assesments[0].subject_topics[0].Asessments_subject[i].name //ime asesmenta
+                   asessment_id:assesments[0].assesments_topic[i].id,
+                   asessment_name:assesments[0].assesments_topic[i].name
                 };
                 assesments_niz.push(format);
                 format={};
             }
             matrica={//TU SU SVI PODACI ZA RENDERIRAT MATRICU OSIM PITANJA
+                topic_id:assesments[0].id,
                 topic_name:assesments[0].name,
                 topic_description:assesments[0].description,
                 rows_D:assesments[0].rows_D,
                 column_numbers:assesments[0].column_numbers,
                 asessments_array:assesments_niz
             };
-            return matrica;//vrati fomratiranu matricu
+            this.Logger.info(JSON.stringify(matrica));
+            return matrica;//vrati fomratiranu matricu*/
         } catch (error) {
             this.Logger.error('Error in function getAsesmentsForTopic '+error);
             throw(error);
@@ -275,11 +265,6 @@ module.exports=class topic{
     async deleteTopicFromEverywhere(topics_id)// izbrisati topic iz svih tablica u kojima se pijavljuje
     {
         try {
-           await this.Topic_subject.destroy({
-                where:{
-                    topic_id:topics_id
-                }
-            });
             await this.Tags_of_topic.destroy({
                 where:{
                     [Op.or]:[
@@ -371,10 +356,6 @@ module.exports=class topic{
                 rows_D:row_D,
                 column_numbers:columns_AO,
                 description:topic_description
-            });
-            await this.Topic_subject.create({
-                topic_id:new_topic.id,
-                subject_id:subjects_id
             });
             await this.Course_topic.create({
                 topic_id:new_topic.id,

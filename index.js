@@ -9,7 +9,7 @@ const {nodelogger}=require('./loaders/logger');
 const models=require('./models');
 //instance=new questionclass(question,topic,save,course,user,result,nodelogger);
 let result_instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger)
-let instance=new topicclass(models.topic,models.asessment_objective,models.course,models.subject,models.result,models.save,models.question,models.topic_subject,models.tags_of_topic,models.course_topic,result_instance, nodelogger);
+let instance=new topicclass(models.topic,models.asessment_objective,models.course,models.subject,models.result,models.save,models.question,models.tags_of_topic,models.course_topic,result_instance, nodelogger);
 //instance=new resultclass(result,user,subject,course,topic,asessment_objective,clas,nodelogger);
 //instance=new clasclass(clas,user,nodelogger);
 //instance=new courseclass(course,clas,subject,nodelogger);
@@ -34,7 +34,7 @@ async function init()
        // const x= await instance.generateQuestions(1,1,1);
         //const x=await instance.unlockQuestions(1,1,1,17);//await zato jer vraca promise
          //const x=await instance.getTopicsForUserAndCourse(3,1,1);
-      // const x=await instance.getAsesmentsForTopic(1,1);
+      const x=await instance.getAsesmentsForTopic(1);
        //nodelogger.info(JSON.stringify(x));
         //const x=await instance.associatedTopics(5);
        // nodelogger.info( await instance.isBlue(1,1,3));
@@ -56,7 +56,7 @@ async function init()
     //await instance.getAllClassForTeacher(2);
     //await instance. getAllCoursesForSubject(2);
    // await instance.getAllSubjectsForClass(1);
-        await instance.unlockAssociatedTopics(3,1,1,1);
+        //await instance.unlockAssociatedTopics(3,1,1,1);
         nodelogger.info('Uspjesno');
     } catch (error) {
         console.log('Greska pri citanju rezultata'+error);

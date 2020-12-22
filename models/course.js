@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsToMany(models.subject,{through: 'course_subject',as: "subjects_course",foreignKey: 'course_id'});
       this.hasMany(models.result,{foreignKey: 'course_id'});//POTREBNO NAPISATI ime foregin keya u oba modela kako sequeliza kod querya nebi automatski generira imena foreign keyova
-      this.belongsToMany(models.clas,{through: 'class_course',as:'classes_course',foreignKey: 'course_id'});
       this.hasMany(models.save,{foreignKey: 'course_id'});
       this.belongsToMany(models.topic,{through:'course_topic',as:'topics_course',foreignKey: 'course_id'});
     }
