@@ -13,6 +13,7 @@ import AdminTopics from './components/admin/AdminTopics';
 import {useSelector} from 'react-redux';
 import Results from "./components/admin/Results";
 import NotFound from './components/common/NotFound';
+import Register from './pages/Register';
 
 
 const theme = createMuiTheme({
@@ -65,6 +66,7 @@ function App() {
                 <Switch>
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/login" component={Login}/>
+                    <Route exact path="/register" component={Register}/>
                     {StudentFeatures&&<Route exact path="/topics"component={StudentTopics}/>}
                     {StudentFeatures&&<Route exact path="/topic/:id" component={StudentMatrix}/>}
                     {AdminFeatures&&<Route exact path="/admin-topic/:id" component={AdminMatrix}/>}

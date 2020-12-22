@@ -19,7 +19,7 @@ export default function CustomSnackbar(props) {
             vertical: 'bottom',
             horizontal: 'right',
         }}
-        open={true}
+        open={props.open}
         autoHideDuration={5000}
         onClose={props.handleClose}>
             <Alert onClose={props.handleClose} severity={props.status}>
