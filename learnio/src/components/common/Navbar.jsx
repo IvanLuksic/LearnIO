@@ -24,16 +24,28 @@ const useStyles = makeStyles((theme) => ({
         marginRight: "auto",
     },
     buttonGreen: {
-        MarginRight: 0,
+        MarginRight:0,
         borderRadius: 25,
         marginLeft: "auto",
         color: "#FFFFFF",
         backgroundColor: "#27ae60",
         maxHeight: 35,
         '&:hover': {
-            backgroundColor: "rgb(41, 97, 65)",
-         },
+          backgroundColor: "rgb(41, 97, 65)",
+       },
     },
+    buttonGreen1: {
+      //MarginRight: 0,
+      borderRadius: 25,
+      //marginLeft: "auto",
+      color: "#FFFFFF",
+      backgroundColor: "#27ae60",
+      maxHeight: 35,
+      '&:hover': {
+          backgroundColor: "rgb(41, 97, 65)",
+       },
+  },
+
     buttonBlue: {
         MarginRight: 0,
         borderRadius: 25,
@@ -106,10 +118,18 @@ function Navbar(){
                     {AdminFeatures&&<Box mr={8}><li><Link to="/results">Results</Link></li></Box>}
                     {AdminFeatures&&<Box mr={8}><li><Link to="/students">Students</Link></li></Box>}
                 </Hidden>
-                    {(!(AdminFeatures||StudentFeatures))&&                    
-                        <Button size="small" className={classes.buttonGreen} >
-                            <Link to="/login" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Login</Link>
-                        </Button>}
+                    {(!(AdminFeatures||StudentFeatures))&& 
+                      <Box className={classes.buttonGreen}> 
+                        <Button size="small" >
+                          <Link to="/register" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1em",marginRight: "1em"}}>SignUp</Link>
+                        </Button>
+                      </Box> }
+                    {(!(AdminFeatures||StudentFeatures))&&
+                      <Box ml={1} className={classes.buttonGreen1}>
+                        <Button size="small"  >
+                          <Link to="/login" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Login</Link>
+                        </Button>
+                      </Box>}
                     {(AdminFeatures||StudentFeatures)&&
                         <Button size="small" className={classes.buttonBlue} >
                             <Link to="/" onClick={()=>{dispatch(logOut());headLogout();}} style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Log Out</Link>
