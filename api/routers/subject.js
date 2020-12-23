@@ -9,5 +9,6 @@ module.exports=function(main_ruter)
 {
     main_ruter.use('/',subject);
     subject.get('/subjects/:class_ID',authenticate_student_or_teacher,subject_controler.getAllSubjects);
+    subject.get('/subjects/all/with/classes',authenticate_admin_or_teacher,subject_controler.getAllSubjectsWithAllClasses);
     subject.post('/subject/insert',ShemaValidator.validate('addSubject'),authenticate_admin_or_teacher.toString,subject_controler.insertSubject);
 }

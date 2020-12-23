@@ -120,22 +120,15 @@ module.exports= class clas{
             });
             if(!clas)//ne postoji vec taj razred
             {
-                await this.Clas.create({
+               const new_clas= await this.Clas.create({
                     name:request.name,
                     school_year:request.school_year
                 });
-                const added_class_id=await this.Clas.findOne({//izvuci PK od tog dodanog razreda da ga mozemo povezat sa studentima
-                    attributes:['id'],
-                    where:{
-                        name:request.name,
-                        school_year:request.school_year
-                    }
-                })
                 for(let i=0;i<request.student_id.length;i++)//povezi sve studente s tin razredon
                 {
                     await this.Class_student.create({
                         student_id:request.student_id[i],
-                        class_id:added_class_id
+                        class_id:new_clas.id//id novog dodanog razreda
                     });
                 }
                 this.Logger.info('Class inserted succesfuly');

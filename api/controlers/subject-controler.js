@@ -20,5 +20,15 @@ module.exports={
             nodelogger.error('Error in insertSubject');
             next(error);
         }
+    },
+    getAllSubjectsWithAllClasses:async (req,res,next)=>
+    {
+        try {
+            const subjects=await Subject_instance.getAllSubjectsWithClasses();
+            res.json(subjects);
+        } catch (error) {
+            nodelogger.error('Error in function  getAllSubjectsWithAllClasses');
+            next(error);
+        }
     }
 }

@@ -98,6 +98,7 @@ module.exports=class user {
                 classes:format_classes
                };
                format.push(temp);
+               format_classes=[];
                temp={};
             }
            this.Logger.info(JSON.stringify(format));
