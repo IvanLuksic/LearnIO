@@ -17,7 +17,6 @@ import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import {Link} from 'react-router-dom';
 import Icon from '@material-ui/core/Icon';
 import fakeBackendTopics from '../../sampleData/admin/allTopics.json';
 import PopupDialog from '../common/PopupDialog';
@@ -26,7 +25,7 @@ import { useDispatch} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
 import hat from '../../images/hat.png';
 import EditStudentPU from '../admin/editComponents/EditStudentPU';
-
+import fakeAllClasses from '../../sampleData/admin/allClasses.json'
 
 const useStyles = makeStyles((theme) => ({
 
@@ -37,27 +36,23 @@ const useStyles = makeStyles((theme) => ({
       backgroundAttachment: "fixed",
       backgroundRepeat: "repeat-y",
       width: "100%",
-      [theme.breakpoints.down('sm')]: {
-        minHeight: "100vh",
-      },
-      [theme.breakpoints.up('md')]: {
-        minHeight: "100vh",
-      },
+      minHeight: "100vh",
+
     },
     tabelaOkvir:{
       borderColor: "transparent !important",
-      height:"35em",
+      height:"30rem",
       [theme.breakpoints.down('md')]: {
         width:"90%",
       },
-      [theme.breakpoints.up('xl')]: {
+      [theme.breakpoints.up('lg')]: {
         width:"70rem",
       },
     },
     lowerPart:{
       marginTop:"3rem",
       borderColor: "transparent !important",
-      height:"35em",
+      height:"30rem",
       [theme.breakpoints.down('md')]: {
         width:"90%",
       },
@@ -189,19 +184,11 @@ function Students(){
     const [loading,setLoading]=useState(offline);//potrebno ga postavit na false da bi radilo
     const [selectedClassID,setSelectedClassID]=useState(()=>null);
     const [selectedStudent,setSelectedStudent]=useState(()=>null);
+    const [allClasses,setAllClasses]=useState(()=>fakeAllClasses);
     const dispatch=useDispatch();
     const classes=useStyles();
 
-    let listOfGroups=[
-      {class:"All",id:-1},
-      {class:"Group 1", id:1},
-      {class:"Group 2", id:2},
-      {class:"Group 3", id:3},
-    ]
-
-    const Confirm=()=>{
-      return null;
-    }
+    let listOfGroups=[{name:"All",id:-1},...allClasses];
 
     
     const fetchClasses=()=>{
@@ -226,6 +213,7 @@ function Students(){
     useEffect(() => {
       (!offline)&&fetchClasses();
     },[]);
+/*=====================================================================================================================================================================================0 */
 
     const renderGroupsList=(listOfGroups)=>{
       return(
@@ -234,7 +222,7 @@ function Students(){
             <Select>
             {
               listOfGroups.map((group)=>{
-                return <MenuItem>{group.name}</MenuItem>
+                return <MenuItem disabled value={group.name}>{group.name}</MenuItem>
               })
             }
             </Select>
@@ -272,15 +260,41 @@ function Students(){
                                                                       };
                                                                       if(inClass){newData.push(student)};
                                                                     });
-                console.log(newData);
                 setData(newData);
       }
       else setData(fakeData);
     };
 
 /*=============================================================================================================================== */
-const editStudent=()=>{
+const editStudent=(studentToEdit)=>{
+  
+  let array=data.filter((person)=>person.id!==studentToEdit.id);
+  array.push(studentToEdit);
+  setData(array);
 
+  if(offline){
+    array = fakeData.filter((person)=>person.id!==studentToEdit.id);
+    array.push(studentToEdit);
+    setFakeData(array);
+  }
+  else if(!offline){
+    const requestOptions = {
+      method: 'GET',
+      mode:'cors',
+      headers: { 'Content-Type': 'application/json'},
+      credentials: 'include'
+    };
+
+    fetch('http://127.0.0.1:3000/', requestOptions)
+    .then(response => response.json())
+    .then(dataFetch => {  
+            setData(dataFetch);
+            setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
+    })
+    .catch((error)=>{
+      console.log('Error in fetch function '+ error);
+    });
+  };
 };
 
 /*=============================================================================================================================== */
@@ -305,7 +319,7 @@ const editStudent=()=>{
           console.log('Error in fetch function '+ error);
         });
       }
-      else{
+      else if(offline){
         setFakeData(fakeData.filter((student)=>student.id!==selectedStudent.id));
         setData(data.filter((student)=>student.id!==selectedStudent.id));
       }
@@ -319,7 +333,7 @@ const editStudent=()=>{
           <Select value={selectedClassID} onChange={(event)=>changeOfClass(event.target.value)}>
           {
             listOfGroups.map((group)=>{
-              return <MenuItem value={group.id}>{group.class}</MenuItem>
+              return <MenuItem value={group.id}>{group.name}</MenuItem>
             })
           }
           </Select>
@@ -341,8 +355,8 @@ const editStudent=()=>{
 
     return(
         <div style={{display: "flex", flexDirection: "column",justifyContent:"none", alignItems:"center"}} className={classes.background}>
-            <PopupDialog openPopup={editDialogOpen} setOpenPopup={setEditDialogOpen} clickAway={true} style={{minHeight:'30%',width:"35rem"}}>
-              <EditStudentPU student={selectedStudent} style={{borderRadius:'25px'}}/>
+            <PopupDialog openPopup={editDialogOpen} setOpenPopup={setEditDialogOpen} clickAway={false} style={{minHeight:'30%',width:"35rem"}}>
+              <EditStudentPU allClasses={allClasses} setOpenPopup={setEditDialogOpen} editStudent={editStudent} student={selectedStudent} style={{borderRadius:'25px'}}/>
             </PopupDialog>
             <ConfirmDialog functionToConfirm={deleteStudent} text={"Do you really want to delete this student?"} setOpenPopup={setConfirmDialogOpen} openPopup={confirmDialogOpen}></ConfirmDialog>
             <Grid container flexDirection="row" alignItems="center" justify="center">

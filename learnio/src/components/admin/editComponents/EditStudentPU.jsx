@@ -22,6 +22,9 @@ import FormControl from '@material-ui/core/FormControl';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import EditIcon from '@material-ui/icons/Edit';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import ListItemText from '@material-ui/core/ListItemText';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,6 +77,16 @@ const ChipsArray=(props)=> {
   );
 };
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
+        width: 200,
+      },
+    },
+};
 
 
 function EditStudentPU(props) {
@@ -86,6 +99,8 @@ function EditStudentPU(props) {
   const [disableSurname, setDisableSurname] = useState(()=>true);
   const [email, setEmail] = useState(()=>props.student.email);
   const [disableEmail, setDisableEmail] = useState(()=>true);
+  const [studentClasses, setStudentClasses] = useState(()=>props.student.classes);
+  const [disableStudentClasses, setDisableStudentClasses] = useState(()=>true);
   const [password, setPassword] = useState(()=>props.student.password);
   const [disablePassword, setDisablePassword] = useState(()=>true);
   const [showPassword, setShowPassword] = useState(()=>false);
@@ -114,80 +129,144 @@ function EditStudentPU(props) {
 //   }
 // //------------------------
 
+  const saveChanges=()=>{
+    let itemToSave;
+    itemToSave={
+      id: props.student.id,
+      created:props.student.created,
+      username: username,
+      name: name,
+      surname: surname,
+      email: email,
+      password: password,
+      classes: studentClasses
+    };
+    props.editStudent(itemToSave);
+    props.setOpenPopup(false);
+  };
+
+  const handleChangeClasses=(event)=>{
+    setStudentClasses(event.target.value);
+  };
+
+  const checkIfIn=(oneClass)=>{
+    let bool=false;
+    studentClasses.map((sCl)=>{
+      if(sCl.id===oneClass.id) bool=true;
+    });
+    return bool;
+  };
+
+
+
   return(
         <Grid container flexDirection="column" justify="center" alignItems="center">
           <Grid item xs={12}>
-            <Typography color="primary" className={classes.loginHeadline}>Login </Typography>
+            <Typography color="primary" className={classes.loginHeadline}>Edit</Typography>
           </Grid>
-            <form className={classes.root} noValidate autoComplete="off">
+          <div  className={classes.root}>
+
+            {/* <form className={classes.root} noValidate autoComplete="off"> */}
             <Grid container flexDirection="row" justify="space-evenly" alignItems="center" item xs={12}>
 
               <Grid container item md={12}>
-                <Grid item xs={9} >
+                <Grid item xs={10} >
                   	<TextField fullWidth className={classes.fields} disabled={disableUsername} type="string" label="Username" variant="filled" defaultValue={username} value={username} onChange={(event)=>{setUsername(event.target.value)}}/>
                 </Grid>
-                <Grid item xs={3} >
-                  <IconButton onClick={()=>{setDisableUsername(!disableUsername);setDisableEmail(true);setDisableName(true);setDisableSurname(true);setPassword(true)}} edge="end">
-                            {disableUsername ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
+                <Grid item xs={2} >
+                  <IconButton onClick={()=>{setDisableUsername(!disableUsername);setDisableEmail(true);setDisableName(true);setDisableSurname(true);setShowPassword(false);setDisablePassword(true);setDisableStudentClasses(true)}} edge="end">
+                    {disableUsername ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
                   </IconButton>
                 </Grid>
               </Grid>
 
               <Grid container item xs={12}>
-                <Grid item xs={9} >
+                <Grid item xs={10} >
                   <TextField fullWidth  className={classes.fields} disabled={disableName} type="string" label="Name" variant="filled" defaultValue={name} value={name} onChange={(event)=>{setName(event.target.value)}}/>
                 </Grid>
-                <Grid item xs={3} >
-                    <IconButton onClick={()=>{setDisableName(!disableName);setDisableEmail(true);setDisableSurname(true);setPassword(true);setDisableUsername(true)}} edge="end">
-                              {disableName ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
-                    </IconButton>
+                <Grid item xs={2} >
+                  <IconButton onClick={()=>{setDisableName(!disableName);setDisableEmail(true);setDisableSurname(true);setDisablePassword(true);setShowPassword(false);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
+                    {disableName ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
+                  </IconButton>
                 </Grid>
               </Grid>
 
               <Grid container item xs={12}>
-                <Grid item xs={9} >
+                <Grid item xs={10} >
                   <TextField fullWidth  className={classes.fields} disabled={disableSurname} type="string" label="Surname" variant="filled" defaultValue={surname} value={surname} onChange={(event)=>{setSurname(event.target.value)}}/>
                 </Grid>
-                <Grid item xs={3} >
-                      <IconButton onClick={()=>{setDisableSurname(!disableSurname);setDisableEmail(true);setDisableName(true);setPassword(true);setDisableUsername(true)}} edge="end">
-                                {disableSurname ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
-                      </IconButton>
+                <Grid item xs={2} >
+                  <IconButton onClick={()=>{setDisableSurname(!disableSurname);setDisableEmail(true);setDisableName(true);setDisablePassword(true);setShowPassword(false);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
+                    {disableSurname ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
+                  </IconButton>
                 </Grid>
               </Grid>
 
               <Grid container item xs={12}>
-                <Grid item xs={9} >
-                  <TextField fullWidth  className={classes.fields}disabled={disableEmail} type="e-mail" label="e-mail" variant="filled" defaultValue={email} value={email} onChange={(event)=>{setEmail(event.target.value)}}/>
+                <Grid item xs={10} >
+                  <TextField fullWidth  className={classes.fields} disabled={disableEmail} type="e-mail" label="e-mail" variant="filled" defaultValue={email} value={email} onChange={(event)=>{setEmail(event.target.value)}}/>
                 </Grid>
-                <Grid item xs={3} >
-                        <IconButton onClick={()=>{setDisableEmail(!disableEmail);setDisableName(true);setDisableSurname(true);setPassword(true);setDisableUsername(true)}} edge="end">
+                <Grid item xs={2} >
+                        <IconButton onClick={()=>{setDisableEmail(!disableEmail);setDisableName(true);setDisableSurname(true);setDisablePassword(true);setShowPassword(false);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
                                   {disableEmail ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
                         </IconButton>
                 </Grid>
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid container item xs={12}>
                 {/* <TextField fullWidth  className={classes.fields} type="password" label="Password" variant="filled" defaultValue="JdakFoly0"/> */}
-                <FormControl className={classes.fields} variant="filled">
-                  <InputLabel htmlFor="filled-adornment-password">Password</InputLabel>
-                  <FilledInput type={showPassword ? 'text' : 'password'} value={password} defaultValue={password} onChange={(event)=>{setPassword(event.target.value)}} endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton onClick={()=>setShowPassword(!showPassword)} edge="end">
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
+                <Grid item xs={10} >
+                  <FormControl className={classes.fields} variant="filled">
+                    <InputLabel >Password</InputLabel>
+                    <FilledInput type={showPassword ? 'text' : 'password'} value={password} defaultValue={password} disabled={disablePassword} onChange={(event)=>{setPassword(event.target.value)}} endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton onClick={()=>{if(!disablePassword){setShowPassword(!showPassword)}} } edge="end">
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={2} >
+                  <IconButton onClick={()=>{setDisablePassword(!disablePassword);setShowPassword(false);setDisableEmail(true);setDisableName(true);setDisableSurname(true);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
+                            {disablePassword ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
+                  </IconButton>
+                </Grid>
               </Grid>
+              
+              <Grid container item xs={12}>
+              <Grid item xs={10} >
+                <FormControl className={classes.fields}>
+                    <InputLabel >Classes</InputLabel>
+                    <Select  multiple value={studentClasses} onChange={handleChangeClasses}  disabled={disableStudentClasses} renderValue={(selected) => {let array=selected.map((selClass)=>`${selClass.name}`); return array.join(`, `);} } MenuProps={MenuProps}>
+                      {props.allClasses.map((oneClass) => {
+                        return(
+                          <MenuItem key={oneClass.id} value={oneClass}>
+                          <Checkbox checked={checkIfIn(oneClass)}/>
+                          <ListItemText primary={`${oneClass.name} #${oneClass.id}`} />
+                        </MenuItem>
+                        )})}
+                    </Select>
+                </FormControl>
+                </Grid>
+                <Grid item xs={2} >
+                  <IconButton onClick={()=>{setDisableStudentClasses(!disableStudentClasses);setDisablePassword(true);setShowPassword(false);setDisableEmail(true);setDisableName(true);setDisableSurname(true);setDisableUsername(true)}} edge="end">
+                            {setDisableStudentClasses ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
+                  </IconButton>
+                </Grid>
+              </Grid>
+
               <Grid item xs={8} md={12}>
-                <Button variant="contained" className={classes.loginButton} style={{borderRadius: 25}} type="submit" color="primary" >
+                <Button variant="contained" className={classes.loginButton} onClick={saveChanges} style={{borderRadius: "25px"}} type="submit" color="primary" >
                     Save
                 </Button>
               </Grid>
               </Grid>
+            
+            </div>
 
-            </form>
+            {/* </form> */}
 
         </Grid>
 
