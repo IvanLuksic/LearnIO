@@ -60,7 +60,7 @@ const useStyles=makeStyles(theme =>({
 function PopupDialog(props){ 
     const classes=useStyles();
     return(
-            <Dialog open={props.openPopup} classes={{paper: classes.dialogWrapper}} PaperProps={{style: props.style,}} >
+            <Dialog open={props.openPopup} classes={{paper: classes.dialogWrapper}} PaperProps={{style: props.style}} >
                 <ClickAwayListener onClickAway={()=>{props.clickAway&&props.setOpenPopup(false);}}>
                     <div> 
                         <DialogTitle className={classes.dialogPart1}>

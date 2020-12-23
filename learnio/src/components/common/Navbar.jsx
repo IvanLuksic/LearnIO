@@ -104,6 +104,7 @@ function Navbar(){
                     {StudentFeatures&&<Box mr={8}><li><Link to="/topics">Topics</Link></li></Box>}
                     {AdminFeatures&&<Box mr={8}><li><Link to="/AdminTopics">Admin-Topics</Link></li></Box>}
                     {AdminFeatures&&<Box mr={8}><li><Link to="/results">Results</Link></li></Box>}
+                    {AdminFeatures&&<Box mr={8}><li><Link to="/students">Students</Link></li></Box>}
                 </Hidden>
                     {(!(AdminFeatures||StudentFeatures))&&                    
                         <Button size="small" className={classes.buttonGreen} >

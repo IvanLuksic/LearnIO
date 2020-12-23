@@ -96,7 +96,6 @@ li {
     border: none !important;
 }
 .MuiDataGrid-row {
-    background-color: white;
     border-radius: 25px;
 }
 .Mui-selected {
@@ -121,9 +120,16 @@ li {
 .Mui-odd {
     background-color: #ededed;
 }
+.MuiDataGrid-root .MuiDataGrid-row:hover:hover{
+    background-color: #d3d3d3 !important;
+
+}
 
 .lobster {
     font-family: "Lobster";
+}
+.redHatDisplay{
+    font-family: 'Red Hat Display', sans-serif;
 }
 .MuiDataGrid-columnsContainer .MuiDataGrid-colCell:nth-last-of-type(2) .MuiDataGrid-iconSeparator	{
     display:none !important;
@@ -137,5 +143,9 @@ li {
     background: lightgrey !important;
 
 }
+/* 
+.MuiDataGrid-root .MuiDataGrid-dataContainer {
+    margin-top: 0.8rem;
+} */
 
 

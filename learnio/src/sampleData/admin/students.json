@@ -1,0 +1,155 @@
+[
+    {
+        "id":1,
+        "name":"Marco",
+        "surname":"Materazzi",
+        "email":"marcomat1950@gmail.com",
+        "username":"mmater00",
+        "created":"12.12.2020.",
+        "password":"aefaefAsfea",
+        "classes":[
+            {
+                "name":"Group 1",
+                "id":1
+            },
+            {
+                "name":"Group 2",
+                "id":2
+            }
+        ]
+    },
+    {
+        "id":2,
+        "name":"Andrea",
+        "surname":"Pirlo",
+        "email":"aPirlo99@gmail.com",
+        "username":"apirlo00",
+        "created":"12.11.2020.",
+        "password":"aefaefAsfea",
+        "classes":[
+            {
+                "name":"Group 2",
+                "id":2
+            },
+            {
+                "name":"Group 3",
+                "id":3
+            }
+        ]
+    },
+    {
+        "id":3,
+        "name":"Michaello",
+        "surname":"Covax",
+        "email":"mCovax@gmail.com",
+        "username":"mcovax00",
+        "created":"20.12.2020.",
+        "password":"aefaefAsfea",
+        "classes":[
+            {
+                "name":"Group 1",
+                "id":1
+            },
+            {
+                "name":"Group 3",
+                "id":3
+            }
+        ]
+    },
+    {
+        "id":4,
+        "name":"Jozef",
+        "surname":"Bagarikov",
+        "email":"jbagari1991@gmail.com",
+        "username":"jbagar00",
+        "created":"12.11.2020.",
+        "password":"aefaefAsfea",
+        "classes":[
+            {
+                "name":"Group 1",
+                "id":1
+            },
+            {
+                "name":"Group 2",
+                "id":2
+            }
+        ]
+    },
+    {
+        "id":5,
+        "name":"Polet",
+        "surname":"Matrix",
+        "email":"patmat@gmail.com",
+        "username":"pmatri01",
+        "created":"18.12.2020.",
+        "password":"aefaefAsfea",
+        "classes":[
+            {
+                "name":"Group 1",
+                "id":1
+            },
+            {
+                "name":"Group 3",
+                "id":3
+            }
+        ]
+    },
+    {
+        "id":6,
+        "name":"Sarah",
+        "surname":"Gavatt",
+        "email":"savatt56@gmail.com",
+        "username":"sgavat00",
+        "created":"15.12.2020.",
+        "password":"aefaefAsfea",
+        "classes":[
+            {
+                "name":"Group 2",
+                "id":2
+            },
+            {
+                "name":"Group 3",
+                "id":3
+            }
+        ]
+    },
+    {
+        "id":7,
+        "name":"Alice",
+        "surname":"McBobbington",
+        "email":"abob45@gmail.com",
+        "username":"amcbob01",
+        "created":"12.12.2020.",
+        "password":"aefaefAsfea",
+        "classes":[
+            {
+                "name":"Group 1",
+                "id":1
+            },
+            {
+                "name":"Group 3",
+                "id":3
+            }
+        ]
+    },
+    {
+        "id":8,
+        "name":"John",
+        "surname":"Doe",
+        "email":"jdoe55@gmail.com",
+        "username":"jdoe07",
+        "created":"30.11.2020.",
+        "password":"aefaefAsfea",
+        "classes":[
+            {
+                "name":"Group 1",
+                "id":1
+            },
+            {
+                "name":"Group 3",
+                "id":3
+            }
+        ]
+    }
+]
+

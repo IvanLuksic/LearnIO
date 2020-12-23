@@ -12,6 +12,7 @@ import AddTopicPU from './components/admin/addComponents/AddTopicPU';
 import AdminTopics from './components/admin/AdminTopics';
 import {useSelector} from 'react-redux';
 import Results from "./components/admin/Results";
+import Students from "./components/admin/Students";
 import NotFound from './components/common/NotFound';
 
 
@@ -71,6 +72,7 @@ function App() {
                     {AdminFeatures&&<Route exact path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>}
                     {AdminFeatures&&<Route exact path="/AdminTopics" component={AdminTopics}/>}
                     {AdminFeatures&&<Route exact path="/results" component={Results}/>}
+                    {AdminFeatures&&<Route exact path="/students" component={Students}/>}
                     <Route component={NotFound}/>
                 </Switch>
               </div>

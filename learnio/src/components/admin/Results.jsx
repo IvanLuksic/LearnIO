@@ -130,7 +130,7 @@ function CustomPagination(props) {
   );
 }
 
-function AdminTopics(){
+function Results(){
     const offline= useSelector(state=>state.offline);
     const[data,setData]=useState(()=>{return fakeBackendResults});
     const classes=useStyles();
@@ -281,5 +281,5 @@ function AdminTopics(){
       </div>
     )
 };
-export default AdminTopics;
+export default Results;
 

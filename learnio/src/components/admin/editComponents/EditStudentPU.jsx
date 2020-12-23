@@ -1,0 +1,198 @@
+import React, {useState} from 'react';
+import {makeStyles} from '@material-ui/core/styles';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
+import Icon from '@material-ui/core/Icon';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
+import {  Typography } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import FilledInput from '@material-ui/core/FilledInput';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import EditIcon from '@material-ui/icons/Edit';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: '0 auto',
+    width: "80%",
+  },
+  fields: {
+      display: 'flex-inline',
+      width: "100%",
+      marginBottom: "0.5em",
+
+  }, 
+  loginHeadline:{
+      fontFamily: "Lobster",
+      fontSize: "3em",
+      margin: "0 auto",
+      marginTop: "0.5em",
+      marginBottom: "0.5em"
+  },
+  loginButton:{
+      margin: "auto",
+      marginTop: "2em",
+      marginBottom: "2em",
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+  },
+  greenPencil:{
+    color:"#27ae60"
+  },
+  greyPencil:{
+    color:"#a2a2a2"
+  }
+  }));
+
+
+const ChipsArray=(props)=> {
+  const classes = useStyles();
+  return (
+    <Paper component="ul" className={classes.rootChips}>
+      {
+      props.wrongAnswers.map((data) => {
+        return (
+          <li key={data}>
+            <Chip style={{margin:"0 0.1em"}} label={data} onDelete={()=>{props.deleteWrongAnswer(data)}}/>
+          </li>
+        );
+      })}
+    </Paper>
+  );
+};
+
+
+
+function EditStudentPU(props) {
+  //states of elements-------------------
+  const [username, setUsername] = useState(()=>props.student.username);
+  const [disableUsername, setDisableUsername] = useState(()=>true);
+  const [name, setName] = useState(()=>props.student.name);
+  const [disableName, setDisableName] = useState(()=>true);
+  const [surname, setSurname] = useState(()=>props.student.surname);
+  const [disableSurname, setDisableSurname] = useState(()=>true);
+  const [email, setEmail] = useState(()=>props.student.email);
+  const [disableEmail, setDisableEmail] = useState(()=>true);
+  const [password, setPassword] = useState(()=>props.student.password);
+  const [disablePassword, setDisablePassword] = useState(()=>true);
+  const [showPassword, setShowPassword] = useState(()=>false);
+
+
+  const classes = useStyles();
+//dropdown button---------------------
+
+
+//   const handleSave= ()=>{
+//     let send={
+//       id:quest.id,
+//       text:text,
+//       question_type:(multipleAnswer?1:2),
+//       image_path:imageState,
+//       row_D:quest.row_D,
+//       column_A:quest.column_A,
+//       answer_a:((wrongAnswers.length>0)?wrongAnswers[0]:null),
+//       answer_b:((wrongAnswers.length>1)?wrongAnswers[1]:null),
+//       answer_c:((wrongAnswers.length>2)?wrongAnswers[2]:null),
+//       answer_d:((wrongAnswers.length>3)?wrongAnswers[3]:null),
+//       solution:correctAnswer
+//     }
+//     props.questChange(send);
+//     props.popUpClose(false);
+//   }
+// //------------------------
+
+  return(
+        <Grid container flexDirection="column" justify="center" alignItems="center">
+          <Grid item xs={12}>
+            <Typography color="primary" className={classes.loginHeadline}>Login </Typography>
+          </Grid>
+            <form className={classes.root} noValidate autoComplete="off">
+            <Grid container flexDirection="row" justify="space-evenly" alignItems="center" item xs={12}>
+
+              <Grid container item md={12}>
+                <Grid item xs={9} >
+                  	<TextField fullWidth className={classes.fields} disabled={disableUsername} type="string" label="Username" variant="filled" defaultValue={username} value={username} onChange={(event)=>{setUsername(event.target.value)}}/>
+                </Grid>
+                <Grid item xs={3} >
+                  <IconButton onClick={()=>{setDisableUsername(!disableUsername);setDisableEmail(true);setDisableName(true);setDisableSurname(true);setPassword(true)}} edge="end">
+                            {disableUsername ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
+                  </IconButton>
+                </Grid>
+              </Grid>
+
+              <Grid container item xs={12}>
+                <Grid item xs={9} >
+                  <TextField fullWidth  className={classes.fields} disabled={disableName} type="string" label="Name" variant="filled" defaultValue={name} value={name} onChange={(event)=>{setName(event.target.value)}}/>
+                </Grid>
+                <Grid item xs={3} >
+                    <IconButton onClick={()=>{setDisableName(!disableName);setDisableEmail(true);setDisableSurname(true);setPassword(true);setDisableUsername(true)}} edge="end">
+                              {disableName ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
+                    </IconButton>
+                </Grid>
+              </Grid>
+
+              <Grid container item xs={12}>
+                <Grid item xs={9} >
+                  <TextField fullWidth  className={classes.fields} disabled={disableSurname} type="string" label="Surname" variant="filled" defaultValue={surname} value={surname} onChange={(event)=>{setSurname(event.target.value)}}/>
+                </Grid>
+                <Grid item xs={3} >
+                      <IconButton onClick={()=>{setDisableSurname(!disableSurname);setDisableEmail(true);setDisableName(true);setPassword(true);setDisableUsername(true)}} edge="end">
+                                {disableSurname ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
+                      </IconButton>
+                </Grid>
+              </Grid>
+
+              <Grid container item xs={12}>
+                <Grid item xs={9} >
+                  <TextField fullWidth  className={classes.fields}disabled={disableEmail} type="e-mail" label="e-mail" variant="filled" defaultValue={email} value={email} onChange={(event)=>{setEmail(event.target.value)}}/>
+                </Grid>
+                <Grid item xs={3} >
+                        <IconButton onClick={()=>{setDisableEmail(!disableEmail);setDisableName(true);setDisableSurname(true);setPassword(true);setDisableUsername(true)}} edge="end">
+                                  {disableEmail ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
+                        </IconButton>
+                </Grid>
+              </Grid>
+
+              <Grid item xs={12}>
+                {/* <TextField fullWidth  className={classes.fields} type="password" label="Password" variant="filled" defaultValue="JdakFoly0"/> */}
+                <FormControl className={classes.fields} variant="filled">
+                  <InputLabel htmlFor="filled-adornment-password">Password</InputLabel>
+                  <FilledInput type={showPassword ? 'text' : 'password'} value={password} defaultValue={password} onChange={(event)=>{setPassword(event.target.value)}} endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton onClick={()=>setShowPassword(!showPassword)} edge="end">
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={8} md={12}>
+                <Button variant="contained" className={classes.loginButton} style={{borderRadius: 25}} type="submit" color="primary" >
+                    Save
+                </Button>
+              </Grid>
+              </Grid>
+
+            </form>
+
+        </Grid>
+
+
+  )
+}
+
+export default EditStudentPU;
