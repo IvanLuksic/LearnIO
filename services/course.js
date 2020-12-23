@@ -45,5 +45,9 @@ module.exports= class course{
             throw(error);
         }
     }
+    async addCourse(request)//request body objektz s podacima za unos
+    {
+
+    }
     
 }

@@ -11,13 +11,14 @@ module.exports={
             next(error);
         }
     },
-    /*insertSubject:async (req,res,next)=>
+    insertSubject:async (req,res,next)=>
     {
         try {
-            
+            await Subject_instance.addSubject(req.body);
+            res.sendStatus(200);
         } catch (error) {
-            nodelogger.error('Error in inserting subject');
+            nodelogger.error('Error in insertSubject');
             next(error);
         }
-    }*/
+    }
 }

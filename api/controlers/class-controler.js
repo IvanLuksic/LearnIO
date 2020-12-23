@@ -21,14 +21,24 @@ module.exports={
             next(error);
         }
     },
-    /*insertClass:async(req,res,next)=>
+    getClassesForAdmin: async (req,res,next)=>
     {
         try {
-            await Class_instance.insertClasses(req.body);
-            res.sendStatus(200);
+            let classes=await Class_instance.getAllClassForAdmin();
+            res.json(classes);
         } catch (error) {
-            nodelogger.error('Error in inserting class');
+            nodelogger.error('Error in  getClassesForAdmin');
             next(error);
         }
-    }*/
+    },
+    insertClass:async(req,res,next)=>
+    {
+        try {
+            await Class_instance.addClass(req.body);//Format:{class_name,class_year,student_id:[ niz brojeva ID-jeva ]}
+            res.sendStatus(200);
+        } catch (error) {
+            nodelogger.error('Error in insertClass');
+            next(error);
+        }
+    }
 }

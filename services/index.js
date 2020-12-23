@@ -17,7 +17,7 @@ let question_instance=new question_class(models.question,models.topic,models.sav
 let class_instance=new clas_class(models.clas,models.user,nodelogger);
 let course_instance=new course_class(models.course,models.clas,models.subject,nodelogger);
 let subject_instance=new subject_class(models.subject,models.clas,models.user,nodelogger);
-let user_instance=new user_class(models.user,nodelogger);
+let user_instance=new user_class(models.user,models.clas,nodelogger);
 module.exports={
     Login_instance:login_instance,
     Session_instance:session_instance,

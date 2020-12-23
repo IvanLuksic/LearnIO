@@ -45,5 +45,9 @@ module.exports= class subject{
             throw(error);
         }
     }
+    async addSubject(request)//request body objektz s podacima za unos
+    {
+
+    }
     
 }

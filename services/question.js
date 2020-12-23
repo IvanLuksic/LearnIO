@@ -1,4 +1,4 @@
-const { Op, LOCK } = require("sequelize");//izvuc ga iz sequelizea koji vraca index.js file u modelsima
+const { Op } = require("sequelize");//izvuc ga iz sequelizea koji vraca index.js file u modelsima
 const {sequelize}=require('../models');
 const queryInterface = sequelize.getQueryInterface();
 const { QueryTypes } = require('sequelize');

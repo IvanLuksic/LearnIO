@@ -11,13 +11,14 @@ module.exports={
             next(error);
         }
     },
-    /*insertCourse:async (req,res,next)=>
+    insertCourse:async (req,res,next)=>
     {
         try {
-            
+            await Course_instance.addCourse(req.body);
+            res.sendStatus(200);
         } catch (error) {
-            nodelogger.error('Error in inserting course');
+            nodelogger.error('Error in insertCourse');
             next(error);
         }
-    }*/
+    }
 }

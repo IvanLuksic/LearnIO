@@ -3,9 +3,12 @@ module.exports={
         title:"Shema za dodavanje topica",
         type:"object",
         properties:{
-            associated_topics_id:{
+            associated_topics_id:{//niz idova
                 type:"array",
-                maxLength:20
+                maxLength:20,
+                items:{
+                    type:"number"
+                }
             },
             course_id:{
                 type:"number",
