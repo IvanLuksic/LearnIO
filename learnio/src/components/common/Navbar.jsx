@@ -9,6 +9,7 @@ import Hidden from '@material-ui/core/Hidden';
 import {Link} from 'react-router-dom';
 import {useSelector,useDispatch} from 'react-redux';
 import {logOut} from '../../redux/actions/loginStatus';
+import AddCourseSubjectClass from '../admin/addComponents/AddCourseSubjectClass';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,17 +47,39 @@ const useStyles = makeStyles((theme) => ({
        },
   },
 
-    buttonBlue: {
+   buttonAdd: {
         MarginRight: 0,
         borderRadius: 25,
         marginLeft: "auto",
         color: "#FFFFFF",
-        backgroundColor: "#4373ec",
-        maxHeight: 35,
-        '&:hover': {
+        //backgroundColor: "#4373ec",
+        maxHeight: 20,
+       /* '&:hover': {
         backgroundColor: "#0e318b",
-      },
+      },*/
     },
+    buttonBoxAdd: {
+     // MarginRight: 0,
+      //borderRadius: 25,
+      marginLeft: "auto",
+      color: "#FFFFFF",
+      //backgroundColor: "#4373ec",
+      //maxHeight: 20,
+     /* '&:hover': {
+      backgroundColor: "#0e318b",
+    },*/
+  },
+    buttonBlue1: {
+      MarginRight: 0,
+      borderRadius: 25,
+      //marginLeft: 50,
+      color: "#FFFFFF",
+      backgroundColor: "#4373ec",
+      maxHeight: 35,
+     /* '&:hover': {
+      backgroundColor: "#0e318b",
+    },*/
+  },
   }));
 
 
@@ -129,12 +152,17 @@ function Navbar(){
                         <Button size="small"  >
                           <Link to="/login" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Login</Link>
                         </Button>
-                      </Box>}
+                      </Box> }
+                      {AdminFeatures &&
+                      <Box  className={classes.buttonBoxAdd}>
+                        <AddCourseSubjectClass className={classes.buttonAdd}></AddCourseSubjectClass>
+                     </Box> } 
                     {(AdminFeatures||StudentFeatures)&&
-                        <Button size="small" className={classes.buttonBlue} >
+                    <Box ml={3} className={classes.buttonBlue1}>
+                        <Button size="small"  >
                             <Link to="/" onClick={()=>{dispatch(logOut());headLogout();}} style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Log Out</Link>
                         </Button>
-                    }
+                        </Box> }
             </Toolbar>
         </AppBar>
     </div>
