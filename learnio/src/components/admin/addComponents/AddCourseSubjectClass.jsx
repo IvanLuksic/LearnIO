@@ -9,11 +9,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import Icon from '@material-ui/core/Icon';
 
 const useStyles = makeStyles((theme) => ({
-  /*speedDial: {
-    position: 'relative',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-  },*/
 }));
 
 const actions = [

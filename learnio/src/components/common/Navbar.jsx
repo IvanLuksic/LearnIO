@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
         MarginLeft: 100,
         marginRight: "auto",
     },
-    buttonGreen: {
+    buttonGreenSignUp: {
         MarginRight:0,
         borderRadius: 25,
         marginLeft: "auto",
@@ -35,10 +35,8 @@ const useStyles = makeStyles((theme) => ({
           backgroundColor: "rgb(41, 97, 65)",
        },
     },
-    buttonGreen1: {
-      //MarginRight: 0,
+    buttonGreenLogin: {
       borderRadius: 25,
-      //marginLeft: "auto",
       color: "#FFFFFF",
       backgroundColor: "#27ae60",
       maxHeight: 35,
@@ -52,33 +50,18 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: 25,
         marginLeft: "auto",
         color: "#FFFFFF",
-        //backgroundColor: "#4373ec",
         maxHeight: 20,
-       /* '&:hover': {
-        backgroundColor: "#0e318b",
-      },*/
     },
     buttonBoxAdd: {
-     // MarginRight: 0,
-      //borderRadius: 25,
       marginLeft: "auto",
       color: "#FFFFFF",
-      //backgroundColor: "#4373ec",
-      //maxHeight: 20,
-     /* '&:hover': {
-      backgroundColor: "#0e318b",
-    },*/
   },
     buttonBlue1: {
       MarginRight: 0,
       borderRadius: 25,
-      //marginLeft: 50,
       color: "#FFFFFF",
       backgroundColor: "#4373ec",
       maxHeight: 35,
-     /* '&:hover': {
-      backgroundColor: "#0e318b",
-    },*/
   },
   }));
 
@@ -142,27 +125,30 @@ function Navbar(){
                     {AdminFeatures&&<Box mr={8}><li><Link to="/students">Students</Link></li></Box>}
                 </Hidden>
                     {(!(AdminFeatures||StudentFeatures))&& 
-                      <Box className={classes.buttonGreen}> 
+                      <Box className={classes.buttonGreenSignUp}> 
                         <Button size="small" >
                           <Link to="/register" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1em",marginRight: "1em"}}>SignUp</Link>
                         </Button>
                       </Box> }
+
                     {(!(AdminFeatures||StudentFeatures))&&
-                      <Box ml={1} className={classes.buttonGreen1}>
+                      <Box ml={1} className={classes.buttonGreenLogin}>
                         <Button size="small"  >
                           <Link to="/login" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Login</Link>
                         </Button>
                       </Box> }
+
                       {AdminFeatures &&
                       <Box  className={classes.buttonBoxAdd}>
                         <AddCourseSubjectClass className={classes.buttonAdd}></AddCourseSubjectClass>
                      </Box> } 
+
                     {(AdminFeatures||StudentFeatures)&&
-                    <Box ml={3} className={classes.buttonBlue1}>
+                      <Box ml={3} className={classes.buttonBlue1}>
                         <Button size="small"  >
                             <Link to="/" onClick={()=>{dispatch(logOut());headLogout();}} style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Log Out</Link>
                         </Button>
-                        </Box> }
+                      </Box> }
             </Toolbar>
         </AppBar>
     </div>
