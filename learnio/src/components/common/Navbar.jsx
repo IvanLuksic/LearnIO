@@ -62,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
       color: "#FFFFFF",
       backgroundColor: "#4373ec",
       maxHeight: 35,
+      marginLeft: "auto"
   },
   }));
 
@@ -120,6 +121,7 @@ function Navbar(){
                 <Hidden xsDown>
                     <Box ml={8} mr={8}><li><Link to="/">Home</Link></li></Box>
                     {StudentFeatures&&<Box mr={8}><li><Link to="/topics">Topics</Link></li></Box>}
+                    {StudentFeatures&&<Box mr={8}><li><Link to="/subjects">Subjects</Link></li></Box>}
                     {AdminFeatures&&<Box mr={8}><li><Link to="/AdminTopics">Admin-Topics</Link></li></Box>}
                     {AdminFeatures&&<Box mr={8}><li><Link to="/results">Results</Link></li></Box>}
                     {AdminFeatures&&<Box mr={8}><li><Link to="/students">Students</Link></li></Box>}

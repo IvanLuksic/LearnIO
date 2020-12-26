@@ -1,0 +1,128 @@
+[
+    {
+        "id":234,
+        "name":"Mathematics 2",
+        "class_id":453,
+        "class_name":"Electrical engineering",
+        "class_year":"2018./2019."
+    },
+    {
+        "id":6547,
+        "name":"Physics",
+        "class_id":453,
+        "class_name":"Electrical engineering",
+        "class_year":"2018./2019."
+    },
+    {
+        "id":9870,
+        "name":"Electronics",
+        "class_id":453,
+        "class_name":"Electrical engineering",
+        "class_year":"2018./2019."
+    },
+    {
+        "id":235,
+        "name":"Physics 2 ",
+        "class_id":56,
+        "class_name":"Mechanical engineering",
+        "class_year":"2014./2015."
+    },
+    {
+        "id":124,
+        "name":"Mathematics 1",
+        "class_id":56,
+        "class_name":"Mechanical engineering",
+        "class_year":"2014./2015."
+    },
+    {
+        "id":43456,
+        "name":"Materials",
+        "class_id":56,
+        "class_name":"Mechanical engineering",
+        "class_year":"2014./2015."
+    },
+    {
+        "id":7689,
+        "name":"English",
+        "class_id":453,
+        "class_name":"Electrical engineering",
+        "class_year":"2018./2019."
+    },
+    {
+        "id":546786,
+        "name":"English",
+        "class_id":56,
+        "class_name":"Mechanical engineering",
+        "class_year":"2014./2015."
+    },
+    {
+        "id":5,
+        "name":"Statistics",
+        "class_id":453,
+        "class_name":"Electrical engineering",
+        "class_year":"2018./2019."
+    },
+    {
+        "id":8,
+        "name":"Statistics",
+        "class_id":56,
+        "class_name":"Mechanical engineering",
+        "class_year":"2014./2015."
+    },
+    {
+        "id":89,
+        "name":"Systems and signals",
+        "class_id":453,
+        "class_name":"Electrical engineering",
+        "class_year":"2018./2019."
+    },
+    {
+        "id":567,
+        "name":"CNC operating",
+        "class_id":56,
+        "class_name":"Mechanical engineering",
+        "class_year":"2014./2015."
+    },
+    {
+        "id":2,
+        "name":"OOP",
+        "class_id":56,
+        "class_name":"Mechanical engineering",
+        "class_year":"2014./2015."
+    },
+    {
+        "id":234,
+        "name":"CN computer architecture",
+        "class_id":56,
+        "class_name":"Mechanical engineering",
+        "class_year":"2014./2015."
+    },
+    {
+        "id":3455,
+        "name":"Lightning and thunder protection",
+        "class_id":453,
+        "class_name":"Electrical engineering",
+        "class_year":"2018./2019."
+    },
+    {
+        "id":1312,
+        "name":"OOP",
+        "class_id":506,
+        "class_name":"Nautics",
+        "class_year":"2014./2015."
+    },
+    {
+        "id":34565,
+        "name":"CN computer architecture",
+        "class_id":506,
+        "class_name":"Nautics",
+        "class_year":"2014./2015."
+    },
+    {
+        "id":23804,
+        "name":"Lightning and thunder protection",
+        "class_id":506,
+        "class_name":"Nautics",
+        "class_year":"2018./2019."
+    }
+]
