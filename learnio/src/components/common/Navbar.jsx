@@ -45,8 +45,9 @@ const useStyles = makeStyles((theme) => ({
        },
   },
 
-   buttonAdd: {
+    buttonAdd: {
         MarginRight: 0,
+        MarginLeft: "auto",
         borderRadius: 25,
         marginLeft: "auto",
         color: "#FFFFFF",
@@ -57,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
       color: "#FFFFFF",
   },
     buttonBlue1: {
-      MarginRight: 0,
+      //MarginRight: 0,
       borderRadius: 25,
       color: "#FFFFFF",
       backgroundColor: "#4373ec",
@@ -146,7 +147,7 @@ function Navbar(){
                      </Box> } 
 
                     {(AdminFeatures||StudentFeatures)&&
-                      <Box ml={3} className={classes.buttonBlue1}>
+                      <Box  className={classes.buttonBlue1}>
                         <Button size="small"  >
                             <Link to="/" onClick={()=>{dispatch(logOut());headLogout();}} style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Log Out</Link>
                         </Button>
