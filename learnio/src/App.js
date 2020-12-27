@@ -15,7 +15,7 @@ import Results from "./components/admin/Results";
 import Students from "./components/admin/Students";
 import NotFound from './components/common/NotFound';
 import Register from './pages/Register';
-
+import StudentSubjects from './components/student/StudentSubjects';
 
 const theme = createMuiTheme({
     palette: {
@@ -70,6 +70,7 @@ function App() {
                     <Route exact path="/register" component={Register}/>
                     {StudentFeatures&&<Route exact path="/topics"component={StudentTopics}/>}
                     {StudentFeatures&&<Route exact path="/topic/:id" component={StudentMatrix}/>}
+                    {StudentFeatures&&<Route exact path="/subjects" component={StudentSubjects}/>}
                     {AdminFeatures&&<Route exact path="/admin-topic/:id" component={AdminMatrix}/>}
                     {AdminFeatures&&<Route exact path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>}
                     {AdminFeatures&&<Route exact path="/AdminTopics" component={AdminTopics}/>}
