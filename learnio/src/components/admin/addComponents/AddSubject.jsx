@@ -88,7 +88,7 @@ export default function AddSubject(props) {
 
     // looking for this? --------------------------------------------
     const handleSave = () => {
-        if(name.length > 0 && className !== "select class") {
+        if(name.length > 0 && classCheck.length > 0) {
             props.handleIndex(2);
             props.handleOpen();
             props.closePopup();
