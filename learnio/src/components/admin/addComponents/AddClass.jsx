@@ -54,6 +54,12 @@ export default function AddCourse(props) {
     const handleClose = () => {
         setOpen(false);
     };
+    const handleIndex = (value) => {
+        setIndex(value);
+        setOpen(true);
+    };
+
+    // looking for this? ------------------------------------
     const handleSave = () => {
         if (message!=="Incorrect year" && name.length > 0) {
 
@@ -68,15 +74,10 @@ export default function AddCourse(props) {
         props.handleOpen();
         props.closePopup();
         }
-        else if (name.length <= 0) {
-            setIndex(1);
-            setOpen(true);
-        }
-        else {
-            setIndex(2);
-            setOpen(true);
-        }
+        else if (name.length <= 0) handleIndex(1);
+        else handleIndex(2);
     };
+    //---------------------------------------------------------
 
     return(
         <Grid className={classes.gridStyle} container item direction="column" justify="space-between" alignItems="center" xs={12} md={10} spacing={1}>
