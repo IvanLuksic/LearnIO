@@ -13,16 +13,16 @@ import InviteLink from './InviteLink';
 import EditIcon from '@material-ui/icons/Edit';
 
 const useStyles = makeStyles((theme) => ({
-  /*root: {
-    height: 380,
-    transform: 'translateZ(0px)',
-    flexGrow: 1,
-  },
-  speedDial: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-  },*/
+  speedDial:{
+    marginRight: 0,
+    marginLeft: "auto",
+    borderRadius: 25,
+    color: "#FFFFFF",
+    maxHeight: "20",
+    position: "fixed",
+    bottom: "3rem",
+    right: "3rem"
+  }
 }));
 
 const actions = [
@@ -97,7 +97,7 @@ function AddCourseSubjectClass() {
   };
 
   return (
-    <div className={classes.root}>
+    <div className={classes.speedDial}>
       <SpeedDial
       className={classes.speedDial}
         ariaLabel="SpeedDial openIcon example"
@@ -105,7 +105,7 @@ function AddCourseSubjectClass() {
         onClose={handleClose}
         onOpen={handleOpen}
         open={open} 
-        direction="left"
+        direction="up"
       >
         {actions.map((action) => (
           <SpeedDialAction
@@ -115,7 +115,7 @@ function AddCourseSubjectClass() {
             onClick={(e) => {
               handleClick(e,action.operation, action.name)
             }}
-            tooltipPlacement="bottom"
+            tooltipPlacement="left"
           />
         ))}
       </SpeedDial>

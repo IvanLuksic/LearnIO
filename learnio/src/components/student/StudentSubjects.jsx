@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
       transition: "all .2s ease-in-out",
       '&:hover':{
         transform: "scale(1.05)",
+        cursor:"pointer"
       }
     },
     blok:{
@@ -106,7 +107,6 @@ const getStartingLetters=(string)=>{
 
 const randomColor=()=>{
   let colors=["#27ae60","#4373ec","#8f8e8b","#EB4949"];
-  console.log(colors[(Math.floor(Math.random()*10000))%4]);
   return colors[(Math.floor(Math.random()*10000))%4];
 };
 
@@ -119,48 +119,46 @@ const formatName=(string)=>{
   else return string;
 };
 
+
 const CardsOfSubjects=(props)=>{
-    let classes=useStyles();
-    //let colorFont
-    let block=props.subjects.map((sub)=>{
-      
-      let colorCircle=randomColor();
+  let classes=useStyles();
+  //let colorFont
 
-      return(
-        <Grid item xs={12} sm={6} lg={3} className={classes.card}>
-            <Paper elevation={3} className={classes.card}> 
-              <Grid container flexDirection="column" justify="center" alignItems="center" className={classes.cardContent}>
-              {/* <Grid item xs={12}>
-                  {""}
-                </Grid> */}
-                <Grid item xs={12}>
-                  {""}
-                </Grid>
-                <Grid item xs={12}>
-                  {""}
-                </Grid>
-                <Grid item style={{backgroundColor:`${colorCircle}`,color:"white" ,width:"75px",height:"75px",borderRadius: "50%",textAlign: "center",lineHeight: "75px",fontSize: "2rem",fontWeight: "bold",display: "block"}}>
-                  {getStartingLetters(sub.name)}
-                </Grid>
-                <Grid item xs={12}>
-                  {formatName(sub.name)}
-                </Grid>
-                <Grid item xs={12} style={{marginBottom:"1rem"}}>
-                  {formatName(sub.class_name)}
-                </Grid>
+  const handleClickCard=(subject_id,class_id)=>{
+    props.page.history.push(`/topics/${class_id}/${subject_id}`);
+  };
+
+  let i=0;
+  let block=props.subjects.map((sub)=>{
+    let colorCircle=randomColor();
+    i++;
+    return(
+      <Grid item xs={12} sm={6} lg={3} className={classes.card}>
+          <Paper elevation={3} className={classes.card} onClick={()=>handleClickCard(sub.id,sub.class_id)}> 
+            <Grid container flexDirection="column" justify="center" alignItems="center" className={classes.cardContent}>
+              <Grid item xs={12}>
+                {""}
               </Grid>
-            </Paper>
-        </Grid>
-      )
-    }
+              <Grid item xs={12}>
+                {""}
+              </Grid>
+              <Grid item style={{backgroundColor:`${props.arrayOfColors[i-1]}`,color:"white" ,width:"100px",height:"100px",borderRadius: "50%",textAlign: "center",lineHeight: "100px",fontSize: "2rem",fontWeight: "bold",display: "block"}}>
+                {getStartingLetters(sub.name)}
+              </Grid>
+              <Grid item xs={12}>
+                {formatName(sub.name)}
+              </Grid>
+              <Grid item xs={12} style={{marginBottom:"1rem"}}>
+                {formatName(sub.class_name)}
+              </Grid>
+            </Grid>
+          </Paper>
+      </Grid>
+    )
+  });
 
-    );
-
-    return block;
-
+  return block;
 };
-
-
 
 
 function StudentSubjects(props)
@@ -173,6 +171,11 @@ function StudentSubjects(props)
     const [currentBlockVisible,setCurrentBlockVisible]=useState(()=>0);
     const [numberOfBlocks,setNumberOfBlocks]=useState(()=>((subjects.length+8-(subjects.length%8))/8));
     const [firstTime,setFirstTime]=useState(()=>true);
+    const [arrayOfColors,setArrayOfColors]=useState(()=>[]);
+
+    const getSubjects=()=>{
+      //FETCH
+    };
 
     function handleScroll(num,upDown) {
       //up je true down je false
@@ -188,21 +191,34 @@ function StudentSubjects(props)
     };
 
     let ren=[];
-
     for(let i=0;i<numberOfBlocks;i++){
       let sliceOfSubjects=subjects.slice(i*8,i*8+8);
       ren.push(
           <Grid id={`blok${i}`} container flexDirection="row" alignItems="center" justify="center" item xs={12} style={{display:(currentBlockVisible<i)?"none":"flex"}} className={classes.blok}>
-              <CardsOfSubjects subjects={sliceOfSubjects}/>
+              <CardsOfSubjects subjects={sliceOfSubjects} arrayOfColors={arrayOfColors} page={props}/>
           </Grid>
     );
     };
 
 
-
    useEffect(()=>{
-    if(!firstTime&&(window.innerWidth>=1280)){handleScroll(currentBlockVisible,false);};
-    if(firstTime)setFirstTime(false);
+    let fetchedSubjects;
+    if(!offline){
+      fetchedSubjects=getSubjects();
+    }
+    else if(offline){
+      fetchedSubjects=subjects;
+    };
+
+    if(firstTime){
+      let ArOc=[];
+      for(let i=0;i<fetchedSubjects.length;i++){
+        ArOc.push(randomColor());
+      };
+      setArrayOfColors(ArOc);
+      setFirstTime(false);
+    }
+    else if(window.innerWidth>=1280){handleScroll(currentBlockVisible,false);};
    });
 
 
@@ -211,44 +227,43 @@ function StudentSubjects(props)
     <div style={{display: "flex", flexDirection: "column", alignItems:"center"}} className={classes.background}> 
     {
       loading? 
-      <div>
-        <Typography color="primary" className={classes.topicTitle}>Subjects</Typography>
-        {ren}
-        <div 
-            className={classes.bottomButtonDiv} 
-            onClick={()=>{
-              if(window.innerWidth>=1280){
-                handleScroll(currentBlockVisible-1,true);
-                setTimeout(() => {setCurrentBlockVisible(currentBlockVisible-1);}, 500);
-              }
-              else{setCurrentBlockVisible(currentBlockVisible-1);};
-              }
-            }
-            style={{display:(currentBlockVisible>0)?"block":"none"}}
-        >
-          <Typography>Less</Typography>
-          <Icon style={{fontSize:"2rem"}}>expand_less</Icon>
+        <div>
+            <Typography color="primary" className={classes.topicTitle}>Subjects</Typography>
+            {ren}
+            <div 
+                className={classes.bottomButtonDiv} 
+                onClick={()=>{
+                  if(window.innerWidth>=1280){
+                    handleScroll(currentBlockVisible-1,true);
+                    setTimeout(() => {setCurrentBlockVisible(currentBlockVisible-1);}, 500);
+                  }
+                  else{setCurrentBlockVisible(currentBlockVisible-1);};
+                  }
+                }
+                style={{display:(currentBlockVisible>0)?"block":"none"}}
+            >
+              <Typography>Less</Typography>
+              <Icon style={{fontSize:"2rem"}}>expand_less</Icon>
+            </div>
+            <div 
+              className={classes.bottomButtonDiv} 
+              onClick={()=>{
+                if(window.innerWidth>=1280){
+                setTimeout(() => {setCurrentBlockVisible(currentBlockVisible+1);}, 300);
+                }
+                else {setCurrentBlockVisible(currentBlockVisible+1)}
+                }
+              } 
+              style={{display:((currentBlockVisible+1)<numberOfBlocks)?"block":"none"}}
+            >
+              <Icon style={{fontSize:"2rem"}}>expand_more</Icon>
+              <Typography>More</Typography>
+            </div>
         </div>
-        <div 
-          className={classes.bottomButtonDiv} 
-          onClick={()=>{
-            if(window.innerWidth>=1280){
-            setTimeout(() => {setCurrentBlockVisible(currentBlockVisible+1);}, 300);
-            }
-            else {setCurrentBlockVisible(currentBlockVisible+1)}
-            }
-          } 
-          style={{display:((currentBlockVisible+1)<numberOfBlocks)?"block":"none"}}
-        >
-          <Icon style={{fontSize:"2rem"}}>expand_more</Icon>
-          <Typography>More</Typography>
-        </div>
-      </div>
     :
     <MatrixSkeleton/>
     }
     </div>
-    
   )
 };
 

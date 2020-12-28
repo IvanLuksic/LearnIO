@@ -121,7 +121,7 @@ function Navbar(){
                 <Box ml={1}><Link to="/"> <span className="learnioNavbar">LearnIO</span></Link></Box>
                 <Hidden xsDown>
                     <Box ml={8} mr={8}><li><Link to="/">Home</Link></li></Box>
-                    {StudentFeatures&&<Box mr={8}><li><Link to="/topics">Topics</Link></li></Box>}
+                    {/* {StudentFeatures&&<Box mr={8}><li><Link to="/topics">Topics</Link></li></Box>} */}
                     {StudentFeatures&&<Box mr={8}><li><Link to="/subjects">Subjects</Link></li></Box>}
                     {AdminFeatures&&<Box mr={8}><li><Link to="/AdminTopics">Admin-Topics</Link></li></Box>}
                     {AdminFeatures&&<Box mr={8}><li><Link to="/results">Results</Link></li></Box>}
@@ -140,12 +140,6 @@ function Navbar(){
                           <Link to="/login" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Login</Link>
                         </Button>
                       </Box> }
-
-                      {AdminFeatures &&
-                      <Box  className={classes.buttonBoxAdd}>
-                        <AddCourseSubjectClass className={classes.buttonAdd}></AddCourseSubjectClass>
-                     </Box> } 
-
                     {(AdminFeatures||StudentFeatures)&&
                       <Box  className={classes.buttonBlue1}>
                         <Button size="small"  >

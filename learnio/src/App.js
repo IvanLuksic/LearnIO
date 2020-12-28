@@ -2,12 +2,12 @@ import React, {useState} from "react";
 import { Route ,Switch} from "react-router-dom";
 import Login from "./pages/login";
 import StudentMatrix from "./pages/StudentMatrix";
+import StudentSubject from "./pages/StudentSubject";
 import AdminMatrix from "./pages/AdminMatrix";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import "./App.css";
 import Home from "./components/common/Home"
 import Navbar from './components/common/Navbar';
-import StudentTopics from "./components/student/StudentTopics";
 import AddTopicPU from './components/admin/addComponents/AddTopicPU';
 import AdminTopics from './components/admin/AdminTopics';
 import {useSelector} from 'react-redux';
@@ -16,6 +16,8 @@ import Students from "./components/admin/Students";
 import NotFound from './components/common/NotFound';
 import Register from './pages/Register';
 import StudentSubjects from './components/student/StudentSubjects';
+import AddCourseSubjectClass from './components/admin/addComponents/AddCourseSubjectClass';
+
 
 const theme = createMuiTheme({
     palette: {
@@ -61,6 +63,7 @@ function App() {
         <div className="App" style={{height: '100vh'}} >
           <ThemeProvider theme={theme}>
               <Navbar/>
+              {AdminFeatures&&<AddCourseSubjectClass/>}
               {/* <Button onClick={()=>{dispatch(studentLogIn());console.log(loginStatus);}}>Student </Button>
               <Button  onClick={()=>{dispatch(adminLogIn());console.log(loginStatus);}}>Admin </Button> */}
               <div className="App-intro">
@@ -68,7 +71,8 @@ function App() {
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/login" component={Login}/>
                     <Route exact path="/register" component={Register}/>
-                    {StudentFeatures&&<Route exact path="/topics"component={StudentTopics}/>}
+                    {StudentFeatures&&<Route path="/topics/:class_id/:subject_id"component={StudentSubject}/>}
+                    {/* {StudentFeatures&&<Route path="/topics"component={StudentTopics}/>} */}
                     {StudentFeatures&&<Route exact path="/topic/:id" component={StudentMatrix}/>}
                     {StudentFeatures&&<Route exact path="/subjects" component={StudentSubjects}/>}
                     {AdminFeatures&&<Route exact path="/admin-topic/:id" component={AdminMatrix}/>}

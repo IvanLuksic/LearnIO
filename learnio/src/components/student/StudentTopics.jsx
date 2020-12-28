@@ -171,11 +171,13 @@ function CustomPagination(props) {
 
 function StudentTopics(props){
     const offline= useSelector(state=>state.offline);
+    const class_id=props.class_id;
+    const subject_id=props.subject_id;
     const dispatch=useDispatch();//rows su podaci
     const [data,setData]=useState(()=>{return fakeLoadingTopics});//koristi ove dok ne učita da ne bi bilo undefined
     const [loading,setLoading]=useState(offline);//OFFLINE:true
     const classes = useStyles();
-   //red 1, blue 2, grey 3, green 4 - ovo je mislavova signalizacija iz APIja
+    //red 1, blue 2, grey 3, green 4 - ovo je mislavova signalizacija iz APIja
     function RenderStatusButton(id,status,name){
       if(status==1) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonRed} component={Link} to={`/topic/${id}`} size="small"> Start </Button>);
       else if(status==2) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonBlue} component={Link} to={`/topic/${id}`} size="small"> Continue </Button>);
