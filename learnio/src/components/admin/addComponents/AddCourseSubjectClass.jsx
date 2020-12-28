@@ -115,7 +115,7 @@ function AddCourseSubjectClass() {
             onClick={(e) => {
               handleClick(e,action.operation, action.name)
             }}
-            tooltipPlacement="bottom"
+            tooltipPlacement="left"
           />
         ))}
       </SpeedDial>
