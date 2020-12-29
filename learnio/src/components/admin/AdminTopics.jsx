@@ -172,8 +172,8 @@ function AdminTopics(props){
     const [selectedProperty, setSelectedProperty]=useState(()=>null);
     const [activeFilters, setActiveFilters]=useState(()=>[]);
 
-    const filterData=(event,filters,dataToFilter)=>{
-      event.preventDefault();
+    const filterData=(filters,dataToFilter,event)=>{
+      if(event!==undefined) event.preventDefault();
       let filtered=dataToFilter.filter((piece)=>{
         let outcome=true;
         for(let filter of filters){
@@ -200,6 +200,7 @@ function AdminTopics(props){
         return bool;
       });
       setActiveFilters(array);
+      setData(filterData(array,savedData,undefined));
     };
 
     const addFilter=(e)=>{
@@ -211,7 +212,7 @@ function AdminTopics(props){
       array.push({propertyName:selectedProperty, propertyValue:searched});
       if((searched!=null)&&(searched!="")&&(selectedProperty!=null)&&(unique)){
         setActiveFilters(array);
-        setData(filterData(e,activeFilters,savedData));
+        setData(filterData(activeFilters,savedData,e));
       }
       else e.preventDefault();
     };
