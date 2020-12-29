@@ -158,21 +158,21 @@ function CustomPagination(props) {
   );
 };
 
-const ChipsArray=(props)=> {
-  const classes = useStyles();
-  return (
-    <Paper component="ul" className={classes.rootChips}>
-      {
-      props.filterRules.map((data) => {
-        return (
-          <li key={data}>
-            <Chip style={{margin:"0 0.1em"}} label={data} onDelete={()=>{props.deleteWrongAnswer(data)}}/>
-          </li>
-        );
-      })}
-    </Paper>
-  );
-};
+// const ChipsArray=(props)=> {
+//   const classes = useStyles();
+//   return (
+//     <Paper component="ul" className={classes.rootChips}>
+//       {
+//       props.filterRules.map((data) => {
+//         return (
+//           <li key={data}>
+//             <Chip style={{margin:"0 0.1em"}} label={data} onDelete={()=>{props.deleteWrongAnswer(data)}}/>
+//           </li>
+//         );
+//       })}
+//     </Paper>
+//   );
+// };
 
 
 function Students(){
@@ -202,7 +202,8 @@ function Students(){
       fetch('http://127.0.0.1:3000/results', requestOptions)
       .then(response => response.json())
       .then(dataFetch => {  
-              setData(dataFetch);
+              setAllClasses(dataFetch);
+              listOfGroups=[{name:"All",id:-1},...dataFetch];
               setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
       })
       .catch((error)=>{
@@ -214,7 +215,7 @@ function Students(){
       (!offline)&&fetchClasses();
     },[]);
 /*=====================================================================================================================================================================================0 */
-
+ //lista razreda
     const renderGroupsList=(listOfGroups)=>{
       return(
           <FormControl className={classes.formControl2}>
