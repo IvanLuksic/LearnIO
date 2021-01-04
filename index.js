@@ -11,10 +11,10 @@ const models=require('./models');
 //instance=new questionclass(question,topic,save,course,user,result,nodelogger);
 //let result_instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger)
 //let instance=new topicclass(models.topic,models.asessment_objective,models.course,models.subject,models.result,models.save,models.question,models.tags_of_topic,models.course_topic,result_instance, nodelogger);
-//instance=new resultclass(result,user,subject,course,topic,asessment_objective,clas,nodelogger);
-//instance=new clasclass(models.clas,models.user,models.class_student,nodelogger);
+instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger);
+//instance=new clasclass(models.clas,models.user,models.class_student,models.subject,nodelogger);
 //instance=new courseclass(models.course,models.clas,models.subject,models.course_subject,nodelogger);
-instance=new subject_class(models.subject,models.clas,models.user,models.class_subject,nodelogger);
+//instance=new subject_class(models.subject,models.clas,models.user,models.class_subject,nodelogger);
 //instance=new userclass(models.user,models.clas,nodelogger);
 async function DatabaseConnection ()
 {
@@ -60,9 +60,15 @@ async function init()
    // await instance.getAllSubjectsForClass(1);
         //await instance.unlockAssociatedTopics(3,1,1,1);
         //await instance.getAllClassForAdmin();
-       // await instance.getAllStudentsForClassWithAllClasses(2);
+       //await instance.getAllStudentsForClass(2);
       // await instance.getAllStudents();
-      await instance. getAllSubjectsWithClasses();
+    // await instance.getSubject_CoursePairs();
+     //await instance.getAllSubjectsWithClasses();
+    // await instance.getAllClassAndSubjectsForStudent(5);
+    //await instance.getAllClassAndSubjectsForTeacher(2);
+    //await instance.getAllStudentResults(3);
+    //await instance.getAllAdminResults();
+    await instance. getAllTeacherResults(2)
         nodelogger.info('Uspjesno');
     } catch (error) {
         console.log('Greska pri citanju rezultata'+error);

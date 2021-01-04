@@ -11,12 +11,27 @@ module.exports= class session{
         try {
            await this.session.create({
                 timestamp_LOGIN: new Date(),
-                timestamp_LOGOUT:new Date(),
+                timestamp_LOGOUT:null,//dok se ne odjavi je null
                 user_id:users_id
             })
         } catch (error) {
-          this.Logger.info('Error in function createSession'+error);
+          this.Logger.error('Error in function createSession'+error);
          throw(error);
+        }
+    }
+    async Logout_time(users_id)
+    {
+        try {
+            await this.session.update({timestamp_LOGOUT:new Date()},{
+                where:{
+                  user_id:users_id,
+                  timestamp_LOGOUT:null  
+                }
+            });
+            this.Logger.info('Logout timestamp added succesfuly');
+        } catch (error) {
+            this.Logger.error('Error in function Logout_time');
+            throw(error);
         }
     }
 }

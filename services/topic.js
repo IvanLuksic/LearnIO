@@ -307,11 +307,11 @@ module.exports=class topic{
             throw(error);
         }
     }
-    async getSubject_CoursePairs()//za dodavanje topica da možemo odabrat kojem ćemo ga paru subject course dodat
+    async getSubject_CoursePairs()//za dodavanje topica da možemo odabrat kojem ćemo ga KURSU DODAT A DA U ISTO VRIJEME IMAMO PREGLED PREDEMTA KOJIMA PRIPADA TAJ KURS
     {
         try {
             try {
-                var subject_course=await this.Course.findAll({
+                var course_subject=await this.Course.findAll({
                     include:[
                         {model:this.Subject,
                         as:'subjects_course',
@@ -323,21 +323,29 @@ module.exports=class topic{
                 this.Logger.error('Error in fetching subject cpourse pairs from database');
                 throw(error);
             }
+            //vratiti niz kurseva oblika[ { course_id,course_name,subjects:[{subject_id,subject_name},....]},....]
             let format=[];
             let temp={};
-            for(let i=0;i<subject_course.length;i++)
+            let format2=[];
+            for(let i=0;i<course_subject.length;i++)
             {
-                for(let j=0;j<subject_course[i].subjects_course.length;j++)
+                for(let j=0;j<course_subject[i].subjects_course.length;j++)
                 {
                     temp={
-                        subject_id:subject_course[i].subjects_course[j].id,
-                        subject_name:subject_course[i].subjects_course[j].name,
-                        course_id:subject_course[i].id,
-                        course_name:subject_course[i].name
+                        subject_id:course_subject[i].subjects_course[j].id,
+                        subject_name:course_subject[i].subjects_course[j].name,
                     };
-                    format.push(temp);
+                    format2.push(temp);
                     temp={};
                 }
+                temp={
+                    course_id:course_subject[i].id,
+                    course_name:course_subject[i].name,
+                    subjects:format2
+                };
+                format.push(temp);
+                temp={};
+                format2=[];
             }
             for(let i=0;i<format.length;i++)
             this.Logger.info(JSON.stringify(format[i]));

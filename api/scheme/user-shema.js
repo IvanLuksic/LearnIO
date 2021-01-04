@@ -35,12 +35,6 @@ module.exports={
                 isNotEmpty: true,
                 minLength: 7
             },
-            created_at:{
-                type:"string",
-                format:'date-time',
-                isNotEmpty: true,
-                maxLength:30
-            },
             user_type:{
                 type:"number",
                 isNotEmpty: true,

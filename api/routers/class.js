@@ -7,8 +7,8 @@ const {authenticate_student,authenticate_admin,authenticate_teacher, authenticat
 const class_controler=require('../controlers/class-controler');
 module.exports=function (main_ruter){
     main_ruter.use('/',clas);
-    clas.get('/teacher/classes',authenticate_teacher,class_controler.getClassesForTeacher);
-    clas.get('/student/classes',authenticate_student,class_controler.getClassesForStudent);
-    clas.get('/admin/classes',authenticate_admin,class_controler.getClassesForAdmin);
+    clas.get('/teacher/classes',authenticate_teacher,class_controler.getClassesAndSubjectsForTeacher);
+    clas.get('/student/classes',authenticate_student,class_controler.getClassesAndSubjectsForStudent);
+    clas.get('/admin/classes',authenticate_admin,class_controler.getClassesAndSubjectsForAdmin);
     clas.post('/class/insert',ShemaValidator.validate('addClass'),authenticate_admin_or_teacher,class_controler.insertClass);
 }

@@ -24,7 +24,7 @@ module.exports=class user {
                 date_of_birth:properties.date_of_birth,
                 username:properties.username,
                 password:properties.password,
-                created_at:properties.created_at,
+                created_at:new Date(),
                 user_type:properties.user_type,
             });
             this.Logger.info('User added sucessfuly into database');
@@ -37,7 +37,7 @@ module.exports=class user {
             throw(error);
         }
     }
-    async getAllStudentsForClassWithAllClasses(clas_id)//za studente iz tog odabranog razreda dohvatit njihove podatke i sve ostale razrede u kojima se nalaze
+    async getAllStudentsForClass(clas_id)//za studente iz tog odabranog razreda dohvatit njihove podatke i sve ostale razrede u kojima se nalaze
     {
         try {
             //1.Dohvatit sve student idove iz tog razreda
