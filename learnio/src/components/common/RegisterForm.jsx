@@ -10,9 +10,9 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import FormControl from '@material-ui/core/FormControl';
 import { FormHelperText } from '@material-ui/core';
-//import 'date-fns';
-//import DateFnsUtils from '@date-io/date-fns';
-//import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker,} from '@material-ui/pickers';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker,} from '@material-ui/pickers';
 import CustomSnackbar from './Snackbar'
 
 import {Link} from 'react-router-dom';
@@ -55,6 +55,8 @@ function RegisterForm(props){
     const [surname,setSurname]=useState("");
     const [username,setUsername]=useState("");
     const [email,setEmail]=useState("");
+    const [roleVisible, setRoleVisible]=useState(true);
+    const [role, setRole]=useState("teacher");
     const [password,setPassword]=useState("");
     const [passwordCheck,setPasswordCheck]=useState("");
     const [showPassword,setShowPassword]=useState(false);
@@ -65,10 +67,11 @@ function RegisterForm(props){
 
     const handleChangeEmail=(event)=>{
         setEmail(event.target.value);
-
+        if(roleVisible==true)
+            setRole("student");
     }
     //provjerava jesu li sva polja unesena i da li se lozinke podudaraju
-    const validation=()=>{
+    const validation=()=>{   
         let temp={}
         temp.name=object.names ?"":"Name is required."
         if(temp.name=="Name is required."){
@@ -158,11 +161,11 @@ function RegisterForm(props){
     let object={
         names:name,
         surnames:surname,
-        //birth:birthDate,
+        birth:birthDate,
         emails:email,
+        roles:role,
         usernames:username,
         passwords:password,
-        showPassword:false,
         
     };
     //unosimo podatke i provjeravamo jeli sve okej
@@ -201,6 +204,21 @@ function RegisterForm(props){
                     error
                     {  ...( {error:errors.surnameError,helperText:errors.surname})}
                 />
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker style={{marginTop:0}} className={classes.fields}
+                        fullWidth
+                        inputVariant="filled"
+                        margin="normal"
+                        id="date-picker-dialog"
+                        label="Birth Date"
+                        format="dd/MM/yyyy"
+                        value={birthDate}
+                        onChange={handleDateChange}
+                        KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                        }}
+                    />
+                </MuiPickersUtilsProvider>
                 <TextField  fullWidth className={classes.fields}  
                     type="email" 
                     label="Email" 
@@ -218,6 +236,15 @@ function RegisterForm(props){
                     error
                     {  ...( {error:errors.usernameError,helperText:errors.username})}
                 />
+                {roleVisible &&
+                <TextField  fullWidth  className={classes.fields} 
+                    type="role" 
+                    label="Role" 
+                    variant="filled"
+                    value={"Student"}
+                    //onChange={()=>{setRole("student")}}
+                    
+                />}
                 <FormControl  className={classes.fields} variant="filled" error {...({error:errors.passwordError})}>               
                     <InputLabel  variant="filled" htmlFor="filled-adornment-password" >Password</InputLabel>
                     <FilledInput fullWidth
@@ -270,19 +297,3 @@ function RegisterForm(props){
     )
 }
 export default RegisterForm;
-
-/*<MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker className={classes.fields}
-                        fullWidth
-                        inputVariant="filled"
-                        margin="normal"
-                        id="date-picker-dialog"
-                        label="Birth Date"
-                        format="dd/MM/yyyy"
-                        value={birthDate}
-                        onChange={handleDateChange}
-                        KeyboardButtonProps={{
-                            'aria-label': 'change date',
-                        }}
-                    />
-                </MuiPickersUtilsProvider>*/
