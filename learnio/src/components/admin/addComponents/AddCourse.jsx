@@ -95,7 +95,7 @@ export default function AddCourse(props) {
 
     return(
         <Grid className={classes.gridStyle} container item direction="column" justify="space-between" alignItems="center" xs={12} md={10} spacing={1}>
-            <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Subject name"/>
+            <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Course name"/>
             <FormControl className={classes.formControl}>
                 <InputLabel>Classes</InputLabel>
                 <Select  multiple value={classCheck} onChange={handleClassCheck} renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.id} - ${selTop.name}`); return array.join(`, `);} } MenuProps={MenuProps}>
