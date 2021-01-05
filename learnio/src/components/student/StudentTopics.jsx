@@ -11,6 +11,10 @@ import {topicSelected} from '../../redux/actions/topicID';
 import fakeLoadingTopics from '../../sampleData/student/topics.json'
 import Skeleton from '@material-ui/lab/Skeleton';
 
+//-------------------------------------
+import CustomAccordion from './AccordionTemp/Accordion.jsx';
+//-------------------------------------
+
 const useStyles = makeStyles((theme) => ({
 
     background:{
@@ -305,7 +309,10 @@ function StudentTopics(props){
           <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
           <div className={classes.tabela}>
             <DataGrid disableSelectionOnClick={true} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns}/>
-          </div>   
+          </div>  
+          <div style={{width:"40vw", marginTop:"20vh", marginBottom:"40vh"}}>
+            <CustomAccordion/>
+          </div> 
         </div>
         :
         <div className={classes.skeleton}>

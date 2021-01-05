@@ -6,8 +6,7 @@ import react from '../../images/react.png';
 import express from '../../images/express.png';
 import node from '../../images/node.png';
 import Grid from '@material-ui/core/Grid';
-//import backgroundIMG from '../../images/learniobg10-15.png'
-import backgroundIMG from '../../images/backgroundFestive.jpg'
+import backgroundIMG from '../../images/learniobg10-15.png'
 import Carousel from 'react-material-ui-carousel';
 
 
