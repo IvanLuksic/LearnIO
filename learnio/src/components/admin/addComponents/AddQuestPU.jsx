@@ -10,6 +10,14 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import sampleCourses from '../../../sampleData/admin/allCourses.json';
+import sampleCourseTopic from '../../../sampleData/admin/allCourseTopic.json';
+import sampleTopics from '../../../sampleData/admin/allTopics.json';
 
 const useStyles = makeStyles((theme) => ({
   grupaBotuna:{
@@ -181,6 +189,7 @@ function AddQuestPU(props) {
   //states of elements-------------------
   const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(false);
+  const [show3, setShow3] = useState(false);
   const [showIMG, setIMG] = useState(false);
   const [text, setText] = useState('');
   const [imageState, setimageState] = useState(null);
@@ -188,7 +197,12 @@ function AddQuestPU(props) {
   const [wrongAnswers, setWrongAnswers]=useState(()=>{ return []});
   const [correctAnswer, setCorrectAnswers]=useState(()=>{ return "Točno"});
   const [multipleAnswer, setMultipleAnswers]=useState(()=>{ return false});
-
+  const [ieQuestionList, setIeQuestionList] = useState([]);
+  const [ieFilteredQuestionList, setIeFilteredQuestionList] = useState([]);
+  const [ieCourseList, setIeCourseList] = useState([]);
+  const [ieTopicList, setIeTopicList] = useState([]);
+  const [ieTopicSelectEnabled, setIeTopicSelectEnabled] = useState(false);
+  const [ieTextFieldEnabled, setIeTextFieldEnabled] = useState(false);
 
   const classes = useStyles();
 //dropdown button---------------------
@@ -235,6 +249,73 @@ function AddQuestPU(props) {
     props.questAdd(send);
     props.popUpClose(false);
   }
+
+  // Insert existing \\
+
+  const ieFilterQuestionList = e => {
+    if(e.target.value === "") {
+      setIeFilteredQuestionList([]);
+      return;
+    }
+
+    const updatedList = ieQuestionList.filter(item => {
+      return (
+        item.toLowerCase().search(e.target.value.toLowerCase()) !== -1
+      );
+    });
+    setIeFilteredQuestionList(updatedList);
+  }
+
+  // Test data functions
+
+  const ieSetTestData = () => {
+    ieSetTestCourses();
+    ieSetTestTopics();
+    ieSetTestQuestions();
+  }
+
+  const ieSetTestCourses = () => {
+    let list = [];
+    sampleCourses.forEach(item => {
+      list.push(item["name"]);
+    });
+    setIeCourseList(list);
+
+    // setIeCourseList(["Prvi kurs", "Drugi kurs", "Treci kurs", "Cetvrti kurs", "Peti kurs", "Sesti kurs", "Prvi kurs2", "Drugi kurs2", "Treci kurs2", "Cetvrti kurs2", "Peti kurs2", "Sesti kurs2", "Prvi kurs3", "Drugi kurs3", "Treci kurs3", "Cetvrti kurs3", "Peti kurs3", "Sesti kurs3"]);
+  }
+
+  const ieSetTestTopics = () => {
+    let list = [];
+    sampleTopics.forEach(item => {
+      list.push(item["topic_name"]);
+    });
+    setIeTopicList(list);
+
+    // setIeTopicList(["Prvi topik", "Drugi topik", "Treci topik", "Cetvrti topik", "Peti topik", "Sesti topik", "Prvi topik2", "Drugi topik2", "Treci topik2", "Cetvrti topik2", "Peti topik2", "Sesti topik2", "Prvi topik2", "Drugi topik2", "Treci topik2", "Cetvrti topik2", "Peti topik2", "Sesti topik2"]);
+  }
+
+  const ieSetTestQuestions = () => {
+    setIeQuestionList(["prvo", "drugo", "trece", "cetvrto", "peto", "sesto", "sedmo", "osmo", "1234", "a b c d", "#!#$%&/(", "tEsTnO piTaNjE"]);
+    setIeFilteredQuestionList(ieQuestionList);
+  }
+
+  // onChange handlers
+
+  const ieHandleCoursePick = () => {
+    ieSetTestTopics();
+
+    setIeTopicSelectEnabled(true);
+
+    setIeTextFieldEnabled(false);
+    setIeQuestionList([]);
+    setIeFilteredQuestionList([]);
+  }
+
+  const ieHandleTopicPick = () => {
+    ieSetTestQuestions();
+    setIeFilteredQuestionList([]);
+    setIeTextFieldEnabled(true);
+  }
 //------------------------
 
   return(
@@ -242,11 +323,12 @@ function AddQuestPU(props) {
     <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
       <Grid item className={classes.grupaBotuna}>
         <ButtonGroup orientation="vertical" variant="contained">
-          <Button variant="contained" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>{show1&&<Icon>keyboard_arrow_right</Icon>}Question</Button>
-          <Button variant="contained" onClick={() => [setShow1(false),setShow2(true)]} className={classes.buttonsInGroup}>{show2&&<Icon>keyboard_arrow_right</Icon>}Answers</Button>
+          <Button variant="contained" onClick={() => [setShow1(true),setShow2(false),setShow3(false)]} className={classes.buttonsInGroup}>{show1&&<Icon>keyboard_arrow_right</Icon>}Question</Button>
+          <Button variant="contained" onClick={() => [setShow1(false),setShow2(true),setShow3(false)]} className={classes.buttonsInGroup}>{show2&&<Icon>keyboard_arrow_right</Icon>}Answers</Button>
+          <Button variant="contained" onClick={() => [setShow1(false),setShow2(false),setShow3(true),ieSetTestCourses()]} className={classes.buttonsInGroup}>{show3&&<Icon>keyboard_arrow_right</Icon>}Insert existing</Button>
         </ButtonGroup>
       </Grid>
-      <Grid item>          
+      <Grid item>
         <Button variant="contained" type="submit" className={classes.saveBtn} onClick={handleSave}>
             SAVE  
         <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}}>save_icon</Icon>
@@ -310,6 +392,42 @@ function AddQuestPU(props) {
           </Grid>
           : null
         }
+        {
+          show3 ? // third case - insert existing
+            <Grid container item className={classes.editText} xs={12} md={8} direction="column" spacing={5}>
+              <Grid container item xs={12}>
+                <InputLabel style={{width:"100%"}} id="ieCourse">Select course</InputLabel>
+                <Select style={{width:"100%"}} labelId="ieCourse" id="ieCourseSelect" onChange={ieHandleCoursePick}>
+                  {ieCourseList.map((item, index) => (
+                    <MenuItem value={item} key={index}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid container item xs={12}>
+                <InputLabel style={{width:"100%"}} id="ieTopic">Select topic</InputLabel>
+                <Select style={{width:"100%"}} labelId="label" id="ieTopicSelect" onChange={ieHandleTopicPick} disabled={!ieTopicSelectEnabled}>
+                  {ieTopicList.map((item, index) => (
+                    <MenuItem value={item} key={index}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid container item xs={12}>
+                <TextField onChange={ieFilterQuestionList} style={{width:"100%"}} placeholder="Search question keywords" id="ieTextField" disabled={!ieTextFieldEnabled}/>
+              </Grid>
+              <List>
+                {ieFilteredQuestionList.map((item, index) => (
+                  <ListItem key={index}>
+                    {item}
+                  </ListItem>
+                ))}
+            </List>
+            </Grid>
+            : null
+          }
   </Grid>
   );
 }
