@@ -12,4 +12,5 @@ module.exports= function (main_router)//module.expots nece vise biti objekt nego
     login.get('/login',authenticate_login,login_controler.login);//ovdi stavit samo da vrati u response rolu i status pa ce se na frontendu presumjerit ovisno o roli
     login.post('/login',ShemaValidator.validate('login'),login_controler.login);
     login.head('/logout',login_controler.logout);//head request jer ne vraca ništa nazad pa da ne bude get
+    login.post('/check/username',ShemaValidator.validate('username'),login_controler.checkUsername);
 }

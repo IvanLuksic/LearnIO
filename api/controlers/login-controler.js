@@ -72,7 +72,17 @@ module.exports={
             req.session.destroy();//IZBRISE SESIJU IZ MEMORY STOREA
             res.sendStatus(200);
         } catch (error) {
-            nodelogger.info('Error in session deleting-logout');
+            nodelogger.error('Error in session deleting-logout');
+            next(error);
+        }
+    },
+    checkUsername: async (req,res,next)=>
+    {
+        try {
+            let available=await Login_instance.checkAvailabilityOfUsername(req.body.username);//vrati objekt
+            res.json(available);
+        } catch (error) {
+            nodelogger.error('Error in checkUsername');
             next(error);
         }
     }

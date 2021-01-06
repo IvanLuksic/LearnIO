@@ -46,6 +46,54 @@ module.exports= class course{
             throw(error);
         }
     }
+    async getCourseWithAllSubjects()//za dodavanje topica da možemo odabrat kojem ćemo ga KURSU DODAT A DA U ISTO VRIJEME IMAMO PREGLED PREDEMTA KOJIMA PRIPADA TAJ KURS
+    {
+        try {
+            try {
+                var course_subject=await this.Course.findAll({
+                    include:[
+                        {model:this.Subject,
+                        as:'subjects_course',
+                        through: { attributes: []}}
+                    ]
+                });
+                this.Logger.info('Subject courses pairs succesfuly fetched from database');
+            } catch (error) {
+                this.Logger.error('Error in fetching subject cpourse pairs from database');
+                throw(error);
+            }
+            //vratiti niz kurseva oblika[ { course_id,course_name,subjects:[{subject_id,subject_name},....]},....]
+            let format=[];
+            let temp={};
+            let format2=[];
+            for(let i=0;i<course_subject.length;i++)
+            {
+                for(let j=0;j<course_subject[i].subjects_course.length;j++)
+                {
+                    temp={
+                        subject_id:course_subject[i].subjects_course[j].id,
+                        subject_name:course_subject[i].subjects_course[j].name,
+                    };
+                    format2.push(temp);
+                    temp={};
+                }
+                temp={
+                    course_id:course_subject[i].id,
+                    course_name:course_subject[i].name,
+                    subjects:format2
+                };
+                format.push(temp);
+                temp={};
+                format2=[];
+            }
+            for(let i=0;i<format.length;i++)
+            this.Logger.info(JSON.stringify(format[i]));
+            return format;
+        } catch (error) {
+            this.Logger.error('Errro in function getSubject_CoursePairs '+error);
+            throw(error);
+        }
+    }
     async addCourse(request)//request body objektz s podacima za unos
     {
         try {
@@ -59,13 +107,11 @@ module.exports= class course{
                 const new_course=await this.Course.create({
                     name:request.course_name
                 });
-                for(let i=0;i<request.subject_id.length;i++)
-                {
+                //KURS moze biti povezan samo s jednim predmetom
                     await this.Course_subject.create({
-                        subject_id:request.subject_id[i],
+                        subject_id:request.subject_id,
                         course_id:new_course.id
                     });
-                }
                 this.Logger.info('Course added succesfuly ');
             }
             else throw(new Error('Defined course already exists'));

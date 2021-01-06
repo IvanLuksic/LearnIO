@@ -3,19 +3,22 @@
 //Dodaj topic u tablicu rezulati kad ga otkljuca-> BOOLEANBLUE ZNACI DA NIJE JOS NITI JEDNAPUT OTKLJUCAN-> TO TREBAM ZNATI JER AKO JE flase onda ga TREBA PROMIJNEITI u true i GENERIAT MU PITANJA U TABLICU save
 const { QueryTypes } = require('sequelize');
 const { Op } = require("sequelize");
+const { format } = require('winston');
 const {sequelize}=require('../models');
 module.exports=class topic{
-    constructor(topic,assesment,course,subject,result,save,question,tags_of_topic,course_topic,result_instance,logger)//svi mogući dependenciesi, ako se neki ne budu korstili maknit
+    constructor(topic,user,assesment,topic_assesment,course,subject,result,save,question,tags_of_topic,course_topic,result_instance,logger)//svi mogući dependenciesi, ako se neki ne budu korstili maknit
     {
         this.Topic=topic,
         this.Logger=logger;
         this.Assesment=assesment;
+        this.Topic_assesment=topic_assesment;
         this.Course=course;
         this.Subject=subject;
         this.Result=result;
         this.Save=save;
         this.Tags_of_topic=tags_of_topic;
         this.Course_topic=course_topic;
+        this.User=user;
         this.Question=question;
         this.Result_instance=result_instance;//kod otključavanja topica nam treba kada spremamo otključani topic u tablicu results
     }
@@ -113,7 +116,7 @@ module.exports=class topic{
     async associatedTopics(topics_id)
     {
         try {
-            try {//POTREBNO DEFINIRAT ALIAS ZA TABLICU TOOIC JER 2 PUTA JOINAMO PO NJOJ
+            try {//POTREBNO DEFINIRAT ALIAS ZA TABLICU TOPIC JER 2 PUTA JOINAMO PO NJOJ
                var association=await sequelize.query('SELECT * FROM topic t1 JOIN tags_of_topic  ON t1.id=tags_of_topic.source_topic JOIN topic t2 ON tags_of_topic.associated_topic=t2.id WHERE t1.id= :topic_id ',{
                 raw:true,
                 replacements: { topic_id: topics_id },
@@ -164,7 +167,7 @@ module.exports=class topic{
                 this.Logger.error('error in fetching from database ');
                 throw(error);
             }
-            if(topic.status==process.env.RED)//nije se prethodno ulazilo u njega-> updejtaj mu status u 1 jer je student kliknuo na njega i vrati 0
+            if(topic.status==process.env.RED)//nije se prethodno ulazilo u njega->KOD TOPICA JE CRVENA BOJA ZA ONE TOPICE U KOJE SE NIJE ULAZILO PRIJE-> updejtaj mu status u 1 jer je student kliknuo na njega i vrati 0
             {
                 try {
                     await this.Result.update({status:process.env.BLUE},{
@@ -235,7 +238,71 @@ module.exports=class topic{
            this.Logger.info(JSON.stringify(format[i]));
            return format;
         } catch (error) {
-            this.Logger.error('Error in function getAllTopics'+error);
+            this.Logger.error('Error in function getAllTopicsForAdmin'+error);
+            throw(error);
+        }
+    }
+    async getAllTopicsForTeacher(teachers_id)//saznamo sve topice koji su dostupni ucitelju preko predmeta s kojima je spojen u tablici teacher_subject
+    {
+        try {
+            try {
+                var topics=await this.User.findAll({
+                    attributes:['id'],
+                    include:{
+                        model:this.Subject,
+                        as:'subjects_teacher',
+                        through: { attributes: []},
+                        include:{
+                            model:this.Course,
+                            as:"courses_subject",
+                            through: { attributes: []},
+                            include:{
+                                model:this.Topic,
+                                attributes:['id','name'],
+                                as:'topics_course',
+                                through: { attributes: []},
+                            }
+                        }
+                    },
+                    where:{//samo za tog ucitelja
+                        id:teachers_id
+                    }
+                });
+            } catch (error) {
+                this.Logger.error('Error in fetching topics from database');
+                throw(error);
+            }
+            this.Logger.info('Topics fetched succesfully');
+            this.Logger.info(JSON.stringify(topics));
+            //vratitt ce glavni niz u kojem je samo 1 clan sa id-om ucitelja-> svi podnizovi ce biti podnizovi od clana topics[0]
+            let format=[];
+            let temp={};
+            //imat podrzani za lsucajeve N:N povezanosti , za sada je veza kurs topic 1:1,kurs predemt 1:1
+            //uzimamo sve moguce trojke topic-kurs-predmet
+            for(let i=0;i<topics[0].subjects_teacher.length;i++)
+            {
+                for(let j=0;j<topics[0].subjects_teacher[i].courses_subject.length;j++)
+                {
+                    
+                    for(let k=0;k<topics[0].subjects_teacher[i].courses_subject[j].topics_course.length;k++)
+                    {
+                        temp={
+                            topic_id:topics[0].subjects_teacher[i].courses_subject[j].topics_course[k].id,
+                            topic_name:topics[0].subjects_teacher[i].courses_subject[j].topics_course[k].name,
+                            course_id:topics[0].subjects_teacher[i].courses_subject[j].id,
+                            course_name:topics[0].subjects_teacher[i].courses_subject[j].name,
+                            subject_id:topics[0].subjects_teacher[i].id,
+                            subject_name:topics[0].subjects_teacher[i].name
+                        }
+                        format.push(temp);
+                        this.Logger.info(JSON.stringify(temp));
+                        temp={};
+                    }
+                }
+            }
+            return format;
+        } catch (error) {
+            this.Logger.error('Error in function getAllTopicsForTeacher'+error);
             throw(error);
         }
     }
@@ -307,80 +374,138 @@ module.exports=class topic{
             throw(error);
         }
     }
-    async getSubject_CoursePairs()//za dodavanje topica da možemo odabrat kojem ćemo ga KURSU DODAT A DA U ISTO VRIJEME IMAMO PREGLED PREDEMTA KOJIMA PRIPADA TAJ KURS
+    async getSubject_CoursePairs()//kod unosa topica da ih mozemo prikazat kada unosi pa da odabere kojem paru kurs-predmet ce pridruzit topic
     {
         try {
             try {
-                var course_subject=await this.Course.findAll({
-                    include:[
-                        {model:this.Subject,
-                        as:'subjects_course',
-                        through: { attributes: []}}
-                    ]
+                var pairs=await this.Subject.findAll({
+                    include:{
+                        model:this.Course,
+                        as:'courses_subject',
+                        through: { attributes: []}
+                    }
                 });
-                this.Logger.info('Subject courses pairs succesfuly fetched from database');
             } catch (error) {
-                this.Logger.error('Error in fetching subject cpourse pairs from database');
+                this.Logger.error('Error in fetching subject course pairs from datatabse');
                 throw(error);
             }
-            //vratiti niz kurseva oblika[ { course_id,course_name,subjects:[{subject_id,subject_name},....]},....]
-            let format=[];
+            this.Logger.info('Subject course pairs fetched succesfuly');
             let temp={};
-            let format2=[];
-            for(let i=0;i<course_subject.length;i++)
+            let format=[];
+            for(let i=0;i<pairs.length;i++)
             {
-                for(let j=0;j<course_subject[i].subjects_course.length;j++)
+                for(let j=0;j<pairs[i].courses_subject.length;j++)
                 {
                     temp={
-                        subject_id:course_subject[i].subjects_course[j].id,
-                        subject_name:course_subject[i].subjects_course[j].name,
+                        subject_id:pairs[i].id,
+                        subject_name:pairs[i].name,
+                        course_id:pairs[i].courses_subject[j].id,
+                        course_name:pairs[i].courses_subject[j].name
                     };
-                    format2.push(temp);
+                    format.push(temp);
                     temp={};
                 }
-                temp={
-                    course_id:course_subject[i].id,
-                    course_name:course_subject[i].name,
-                    subjects:format2
-                };
-                format.push(temp);
-                temp={};
-                format2=[];
             }
-            for(let i=0;i<format.length;i++)
-            this.Logger.info(JSON.stringify(format[i]));
+            for(let pair of format)
+            this.Logger.info(JSON.stringify(pair));
             return format;
-        } catch (error) {
-            this.Logger.error('Errro in function getSubject_CoursePairs '+error);
+            } catch (error) {
+            this.Logger.error('Error in function getSubject_CoursePairs'+error);
             throw(error);
         }
     }
-    async addTopic(associated_topics_id,columns_AO,row_D,courses_id,subjects_id,topic_name,topic_description)
+    async addTopic(properties)//request body objekt saljemo
     {
-        //Dodat u topic tablicu u subject topic course topic i tagsoftopic
+        //Dodat u topic tablicu u course topic i tagsoftopic
         try {
            const new_topic= await this.Topic.create({
-                name:topic_name,
-                rows_D:row_D,
-                column_numbers:columns_AO,
-                description:topic_description
+                name:properties.topic_name,
+                rows_D:properties.rows_D,
+                column_numbers:properties.columns_AO,
+                description:oropeeties.topic_description
             });
             await this.Course_topic.create({
                 topic_id:new_topic.id,
-                course_id:courses_id
+                course_id:properties.course_id
             });
-            for(let i=0;i<associated_topics_id.length;i++)//associated topcis je NIZ koji sadrži idove povezanih topica
+            for(let i=0;i<associated_topics.length;i++)//associated topcis je NIZ koji sadrži idove povezanih topica
             {
                 await this.Tags_of_topic.create({
                     source_topic:new_topic.id,
-                    associated_topic:associated_topics_id[i],
-                    required_level:3//zasasd spremamio po defaultu na 3
+                    associated_topic:associated_topics[i].topic_id,
+                    required_level:associated_topics[i].required_level//zasasd spremamio po defaultu na 3
                 });
+            }
+            //DODAT JOS UNOS ASESMENTA OD KOJIH DIO MOZE BITI IZABRAN VEC PRETHODNO A DIO MOZE BITI NANOVO DEFINIRAN
+            //ZASAD RADIMO DA TRETIRAMO SVAKI ASESMENT KO NOVI KOJEG UNOSIMO U TABLICI,KASNIJE IMAT id koji ce bit null ako je nanaovo unsesen a razlicit od null ako je odabra vec neki od ponudenih
+            for(let i=0;i<properties.asessments_array.length;i++)
+            {
+                try {
+                   const new_asessment=await this.Assesment.create({
+                        name:properties.asessments_array[i]    //jer je to niz stringova
+                    });
+                    await this.Topic_assesment.create({
+                        topic_id:new_topic.id,
+                        asessment_id:new_asessment.id
+                    });
+                } catch (error) {
+                    this.Logger.error('Error in inserting asessments into database');
+                    throw(error);
+                }
             }
             this.Logger.info('New topic succesfuly added to dataabase');
             return new_topic.id;            
         } catch (error) {
             this.Logger.error('Error in function addTopic'+error);
+            throw(error);
+        }
+    }
+    async getAllTopicsFromSubject(subjects_id)//dohvat svih topica iz predmeta iz kojih ce se birati povezani topici->POVEZANI TOPICI SE MOGU BIRATI SAMO IZ ISTOG PREDEMTA
+    {
+        try {
+            try {
+                var topics=await this.Subject.findAll({//svi topici iz nekog predmeta ce biti svi topici iz pojedinih kurseva iz tog predmeta->TOPIC SE NALAZI UNUTAR 1 KURSA A KURS UNUTAR 1 PREDEMTA->NECE BITI DUPLIKATA TOPICA UNUTAR RAZLICITIH KURSEVA(BAREM ZASAD DOK RADIMO NA OVOM PRINCIPU)
+                    include:{
+                        model:this.Course,
+                        as:'courses_subject',
+                        through: { attributes: []},
+                        include:{
+                            attributes:['id','name'],
+                            model:this.Topic,
+                            as:'topics_course',
+                            through: { attributes: []}
+                        }
+                    },
+                    where:{//id se odnosi na id od predmeta
+                        id:subjects_id
+                    }
+                });
+            } catch (error) {
+                this.Logger.error('Error in fetching topics from subject');
+                throw(error);
+            }
+            this.Logger.info('Topics from subject fetched succsfuly from database');
+            this.Logger.info(JSON.stringify(topics));
+            //dohvacamo ovo sve samo za 1 predmet->GLAVNI NIZ CE BITI NIZ OD SAMO 1 CLANA PA PISEMO topics[0] I NA NJEGA VEZEMO SVE OSTALE PODNIZOVE
+            let format=[];
+            let temp={};
+            for(let i=0;i<topics[0].courses_subject.length;i++)
+            {
+                for(let j=0;j<topics[0].courses_subject[i].topics_course.length;j++)
+                {
+                    temp={
+                        topic_id:topics[0].courses_subject[i].topics_course[j].id,
+                        topic_name:topics[0].courses_subject[i].topics_course[j].name
+                    };
+                    format.push(temp);
+                    temp={};
+                }
+            }
+            for(let topic of format)
+            this.Logger.info(JSON.stringify(topic));
+            return format;
+        } catch (error) {
+            this.Logger.error('Error in function getAllTopicsFromSubject'+error);
             throw(error);
         }
     }

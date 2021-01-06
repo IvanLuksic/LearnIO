@@ -13,13 +13,6 @@ module.exports={
                 isNotEmpty: true,
                 maxLength:20
             },
-            student_id:{
-                type:"array",
-                minItems:1,
-                items:{
-                    type:"number"
-                }
-            }
         }
     }
 }

@@ -8,12 +8,9 @@ module.exports={
                 isNotEmpty: true,
                 maxLength:30
             },
-            subject_id:{
-                type:"array",
-                minItems:1,
-                items:{
-                    type:"number"
-                }
+            subject_id:{//samo 1 predmetu pripada kurs
+                    type:"number",
+                    isNotEmpty:true
             }
         }
     }

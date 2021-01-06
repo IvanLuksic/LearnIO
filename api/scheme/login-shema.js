@@ -15,5 +15,16 @@ login:{
         }
     },
     required:["username","password"]
+},
+username:{
+    title:"Shema za provjeru jeli username zauzet prije nego se posalje zahtjev za registraciju",
+    type:"object",
+    properties:{
+        username:{
+            type:"string",
+            isNotEmpty: true,
+            minLength:1
+        }
+    }
 }
 }

@@ -9,9 +9,9 @@ const userclass=require('./services/user');
 const {nodelogger}=require('./loaders/logger');
 const models=require('./models');
 //instance=new questionclass(question,topic,save,course,user,result,nodelogger);
-//let result_instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger)
-//let instance=new topicclass(models.topic,models.asessment_objective,models.course,models.subject,models.result,models.save,models.question,models.tags_of_topic,models.course_topic,result_instance, nodelogger);
-instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger);
+let result_instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger)
+let instance=new topicclass(models.topic,models.user,models.asessment_objective,models.topic_assesment, models.course,models.subject,models.result,models.save,models.question,models.tags_of_topic,models.course_topic,result_instance, nodelogger);
+//instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger);
 //instance=new clasclass(models.clas,models.user,models.class_student,models.subject,nodelogger);
 //instance=new courseclass(models.course,models.clas,models.subject,models.course_subject,nodelogger);
 //instance=new subject_class(models.subject,models.clas,models.user,models.class_subject,nodelogger);
@@ -68,7 +68,10 @@ async function init()
     //await instance.getAllClassAndSubjectsForTeacher(2);
     //await instance.getAllStudentResults(3);
     //await instance.getAllAdminResults();
-    await instance. getAllTeacherResults(2)
+   // await instance. getAllTeacherResults(2)
+   // instance.getAllTopicsForTeacher(2)
+  // instance.getSubject_CoursePairs();
+  instance.getAllTopicsFromSubject(1)
         nodelogger.info('Uspjesno');
     } catch (error) {
         console.log('Greska pri citanju rezultata'+error);

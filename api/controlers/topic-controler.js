@@ -35,6 +35,23 @@ module.exports={
             next(error);
         }
     },
+    getTeacherTopics:async (req,res,next)=>
+    {
+        try {
+            try {
+                var topics=await Topic_instance.getAllTopicsForTeacher(req.session.user);//dati mu id od ucitelja
+            } catch (error) {
+                nodelogger.error('Error in fetching topics for teacher');
+                throw(error);
+            }
+            let response={};
+            response.Topics=topics;
+            res.json(response);
+        } catch (error) {
+            nodelogger.error('Error in getTeacherTopics');
+            next(error);
+        }
+    },
     getAdminTopicsEdit:async(req,res,next)=>//Dohvati mu ime topica retke i stupce + niz svih pitanja za svako polje u matrici
     {
         try {
@@ -87,7 +104,7 @@ module.exports={
     deleteTopic:async (req,res,next)=>
     {
         try {
-            await Topic_instance.deleteTopicFromEverywhere(req.params.topicID);
+            await Topic_instance.deleteTopicFromEverywhere(req.params.topic_id);
             nodelogger.info('Topic succesfuly deleted from database');
             res.sendStatus(200);
         } catch (error) {
@@ -110,12 +127,21 @@ module.exports={
             next(error);
         }
     },
+    getAssociatedFromSubject:async (req,res,next)=>
+    {
+        try {
+            var associated=await Topic_instance.getAllTopicsFromSubject(req.params.subject_id);
+            res.json(associated);
+        } catch (error) {
+            nodelogger.error('Error in getAssociatedFromSubject');
+            next(error);
+        }
+    },
     addTopics: async (req,res,next)=>
     {
         try {
-            const {associated_topics_id,columns_AO,rows_D,course_id,subject_id,topic_name,topic_description}=req.body;
             try {
-                var added_topic_id=await Topic_instance.addTopic(associated_topics_id,columns_AO,rows_D,course_id,subject_id,topic_name,topic_description);
+                var added_topic_id=await Topic_instance.addTopic(req.body);
             } catch (error) {
                 nodelogger.info('Error in adding topic to database');
                 throw(error);
