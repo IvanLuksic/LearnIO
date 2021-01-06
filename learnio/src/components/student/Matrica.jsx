@@ -94,8 +94,8 @@ function Matrica(props)
     const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
     const [loading,setLoading]=useState(offline);//OFFLINE:true
     
-    //pokusaj da spojin tocno koliko ima redaka
-    const bzvz=[
+    //opis svakog ao
+    const opis=[
       {ao:1,opis:"tezina 1"},
       {ao:2,opis:"tezina 2"},
       {ao:3,opis:"tezina 3"},
@@ -107,18 +107,6 @@ function Matrica(props)
       {ao:9,opis:"tezina 9"},
       {ao:10,opis:"tezina 10"},
     ]
-    const nums=range(1,matricaAO);
-    function range(start, end) {
-      let nums=[];
-      for (let i = start; i <= end; i++)
-      { 
-  	      nums.push(bzvz);
-      } 
-      return nums;
-    }
-    
-
-  
 
     const GetQuestion=()=>{
             const requestOptions = {
@@ -177,7 +165,7 @@ function Matrica(props)
                   <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
               </Grid>
                 <Grid direction="column" > 
-                  {nums.map((AO)=>(<Typography color="primary">AO={AO.ao} {AO.opis} </Typography>))}
+                  {opis.slice(0,matricaAO).map((AO)=>(<Typography color="primary">AO={AO.ao} {AO.opis} </Typography>))}
                 </Grid>
               <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
                   <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
