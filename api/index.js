@@ -7,6 +7,7 @@ const clas=require('./routers/class');
 const course=require('./routers/course');
 const subject=require('./routers/subject');
 const user=require('./routers/user');
+const invite=require('./routers/invite');
 const main_ruter=express.Router();
 login(main_ruter);
 topic(main_ruter);
@@ -16,6 +17,7 @@ clas(main_ruter);
 course(main_ruter);
 subject(main_ruter);
 user(main_ruter);
+invite(main_ruter);
 module.exports={
     Main_ruter: main_ruter
 }

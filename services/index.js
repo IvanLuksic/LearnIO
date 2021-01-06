@@ -9,6 +9,7 @@ const clas_class=require('./class');
 const course_class=require('./course');
 const subject_class=require('./subject');
 const user_class=require('./user');
+const invite_class = require('./invite_link');
 let login_instance=new login_class(models.user,nodelogger);
 let session_instance=new session_class(models.session,nodelogger);
 let result_instance=new result_class(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger)
@@ -18,6 +19,7 @@ let class_instance=new clas_class(models.clas,models.user,models.class_student,m
 let course_instance=new course_class(models.course,models.clas,models.subject,models.course_subject,nodelogger);
 let subject_instance=new subject_class(models.subject,models.clas,models.user,models.class_subject,nodelogger);
 let user_instance=new user_class(models.user,models.clas,nodelogger);
+let invite_link_instance=new invite_class(models.invite_links,models.class_student,nodelogger);
 module.exports={
     Login_instance:login_instance,
     Session_instance:session_instance,
@@ -27,5 +29,6 @@ module.exports={
     Class_instance:class_instance,
     Course_instance:course_instance,
     Subject_instance:subject_instance,
-    User_instance:user_instance
+    User_instance:user_instance,
+    Invite_instance:invite_link_instance
 }

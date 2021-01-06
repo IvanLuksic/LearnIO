@@ -19,6 +19,7 @@
     "express-flash-messages": "^0.1.1",
     "express-session": "^1.17.1",
     "morgan": "^1.10.0",
+    "node-uuid": "^1.4.8",
     "pg": "^8.4.2",
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.3.5",

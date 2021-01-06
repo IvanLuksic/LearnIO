@@ -12,14 +12,6 @@ module.exports = {
       course_id:2
     },
     {
-      subject_id:2,
-      course_id:1
-    },
-    {
-    subject_id:2,
-      course_id:2
-    },
-    {
      subject_id:2,
       course_id:3
     }

@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.session,{foreignKey: 'user_id'});
       this.hasMany(models.save,{foreignKey: 'student_id'});
       this.belongsToMany(models.clas,{through:'class_of_teacher',as:'classes_teacher',foreignKey: 'teacher_id'});
+      this.hasMany(models.invite_links,{foreignKey: 'creator_id'});
     }
   };
   user.init({

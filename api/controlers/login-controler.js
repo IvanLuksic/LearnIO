@@ -70,7 +70,7 @@ module.exports={
             //STAVITI TRENUTAK LOGOUTA U SESSION TABLICI-> pronaći redak di je user_id iz sessiona i di je timestamp_LOGOUT =null jer može bit više zapisa prethodnih za tog usera ali u njima je vec prethodno postavljen LOGOUT na neko vrijeme
             Session_instance.Logout_time(req.session.user);//poslat user_id
             req.session.destroy();//IZBRISE SESIJU IZ MEMORY STOREA
-            res.sendStatus(200);
+            res.sendStatus(204);//STATUS 204 No Content ako je sve dobro proslo
         } catch (error) {
             nodelogger.error('Error in session deleting-logout');
             next(error);
