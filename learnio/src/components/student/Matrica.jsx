@@ -52,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.up('md')]: {
         padding:"100px 0 0 0",
       },
+    descriptionAO:{
+      fontFamily:"Red Hat Display"
+    }
       
     }
 
@@ -90,8 +93,32 @@ function Matrica(props)
     const [topicDescription,setTopicDescription]=useState(()=>fakeFetchResponse.Matrix.topic_description);
     const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
     const [loading,setLoading]=useState(offline);//OFFLINE:true
+    
+    //pokusaj da spojin tocno koliko ima redaka
+    const bzvz=[
+      {ao:1,opis:"tezina 1"},
+      {ao:2,opis:"tezina 2"},
+      {ao:3,opis:"tezina 3"},
+      {ao:4,opis:"tezina 4"},
+      {ao:5,opis:"tezina 5"},
+      {ao:6,opis:"tezina 6"},
+      {ao:7,opis:"tezina 7"},
+      {ao:8,opis:"tezina 8"},
+      {ao:9,opis:"tezina 9"},
+      {ao:10,opis:"tezina 10"},
+    ]
+    const nums=range(1,matricaAO);
+    function range(start, end) {
+      let nums=[];
+      for (let i = start; i <= end; i++)
+      { 
+  	      nums.push(bzvz);
+      } 
+      return nums;
+    }
+    
 
-
+  
 
     const GetQuestion=()=>{
             const requestOptions = {
@@ -144,11 +171,14 @@ function Matrica(props)
           <WrongPU closePopup={setOpenPopupWrong} setTopicID={setTopicID} pageProps={props}/>
         </PopupDialog>        
         <Grid container direction="column" justify="flex-start" alignItems="center" className={classes.wholeGrid}>
-          <Grid container item md={6} direction="row"  justify="center" alignItems="center" >
+          <Grid container item md={10} direction="row"  justify="center" alignItems="center" >
               <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
                   <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName} </Typography></Grid>
                   <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
               </Grid>
+                <Grid direction="column" > 
+                  {nums.map((AO)=>(<Typography color="primary">AO={AO.ao} {AO.opis} </Typography>))}
+                </Grid>
               <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
                   <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
               </Grid>
