@@ -12,6 +12,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import { useSelector} from 'react-redux';
+import Slider from '@material-ui/core/Slider';
+import fakeBackendTopics from '../../../sampleData/admin/allTopics.json';
 
 
 const useStyles = makeStyles((theme)=>({
@@ -136,6 +138,10 @@ const useStyles = makeStyles((theme)=>({
       [theme.breakpoints.up('md')]: {
         marginLeft:"1em",
       }
+    },
+    topicWithSlider:{
+      padding:"1rem 0 0 0",
+      alignItems:"center"
     }
 }));
 
@@ -150,6 +156,7 @@ const MenuProps = {
       },
     },
 };
+
 const subjectCoursePairs=[
   {
     subject_id: 1,
@@ -175,14 +182,42 @@ const subjectCoursePairs=[
     course_id:160,
     course_name:"Elektrotehnika"
   }
-]
+];
 
+const TopicAndLevel=(props)=>{
+  const classes=useStyles();
+
+  return(
+    <Grid container flexDirection="row" justify="center" item xs={12} className={classes.topicWithSlider}>
+        <Grid item xs={4}>
+          <p><span style={{color:"grey"}}>#{props.topic.topic_id} </span> {props.topic.topic_name}</p>
+        </Grid>
+        <Grid  container flexDirection="row" justify="center" item xs={3} style={{padding:"0.25em",borderRadius:"25px",border:"1px solid lightgrey",backgroundColor:"#77777722",alignItems:"center"}}>
+          <Grid item xs={8}>
+            <Slider aria-labelledby="discrete-slider-small-steps" step={1} marks min={1} max={5} valueLabelDisplay="auto" value={props.AOL} onChange={(event,newValue)=>{props.setAOL(newValue);}}/>
+          </Grid>
+          <Grid item xs={2}>
+              {props.AOL}
+          </Grid>
+        </Grid>
+      </Grid>
+  );
+};
+
+const AOInput=(props)=>{
+  const classes=useStyles();
+  return(
+      <Grid item xs={5}>
+        <TextField className={classes.textField1} value={props.AOI} multiline rows={1} id="outlined-basic" variant="outlined" label={`AO${props.i}`} onChange={(e)=>{props.setAOI(e.target.value);}} />
+      </Grid>
+  );
+};
 
 function AddTopicPU(props){
 
     const offline= useSelector(state=>state.offline);
-    const [valueAO, setValueAO] = useState(1);
-    const [valueD, setValueD] = useState(1);
+    const [valueAO, setValueAO] = useState(null);
+    const [valueD, setValueD] = useState(null);
     const [valueText,setValueText]= useState('');
     const [show1, setShow1] = useState(true);
     const [show2, setShow2] = useState(false);
@@ -192,41 +227,82 @@ function AddTopicPU(props){
     const [associatedTopicsPossible, setAssociatedTopicsPossible] = useState([null]);
     const [subjectAndCourseList, setSubjectAndCourseList]=useState(()=>subjectCoursePairs);
     const [subjectAndCourse, setSubjectAndCourse]=useState(null);
+    const [AOI1,setAOI1]=useState(()=>"");
+    const [AOI2,setAOI2]=useState(()=>"");
+    const [AOI3,setAOI3]=useState(()=>"");
+    const [AOI4,setAOI4]=useState(()=>"");
+    const [AOI5,setAOI5]=useState(()=>"");
+    const [AOI6,setAOI6]=useState(()=>"");
+    const [AOI7,setAOI7]=useState(()=>"");
+    const [AOI8,setAOI8]=useState(()=>"");
+    const [AOI9,setAOI9]=useState(()=>"");
+    const [AOI10,setAOI10]=useState(()=>"");
+    const [AOL1,setAOL1]=useState(()=>3);
+    const [AOL2,setAOL2]=useState(()=>3);
+    const [AOL3,setAOL3]=useState(()=>3);
+    const [AOL4,setAOL4]=useState(()=>3);
+    const [AOL5,setAOL5]=useState(()=>3);
+    const [AOL6,setAOL6]=useState(()=>3);
+    const [AOL7,setAOL7]=useState(()=>3);
+    const [AOL8,setAOL8]=useState(()=>3);
+    const [AOL9,setAOL9]=useState(()=>3);
+    const [AOL10,setAOL10]=useState(()=>3);
+    
 
+    const fetchTopics=()=>{
+      let dataFetched;
+      const requestOptions = {
+        method: 'GET',
+        mode:'cors',
+        headers: { 'Content-Type': 'application/json'},
+        credentials: 'include'
+    };
+    
+    fetch(`http://127.0.0.1:3000/admin/topics/associated/${subjectAndCourse.subject_id}`, requestOptions)
+    .then(response => response.json())
+    .then(data => {  
+      dataFetched=data.Topics;
+    })
+    .catch((error)=>{
+        console.log('Error in fetch function '+ error);
+    });
+    
+      return dataFetched;
+    };
 
     const handleChangeTag = (event) => {
       setAssociatedTopic(event.target.value);
     };
+
     const handleChangePair = (event) => {
       if(event.target.value!==subjectAndCourse){
         setAssociatedTopicVisible(false);
         setAssociatedTopic([]);
         setSubjectAndCourse(event.target.value);
       };
-      let array=[];
-      props.fetchedTopics.map((topic)=>{
-        if(topic.course_name===event.target.value.course_name){array=[...array,{topic_name:topic.topic_name,topic_id:topic.topic_id}]}
-      });
-      let unique=[];
-      let map=new Map();
-      for(const item of array){
-        if(!map.has(item.topic_id)){map.set(item.topic_id,true);unique.push(item);}
+      if(!offline){
+        setAssociatedTopicsPossible(fetchTopics());
       }
-      if(array.length>0) setAssociatedTopicVisible(true);
-      setAssociatedTopicsPossible(unique);
+      else setAssociatedTopicsPossible(fakeBackendTopics);
+      setAssociatedTopicVisible(true);
     };
+
     const handleChangeText=(event)=>{
       setValueText(event.target.value); 
     };
+
     const handleChangeDesc=(event)=>{
       setValueDesc(event.target.value); 
     };
+
     const handleChangeAO = (event) => {
       setValueAO(event.target.value); 
     };
+
     const handleChangeD = (event) => {
       setValueD(event.target.value); 
     };
+
     const getSubjectCoursePairs=()=>{
       const requestOptions = {
         method: 'GET',
@@ -242,22 +318,46 @@ function AddTopicPU(props){
       .catch((error)=>{
       console.log('Error in fetch function '+ error);
       });
-    }
+    };
+
     useEffect(()=>{getSubjectCoursePairs();},[]);
     //submit botun sprema vrijednosti i poziva closePopUp
     const handleSave= ()=>{
       if(subjectAndCourse!==null){
-        let array=[];
-        if(associatedTopic!==[null]){associatedTopic.map((topic)=>array=[...array,topic.topic_id])};
+        let arrayAT=[];
+        let arrayAO=[];
+        if(associatedTopic!==[null]){
+          if(associatedTopic[0]!==undefined)arrayAT.push({...associatedTopic[0],required_level:AOL1});
+          if(associatedTopic[1]!==undefined)arrayAT.push({...associatedTopic[1],required_level:AOL2});
+          if(associatedTopic[2]!==undefined)arrayAT.push({...associatedTopic[2],required_level:AOL3});
+          if(associatedTopic[3]!==undefined)arrayAT.push({...associatedTopic[3],required_level:AOL4});
+          if(associatedTopic[4]!==undefined)arrayAT.push({...associatedTopic[4],required_level:AOL5});
+          if(associatedTopic[5]!==undefined)arrayAT.push({...associatedTopic[5],required_level:AOL6});
+          if(associatedTopic[6]!==undefined)arrayAT.push({...associatedTopic[6],required_level:AOL7});
+          if(associatedTopic[7]!==undefined)arrayAT.push({...associatedTopic[7],required_level:AOL8});
+          if(associatedTopic[8]!==undefined)arrayAT.push({...associatedTopic[8],required_level:AOL9});
+          if(associatedTopic[9]!==undefined)arrayAT.push({...associatedTopic[9],required_level:AOL10});
+
+        };
+        if(valueAO>0)arrayAO.push(AOI1);
+        if(valueAO>1)arrayAO.push(AOI2);
+        if(valueAO>2)arrayAO.push(AOI3);
+        if(valueAO>3)arrayAO.push(AOI4);
+        if(valueAO>4)arrayAO.push(AOI5);
+        if(valueAO>5)arrayAO.push(AOI6);
+        if(valueAO>6)arrayAO.push(AOI7);
+        if(valueAO>7)arrayAO.push(AOI8);
+        if(valueAO>8)arrayAO.push(AOI9);
+        if(valueAO>9)arrayAO.push(AOI10);
+        console.log(arrayAO);
         let send={
           topic_name: valueText,
           columns_AO:valueAO,
           rows_D: valueD,
-          subject_id: subjectAndCourse.subject_id,
           course_id:subjectAndCourse.course_id,
-          associated_topics_id: array,
-          topic_description:valueDesc
-
+          associated_topics: arrayAT,
+          topic_description:valueDesc,
+          assessments_array:arrayAO
         };
 
         const requestOptions = {
@@ -268,7 +368,7 @@ function AddTopicPU(props){
           credentials: 'include'
         };
 
-        offline&&props.addTopic({
+        offline&&(props.addTopic!==undefined)&&props.addTopic({
           topic_id:Math.floor(Math.random()*10000),
           topic_name:valueText,
           course_id:subjectAndCourse.course_id,
@@ -277,12 +377,12 @@ function AddTopicPU(props){
           subject_name:subjectAndCourse.subject_name,
           topic_description:valueDesc
         });
-        offline&&props.closePopup();
+        offline&&(props.closePopup!==undefined)&&props.closePopup();
 
         fetch(`http://127.0.0.1:3000/admin/add/topic`, requestOptions)
         .then(response => response.json())
         .then(data => {  
-          props.addTopic({
+          (props.addTopic!==undefined)&&props.addTopic({
             topic_id:data.topic_id,
             topic_name:valueText,
             course_id:subjectAndCourse.course_id,
@@ -298,33 +398,6 @@ function AddTopicPU(props){
         });
       }
     };
-
-        // topic.topic=valueText;
-        // topic.description=desc;
-        // topic.ao=valueAO;
-        // topic.d=valueD;
-        // topic.tags=associatedTopic;
-        // props.addTopic(topic);
-        // props.closePopup();
-        //closePopUp();
-        //pa san stavia ovo u komentar jer sigurno radi
-        /*setOpenAddTopic(false);
-        setValueAO(1);
-        setValueD(1);
-        setValueText(' ');
-        setAssociatedTopic([]);*/
-    // };
-    // prilikom zatvaranja popupa da postavi sve na pocetne vrijednosti
-    // const closePopUp=()=>{
-    //     setOpenAddTopic(false);
-    //     setValueAO(1);
-    //     setValueD(1);
-    //     setValueText(' ');
-    //     setAssociatedTopic([]);
-    //     setShow1(true);
-    //     setShow2(false);
-    //     setShow3(false);
-    // }
 
     const classes=useStyles();
     return(
@@ -373,6 +446,18 @@ function AddTopicPU(props){
                                       </Select>
                                   </Grid>
                                 </Grid>
+                                <Grid container item direction="row" xs={12} md={12} style={{justifyContent:"space-evenly"}}>
+                                  {(valueAO>0)&&<AOInput setAOI={setAOI1} AOI={AOI1} i={1}/>}
+                                  {(valueAO>1)&&<AOInput setAOI={setAOI2} AOI={AOI2} i={2}/>}
+                                  {(valueAO>2)&&<AOInput setAOI={setAOI3} AOI={AOI3} i={3}/>}
+                                  {(valueAO>3)&&<AOInput setAOI={setAOI4} AOI={AOI4} i={4}/>}
+                                  {(valueAO>4)&&<AOInput setAOI={setAOI5} AOI={AOI5} i={5}/>}
+                                  {(valueAO>5)&&<AOInput setAOI={setAOI6} AOI={AOI6} i={6}/>}
+                                  {(valueAO>6)&&<AOInput setAOI={setAOI7} AOI={AOI7} i={7}/>}
+                                  {(valueAO>7)&&<AOInput setAOI={setAOI8} AOI={AOI8} i={8}/>}
+                                  {(valueAO>8)&&<AOInput setAOI={setAOI9} AOI={AOI9} i={9}/>}
+                                  {(valueAO>9)&&<AOInput setAOI={setAOI10} AOI={AOI10} i={10}/>}
+                                </Grid>
                             </Grid>
                             : null
                         }{
@@ -391,6 +476,7 @@ function AddTopicPU(props){
                                 </FormControl>
                                 </Grid>
                                 {associatedTopicVisible&&<Grid item xs={12} style={{width:"100%"}}>
+                                <Grid item xs={12} style={{width:"100%"}}>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel >Associated topics</InputLabel>
                                     <Select  multiple value={associatedTopic} onChange={handleChangeTag}  renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.topic_id} - ${selTop.topic_name}`); return array.join(`, `);} } MenuProps={MenuProps}>
@@ -402,6 +488,19 @@ function AddTopicPU(props){
                                       ))}
                                     </Select>
                                 </FormControl>
+                                </Grid>
+                                <Grid item xs={12} style={{width:"100%",paddingTop:"2rem"}}> 
+                                      {(associatedTopic[0]!==undefined)&&<TopicAndLevel topic={associatedTopic[0]} setAOL={setAOL1} AOL={AOL1}/>}
+                                      {(associatedTopic[1]!==undefined)&&<TopicAndLevel topic={associatedTopic[1]} setAOL={setAOL2} AOL={AOL2}/>}
+                                      {(associatedTopic[2]!==undefined)&&<TopicAndLevel topic={associatedTopic[2]} setAOL={setAOL3} AOL={AOL3}/>}
+                                      {(associatedTopic[3]!==undefined)&&<TopicAndLevel topic={associatedTopic[3]} setAOL={setAOL4} AOL={AOL4}/>}
+                                      {(associatedTopic[4]!==undefined)&&<TopicAndLevel topic={associatedTopic[4]} setAOL={setAOL5} AOL={AOL5}/>}
+                                      {(associatedTopic[5]!==undefined)&&<TopicAndLevel topic={associatedTopic[5]} setAOL={setAOL6} AOL={AOL6}/>}
+                                      {(associatedTopic[6]!==undefined)&&<TopicAndLevel topic={associatedTopic[6]} setAOL={setAOL7} AOL={AOL7}/>}
+                                      {(associatedTopic[7]!==undefined)&&<TopicAndLevel topic={associatedTopic[7]} setAOL={setAOL8} AOL={AOL8}/>}
+                                      {(associatedTopic[8]!==undefined)&&<TopicAndLevel topic={associatedTopic[8]} setAOL={setAOL9} AOL={AOL9}/>}
+                                      {(associatedTopic[9]!==undefined)&&<TopicAndLevel topic={associatedTopic[9]} setAOL={setAOL10} AOL={AOL10}/>}
+                                </Grid>
                                 </Grid>}
                             </Grid>
                             :null
