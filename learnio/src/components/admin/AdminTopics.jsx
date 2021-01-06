@@ -252,7 +252,7 @@ function AdminTopics(props){
             </div>
 
             <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
-              <AddTopicPU closePopup={handleClose} addTopic={addQuestion}  fetchedTopics={data}/>
+              <AddTopicPU closePopup={handleClose} addTopic={addQuestion}/>
             </PopupDialog>
           </div>
           }

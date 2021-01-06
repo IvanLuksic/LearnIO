@@ -11,6 +11,7 @@ import CustomSnackbar from '../../common/Snackbar.jsx';
 import PopupDialog from '../../common/PopupDialog';
 import InviteLink from './InviteLink';
 import EditIcon from '@material-ui/icons/Edit';
+import AddTopicPU from './AddTopicPU';
 
 const useStyles = makeStyles((theme) => ({
   speedDial:{
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const actions = [
+  { icon: <Icon>apps</Icon>, name: 'add topic', operation: 'addtopic' },
   { icon: <Icon>class_icon</Icon>, name: 'add class', operation: 'addclass' },
   { icon: <Icon>subject_icon</Icon>, name: 'add subject', operation: 'addsubject' },
   { icon: <Icon>list_icon</Icon>, name: 'add course', operation: 'addcourse' },
@@ -75,6 +77,7 @@ function AddCourseSubjectClass() {
     if(operation=="invitePopUp") setIndex(4);
     if(operation === "addcourse") setIndex(1);
     if(operation === "addsubject") setIndex(2);
+    if(operation === "addtopic") setIndex(5);
     if(operation === "addclass") {
       fillYears();
       setIndex(3);
@@ -138,6 +141,11 @@ function AddCourseSubjectClass() {
       }{
         popupOpen && index === 4 ? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'40%'}}>
           <InviteLink closeInvite={closePopup}></InviteLink>
+        </PopupDialog>
+        : null
+      }{
+        popupOpen && index === 5 ? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
+          <AddTopicPU  closePopup={handleClose}/>
         </PopupDialog>
         : null
       }

@@ -55,16 +55,16 @@ const MenuProps = {
       },
     },
 };
-const classIDs = [
-    {id: 1, name: "Racunarstvo"},
-    {id: 2, name: "Elektrotehnika"},
-    {id: 3, name: "Brodogradnja"},
+const subjects = [
+    {subject_id: 1, subject_name: "Racunarstvo", classes:[{class_name:"Preddiplomski", class_year:"2014."},{class_name:"Strucni", class_year:"2014."}]},
+    {subject_id: 2, subject_name: "Elektrotehnika", classes:[{class_name:"Preddiplomski", class_year:"2014."},{class_name:"Strucni", class_year:"2014."}]},
+    {subject_id: 3, subject_name: "Brodogradnja", classes:[{class_name:"Preddiplomski", class_year:"2014."},{class_name:"Strucni", class_year:"2014."}]},
 ];
 
 export default function AddCourse(props) {
     const classes = useStyles();
     const [name, setName] = useState("");
-    const [classCheck, setClassCheck] = useState([])
+    const [classCheck, setClassCheck] = useState(()=>null)
     const [open, setOpen] = useState(false);
     const [index, setIndex] = useState(0);
 
@@ -98,11 +98,10 @@ export default function AddCourse(props) {
             <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Course name"/>
             <FormControl className={classes.formControl}>
                 <InputLabel>Classes</InputLabel>
-                <Select  multiple value={classCheck} onChange={handleClassCheck} renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.id} - ${selTop.name}`); return array.join(`, `);} } MenuProps={MenuProps}>
-                    {classIDs.map((classID) => (
-                        <MenuItem key={classID.id} value={classID}>
-                            <Checkbox checked={classCheck.indexOf(classID) > -1} />
-                            <ListItemText primary={`${classID.id} - ${classID.name}`} />
+                <Select  value={classCheck} onChange={handleClassCheck} renderValue={(selected) => `${selected.subject_id} - ${selected.subject_name}`}  MenuProps={MenuProps}>
+                    {subjects.map((subject) => (
+                        <MenuItem key={subject.subject_id} value={subject}>
+                            <ListItemText primary={`${subject.subject_id} - ${subject.subject_name}`} />
                         </MenuItem>
                     ))}
                 </Select>

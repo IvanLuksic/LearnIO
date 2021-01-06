@@ -70,7 +70,8 @@ export default function AddSubject(props) {
     const [className, setClass] = useState("select class");
     const [open, setOpen] = useState(false);
     const [index, setIndex] = useState(0);
-    const [classCheck, setClassCheck] = useState([])
+    const [classCheck, setClassCheck] = useState([]);
+    //dodaj stanje za classIDs
 
     const handleName = (event) => {
         setName(event.target.value);
