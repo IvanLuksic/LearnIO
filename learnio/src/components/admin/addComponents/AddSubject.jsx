@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -11,6 +11,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
+import { useSelector} from 'react-redux';
 
 const useStyles = makeStyles((theme)=>({
     textField:{
@@ -55,24 +56,38 @@ const MenuProps = {
       },
     },
 };
-const classIDs = [
-    {id: 1, name: "1.A"},
-    {id: 2, name: "2.B"},
-    {id: 3, name: "3.C"},
-    {id: 4, name: "4.D"},
-    {id: 5, name: "5.E"},
-    {id: 6, name: "6.F"},
+const classIDOs = [
+    {class_id: 1, class_name: "1.A"},
+    {class_id: 2, class_name: "1.A"},
+    {class_id: 3, class_name: "1.A"},
+    {class_id: 4, class_name: "1.A"},
+    {class_id: 5, class_name: "1.A"},
 ];
 
 export default function AddSubject(props) {
+    const offline= useSelector(state=>state.offline);
     const classes = useStyles();
     const [name,setName] = useState("");
     const [className, setClass] = useState("select class");
     const [open, setOpen] = useState(false);
     const [index, setIndex] = useState(0);
     const [classCheck, setClassCheck] = useState([]);
-    //dodaj stanje za classIDs
+    const [classIDs, setClassIDs] = useState(()=>classIDOs);
+    const [errorText, setError] = useState(()=>"");
 
+    //dodaj stanje za classIDs
+    const fetchClasses=()=>{
+        const requestOptions = {
+            method: 'GET',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            credentials: 'include'
+        };
+        fetch('http://127.0.0.1:3000/question/update', requestOptions)
+        .then(response => response.json())
+        .then(data => {  setClassIDs(data)})
+        .catch((error)=>{handleIndex(3);setError('Error in fetch function '+ error);});
+    };
     const handleName = (event) => {
         setName(event.target.value);
     };
@@ -90,26 +105,55 @@ export default function AddSubject(props) {
     // looking for this? --------------------------------------------
     const handleSave = () => {
         if(name.length > 0 && classCheck.length > 0) {
-            props.handleIndex(2);
-            props.handleOpen();
-            props.closePopup();
-        }
+            if(!offline){
+                let cl=classCheck.map((cla)=>cla.class_id)
+                let send={
+                    subject_name: name,
+                    classes: cl,
+                    // student_id: [
+                    //     {id: 1},
+                    // ],
+                }
+    
+                const requestOptions = {
+                    method: 'PUT',
+                    mode:'cors',
+                    headers: { 'Content-Type': 'application/json'},
+                    body: JSON.stringify({...send}),
+                    credentials: 'include'
+                };
+                fetch('http://127.0.0.1:3000/question/update', requestOptions)
+                .then((data)=>{            
+                    props.handleIndex(2);
+                    props.handleOpen();
+                    props.closePopup();})
+                .catch((error)=>{handleIndex(3);setError('Error in fetch function '+ error);});
+            }
+            if(offline){
+                props.handleIndex(2);
+                props.handleOpen();
+                props.closePopup();
+            }
         else if(name.length <= 0) handleIndex(1);
         else handleIndex(2);
+        }
     };
 
     //---------------------------------------------------------------
+    useEffect(()=>{
+        (!offline)&&fetchClasses();
+    });
 
     return(
         <Grid className={classes.gridStyle} container item direction="column" justify="space-between" alignItems="center" xs={12} md={10} spacing={1}>
             <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Subject name"/>
             <FormControl className={classes.formControl}>
                 <InputLabel>Subjects</InputLabel>
-                <Select  multiple value={classCheck} onChange={handleClassCheck} renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.id} - ${selTop.name}`); return array.join(`, `);} } MenuProps={MenuProps}>
+                <Select  multiple value={classCheck} onChange={handleClassCheck} renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.class_id} - ${selTop.class_name}`); return array.join(`, `);} } MenuProps={MenuProps}>
                     {classIDs.map((classID) => (
-                        <MenuItem key={classID.id} value={classID}>
+                        <MenuItem key={classID.class_id} value={classID}>
                             <Checkbox checked={classCheck.indexOf(classID) > -1} />
-                            <ListItemText primary={`${classID.id} - ${classID.name}`} />
+                            <ListItemText primary={`${classID.class_id} - ${classID.class_name}`} />
                         </MenuItem>
                     ))}
                 </Select>
@@ -123,6 +167,9 @@ export default function AddSubject(props) {
                 : null
             }{
                 open && index === 2 ? <CustomSnackbar handleClose={handleClose} open={open} text="No classes selected" status="error"/>
+                : null
+            }{
+                open && index === 3 ? <CustomSnackbar handleClose={handleClose} open={open} text={errorText} status="error"/>
                 : null
             }
         </Grid>

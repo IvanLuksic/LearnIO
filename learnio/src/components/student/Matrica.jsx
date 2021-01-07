@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
         padding:"100px 0 0 0",
       },
     descriptionAO:{
-      fontFamily:"Red Hat Display"
+      fontFamily: "Red Hat Display, sans-serif !important"
     }
       
     }
@@ -165,7 +165,7 @@ function Matrica(props)
                   <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
               </Grid>
                 <Grid direction="column" > 
-                  {opis.slice(0,matricaAO).map((AO)=>(<Typography color="primary">AO={AO.ao} {AO.opis} </Typography>))}
+                  {opis.slice(0,matricaAO).map((AO)=>(<p style={{fontFamily:"Red Hat Display", color: "#4372ec"}}>AO={AO.ao} {AO.opis} </p>))}
                 </Grid>
               <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
                   <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>

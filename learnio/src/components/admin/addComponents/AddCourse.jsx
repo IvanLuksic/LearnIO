@@ -9,8 +9,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
 import CustomSnackbar from '../../common/Snackbar.jsx';
+import { useSelector} from 'react-redux';
+import Tooltip from '@material-ui/core/Tooltip';
+import { subHours } from 'date-fns';
 
 const useStyles = makeStyles((theme) => ({
     textField:{
@@ -55,24 +57,44 @@ const MenuProps = {
       },
     },
 };
-const subjects = [
+const subs= [
     {subject_id: 1, subject_name: "Racunarstvo", classes:[{class_name:"Preddiplomski", class_year:"2014."},{class_name:"Strucni", class_year:"2014."}]},
     {subject_id: 2, subject_name: "Elektrotehnika", classes:[{class_name:"Preddiplomski", class_year:"2014."},{class_name:"Strucni", class_year:"2014."}]},
     {subject_id: 3, subject_name: "Brodogradnja", classes:[{class_name:"Preddiplomski", class_year:"2014."},{class_name:"Strucni", class_year:"2014."}]},
 ];
 
 export default function AddCourse(props) {
+    const offline= useSelector(state=>state.offline);
     const classes = useStyles();
     const [name, setName] = useState("");
-    const [classCheck, setClassCheck] = useState(()=>null)
+    const [subjectCheck, setSubjectCheck] = useState(()=>null)
     const [open, setOpen] = useState(false);
     const [index, setIndex] = useState(0);
+    const [subjects, setSubjects] = useState(()=>subs);
+    const [errorText, setError] = useState(()=>"");
 
+
+    const fetchSubjects=()=>{
+        const requestOptions = {
+            method: 'GET',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            credentials: 'include'
+        };
+        fetch('http://127.0.0.1:3000/question/update', requestOptions)
+        .then(response => response.json())
+        .then(data => {  setSubjects(data)})
+        .catch((error)=>{handleIndex(3);setError('Error in fetch function '+ error);});
+    };
+    const getClassNames = (subject) => {
+        let array=subject.classes.map((cl)=>cl.class_name+" "+cl.class_year);
+        return array.join(", ");
+    };
     const handleName = (event) => {
         setName(event.target.value);
     };
-    const handleClassCheck = (event) => {
-        setClassCheck(event.target.value);
+    const handleSubjectCheck = (event) => {
+        setSubjectCheck(event.target.value);
     };
     const handleClose = () => {
         setOpen(false);
@@ -83,10 +105,31 @@ export default function AddCourse(props) {
     }
     // looking for this? -----------------------------------------------------
     const handleSave = () => {
-        if (name.length > 0 && classCheck.length > 0) {
-            props.handleIndex(3);
-            props.handleOpen();
-            props.closePopup();
+        if (name.length > 0 && subjectCheck.length > 0) {
+            if(!offline){
+                let send={
+                    subject_id: subjectCheck.subject_id,
+                    course_name:name
+                }
+                const requestOptions = {
+                    method: 'PUT',
+                    mode:'cors',
+                    headers: { 'Content-Type': 'application/json'},
+                    body: JSON.stringify({...send}),
+                    credentials: 'include'
+                };
+                fetch('http://127.0.0.1:3000/question/update', requestOptions)
+                .then((data)=>{            
+                    props.handleIndex(3);
+                    props.handleOpen();
+                    props.closePopup();})
+                .catch((error)=>{handleIndex(3);setError('Error in fetch function '+ error);});
+            }
+            if(offline){
+                props.handleIndex(3);
+                props.handleOpen();
+                props.closePopup();
+            }
         }
         else if (name.length <= 0) handleIndex(1);
         else handleIndex(2);
@@ -97,12 +140,14 @@ export default function AddCourse(props) {
         <Grid className={classes.gridStyle} container item direction="column" justify="space-between" alignItems="center" xs={12} md={10} spacing={1}>
             <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Course name"/>
             <FormControl className={classes.formControl}>
-                <InputLabel>Classes</InputLabel>
-                <Select  value={classCheck} onChange={handleClassCheck} renderValue={(selected) => `${selected.subject_id} - ${selected.subject_name}`}  MenuProps={MenuProps}>
+                <InputLabel>Subjects</InputLabel>
+                <Select  value={subjectCheck} onChange={handleSubjectCheck} renderValue={(selected) => `${selected.subject_id} - ${selected.subject_name}`}  MenuProps={MenuProps}>
                     {subjects.map((subject) => (
-                        <MenuItem key={subject.subject_id} value={subject}>
-                            <ListItemText primary={`${subject.subject_id} - ${subject.subject_name}`} />
-                        </MenuItem>
+                        <Tooltip title={getClassNames(subject)} placement="right" arrow>
+                            <MenuItem key={subject.subject_id} value={subject}>
+                                <ListItemText primary={`${subject.subject_id} - ${subject.subject_name}`} />
+                            </MenuItem>
+                        </Tooltip>
                     ))}
                 </Select>
             </FormControl>
@@ -113,9 +158,11 @@ export default function AddCourse(props) {
             {
                 open && index === 1 ? <CustomSnackbar handleClose={handleClose} open={open} text="Name not specified" status="error"/>
                 : null
-            }
-            {
+            }{
                 open && index === 2 ? <CustomSnackbar handleClose={handleClose} open={open} text="No classes selected" status="error"/>
+                : null
+            }{
+                open && index === 3 ? <CustomSnackbar handleClose={handleClose} open={open} text={errorText} status="error"/>
                 : null
             }
         </Grid>

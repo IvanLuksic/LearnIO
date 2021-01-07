@@ -63,7 +63,6 @@ function App() {
         <div className="App" style={{height: '100vh'}} >
           <ThemeProvider theme={theme}>
               <Navbar/>
-              {AdminFeatures&&<AddCourseSubjectClass/>}
               {/* <Button onClick={()=>{dispatch(studentLogIn());console.log(loginStatus);}}>Student </Button>
               <Button  onClick={()=>{dispatch(adminLogIn());console.log(loginStatus);}}>Admin </Button> */}
               <div className="App-intro">
@@ -83,6 +82,8 @@ function App() {
                     <Route component={NotFound}/>
                 </Switch>
               </div>
+              {AdminFeatures&&<AddCourseSubjectClass/>}
+
           </ThemeProvider>
         </div>
 

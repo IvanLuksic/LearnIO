@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import MenuItem from '@material-ui/core/MenuItem';
 import CustomSnackbar from '../../common/Snackbar.jsx';
+import { useSelector} from 'react-redux';
 
 const useStyles = makeStyles((theme)=>({
     textField:{
@@ -36,12 +37,15 @@ const useStyles = makeStyles((theme)=>({
 }));
 
 export default function AddCourse(props) {
+    const offline= useSelector(state=>state.offline);
     const classes = useStyles();
     const [name,setName] = useState("");
     const [year, setYear] = useState("select year");
     const [message, setMessage] = useState("Incorrect year");
     const [index, setIndex] = useState(0);
     const [open, setOpen] = useState(false);
+    const [errorText, setError] = useState(()=>"");
+
 
     const handleYear = (value) => {
         setYear(value);
@@ -62,20 +66,37 @@ export default function AddCourse(props) {
     // looking for this? ------------------------------------
     const handleSave = () => {
         if (message!=="Incorrect year" && name.length > 0) {
+        if(!offline){
+            let send={
+                class_name: name,
+                class_year: year,
+                // student_id: [
+                //     {id: 1},
+                // ],
+            }
 
-        let send={
-            class_name: name,
-            class_year: year,
-            student_id: [
-                {id: 1},
-            ],
+            const requestOptions = {
+                method: 'PUT',
+                mode:'cors',
+                headers: { 'Content-Type': 'application/json'},
+                body: JSON.stringify({...send}),
+                credentials: 'include'
+            };
+            fetch('http://127.0.0.1:3000/question/update', requestOptions)
+            .then((data)=>{            
+                props.handleIndex(1);
+                props.handleOpen();
+                props.closePopup();})
+            .catch((error)=>{handleIndex(3);setError('Error in fetch function '+ error);});
         }
-        props.handleIndex(1);
-        props.handleOpen();
-        props.closePopup();
+        if(offline){
+            props.handleIndex(1);
+            props.handleOpen();
+            props.closePopup();
         }
         else if (name.length <= 0) handleIndex(1);
         else handleIndex(2);
+    }
     };
     //---------------------------------------------------------
 
@@ -94,6 +115,9 @@ export default function AddCourse(props) {
                 : null
             }{
                 open && index === 1 ? <CustomSnackbar handleClose={handleClose} open={open} text="Name not specified" status="error"/>
+                : null
+            }{
+                open && index === 3 ? <CustomSnackbar handleClose={handleClose} open={open} text={errorText} status="error"/>
                 : null
             }
         </Grid>
@@ -122,4 +146,4 @@ function YearPicker(props) {
                 ))}
         </TextField>
     );
-}
+};
