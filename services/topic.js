@@ -22,7 +22,7 @@ module.exports=class topic{
         this.Question=question;
         this.Result_instance=result_instance;//kod otključavanja topica nam treba kada spremamo otključani topic u tablicu results
     }
-    async getTopicsForUserAndCourse(students_id,subjects_id,courses_id,clas_id)//svi topici koji se nalaze u tablici rezultati-> oni su trenutno otkljucani za tog korisnika
+    async getTopicsForStudent(students_id,subjects_id,courses_id,clas_id)//svi topici koji se nalaze u tablici rezultati-> oni su trenutno otkljucani za tog korisnika
     {
 
         try {
@@ -62,6 +62,46 @@ module.exports=class topic{
             }
         } catch (error) {
             this.Logger.error('Error in function getTopicsForUserAndCourse '+error);
+            throw(error);
+        }
+    }
+    async getAllTopicsFromCourse(courses_id)//dohvatit topice iz odredenog kursa
+    {
+        try {
+            try {
+                var topics=await this.Course.findAll({
+                    attributes:['id'],
+                    include:{
+                        model:this.Topic,
+                        attributes:['id','name'],
+                        as:'topics_course',
+                        through: { attributes: [] },
+                    },
+                    where:{//samo iz odredenog kursa
+                        id:courses_id
+                    }
+                });
+            } catch (error) {
+                this.Logger.error('Error in fetching topics from database');
+                throw(error);
+            }
+            this.Logger.info('Topics succesfuly fetched from database');
+            let format=[];
+            let temp={};
+            for(let i=0;i<topics[0].topics_course.length;i++)
+            {
+                temp={
+                    topic_id:topics[0].topics_course[i].id,
+                    topic_name:topics[0].topics_course[i].name
+                };
+                format.push(temp);
+                temp={};
+            }
+            for(let topic of format)
+            this.Logger.info(JSON.stringify(topic));
+            return format;
+        } catch (error) {
+            this.Logger.error('Error in function getAllTopicsFromCourse'+error);
             throw(error);
         }
     }
@@ -422,18 +462,18 @@ module.exports=class topic{
                 name:properties.topic_name,
                 rows_D:properties.rows_D,
                 column_numbers:properties.columns_AO,
-                description:oropeeties.topic_description
+                description:properties.topic_description
             });
             await this.Course_topic.create({
                 topic_id:new_topic.id,
                 course_id:properties.course_id
             });
-            for(let i=0;i<associated_topics.length;i++)//associated topcis je NIZ koji sadrži idove povezanih topica
+            for(let i=0;i<properties.associated_topics.length;i++)//associated topcis je NIZ koji sadrži idove povezanih topica
             {
                 await this.Tags_of_topic.create({
                     source_topic:new_topic.id,
-                    associated_topic:associated_topics[i].topic_id,
-                    required_level:associated_topics[i].required_level//zasasd spremamio po defaultu na 3
+                    associated_topic:properties.associated_topics[i].topic_id,
+                    required_level:properties.associated_topics[i].required_level//zasasd spremamio po defaultu na 3
                 });
             }
             //DODAT JOS UNOS ASESMENTA OD KOJIH DIO MOZE BITI IZABRAN VEC PRETHODNO A DIO MOZE BITI NANOVO DEFINIRAN

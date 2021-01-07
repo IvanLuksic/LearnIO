@@ -1,7 +1,7 @@
 const express=require('express');
 const course=express.Router();
 const ShemaValidator=require('../scheme/validator');
-const shema=require('../scheme/class-shema');
+const shema=require('../scheme/course-shema');
 ShemaValidator.addSchemas(shema);
 const {authenticate_student_or_teacher, authenticate_admin_or_teacher}=require('../middleware/login');
 const course_controler=require('../controlers/course-controler');

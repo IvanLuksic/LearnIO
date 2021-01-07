@@ -6,12 +6,14 @@ login:{
         username:{
             type:"string",
             isNotEmpty: true,
-            minLength:1
+            minLength:5,
+            maxLength:20
         },
         password:{
             type:"string",
             isNotEmpty: true,
-            minLength: 7
+            minLength: 7,
+            maxLength:70
         }
     },
     required:["username","password"]
@@ -23,7 +25,8 @@ username:{
         username:{
             type:"string",
             isNotEmpty: true,
-            minLength:1
+            minLength:5,
+            maxLength:20
         }
     }
 }

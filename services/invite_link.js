@@ -23,10 +23,12 @@ module.exports=class invite_link{
                 this.Logger.error('Error in inserting invite link to database');
                 throw(error);
             }
-            let invite_link=encodeURI('http://localhost:3000/api/invite/'+randomID);//URL enkodiramo zadani link i vratimo ga
+            let invite_link_href=encodeURI('http://localhost:3000/api/invite/'+randomID);//URL enkodiramo zadani link i vratimo ga
+            let invite_link='invite/'+randomID;//ovo je hypertext koji ce se dijelit i prikazivat na stranici a GORNJI DIO JE HREF DIO KOJI CE BITI URI za pristup invite dijelu-> na njega ce voditi klik na hypertext
             let format={};
             format.invite_link=invite_link;
-            this.Logger.info('Invite link: '+format.invite_link);
+            format.invite_link_href=invite_link_href;
+            this.Logger.info('Invite link: '+format.invite_link+' Href:'+format.invite_link_href);
             return format;
         } catch (error) {
             this.Logger.error('Error in function generateInviteLink'+error);

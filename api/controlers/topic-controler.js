@@ -1,22 +1,29 @@
 const {Topic_instance,Question_instance}=require('../../services');
 const {nodelogger}=require('../../loaders/logger');
 module.exports={
-    getTopics:async (req,res,next)=>{//da bi dosaoo do ovde morao je proci autentikaciju-> ne treba se brinuti o tome ovde
+    getTopicsStudent:async (req,res,next)=>{//da bi dosaoo do ovde morao je proci autentikaciju-> ne treba se brinuti o tome ovde
         try {
-        const student_id= req.session.user;//u cookie se nalazi user id
-        nodelogger.info('Parametri: '+req.params.course_id+' '+req.params.subject_id+' '+student_id+' '+req.params.class_id);
+        nodelogger.info('Parametri: '+req.params.course_id+' '+req.params.subject_id+' '+req.session.user+' '+req.params.class_id);
         try {
-            var topics=await Topic_instance.getTopicsForUserAndCourse(student_id,req.params.course_id,req.params.subject_id,req.params.class_id);
+            var topics=await Topic_instance.getTopicsForStudent(req.session.user,req.params.course_id,req.params.subject_id,req.params.class_id);//dohvacamo za studenta samo one koji su mu otkljujcani odnosno nalaze se u tablici rezultati
         } catch (error) {
             nodelogger.error('Error in fetching topics frrom database ');
             throw(error);
         }
-        nodelogger.info('Fetched succesfuly from database');
         res.json(topics);//dodaj u resposne objekt-> RESPOSNE NEMA BODY OBJEKT-> OVAKO ŠALJEMO JSON OBJEKT U RESPOSNE BODYU
     } catch (error) {
             nodelogger.error('Error in getTopics ');
             next(error);//idi na error midleware hadler-> on ce vratiti resposne i koja je greska
     }
+    },
+    getTopicsFromCourse:async (req,res,next)=>
+    {
+        try {
+            let topics=await Topic_instance.getAllTopicsFromCourse(req.params.course_id);
+            res.json(topics);
+        } catch (error) {
+            nodelogger.error('Eror in getTopicsFromCourse');
+        }
     },
     getAdminTopics:async(req,res,next)=>//AKO JE DOSAO DO OVDE ONDA JE ADMIN-> VRATI MU SVE TOPICE
     {

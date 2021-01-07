@@ -49,8 +49,10 @@ module.exports= class subject{
     async addSubject(request)//request body objektz s podacima za unos
     {
         try {
-            const subject=await this.Subject.findOne({//provjerti jel postoji vec taj isti predmet
-               name:request.subject_name
+            let subject=await this.Subject.findOne({//provjerti jel postoji vec taj isti predmet
+              where:{
+                name:request.subject_name
+              }
             });
             if(!subject)//ako ne postoji
             {

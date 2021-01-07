@@ -28,12 +28,14 @@ module.exports={
             username:{
                 type:"string",
                 isNotEmpty: true,
-                minLength:1
+                minLength:5,
+                maxLength:20
             },
             password:{
                 type:"string",
                 isNotEmpty: true,
-                minLength: 7
+                minLength: 7,
+                maxLength:70
             },
             user_type:{
                 type:"number",

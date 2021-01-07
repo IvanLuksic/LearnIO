@@ -17,7 +17,7 @@ module.exports={
         {
             if(req.session.user_type!=parseInt(process.env.STUDENT,10))
             {
-                res.sendStatus(404);
+                res.sendStatus(404);//IZVAN NJEGOVIH PRAVA
             }else next();   //pozovi sljedeci middleware za taj request za tu rutu-> ULOGIRAN JE KAO STUDENT I IMA PRAVA
         }
     },

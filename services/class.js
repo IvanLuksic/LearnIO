@@ -164,17 +164,17 @@ module.exports= class clas{
     async addClass(request)//request body objektz s podacima za unos
     {
         try {//provjertiv jeli postoji vec isti taj razred
-            const clas=this.Clas.findOne({
+            var clas=await this.Clas.findOne({
                 where:{
-                    name:request.name,
-                    school_year:request.school_year
+                    name:request.class_name,
+                    school_year:request.class_year
                 }
             });
             if(!clas)//ne postoji vec taj razred
             {
                const new_clas= await this.Clas.create({
-                    name:request.name,
-                    school_year:request.school_year
+                    name:request.class_name,
+                    school_year:request.class_year
                 });
                /* ZASAD NE UNOSIMO STUDENTE U CLASS JER BI BILO NEPRAKTICNO PA CEMO PROBAT PREKO INVITE LINKA for(let i=0;i<request.student_id.length;i++)//povezi sve studente s tin razredon
                 {

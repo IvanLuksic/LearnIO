@@ -1,5 +1,3 @@
-const { noExtendLeft } = require("sequelize/types/lib/operators");
-
 module.exports= class session{
     constructor(session_model,logger)
     {
