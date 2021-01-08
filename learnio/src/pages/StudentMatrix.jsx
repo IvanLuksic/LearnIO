@@ -10,8 +10,8 @@ function StudentMatrix(props){
     const changeToError=()=>{if(noError===true) setNoError(false);}
     const changeToNoError=()=>{if(noError===false) setNoError(true);}
     let dispatch=useDispatch();
-    if(Number(props.match.params.id)){changeToNoError();dispatch(topicSelected(props.match.params.id,"Topic"))};
-    if(!Number(props.match.params.id)){changeToError()};
+    if(Number(props.match.params.topic_id)){changeToNoError();dispatch(topicSelected(props.match.params.topic_id,"Topic"))};
+    if(!Number(props.match.params.topic_id)){changeToError()};
 
 
     return(

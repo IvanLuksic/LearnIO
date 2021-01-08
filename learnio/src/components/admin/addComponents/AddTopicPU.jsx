@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from'react';
-import {Button, TextField}from'@material-ui/core';
+import {Button, TextField, Typography}from'@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Grid from '@material-ui/core/Grid';
@@ -19,6 +19,14 @@ import fakeBackendTopics from '../../../sampleData/admin/allTopics.json';
 const useStyles = makeStyles((theme)=>({
     dialogWrapper:{
         position:'absolute',
+    },
+    topicTitle:{
+      fontFamily:'Lobster',
+      fontSize:'4.5rem',
+      marginBottom:"3rem",
+      marginTop:"1rem",
+      textShadow:" -5px 5px #30303033",
+      color: "#3b3a3a"
     },
     grupaBotuna:{
       [theme.breakpoints.down('sm')]: {
@@ -403,7 +411,11 @@ function AddTopicPU(props){
 
     const classes=useStyles();
     return(
-        <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="center" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
+        <Grid className={classes.popupStyle} container direction="column" justify="space-between" alignItems="center" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
+        <Grid item xs={12}>
+          <Typography className={classes.topicTitle}>Topic</Typography>
+        </Grid>
+        <Grid className={classes.popupStyle} container direction="row" item xs={12}>
             <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
               <Grid item className={classes.grupaBotuna}>
               <ButtonGroup orientation="vertical" variant="contained">
@@ -507,6 +519,7 @@ function AddTopicPU(props){
                             </Grid>
                             :null
                         }
+          </Grid>
         </Grid>
     );
 }

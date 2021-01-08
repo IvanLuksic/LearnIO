@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
       fontSize:'8vh',
       marginTop:"15vh",
       marginBottom:"5vh",
+      textShadow:" -5px 5px #30303033"
     },
     addButton:{
       marginTop:"-0.12em",
@@ -241,14 +242,9 @@ function AdminTopics(props){
           {
           <div style={{display: "flex", flexDirection: "column",justifyContent:"none", alignItems:"center"}} className={classes.background}>
             <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
-
-
-
             <div className={classes.tabela}>
-
-               <Filter data={data} savedData={savedData} setData={setData} listOfProperties={[{name:"topic_id",nameToDisplay:"ID"},{name:"topic_name",nameToDisplay:"NAME"}]}/>
-
-                <DataGrid disableSelectionOnClick={true}  pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
+              <Filter data={data} savedData={savedData} setData={setData} listOfProperties={[{name:"topic_id",nameToDisplay:"ID"},{name:"topic_name",nameToDisplay:"NAME"}]}/>
+              <DataGrid disableSelectionOnClick={true}  pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
             </div>
 
             <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>

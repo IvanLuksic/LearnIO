@@ -7,8 +7,16 @@ import Icon from '@material-ui/core/Icon';
 import MenuItem from '@material-ui/core/MenuItem';
 import CustomSnackbar from '../../common/Snackbar.jsx';
 import { useSelector} from 'react-redux';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme)=>({
+    topicTitle:{
+        fontFamily:'Lobster',
+        fontSize:'2.5rem',
+        marginBottom:"1rem",
+        textShadow:" -5px 5px #30303033",
+        color: "#3b3a3a"
+      },
     textField:{
         marginTop: "1em",
         marginBottom: "0.5em",
@@ -108,6 +116,7 @@ export default function AddCourse(props) {
 
     return(
         <Grid className={classes.gridStyle} container item direction="column" justify="space-between" alignItems="center" xs={12} md={10} spacing={1}>
+            <Typography className={classes.topicTitle}>Class</Typography>
             <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Class name"/>
 
             <YearPicker years={props.years} year={year} message={message} handleYear={handleYear}/>

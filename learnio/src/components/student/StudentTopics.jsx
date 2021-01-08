@@ -183,9 +183,9 @@ function StudentTopics(props){
     const classes = useStyles();
     //red 1, blue 2, grey 3, green 4 - ovo je mislavova signalizacija iz APIja
     function RenderStatusButton(id,status,name){
-      if(status==1) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonRed} component={Link} to={`/topic/${id}`} size="small"> Start </Button>);
-      else if(status==2) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonBlue} component={Link} to={`/topic/${id}`} size="small"> Continue </Button>);
-      else if(status==4) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonGreen} component={Link} to={`/topic/${id}`} size="small"> Revise </Button>);
+      if(status==1) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonRed} component={Link} to={`/student/topic/${id}`} size="small"> Start </Button>);
+      else if(status==2) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonBlue} component={Link} to={`/student/topic/${id}`} size="small"> Continue </Button>);
+      else if(status==4) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonGreen} component={Link} to={`/student/topic/${id}`} size="small"> Revise </Button>);
       else return <p>UNLUCKY</p>;
     };
 

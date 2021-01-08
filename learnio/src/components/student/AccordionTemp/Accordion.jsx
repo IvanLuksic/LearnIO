@@ -10,7 +10,6 @@ import Button from '@material-ui/core/Button';
 import 'reactjs-popup/dist/index.css';
 import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
-
 import offlineData from '../../../sampleData/admin/allTopics.json';
 
 
@@ -54,54 +53,37 @@ const useStyles = makeStyles((theme)=>({
   },},
 }));
 
-const course = {
-    course_name: "Course 1",
-    course_id: 1,
-    topic_list:[
-        {
-            topic: offlineData[0],
-        },
-        {
-            topic: offlineData[1],
-        },
-        {
-            topic: offlineData[2],
-        },
-        {
-            topic: offlineData[3],
-        },
-    ]
-}
 
-export default function CustomAccordion() {
+export default function CustomAccordion(props) {
     const classes = useStyles();
-    const [expanded, setExpanded] = useState(false);
-
-    const handleChange = (panel) => {
-        setExpanded( expanded? false:panel.course_id);
-    };
+    const nothing=(props.courses===undefined);
 
     return(
-        <div style={{width:"100%"}}>
-            <Accordion style={{marginTop:'2px'}} expanded={expanded === course.course_id}>
-                <AccordionSummary>
-                    <Typography className={classes.accHeading}>{course.course_name}</Typography>
-                    <Button className={classes.toggleButton} size="small" onClick={() => handleChange(course)}> {expanded? "Close":"Open"} </Button>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Grid  container direction="row" justify="center" alignItems="center" spacing={1}>
-                        <Grid container item md={9} xs={8} direction="column" justify="flex-start" alignItems="flex-start">
-                            {
-                                course.topic_list.map((topic, index)=>{
-                                    return <Typography>{topic.topic.topic_name}</Typography>
-                                })
-                            }
-                        </Grid>
-                        <Grid container item md={3} xs={4} direction="row" justify="flex-end" alignItems="center"> 
-                        </Grid>
-                    </Grid>
-                </AccordionDetails>
-            </Accordion>
-        </div>
+        nothing?
+            null
+            :
+            <div style={{width:"100%"}}>
+            {
+                    props.courses.map((course)=>
+                    <Accordion style={{marginTop:'2px'}} expanded={props.expanded == course.course_id}  onClick={()=>props.handleChange(course)}>
+                        <AccordionSummary  expandIcon={<ExpandMoreIcon />} >
+                            <Typography className={classes.accHeading}>{course.course_name}</Typography>
+                            <Button className={classes.toggleButton} size="small" onClick={()=>props.pageProps.history.push(`/student/topics/${course.course_id}`)} > Open </Button>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Grid  container direction="row" justify="center" alignItems="center" spacing={1}>
+                                <Grid container item md={9} xs={8} direction="column" justify="flex-start" alignItems="flex-start">
+                                    {
+                                        course.topics.map((topic, index)=> <Typography>{topic.topic_name}</Typography>)
+                                    }
+                                </Grid>
+                                <Grid container item md={3} xs={4} direction="row" justify="flex-end" alignItems="center"> 
+                                </Grid>
+                            </Grid>
+                        </AccordionDetails>
+                    </Accordion>
+                    )
+                }
+            </div>
     );
 }
