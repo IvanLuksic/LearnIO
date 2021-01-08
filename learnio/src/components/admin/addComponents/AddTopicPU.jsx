@@ -224,7 +224,7 @@ function AddTopicPU(props){
     const [valueDesc,setValueDesc]=useState();
     const [associatedTopic, setAssociatedTopic] = useState([null]);
     const [associatedTopicVisible, setAssociatedTopicVisible] = useState(false);
-    const [associatedTopicsPossible, setAssociatedTopicsPossible] = useState([null]);
+    const [associatedTopicsPossible, setAssociatedTopicsPossible] = useState([{topic_id:-1,topic_name:""}]);
     const [subjectAndCourseList, setSubjectAndCourseList]=useState(()=>subjectCoursePairs);
     const [subjectAndCourse, setSubjectAndCourse]=useState(null);
     const [AOI1,setAOI1]=useState(()=>"");
@@ -249,7 +249,7 @@ function AddTopicPU(props){
     const [AOL10,setAOL10]=useState(()=>3);
     
 
-    const fetchTopics=()=>{
+    const fetchTopics=(sub)=>{
       let dataFetched;
       const requestOptions = {
         method: 'GET',
@@ -258,16 +258,15 @@ function AddTopicPU(props){
         credentials: 'include'
     };
     
-    fetch(`http://127.0.0.1:3000/admin/topics/associated/${subjectAndCourse.subject_id}`, requestOptions)
+    fetch(`http://127.0.0.1:3000/api/admin/topics/associated/${sub.subject_id}`, requestOptions)
     .then(response => response.json())
     .then(data => {  
-      dataFetched=data.Topics;
+      setAssociatedTopicsPossible(data);
+      console.log(data);
     })
     .catch((error)=>{
         console.log('Error in fetch function '+ error);
     });
-    
-      return dataFetched;
     };
 
     const handleChangeTag = (event) => {
@@ -279,13 +278,16 @@ function AddTopicPU(props){
         setAssociatedTopicVisible(false);
         setAssociatedTopic([]);
         setSubjectAndCourse(event.target.value);
+        if(!offline){
+          fetchTopics(event.target.value);
+          setAssociatedTopicVisible(true);
+
+        }
+        else setAssociatedTopicsPossible(fakeBackendTopics);
+        setAssociatedTopicVisible(true);
       };
-      if(!offline){
-        setAssociatedTopicsPossible(fetchTopics());
-      }
-      else setAssociatedTopicsPossible(fakeBackendTopics);
-      setAssociatedTopicVisible(true);
-    };
+
+      };
 
     const handleChangeText=(event)=>{
       setValueText(event.target.value); 
@@ -310,7 +312,7 @@ function AddTopicPU(props){
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
-      fetch(`http://127.0.0.1:3000/admin/topics/subject/course/pairs`, requestOptions)
+      fetch(`http://127.0.0.1:3000/api/admin/topics/subject/course/pairs`, requestOptions)
       .then(response => response.json())
       .then(data => {  
         setSubjectAndCourseList(data);
@@ -357,7 +359,7 @@ function AddTopicPU(props){
           course_id:subjectAndCourse.course_id,
           associated_topics: arrayAT,
           topic_description:valueDesc,
-          assessments_array:arrayAO
+          asessments_array:arrayAO
         };
 
         const requestOptions = {
@@ -379,7 +381,7 @@ function AddTopicPU(props){
         });
         offline&&(props.closePopup!==undefined)&&props.closePopup();
 
-        fetch(`http://127.0.0.1:3000/admin/add/topic`, requestOptions)
+        fetch(`http://127.0.0.1:3000/api/add/topic`, requestOptions)
         .then(response => response.json())
         .then(data => {  
           (props.addTopic!==undefined)&&props.addTopic({

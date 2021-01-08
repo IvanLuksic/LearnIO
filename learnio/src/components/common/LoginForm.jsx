@@ -71,7 +71,7 @@ function LoginForm(props){
             body: JSON.stringify({username:object.usernames, password:object.passwords}),
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/login', requestOptions)
+        fetch('http://127.0.0.1:3000/api/login', requestOptions)
         .then((response)=>{
             if(response.status===200)
             {

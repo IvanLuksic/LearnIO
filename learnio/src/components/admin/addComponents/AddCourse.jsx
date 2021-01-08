@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
@@ -81,9 +81,9 @@ export default function AddCourse(props) {
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/question/update', requestOptions)
+        fetch('http://127.0.0.1:3000/api/subjects/all/with/classes', requestOptions)
         .then(response => response.json())
-        .then(data => {  setSubjects(data)})
+        .then(data => {  setSubjects(data);console.log(data);})
         .catch((error)=>{handleIndex(3);setError('Error in fetch function '+ error);});
     };
     const getClassNames = (subject) => {
@@ -102,38 +102,48 @@ export default function AddCourse(props) {
     const handleIndex = (value) => {
         setIndex(value);
         setOpen(true);
-    }
+    };
+
+    useEffect(()=>{
+        (!offline)&&fetchSubjects();
+    },[]);
     // looking for this? -----------------------------------------------------
     const handleSave = () => {
-        if (name.length > 0 && subjectCheck.length > 0) {
+        if (name.length > 0 && subjectCheck!==undefined) {
             if(!offline){
                 let send={
                     subject_id: subjectCheck.subject_id,
                     course_name:name
                 }
                 const requestOptions = {
-                    method: 'PUT',
+                    method: 'POST',
                     mode:'cors',
                     headers: { 'Content-Type': 'application/json'},
                     body: JSON.stringify({...send}),
                     credentials: 'include'
                 };
-                fetch('http://127.0.0.1:3000/question/update', requestOptions)
+                fetch('http://127.0.0.1:3000/api/course/insert', requestOptions)
                 .then((data)=>{            
-                    props.handleIndex(3);
-                    props.handleOpen();
-                    props.closePopup();})
-                .catch((error)=>{handleIndex(3);setError('Error in fetch function '+ error);});
+                    if(data.status===200){
+                        props.handleIndex(3);
+                        props.handleOpen();
+                        props.closePopup();
+                    }
+                    else{
+                        setError('Error in fetch function '+ data.status);handleIndex(3);
+                }})
+                .catch((error)=>{setError('Error in fetch function '+ error);handleIndex(3);});
             }
-            if(offline){
+            else if(offline){
                 props.handleIndex(3);
                 props.handleOpen();
                 props.closePopup();
-            }
+            };
+    
         }
-        else if (name.length <= 0) handleIndex(1);
+        else if (name.length <= 0){handleIndex(1)}
         else handleIndex(2);
-    };
+        };
     //-------------------------------------------------------------------------
 
     return(
@@ -141,13 +151,13 @@ export default function AddCourse(props) {
             <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Course name"/>
             <FormControl className={classes.formControl}>
                 <InputLabel>Subjects</InputLabel>
-                <Select  value={subjectCheck} onChange={handleSubjectCheck} renderValue={(selected) => `${selected.subject_id} - ${selected.subject_name}`}  MenuProps={MenuProps}>
+                <Select value={subjectCheck} onChange={(event)=>handleSubjectCheck(event)} renderValue={(selected) => `${selected.subject_id} - ${selected.subject_name}`}  MenuProps={MenuProps}>
                     {subjects.map((subject) => (
-                        <Tooltip title={getClassNames(subject)} placement="right" arrow>
                             <MenuItem key={subject.subject_id} value={subject}>
-                                <ListItemText primary={`${subject.subject_id} - ${subject.subject_name}`} />
+                                <Tooltip title={getClassNames(subject)} placement="right" arrow>
+                                    <ListItemText primary={`${subject.subject_id} - ${subject.subject_name}`} />
+                                </Tooltip>
                             </MenuItem>
-                        </Tooltip>
                     ))}
                 </Select>
             </FormControl>
@@ -159,7 +169,7 @@ export default function AddCourse(props) {
                 open && index === 1 ? <CustomSnackbar handleClose={handleClose} open={open} text="Name not specified" status="error"/>
                 : null
             }{
-                open && index === 2 ? <CustomSnackbar handleClose={handleClose} open={open} text="No classes selected" status="error"/>
+                open && index === 2 ? <CustomSnackbar handleClose={handleClose} open={open} text="No subjects selected" status="error"/>
                 : null
             }{
                 open && index === 3 ? <CustomSnackbar handleClose={handleClose} open={open} text={errorText} status="error"/>

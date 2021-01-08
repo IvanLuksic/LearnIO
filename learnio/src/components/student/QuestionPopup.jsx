@@ -98,7 +98,7 @@ function QuestionPopup(props){
             credentials: 'include'
         };
 
-        fetch('http://127.0.0.1:3000/question/check', requestOptions)
+        fetch('http://127.0.0.1:3000/api/question/check', requestOptions)
         .then(response => response.json())
                 .then(data => {  
                   if(data.correct==false){props.setOpenPopupWrong(true)};

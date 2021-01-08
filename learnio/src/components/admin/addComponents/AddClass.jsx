@@ -76,27 +76,33 @@ export default function AddCourse(props) {
             }
 
             const requestOptions = {
-                method: 'PUT',
+                method: 'POST',
                 mode:'cors',
                 headers: { 'Content-Type': 'application/json'},
                 body: JSON.stringify({...send}),
                 credentials: 'include'
             };
-            fetch('http://127.0.0.1:3000/question/update', requestOptions)
-            .then((data)=>{            
-                props.handleIndex(1);
-                props.handleOpen();
-                props.closePopup();})
-            .catch((error)=>{handleIndex(3);setError('Error in fetch function '+ error);});
+            fetch('http://127.0.0.1:3000/api/class/insert', requestOptions)
+            .then((data)=>{
+                if(data.status===200){
+                    props.handleIndex(1);
+                    props.handleOpen();
+                    props.closePopup();
+                }
+                else{
+                    setError('Error in fetch function '+ data.status);handleIndex(3);
+            }})
+            .catch((error)=>{setError('Error in fetch function '+ error);handleIndex(3);});
         }
-        if(offline){
+        else if(offline){
             props.handleIndex(1);
             props.handleOpen();
             props.closePopup();
-        }
-        else if (name.length <= 0) handleIndex(1);
-        else handleIndex(2);
+        };
+
     }
+    else if (name.length <= 0){handleIndex(1)}
+    else handleIndex(2);
     };
     //---------------------------------------------------------
 

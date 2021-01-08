@@ -115,7 +115,7 @@ function Matrica(props)
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch(`http://127.0.0.1:3000/question/${1}/${1}/${1}/${topicID}`, requestOptions)//class_id subject_id course_id topic_id
+        fetch(`http://127.0.0.1:3000/api/question/${1}/${1}/${1}/${topicID}`, requestOptions)//class_id subject_id course_id topic_id
         .then(response => response.json())
                 .then(data => {  
                   console.log(JSON.stringify(data));

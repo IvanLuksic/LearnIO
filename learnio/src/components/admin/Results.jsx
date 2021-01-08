@@ -169,7 +169,7 @@ function Results(){
         credentials: 'include'
       };
 
-      fetch('http://127.0.0.1:3000/results', requestOptions)
+      fetch('http://127.0.0.1:3000/api/results', requestOptions)
       .then(response => response.json())
       .then(dataFetch => {  
               setData(dataFetch);

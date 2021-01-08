@@ -223,7 +223,7 @@ function StudentTopics(props){
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
-      fetch(`http://127.0.0.1:3000/topic/${1}/${1}/${1}`, requestOptions)// class subject course
+      fetch(`http://127.0.0.1:3000/api/topic/${1}/${1}/${1}`, requestOptions)// class subject course
       .then(response => response.json())
             .then(dataFetch => {  
               console.log(JSON.stringify(dataFetch));

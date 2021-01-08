@@ -50,17 +50,18 @@ function InviteLink(props){
         getURL(event.target.value);
     }
     //funkcija za dobit url za svaki class posebno
-    const getURL=(id)=>{
-        if(id=="1")
-        {
-            setUrl("https://www.sofascore.com/hr/");
-        }
-        else if(id=="2")
-        {
-            setUrl("http://localhost:3000/students");
-        }
-        else setUrl("http://localhost:3000/AdminTopics")
-    }
+    const getURL=()=>{
+        const requestOptions = {
+            method: 'GET',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            credentials: 'include'
+        };
+        fetch(`http://127.0.0.1:3000/topic/${1}/${1}/${1}`, requestOptions)// class subject course
+        .then(response => response.json())
+        .then(data=>setUrl(data.link))
+        .catch((error)=>{console.log('Error in fetch function '+ error)});
+    };
     function copyToClipboard(e) {
         textFieldRef.current.select();
         document.execCommand('copy');

@@ -199,7 +199,7 @@ function Students(){
         credentials: 'include'
       };
 
-      fetch('http://127.0.0.1:3000/results', requestOptions)
+      fetch('http://127.0.0.1:3000/api/results', requestOptions)
       .then(response => response.json())
       .then(dataFetch => {  
               setAllClasses(dataFetch);
@@ -244,7 +244,7 @@ function Students(){
                   credentials: 'include'
                 };
           
-                fetch('http://127.0.0.1:3000/', requestOptions)
+                fetch('http://127.0.0.1:3000/api/', requestOptions)
                 .then(response => response.json())
                 .then(dataFetch => {  
                         setData(dataFetch);
@@ -286,7 +286,7 @@ const editStudent=(studentToEdit)=>{
       credentials: 'include'
     };
 
-    fetch('http://127.0.0.1:3000/', requestOptions)
+    fetch('http://127.0.0.1:3000/api/', requestOptions)
     .then(response => response.json())
     .then(dataFetch => {  
             setData(dataFetch);
@@ -310,7 +310,7 @@ const editStudent=(studentToEdit)=>{
           credentials: 'include'
         };
   
-        fetch('http://127.0.0.1:3000/', requestOptions)
+        fetch('http://127.0.0.1:3000/api/', requestOptions)
         .then(response => response.json())
         .then(dataFetch => {  
                 setData(dataFetch);

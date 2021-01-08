@@ -145,7 +145,7 @@ function AddCourseSubjectClass() {
         : null
       }{
         popupOpen && index === 5 ? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
-          <AddTopicPU  closePopup={handleClose}/>
+          <AddTopicPU  closePopup={closePopup}/>
         </PopupDialog>
         : null
       }
