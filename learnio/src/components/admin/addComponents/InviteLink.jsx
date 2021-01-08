@@ -1,13 +1,14 @@
-import React,{useRef,useState} from 'react';
+import React,{useRef,useState,useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {  Button, TextField, Typography } from '@material-ui/core';
-import fakeAllClasses from '../../../sampleData/admin/allClasses.json';
+import fakeAllClasses from '../../../sampleData/admin/class.json';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import CustomSnackbar from '../../common/Snackbar'
+import { useSelector} from 'react-redux';
 
 const useStyles = makeStyles((theme)=>({
     topicTitle:{
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme)=>({
 }));
 
 function InviteLink(props){
-
+    const offline= useSelector(state=>state.offline);
     const classes=useStyles()
     const [AllClasses,setAllClasses]=useState(()=>fakeAllClasses);
     const [SelectedClass,setSelectedClass]=useState(0);
@@ -57,22 +58,34 @@ function InviteLink(props){
     const textFieldRef = useRef(null);
     const [openSnackbar,setOpenSnackbar]=useState(false);
 
-
-    const handleClass=(event)=>{
-        setSelectedClass(event.target.value);   
-        getURL(event.target.value);
-    }
-    //funkcija za dobit url za svaki class posebno
-    const getURL=()=>{
+    const fetchClasses=()=>{
         const requestOptions = {
             method: 'GET',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch(`http://127.0.0.1:3000/topic/${1}/${1}/${1}`, requestOptions)// class subject course
+        fetch('http://127.0.0.1:3000/api/all/classes', requestOptions)
         .then(response => response.json())
-        .then(data=>setUrl(data.link))
+        .then(data => {  setAllClasses(data)})
+        .catch((error)=>console.log('Error in fetch function '+ error));
+    };
+
+    const handleClass=(event)=>{
+        setSelectedClass(event.target.value);   
+        getURL(event.target.value);
+    }
+    //funkcija za dobit url za svaki class posebno
+    const getURL=(sub)=>{
+        const requestOptions = {
+            method: 'GET',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            credentials: 'include',
+        };
+        fetch(`http://127.0.0.1:3000/api/invite/to/class/${sub.class_id}`, requestOptions)// class subject course
+        .then(response => response.json())
+        .then(data=>setUrl(`http://learnio.com/${data.link}`))
         .catch((error)=>{console.log('Error in fetch function '+ error)});
     };
     function copyToClipboard(e) {
@@ -83,7 +96,11 @@ function InviteLink(props){
     }
     const closeSnackbar=()=>{
         setOpenSnackbar(false);
-    }
+    };
+
+    useEffect(()=>{
+        (!offline)&&fetchClasses();
+    },[])
     return(
         <Grid>
             <CustomSnackbar text="Copied" status="success" open={openSnackbar} handleClose={closeSnackbar}></CustomSnackbar>
@@ -116,11 +133,11 @@ function InviteLink(props){
                 </FormControl> */}
         <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel id="demo-simple-select-outlined-label">Class</InputLabel>
-        <Select labelId="demo-simple-select-outlined-label" id="demo-simple-select-outlined" label="Class">
+        <Select labelId="demo-simple-select-outlined-label" id="demo-simple-select-outlined" label="Class" value={SelectedClass} onChange={handleClass}>
             {
                     AllClasses.map((group)=>{
                     return(
-                        <MenuItem value={group.id}>{group.name}</MenuItem>
+                        <MenuItem value={group}>{group.class_name}</MenuItem>
                     )
                 })
             }

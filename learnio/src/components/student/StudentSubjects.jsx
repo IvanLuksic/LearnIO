@@ -134,7 +134,7 @@ const CardsOfSubjects=(props)=>{
     i++;
     return(
       <Grid item xs={12} sm={6} lg={3} className={classes.card}>
-          <Paper elevation={3} className={classes.card} onClick={()=>handleClickCard(sub.id)}> 
+          <Paper elevation={3} className={classes.card} onClick={()=>handleClickCard(sub.subject_id)}> 
             <Grid container flexDirection="column" justify="center" alignItems="center" className={classes.cardContent}>
               <Grid item xs={12}>
                 {""}
@@ -143,10 +143,10 @@ const CardsOfSubjects=(props)=>{
                 {""}
               </Grid>
               <Grid item style={{backgroundColor:`${props.arrayOfColors[i-1]}`,color:"white" ,width:"100px",height:"100px",borderRadius: "50%",textAlign: "center",lineHeight: "100px",fontSize: "2rem",fontWeight: "bold",display: "block"}}>
-                {getStartingLetters(sub.name)}
+                {getStartingLetters(sub.subject_name)}
               </Grid>
               <Grid item xs={12}>
-                {formatName(sub.name)}
+                {formatName(sub.subject_name)}
               </Grid>
               <Grid item xs={12} style={{marginBottom:"1rem"}}>
                 {formatName(sub.class_name)}
@@ -163,18 +163,53 @@ const CardsOfSubjects=(props)=>{
 
 function StudentSubjects(props)
 {   
+    const unpackClasses=(c)=>{
+      let subs=[];
+      c.map((cla)=>{
+        cla.subjects.map((sub)=>{
+          subs.push({
+            subject_name:sub.subject_name,
+            subject_id:sub.subject_id,
+            class_name:cla.class_name,
+            class_id:cla.class_id,
+            class_year:cla.class_year
+          })
+        })
+      });
+      console.log(subs);
+      return subs;
+    };
+    let subsStart=unpackClasses(fakeSubjects);
+
     let classes=useStyles();
     const offline= useSelector(state=>state.offline);
-    const [loading,setLoading]=useState(offline);//OFFLINE:true
-    const [subjects,setSubjects]=useState(()=>fakeSubjects);
+    const [loading,setLoading]=useState(()=>offline);//OFFLINE:true
+    const [subjects,setSubjects]=useState(()=>subsStart);
     const [blocksOfSubjects,setBlocksOfSubjects]=useState(()=>null);
     const [currentBlockVisible,setCurrentBlockVisible]=useState(()=>0);
-    const [numberOfBlocks,setNumberOfBlocks]=useState(()=>((subjects.length+8-(subjects.length%8))/8));
+    const [numberOfBlocks,setNumberOfBlocks]=useState(()=>{return((subsStart.length+8-(subsStart.length%8))/8);});
     const [firstTime,setFirstTime]=useState(()=>true);
     const [arrayOfColors,setArrayOfColors]=useState(()=>[]);
 
     const getSubjects=()=>{
-      //FETCH
+      let retData=[];
+      const requestOptions = {
+          method: 'GET',
+          mode:'cors',
+          headers: { 'Content-Type': 'application/json'},
+          credentials: 'include',
+      };
+      fetch(`http://127.0.0.1:3000/api/student/classes`, requestOptions)// class subject course
+      .then(response => response.json())
+      .then(data=>{let d=unpackClasses(data);setSubjects(d);setNumberOfBlocks((d.length+8-(d.length%8))/8);retData=d;setFirstTime(false);setLoading(true);
+        let ArOc=[];
+        for(let i=0;i<d.length;i++){
+          ArOc.push(randomColor());
+        };
+        setArrayOfColors(ArOc);
+      })
+      .catch((error)=>{console.log('Error in fetch function '+ error)});    
+      return retData;
     };
 
     function handleScroll(num,upDown) {
@@ -203,22 +238,20 @@ function StudentSubjects(props)
 
    useEffect(()=>{
     let fetchedSubjects;
-    if(!offline){
-      fetchedSubjects=getSubjects();
-    }
-    else if(offline){
-      fetchedSubjects=subjects;
-    };
-
     if(firstTime){
-      let ArOc=[];
-      for(let i=0;i<fetchedSubjects.length;i++){
-        ArOc.push(randomColor());
+      if(!offline){
+        fetchedSubjects=getSubjects();
       };
-      setArrayOfColors(ArOc);
-      setFirstTime(false);
-    }
-    else if(window.innerWidth>=1280){handleScroll(currentBlockVisible,false);};
+      if(offline){
+        fetchedSubjects=subjects;
+        let ArOc=[];
+        for(let i=0;i<fetchedSubjects.length;i++){
+          ArOc.push(randomColor());
+        };
+        setArrayOfColors(ArOc);
+      };
+      }
+      else if(window.innerWidth>=1280){handleScroll(currentBlockVisible,false);};
    });
 
 

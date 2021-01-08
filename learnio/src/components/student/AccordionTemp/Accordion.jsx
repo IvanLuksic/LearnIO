@@ -74,7 +74,8 @@ export default function CustomAccordion(props) {
                             <Grid  container direction="row" justify="center" alignItems="center" spacing={1}>
                                 <Grid container item md={9} xs={8} direction="column" justify="flex-start" alignItems="flex-start">
                                     {
-                                        course.topics.map((topic, index)=> <Typography>{topic.topic_name}</Typography>)
+                                        <p>Prazno</p>
+                                        // course.topics.map((topic, index)=> <Typography>{topic.topic_name}</Typography>)
                                     }
                                 </Grid>
                                 <Grid container item md={3} xs={4} direction="row" justify="flex-end" alignItems="center"> 
