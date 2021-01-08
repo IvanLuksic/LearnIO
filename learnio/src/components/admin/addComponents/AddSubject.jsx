@@ -12,15 +12,23 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import { useSelector} from 'react-redux';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme)=>({
+    topicTitle:{
+        fontFamily:'Lobster',
+        fontSize:'2.5rem',
+        marginBottom:"1rem",
+        textShadow:" -5px 5px #30303033",
+        color: "#3b3a3a"
+      },
     textField:{
         marginTop: "1em",
         marginBottom: "0.5em",
         width:"100%",
-        [theme.breakpoints.up('md')]: {
-            marginLeft:"1em",
-        }
+        // [theme.breakpoints.up('md')]: {
+        //     marginLeft:"1em",
+        // }
     },
     saveBtn: {
         borderRadius: "7px",
@@ -40,10 +48,9 @@ const useStyles = makeStyles((theme)=>({
         marginBottom:"5%",
     },
     formControl: {
-        margin: theme.spacing(2),
-        width: "70%",
-        position: "relative",
-    },
+        margin: theme.spacing(1),
+        minWidth: "100%",
+      },
 }));
 
 const ITEM_HEIGHT = 48;
@@ -146,10 +153,11 @@ export default function AddSubject(props) {
 
     return(
         <Grid className={classes.gridStyle} container item direction="column" justify="space-between" alignItems="center" xs={12} md={10} spacing={1}>
+            <Typography className={classes.topicTitle}>Subject</Typography>
             <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Subject name"/>
-            <FormControl className={classes.formControl}>
+            <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel>Subjects</InputLabel>
-                <Select  multiple value={classCheck} onChange={handleClassCheck} renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.class_id} - ${selTop.class_name}`); return array.join(`, `);} } MenuProps={MenuProps}>
+                <Select  multiple label="Subjects" value={classCheck} onChange={handleClassCheck} renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.class_id} - ${selTop.class_name}`); return array.join(`, `);} } MenuProps={MenuProps}>
                     {classIDs.map((classID) => (
                         <MenuItem key={classID.class_id} value={classID}>
                             <Checkbox checked={classCheck.indexOf(classID) > -1} />

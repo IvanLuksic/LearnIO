@@ -9,13 +9,23 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import CustomSnackbar from '../../common/Snackbar'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme)=>({
+    topicTitle:{
+        fontFamily:'Lobster',
+        fontSize:'2.5rem',
+        marginBottom:"1rem",
+        textShadow:" -5px 5px #30303033",
+        color: "#3b3a3a"
+      },
     title:{
         flexGrow:1,
         fontWeight:"bold",
         textAlign: 'center', 
         
-    },
+    },  formControl: {
+        margin: theme.spacing(1),
+        minWidth: "85%",
+      },
     selectClass: {
         margin: theme.spacing(3),
         [theme.breakpoints.down('md')]: {
@@ -30,7 +40,10 @@ const useStyles = makeStyles((theme) => ({
         width:"85%",
         marginBottom:"5%",
     },
-    linkGroup:{
+    linkField:{
+        marginTop: theme.spacing(3),
+    },
+    copyButton:{
         margin: theme.spacing(3),
     }
 }));
@@ -50,17 +63,19 @@ function InviteLink(props){
         getURL(event.target.value);
     }
     //funkcija za dobit url za svaki class posebno
-    const getURL=(id)=>{
-        if(id=="1")
-        {
-            setUrl("https://www.sofascore.com/hr/");
-        }
-        else if(id=="2")
-        {
-            setUrl("http://localhost:3000/students");
-        }
-        else setUrl("http://localhost:3000/AdminTopics")
-    }
+    const getURL=()=>{
+        const requestOptions = {
+            method: 'GET',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            credentials: 'include'
+        };
+        fetch(`http://127.0.0.1:3000/topic/${1}/${1}/${1}`, requestOptions)// class subject course
+        .then(response => response.json())
+        .then(data=>setUrl(data.link))
+        .catch((error)=>{console.log('Error in fetch function '+ error)});
+    };
+
     function copyToClipboard(e) {
         textFieldRef.current.select();
         document.execCommand('copy');
@@ -74,10 +89,10 @@ function InviteLink(props){
         <Grid>
             <CustomSnackbar text="Copied" status="success" open={openSnackbar} handleClose={closeSnackbar}></CustomSnackbar>
             <Grid item>
-                <Typography variant="h6" className={classes.title} color="primary">Invite students in your class</Typography>
+                <Typography className={classes.topicTitle}>Invite</Typography>
             </Grid>
-            <Grid item>
-            <FormControl className={classes.selectClass} >
+            <Grid item xs={12}>
+            {/* <FormControl className={classes.selectClass} >
                 <InputLabel id="demo-simple-select-label">Choose class</InputLabel>
                 <Select value={SelectedClass} onChange={handleClass}>
                 {
@@ -87,16 +102,42 @@ function InviteLink(props){
                 })
                  }
             </Select>
-            </FormControl>
+            </FormControl> */}
+            {/* <FormControl className={classes.selectClass}>
+                    <InputLabel >Choose class</InputLabel>
+                    <Select id="selektiranjeFilterPropertyja" value={SelectedClass} onChange={handleClass}>
+                        {
+                             AllClasses.map((group)=>{
+                                return(
+                                    <MenuItem value={group.id}>{group.name}</MenuItem>
+                                )
+                            })
+                        }
+                    </Select>
+                </FormControl> */}
+        <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel id="demo-simple-select-outlined-label">Class</InputLabel>
+        <Select labelId="demo-simple-select-outlined-label" id="demo-simple-select-outlined" label="Class">
+            {
+                    AllClasses.map((group)=>{
+                    return(
+                        <MenuItem value={group.id}>{group.name}</MenuItem>
+                    )
+                })
+            }
+        </Select>
+      </FormControl>
             </Grid>
-            <Grid item>
+            <Grid item xs={12}>
                 <Typography variant="body1" >Invitation link:</Typography>
             </Grid>
-            <Grid item className={classes.linkGroup}>
+            <Grid item xs={12} className={classes.linkField}>
                 <TextField variant="outlined" value={url} className={classes.link} size="small" inputRef={textFieldRef}></TextField>
+            </Grid>
+            <Grid item xs={12} className={classes.copyButton}>
                 <Button variant="contained" color="primary" size="large" onClick={copyToClipboard}>Copy</Button>
             </Grid>
-        </Grid>
+        </Grid>                
     );
 }
 export default InviteLink;

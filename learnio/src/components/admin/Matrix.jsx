@@ -38,7 +38,9 @@ const useStyles = makeStyles((theme) => ({
           paddingBottom:'9px', 
     },
     lobster: {
-          fontFamily: "Lobster"
+          fontFamily: "Lobster",
+          textShadow:" -5px 5px #30303033",
+
     },
     divider:{
         [theme.breakpoints.down('sm')]: {

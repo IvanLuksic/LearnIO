@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { Route ,Switch} from "react-router-dom";
 import Login from "./pages/login";
 import StudentMatrix from "./pages/StudentMatrix";
-import StudentSubject from "./pages/StudentSubject";
+import StudentUnit from "./pages/StudentUnit";
 import AdminMatrix from "./pages/AdminMatrix";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import "./App.css";
@@ -17,7 +17,8 @@ import NotFound from './components/common/NotFound';
 import Register from './pages/Register';
 import StudentSubjects from './components/student/StudentSubjects';
 import AddCourseSubjectClass from './components/admin/addComponents/AddCourseSubjectClass';
-
+import StudentCourses from './components/student/StudentCourses';
+import Invited from './pages/Invited';
 
 const theme = createMuiTheme({
     palette: {
@@ -70,15 +71,18 @@ function App() {
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/login" component={Login}/>
                     <Route exact path="/register" component={Register}/>
-                    {StudentFeatures&&<Route path="/topics/:class_id/:subject_id"component={StudentSubject}/>}
+                    {StudentFeatures&&<Route exact path="/student/topics/:unit_id"component={StudentUnit}/>}
+                    {StudentFeatures&&<Route exact path="/student/units/:subject_id" component={StudentCourses}/>}
                     {/* {StudentFeatures&&<Route path="/topics"component={StudentTopics}/>} */}
-                    {StudentFeatures&&<Route exact path="/topic/:id" component={StudentMatrix}/>}
-                    {StudentFeatures&&<Route exact path="/subjects" component={StudentSubjects}/>}
+                    {StudentFeatures&&<Route exact path="/student/topic/:topic_id" component={StudentMatrix}/>}
+                    {StudentFeatures&&<Route exact path="/student/subjects" component={StudentSubjects}/>}
+                    {StudentFeatures&&<Route exact path="/invite/:code" component={Invited}/>}
                     {AdminFeatures&&<Route exact path="/admin-topic/:id" component={AdminMatrix}/>}
                     {AdminFeatures&&<Route exact path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>}
                     {AdminFeatures&&<Route exact path="/AdminTopics" component={AdminTopics}/>}
                     {AdminFeatures&&<Route exact path="/results" component={Results}/>}
                     {AdminFeatures&&<Route exact path="/students" component={Students}/>}
+                    
                     <Route component={NotFound}/>
                 </Switch>
               </div>

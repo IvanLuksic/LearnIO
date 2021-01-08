@@ -78,7 +78,7 @@ function WrongPU(props){//uzima samo closePopup
     const closePopup=(value)=>{
         if(Number.isInteger(value)){
             props.setTopicID(value);
-            props.pageProps.history.push(`/topic/${value}`);
+            props.pageProps.history.push(`/student/topic/${value}`);
         };
         props.closePopup(false);
     }

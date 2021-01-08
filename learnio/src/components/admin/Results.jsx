@@ -42,6 +42,8 @@ const useStyles = makeStyles((theme) => ({
       fontSize:'8vh',
       marginTop:"15vh",
       marginBottom:"5vh",
+      textShadow:" -5px 5px #30303033"
+
     },
     addButton:{
       marginTop:"-0.12em",

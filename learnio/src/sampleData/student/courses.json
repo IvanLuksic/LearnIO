@@ -1,0 +1,52 @@
+[
+    {
+        "course_name": "Course 1",
+        "course_id": 1,
+        "topics":[
+            {
+                "topic_name": "ime1"
+            },
+            {
+                "topic_name": "ime2"
+            },
+            {
+                "topic_name": "ime3"
+            },
+            {
+                "topic_name": "ime4"
+            }
+        ]
+    },
+    {
+        "course_name": "Course 2",
+        "course_id": 2,
+        "topics":[
+            {
+                "topic_name": "ime1"
+            }
+        ]
+    },
+    {
+        "course_name": "Course 3",
+        "course_id":3,
+        "topics":[
+            {
+                "topic_name": "ime1"
+            },
+            {
+                "topic_name": "ime2"
+            },
+            {
+                "topic_name": "ime3"
+            },
+            {
+                "topic_name": "ime4"
+            }
+        ]
+    },
+    {
+        "course_name": "Course 4",
+        "course_id": 4,
+        "topics":[]
+    }
+]

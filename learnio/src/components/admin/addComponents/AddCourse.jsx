@@ -13,6 +13,7 @@ import CustomSnackbar from '../../common/Snackbar.jsx';
 import { useSelector} from 'react-redux';
 import Tooltip from '@material-ui/core/Tooltip';
 import { subHours } from 'date-fns';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     textField:{
@@ -44,7 +45,14 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(2),
         width: "70%",
         position: "relative",
-    },
+    },    
+    topicTitle:{
+        fontFamily:'Lobster',
+        fontSize:'2.5rem',
+        marginBottom:"1rem",
+        textShadow:" -5px 5px #30303033",
+        color: "#3b3a3a"
+      },
 }));
 
 const ITEM_HEIGHT = 48;
@@ -138,7 +146,8 @@ export default function AddCourse(props) {
 
     return(
         <Grid className={classes.gridStyle} container item direction="column" justify="space-between" alignItems="center" xs={12} md={10} spacing={1}>
-            <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Course name"/>
+            <Typography className={classes.topicTitle}>Unit</Typography>
+            <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Unit name"/>
             <FormControl className={classes.formControl}>
                 <InputLabel>Subjects</InputLabel>
                 <Select  value={subjectCheck} onChange={handleSubjectCheck} renderValue={(selected) => `${selected.subject_id} - ${selected.subject_name}`}  MenuProps={MenuProps}>

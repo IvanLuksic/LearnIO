@@ -124,8 +124,8 @@ const CardsOfSubjects=(props)=>{
   let classes=useStyles();
   //let colorFont
 
-  const handleClickCard=(subject_id,class_id)=>{
-    props.page.history.push(`/topics/${class_id}/${subject_id}`);
+  const handleClickCard=(subject_id)=>{
+    props.page.history.push(`/student/units/${subject_id}`);
   };
 
   let i=0;
@@ -134,7 +134,7 @@ const CardsOfSubjects=(props)=>{
     i++;
     return(
       <Grid item xs={12} sm={6} lg={3} className={classes.card}>
-          <Paper elevation={3} className={classes.card} onClick={()=>handleClickCard(sub.id,sub.class_id)}> 
+          <Paper elevation={3} className={classes.card} onClick={()=>handleClickCard(sub.id)}> 
             <Grid container flexDirection="column" justify="center" alignItems="center" className={classes.cardContent}>
               <Grid item xs={12}>
                 {""}
