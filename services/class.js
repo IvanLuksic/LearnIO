@@ -161,9 +161,76 @@ module.exports= class clas{
             throw(error);
         }
     }
+    async getAllClasses()
+    {
+        try {
+            try {
+                var classes=await this.Clas.findAll();
+            } catch (error) {
+                this.Logger.error('Error fetching classes from database');
+            }
+            let format=[];
+            let temp={};
+            for(let clas of classes)
+            {
+                temp={
+                    class_id:clas.id,
+                    class_name:clas.name,
+                    class_year:clas.school_year
+                };
+                format.push(temp);
+                temp={};
+            }
+            this.Logger.info(JSON.stringify(format));
+            return format;
+        } catch (error) {
+            this.Logger.error('error in function getAllClasses'+error);
+            throw(error);
+        }
+    }
+    async getClassesForTeacher(teachers_id)
+    {
+        try {
+            try {
+                var classes=await this.User.findAll({
+                    attributes:['id'],
+                    include:{
+                        model:this.Clas,
+                        as:'classes_teacher',
+                        through: { attributes: [] }
+                    },
+                    where:{
+                        id:teachers_id
+                    }
+                });
+            } catch (error) {
+                this.Logger.error('Error in fetching classes for teacher from database');
+                throw(error);
+            }
+            this.Logger.info('Classes for teacher fetched succesfuly from database');
+            let format=[];
+            let temp={};
+            for(let i=0;i<classes[0].classes_teacher.length;i++)
+            {
+                temp={
+                    class_id:classes[0].classes_teacher[i].id,
+                    class_name:classes[0].classes_teacher[i].name,
+                    class_year:classes[0].classes_teacher[i].school_year
+                };
+                format.push(temp);
+                temp={};
+            }
+            for(let clas of format)
+            this.Logger.info(JSON.stringify(clas));
+            return format;
+        } catch (error) {
+            this.Logger.error('Error in function getClassesForTeacher'+error);
+            throw(error);
+        }
+    }
     async addClass(request)//request body objektz s podacima za unos
     {
-        try {//provjertiv jeli postoji vec isti taj razred
+        try {//provjeriti jeli postoji vec isti taj razred
             var clas=await this.Clas.findOne({
                 where:{
                     name:request.class_name,

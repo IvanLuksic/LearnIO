@@ -31,6 +31,16 @@ module.exports={
             next(error);
         }
     },
+    getClasses:async (req,res,next)=>
+    {
+        try {
+            let classes=await Class_instance.getAllClasses();
+            res.json(classes);
+        } catch (error) {
+            nodelogger.error('Error in getClasses');
+            next(error);
+        }
+    },
     insertClass:async(req,res,next)=>
     {
         try {
@@ -38,6 +48,16 @@ module.exports={
             res.sendStatus(200);
         } catch (error) {
             nodelogger.error('Error in insertClass');
+            next(error);
+        }
+    },
+    getClassesTeacher:async(req,res,next)=>
+    {
+        try {
+            classes=await Class_instance.getClassesForTeacher(req.session.user);
+            res.json(classes);
+        } catch (error) {
+            nodelogger.error('Error in getClassesTeacher');
             next(error);
         }
     }
