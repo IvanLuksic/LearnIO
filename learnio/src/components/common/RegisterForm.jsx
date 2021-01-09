@@ -73,32 +73,32 @@ function RegisterForm(props){
     //provjerava jesu li sva polja unesena i da li se lozinke podudaraju
     const validation=()=>{   
         let temp={}
-        temp.name=object.names ?"":"Name is required."
+        temp.name=object.name ?"":"Name is required."
         if(temp.name=="Name is required."){
             temp.nameError=true
         }
         else temp.nameError=false
 
-        temp.surname=object.surnames ?"":"Surname is required."
+        temp.surname=object.surname ?"":"Surname is required."
         if(temp.surname=="Surname is required."){
             temp.surnameError=true
         }
         else temp.surnameError=false
 
-        temp.username=object.usernames ?"":"Username is required."
+        temp.username=object.username ?"":"Username is required."
         if(temp.username=="Username is required."){
             temp.usernameError=true
         }
         else temp.usernameError=false
 
-        temp.password=object.passwords ?"":"Password is required."
+        temp.password=object.password ?"":"Password is required."
         if(temp.password=="Password is required."){
             temp.passwordError=true
         }
         else temp.passwordError=false
 
-    	temp.email=(/$^|.+@.+..+/).test(object.emails)?"":"Email is not vaild."
-        temp.email1=object.emails ?"":"Email is required." 
+    	temp.email=(/$^|.+@.+..+/).test(object.mail)?"":"Email is not vaild."
+        temp.email1=object.mail ?"":"Email is required." 
         if(temp.email=="Email is not vaild."){
             temp.emailError=true
         }
@@ -159,20 +159,42 @@ function RegisterForm(props){
 
     //objekt(tj osoba) koja se registrira
     let object={
-        names:name,
-        surnames:surname,
-        birth:birthDate,
-        emails:email,
-        roles:role,
-        usernames:username,
-        passwords:password,
+        name:name,
+        surname:surname,
+        date_of_birth:birthDate,
+        mail:email,
+        user_type:3,
+        username:username,
+        password:password,
         
     };
+    function sendSignup()
+    {
+        console.log(object);
+            const requestOptions = {
+              method: 'POST',
+              mode:'cors',
+              headers: { 'Content-Type': 'application/json'},
+              credentials: 'include',
+              body:JSON.stringify(object)
+            };
+            fetch('http://127.0.0.1:3000/api/student/register', requestOptions)
+            .then((data)=>{
+                if(data.status===200){
+                   props.pageProps.history.push('/');
+                }
+                else{
+                    console.log('Error in fetch function '+ data.status);
+            }})
+            .catch((error)=>{ console.log('Error in fetch function '+ error);});
+            
+    }
     //unosimo podatke i provjeravamo jeli sve okej
     const Submit=(e)=>{
         e.preventDefault();
         if(validation())
         {
+            sendSignup();
             setOpenSnackbar(true);
             console.log(object);
         }      
