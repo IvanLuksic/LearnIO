@@ -15,9 +15,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import sampleCourses from '../../../sampleData/admin/allCourses.json';
 import sampleCourseTopic from '../../../sampleData/admin/allCourseTopic.json';
 import sampleTopics from '../../../sampleData/admin/allTopics.json';
+import sampleQuestions from '../../../sampleData/admin/allQuestionsOfTopic.json';
 
 const useStyles = makeStyles((theme) => ({
   grupaBotuna:{
@@ -109,6 +111,13 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft:"7em",
         paddingRight:"7em",
       },
+    },
+    ieList: {
+      width: '100%',
+      position: 'relative',
+      overflow: 'auto',
+      maxHeight: 200,
+      marginTop: 15
     },
     pictureNotLoaded:{
       color:"lightgrey",
@@ -203,6 +212,10 @@ function AddQuestPU(props) {
   const [ieTopicList, setIeTopicList] = useState([]);
   const [ieTopicSelectEnabled, setIeTopicSelectEnabled] = useState(false);
   const [ieTextFieldEnabled, setIeTextFieldEnabled] = useState(false);
+  const [ieTextFieldContent, setIeTextFieldContent] = useState("");
+  const [ieSelectedQuestion, setIeSelectedQuestion] = useState([]);
+  const [ieIncludeImage, setIeIncludeImage] = useState(false);
+  const [ieIncludeImageEnabled, setIeIncludeImageEnabled] = useState(true);
 
   const classes = useStyles();
 //dropdown button---------------------
@@ -216,7 +229,7 @@ function AddQuestPU(props) {
   const handleCorrect = (event) => {  
     setCorrectAnswers(event.target.value);
   };
-  const updateAnsweInput=(event)=>{
+  const updateAnswerInput=(event)=>{
     setAnswerInput(event.target.value);
   };
   const checkUnique=(validate)=>{
@@ -250,7 +263,7 @@ function AddQuestPU(props) {
     props.popUpClose(false);
   }
 
-  // Insert existing \\
+  // // Insert existing \\
 
   const ieFilterQuestionList = e => {
     if(e.target.value === "") {
@@ -260,10 +273,15 @@ function AddQuestPU(props) {
 
     const updatedList = ieQuestionList.filter(item => {
       return (
-        item.toLowerCase().search(e.target.value.toLowerCase()) !== -1
+        item["text"].toLowerCase().search(e.target.value.toLowerCase()) !== -1
       );
     });
     setIeFilteredQuestionList(updatedList);
+  }
+
+  const ieTextFieldChanged = e => {
+    ieFilterQuestionList(e);
+    setIeTextFieldContent(e.target.value);
   }
 
   // Test data functions
@@ -280,8 +298,6 @@ function AddQuestPU(props) {
       list.push(item["name"]);
     });
     setIeCourseList(list);
-
-    // setIeCourseList(["Prvi kurs", "Drugi kurs", "Treci kurs", "Cetvrti kurs", "Peti kurs", "Sesti kurs", "Prvi kurs2", "Drugi kurs2", "Treci kurs2", "Cetvrti kurs2", "Peti kurs2", "Sesti kurs2", "Prvi kurs3", "Drugi kurs3", "Treci kurs3", "Cetvrti kurs3", "Peti kurs3", "Sesti kurs3"]);
   }
 
   const ieSetTestTopics = () => {
@@ -290,12 +306,17 @@ function AddQuestPU(props) {
       list.push(item["topic_name"]);
     });
     setIeTopicList(list);
-
-    // setIeTopicList(["Prvi topik", "Drugi topik", "Treci topik", "Cetvrti topik", "Peti topik", "Sesti topik", "Prvi topik2", "Drugi topik2", "Treci topik2", "Cetvrti topik2", "Peti topik2", "Sesti topik2", "Prvi topik2", "Drugi topik2", "Treci topik2", "Cetvrti topik2", "Peti topik2", "Sesti topik2"]);
   }
 
   const ieSetTestQuestions = () => {
-    setIeQuestionList(["prvo", "drugo", "trece", "cetvrto", "peto", "sesto", "sedmo", "osmo", "1234", "a b c d", "#!#$%&/(", "tEsTnO piTaNjE"]);
+    let list = [];
+    sampleQuestions["fields"].forEach(item => {
+      item["Questions"].forEach(question => {
+        list.push(question)
+      });
+    });
+    setIeQuestionList(list);
+
     setIeFilteredQuestionList(ieQuestionList);
   }
 
@@ -315,7 +336,51 @@ function AddQuestPU(props) {
     ieSetTestQuestions();
     setIeFilteredQuestionList([]);
     setIeTextFieldEnabled(true);
+    setIeTextFieldContent("");
   }
+
+  const ieQuestionPick = (item) => {
+    setIeTextFieldContent(item["text"]);
+    if(item["image_path"] != null) {
+      setIeIncludeImageEnabled(true);
+      setIeIncludeImage(true);
+    }
+    else {
+      setIeIncludeImage(false);
+      setIeIncludeImageEnabled(false);
+    }
+    setIeSelectedQuestion(item);
+  }
+
+  // Insertion
+  
+  const ieHandleInsert = () => {
+    let question = ieSelectedQuestion;
+    let incorrectAnswers = [];
+
+    setText(question["text"]);
+    setCorrectAnswers(question["solution"]);
+
+    if( question["answer_a"] != "")
+      incorrectAnswers.push(question["answer_a"]);
+    if( question["answer_b"] != "")
+      incorrectAnswers.push(question["answer_b"]);
+    if( question["answer_c"] != "")
+      incorrectAnswers.push(question["answer_c"]);
+    if( question["answer_d"] != "")
+      incorrectAnswers.push(question["answer_d"]);
+
+    setWrongAnswers(incorrectAnswers);
+    if(ieIncludeImage)
+      setimageState(question["image_path"]);
+
+
+    setIeTextFieldContent("");
+    setIeFilteredQuestionList([]);
+    setShow1(true); setShow2(false); setShow3(false);
+  }
+
+  // \\ Insert existing //
 //------------------------
 
   return(
@@ -385,7 +450,7 @@ function AddQuestPU(props) {
             {multipleAnswer&&
             <Grid container item xs={12} justify="center" alignItems="center" direction="row">
               <form onSubmit={(e)=>{e.preventDefault();}}>
-                <TextField style={{width:"100%"}} placeholder="Odgovor" value={answerInput} onChange={updateAnsweInput} onKeyDown={addWrongAnswer}/>
+                <TextField style={{width:"100%"}} placeholder="Odgovor" value={answerInput} onChange={updateAnswerInput} onKeyDown={addWrongAnswer}/>
               </form>
             </Grid>
             }
@@ -396,8 +461,8 @@ function AddQuestPU(props) {
           show3 ? // third case - insert existing
             <Grid container item className={classes.editText} xs={12} md={8} direction="column" spacing={5}>
               <Grid container item xs={12}>
-                <InputLabel style={{width:"100%"}} id="ieCourse">Select course</InputLabel>
-                <Select style={{width:"100%"}} labelId="ieCourse" id="ieCourseSelect" onChange={ieHandleCoursePick}>
+                <InputLabel style={{width:"25%", marginTop:"10px"}} id="ieCourse">Select course:</InputLabel>
+                <Select style={{width:"75%"}} labelId="ieCourse" id="ieCourseSelect" onChange={ieHandleCoursePick}>
                   {ieCourseList.map((item, index) => (
                     <MenuItem value={item} key={index}>
                       {item}
@@ -406,8 +471,8 @@ function AddQuestPU(props) {
                 </Select>
               </Grid>
               <Grid container item xs={12}>
-                <InputLabel style={{width:"100%"}} id="ieTopic">Select topic</InputLabel>
-                <Select style={{width:"100%"}} labelId="label" id="ieTopicSelect" onChange={ieHandleTopicPick} disabled={!ieTopicSelectEnabled}>
+                <InputLabel style={{width:"25%", marginTop:"10px"}} id="ieTopic">Select topic:</InputLabel>
+                <Select style={{width:"75%"}} labelId="label" id="ieTopicSelect" onChange={ieHandleTopicPick} disabled={!ieTopicSelectEnabled}>
                   {ieTopicList.map((item, index) => (
                     <MenuItem value={item} key={index}>
                       {item}
@@ -415,16 +480,23 @@ function AddQuestPU(props) {
                   ))}
                 </Select>
               </Grid>
-              <Grid container item xs={12}>
-                <TextField onChange={ieFilterQuestionList} style={{width:"100%"}} placeholder="Search question keywords" id="ieTextField" disabled={!ieTextFieldEnabled}/>
+              <Grid style={{marginLeft: "20px"}} container item xs={12}>
+                  <TextField onChange={ieTextFieldChanged} style={{width:"70%"}} value={ieTextFieldContent} placeholder="Search question keywords" id="ieTextField" disabled={!ieTextFieldEnabled}/>
+                  <Button onClick={ieHandleInsert} variant="contained" color="primary" component="span" style={{width: "25%", marginLeft: "5%"}}>
+                    Insert
+                  </Button>
+                  <Grid style={{flexDirection: 'row', justifyContent: 'flex-end'}} container item xs={12}>
+                    <InputLabel style={{marginTop: "14px"}}>Include image </InputLabel>
+                    <Checkbox disabled={!ieIncludeImageEnabled} color="primary" checked={ieIncludeImage} onChange={() => {setIeIncludeImage(!ieIncludeImage)}}/>
+                  </Grid>
+                  <List className={classes.ieList}> 
+                    {ieFilteredQuestionList.slice(0,25).map((item, index) => (
+                      <ListItem fadeIn button key={index} onClick={() => ieQuestionPick(item)}>
+                        <ListItemText>{item["text"]}</ListItemText>
+                      </ListItem>
+                    ))}
+                </List>
               </Grid>
-              <List>
-                {ieFilteredQuestionList.map((item, index) => (
-                  <ListItem key={index}>
-                    {item}
-                  </ListItem>
-                ))}
-            </List>
             </Grid>
             : null
           }
