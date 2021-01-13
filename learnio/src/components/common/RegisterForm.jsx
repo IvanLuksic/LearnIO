@@ -178,7 +178,7 @@ function RegisterForm(props){
               credentials: 'include',
               body:JSON.stringify(object)
             };
-            fetch('http://127.0.0.1:3000/api/student/register', requestOptions)
+            fetch('/api/student/register', requestOptions)
             .then((data)=>{
                 if(data.status===200){
                    props.pageProps.history.push('/');

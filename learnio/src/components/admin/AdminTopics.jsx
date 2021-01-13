@@ -152,7 +152,7 @@ function AdminTopics(props){
           credentials: 'include'
       };
 
-      fetch('http://127.0.0.1:3000/api/admin/topics', requestOptions)
+      fetch('/api/admin/topics', requestOptions)
       .then(response => response.json())
       .then(data => {  
         setData(data.Topics);
@@ -203,7 +203,7 @@ function AdminTopics(props){
           headers: { 'Content-Type': 'application/json'},
           credentials: 'include'
       };
-      fetch(`http://127.0.0.1:3000/api/admin/topics/delete/${item}`, requestOptions)
+      fetch(`/api/admin/topics/delete/${item}`, requestOptions)
       .then(() =>{handleDelete(item);})
       .catch((error)=>{console.log('Error in fetch function '+ error);});
     };

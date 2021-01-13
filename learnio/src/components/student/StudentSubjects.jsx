@@ -199,7 +199,7 @@ function StudentSubjects(props)
           headers: { 'Content-Type': 'application/json'},
           credentials: 'include',
       };
-      fetch(`http://127.0.0.1:3000/api/student/classes`, requestOptions)// class subject course
+      fetch(`/api/student/classes`, requestOptions)// class subject course
       .then(response => response.json())
       .then(data=>{let d=unpackClasses(data);setSubjects(d);setNumberOfBlocks((d.length+8-(d.length%8))/8);retData=d;setFirstTime(false);setLoading(true);
         let ArOc=[];

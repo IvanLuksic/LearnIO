@@ -105,7 +105,7 @@ function MatricaAdmin(props)
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch(`http://127.0.0.1:3000/api/admin/topics/edit/${topicID}`, requestOptions)//topic id
+        fetch(`/api/admin/topics/edit/${topicID}`, requestOptions)//topic id
         .then(response => response.json())
         .then(data => {  
                   console.log(JSON.stringify(data));
@@ -234,7 +234,7 @@ function MatricaAdmin(props)
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch(`http://127.0.0.1:3000/api/question/delete/${Ques.id}`, requestOptions)
+        fetch(`/api/question/delete/${Ques.id}`, requestOptions)
         .then(() =>{deleteQuestion(Ques,aoSelected,dSelected);})
         .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
@@ -250,7 +250,7 @@ function MatricaAdmin(props)
             body: JSON.stringify({...Ques}),
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/api/question/update', requestOptions)
+        fetch('/api/question/update', requestOptions)
         .then(() =>{changeExpanded(false);changeQuestion(Ques);
         })
         .catch((error)=>{console.log('Error in fetch function '+ error);});
@@ -267,7 +267,7 @@ function MatricaAdmin(props)
             body: JSON.stringify({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:Number(topicID)}),
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/api/question/add', requestOptions)
+        fetch('/api/question/add', requestOptions)
         .then(response => response.json())
         .then(data => {if(data.id!=undefined){addQuestion({id:data.id,...Ques,row_D:dSelected,column_A:aoSelected});forceUpdate();}})
         .catch((error)=>{console.log('Error in fetch function '+ error);});
