@@ -205,7 +205,7 @@ function StudentTopics(props){
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
-      fetch(`http://127.0.0.1:3000/api/courses/${props.match.params.subject_id}`, requestOptions)// class subject course
+      fetch(`/api/courses/${props.match.params.subject_id}`, requestOptions)// class subject course
       .then((response)=>{
         if(response.status===200)
         {

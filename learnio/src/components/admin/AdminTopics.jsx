@@ -156,13 +156,14 @@ function AdminTopics(props){
           credentials: 'include'
       };
 
-      fetch('http://127.0.0.1:3000/api/admin/topics', requestOptions)
+      fetch('/api/admin/topics', requestOptions)
       .then(response => {
         if(response.status===200)
         {
         Promise.resolve(response).then(response => response.json())
         .then(data => {
           setData(data.Topics);
+          setSavedData(data.Topics);
           setSnackbarStatus("success");
           setSnackbarText("Subjects loaded successfully.")
           setSnackbarOpen(true);
@@ -265,7 +266,7 @@ function AdminTopics(props){
           <div style={{display: "flex", flexDirection: "column",justifyContent:"none", alignItems:"center"}} className={classes.background}>
             <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
             <div className={classes.tabela}>
-              <Filter data={data} savedData={savedData} setData={setData} listOfProperties={[{name:"topic_id",nameToDisplay:"ID"},{name:"topic_name",nameToDisplay:"NAME"}]}/>
+              <Filter data={data} savedData={savedData} setData={setData} listOfProperties={[{name:"topic_id",nameToDisplay:"ID"},{name:"topic_name",nameToDisplay:"Topic"},{name:"course_name",nameToDisplay:"Course"},{name:"subject_name",nameToDisplay:"Subject"}]}/>
               <DataGrid disableSelectionOnClick={true}  pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
             </div>
 

@@ -93,7 +93,7 @@ function MatricaAdmin(props)
     const [matricaD,setMatricaD] = useState(()=>fakeBackendQuestions.rows);
     const [loading,setLoading]=useState(offline);//OFFLINE:potrebno ga postavit na false da bi radilo
     const [topicName,setTopicName]=useState(()=>fakeBackendQuestions.topic_name);
-    const [topicID,setTopicID]=useState(useSelector(state=>state.topic.id));
+    const [topicID,setTopicID]=useState(useSelector(state=>state.topic));
     const [topicDescription,setTopicDescription]=useState(()=>fakeBackendQuestions.topic_description);
     const [noError,setNoError]=useState(()=> true);
     const [snackbarText,setSnackbarText]=useState(()=>"");
@@ -113,7 +113,7 @@ function MatricaAdmin(props)
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch(`http://127.0.0.1:3000/api/admin/topics/edit/${topicID}`, requestOptions)//topic id
+        fetch(`/api/admin/topics/edit/${topicID}`, requestOptions)//topic id
         .then((response)=>{
             if(response.status===200)
             {
@@ -260,12 +260,13 @@ function MatricaAdmin(props)
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch(`http://127.0.0.1:3000/api/question/delete/${Ques.id}`, requestOptions)
+        fetch(`/api/question/delete/${Ques.id}`, requestOptions)
         .then((response)=>{
           if(response.status===200)
           {
-            Promise.resolve(response).then(response => response.json())
+            Promise.resolve(response.status)
               .then(()=> {
+                changeExpanded(false);
                 deleteQuestion(Ques,aoSelected,dSelected);
                 setSnackbarStatus("success");
                 setSnackbarText("Question deleted successfully.");
@@ -298,11 +299,11 @@ function MatricaAdmin(props)
             body: JSON.stringify({...Ques}),
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/api/question/update', requestOptions)
+        fetch('/api/question/update', requestOptions)
         .then((response)=>{
             if(response.status===200)
             {
-              Promise.resolve(response).then(response => response.json())
+              Promise.resolve(response.status)
                 .then(()=> {
                     changeExpanded(false);
                     changeQuestion(Ques);
@@ -336,7 +337,7 @@ function MatricaAdmin(props)
             body: JSON.stringify({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:Number(topicID)}),
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/api/question/add', requestOptions)
+        fetch('/api/question/add', requestOptions)
         .then((response)=>{
             if(response.status===200)
             {

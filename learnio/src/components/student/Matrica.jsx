@@ -80,10 +80,12 @@ const fieldToRows=(field,ao,d)=>{
 };
 
 function Matrica(props)
-{   
+{       
+    const dispatch=useDispatch();//rows su podaci
+    dispatch(topicSelected(parseInt(props.match.params.topic_id)));
+
     const offline= useSelector(state=>state.offline);
     const [fields, setFields]=useState(()=>{return fakeFetchResponse.Questions});//bilo data.Questions
-    const dispatch=useDispatch();//rows su podaci
     const [aoSelected,setAoSelected]=useState(1);
     const [dSelected,setDSelected]=useState(1);
     const [questionSelected,setQuestionSelected]=useState(null);
@@ -94,14 +96,18 @@ function Matrica(props)
     const [assesment_objectives,setAssesment_objectives]=useState();
     const [topicName,setTopicName]=useState(()=>fakeFetchResponse.Matrix.topic_name);
     const [topicDescription,setTopicDescription]=useState(()=>fakeFetchResponse.Matrix.topic_description);
-    const [topicID,setTopicID]=useState(useSelector(state=>state.topic.id));
+    const [topicID,setTopicID]=useState(useSelector(state=>state.topic));
     const [loading,setLoading]=useState(offline);//OFFLINE:true
     const [noError,setNoError]=useState(()=> true);
     const [snackbarText,setSnackbarText]=useState(()=>"");
     const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
     const [errorStatus,setErrorStatus]=useState(()=>"");
     const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
-    dispatch(topicSelected(parseInt(props.match.params.topic_id)));
+    
+    const sub=useSelector(state=>state.subject);
+    const uni=useSelector(state=>state.unit);
+    const cla=useSelector(state=>state.class);
+
 
     //opis svakog ao
     // const opis=[
@@ -119,9 +125,6 @@ function Matrica(props)
 
     const GetQuestion=()=>{
 
-        const sub=useSelector(state=>state.subject.id);
-        const uni=useSelector(state=>state.unit.id);
-        const cla=useSelector(state=>state.class.id);
 
         const requestOptions = {
           method: 'GET',
@@ -129,7 +132,7 @@ function Matrica(props)
           headers: { 'Content-Type': 'application/json'},
           credentials: 'include'
         };
-        fetch(`http://127.0.0.1:3000/api/question/${cla}/${sub}/${uni}/${topicID}`, requestOptions)//class_id subject_id course_id topic_id
+        fetch(`/api/question/${cla}/${sub}/${uni}/${topicID}`, requestOptions)//class_id subject_id course_id topic_id
         .then((response)=>{
           if(response.status===200)
           {
@@ -200,7 +203,7 @@ function Matrica(props)
               </Grid>
                 {/* <Grid direction="column" > 
                   {opis.slice(0,matricaAO).map((AO)=>(<p style={{fontFamily:"Red Hat Display", color: "#4372ec"}}>AO={AO.ao} {AO.opis} </p>))}
-                </Grid> OVO SU AO-ovi SAMO UMISTO OPISA KORISTIT ASSESSMENT OBJE*/}
+                </Grid> OVO SU AO-ovi SAMO UMISTO OPISA KORISTIT ASSESSMENT OBJE */}
               <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
                   <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
               </Grid>

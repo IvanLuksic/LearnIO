@@ -177,6 +177,9 @@ function CustomPagination(props) {
 
 
 function StudentTopics(props){
+        
+    const sub=useSelector(state=>state.subject);
+    const cla=useSelector(state=>state.class);
     const offline= useSelector(state=>state.offline);
     const dispatch=useDispatch();//rows su podaci
     const [data,setData]=useState(()=>{return fakeLoadingTopics});//koristi ove dok ne učita da ne bi bilo undefined
@@ -186,6 +189,8 @@ function StudentTopics(props){
     const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
     const [errorStatus,setErrorStatus]=useState(()=>"");
     const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+
+
     dispatch(unitSelected(parseInt(props.match.params.unit_id)));
 
     const classes = useStyles();
@@ -224,13 +229,14 @@ function StudentTopics(props){
 
 
     const fetchData=()=>{
+
       const requestOptions = {
         method: 'GET',
         mode:'cors',
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
-      fetch(`http://127.0.0.1:3000/api/topics/${props.match.params.unit_id}`, requestOptions)// class subject course
+      fetch(`/api/student/topics/${cla}/${sub}/${props.match.params.unit_id}`, requestOptions)// class subject course
       .then((response)=>{
         if(response.status===200)
         {

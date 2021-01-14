@@ -219,16 +219,20 @@ function RegisterForm(props){
     const checkUsername=(temp)=>{
 
         const requestOptions = {
-            method: 'GET',
+            method: 'POST',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            credentials: 'include'
+            credentials: 'include',
+            body:JSON.stringify({username:temp})
           };
 
-          fetch(`http://127.0.0.1:3000/api/checkusername/${temp}`, requestOptions)
+          
+          fetch(`/api/check/username`, requestOptions)
           .then(response => response.json())
           .then(dataFetch => {  
-                  if(dataFetch.available==1){
+                  console.log(dataFetch);
+                  if(dataFetch.available==false){
+                    console.log("Tu sammm");
                     let ar=errors;
                     ar.usernameError=true;
                     ar.username=`This username is not available.`;
@@ -240,6 +244,7 @@ function RegisterForm(props){
                     ar.username=null;
                     setErrors(ar);
                   }
+                  setUsername(temp);
           })
           .catch((error)=>{
             console.log('Error in fetch function '+ error);
@@ -296,7 +301,7 @@ function RegisterForm(props){
                     type="username" 
                     label="Username" 
                     variant="filled" 
-                    onChange={(e)=>{ checkUsername(e.target.value); setUsername(e.target.value);}}
+                    onChange={(e)=>{ if(e.target.value.length>4){ checkUsername(e.target.value);}else{setUsername(e.target.value);}}}
                     // onBlur={()=>{const temp=username; setUsername("");}}
                     error={errors.usernameError}
                     value={username}

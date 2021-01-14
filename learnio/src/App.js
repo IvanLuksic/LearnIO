@@ -46,7 +46,7 @@ function App() {
       credentials: 'include'
     };
 
-    fetch(`http://127.0.0.1:3000/api/checklogin`, requestOptions)//class_id subject_id course_id topic_id
+    fetch(`/api/checklogin`, requestOptions)//class_id subject_id course_id topic_id
     .then((response)=>{
       if(response.status===200)
       {
