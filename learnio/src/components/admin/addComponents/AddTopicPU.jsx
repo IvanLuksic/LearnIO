@@ -266,7 +266,7 @@ function AddTopicPU(props){
         credentials: 'include'
     };
     
-    fetch(`http://127.0.0.1:3000/api/admin/topics/associated/${sub.subject_id}`, requestOptions)
+    fetch(`/api/admin/topics/associated/${sub.subject_id}`, requestOptions)
     .then(response => response.json())
     .then(data => {  
       setAssociatedTopicsPossible(data);
@@ -320,7 +320,7 @@ function AddTopicPU(props){
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
-      fetch(`http://127.0.0.1:3000/api/admin/topics/subject/course/pairs`, requestOptions)
+      fetch(`/api/admin/topics/subject/course/pairs`, requestOptions)
       .then(response => response.json())
       .then(data => {  
         setSubjectAndCourseList(data);
@@ -389,7 +389,7 @@ function AddTopicPU(props){
         });
         offline&&(props.closePopup!==undefined)&&props.closePopup();
 
-        fetch(`http://127.0.0.1:3000/api/add/topic`, requestOptions)
+        fetch(`/api/add/topic`, requestOptions)
         .then(response => response.json())
         .then(data => {  
           (props.addTopic!==undefined)&&props.addTopic({

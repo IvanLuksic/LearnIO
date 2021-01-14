@@ -111,7 +111,7 @@ function App() {
                     {AdminFeatures&&<Route exact path="/AdminTopics" component={AdminTopics}/>}
                     {AdminFeatures&&<Route exact path="/results" component={Results}/>}
                     {AdminFeatures&&<Route exact path="/students" component={Students}/>}
-                    <Route component={NotFound}/>
+                    <Route component={NotFound} code={"404"}/>
                 </Switch>
               </div>
               {AdminFeatures&&<AddCourseSubjectClass/>}

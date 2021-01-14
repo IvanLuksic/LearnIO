@@ -65,7 +65,7 @@ function InviteLink(props){
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/api/all/classes', requestOptions)
+        fetch('/api/all/classes', requestOptions)
         .then(response => response.json())
         .then(data => {  setAllClasses(data)})
         .catch((error)=>console.log('Error in fetch function '+ error));
@@ -83,7 +83,7 @@ function InviteLink(props){
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include',
         };
-        fetch(`http://127.0.0.1:3000/api/invite/to/class/${sub.class_id}`, requestOptions)// class subject course
+        fetch(`/api/invite/to/class/${sub.class_id}`, requestOptions)// class subject course
         .then(response => response.json())
         .then(data=>setUrl(`http://learnio.com/${data.link}`))
         .catch((error)=>{console.log('Error in fetch function '+ error)});

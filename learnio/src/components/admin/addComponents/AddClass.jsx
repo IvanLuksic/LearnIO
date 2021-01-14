@@ -90,7 +90,7 @@ export default function AddCourse(props) {
                 body: JSON.stringify({...send}),
                 credentials: 'include'
             };
-            fetch('http://127.0.0.1:3000/api/class/insert', requestOptions)
+            fetch('/api/class/insert', requestOptions)
             .then((data)=>{
                 if(data.status===200){
                     props.handleIndex(1);
