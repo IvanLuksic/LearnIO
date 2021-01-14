@@ -10,7 +10,10 @@ import PopupDialog from '../common/PopupDialog.jsx';
 import { useSelector} from 'react-redux';
 import WrongPU from './WrongPU';
 import MatrixSkeleton from './matrixComponents/MatrixSkeleton';
-
+import {topicSelected} from '../../redux/actions/topicID';
+import NotFound from '../common/NotFound';
+import CustomSnackbar from '../common/Snackbar.jsx';
+import {useDispatch} from 'react-redux';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
     topicTitle:{
         fontSize:'6vh',
         marginBottom: '1em',
-
         paddingBottom:'9px', 
     },
     lobster: {
@@ -81,6 +83,7 @@ function Matrica(props)
 {   
     const offline= useSelector(state=>state.offline);
     const [fields, setFields]=useState(()=>{return fakeFetchResponse.Questions});//bilo data.Questions
+    const dispatch=useDispatch();//rows su podaci
     const [aoSelected,setAoSelected]=useState(1);
     const [dSelected,setDSelected]=useState(1);
     const [questionSelected,setQuestionSelected]=useState(null);
@@ -91,49 +94,79 @@ function Matrica(props)
     const [assesment_objectives,setAssesment_objectives]=useState();
     const [topicName,setTopicName]=useState(()=>fakeFetchResponse.Matrix.topic_name);
     const [topicDescription,setTopicDescription]=useState(()=>fakeFetchResponse.Matrix.topic_description);
-    const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
+    const [topicID,setTopicID]=useState(useSelector(state=>state.topic.id));
     const [loading,setLoading]=useState(offline);//OFFLINE:true
-    
+    const [noError,setNoError]=useState(()=> true);
+    const [snackbarText,setSnackbarText]=useState(()=>"");
+    const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+    const [errorStatus,setErrorStatus]=useState(()=>"");
+    const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+    dispatch(topicSelected(parseInt(props.match.params.topic_id)));
+
     //opis svakog ao
-    const opis=[
-      {ao:1,opis:"tezina 1"},
-      {ao:2,opis:"tezina 2"},
-      {ao:3,opis:"tezina 3"},
-      {ao:4,opis:"tezina 4"},
-      {ao:5,opis:"tezina 5"},
-      {ao:6,opis:"tezina 6"},
-      {ao:7,opis:"tezina 7"},
-      {ao:8,opis:"tezina 8"},
-      {ao:9,opis:"tezina 9"},
-      {ao:10,opis:"tezina 10"},
-    ]
+    // const opis=[
+    //   {ao:1,opis:"tezina 1"},
+    //   {ao:2,opis:"tezina 2"},
+    //   {ao:3,opis:"tezina 3"},
+    //   {ao:4,opis:"tezina 4"},
+    //   {ao:5,opis:"tezina 5"},
+    //   {ao:6,opis:"tezina 6"},
+    //   {ao:7,opis:"tezina 7"},
+    //   {ao:8,opis:"tezina 8"},
+    //   {ao:9,opis:"tezina 9"},
+    //   {ao:10,opis:"tezina 10"},
+    // ]
 
     const GetQuestion=()=>{
-            const requestOptions = {
-            method: 'GET',
-            mode:'cors',
-            headers: { 'Content-Type': 'application/json'},
-            credentials: 'include'
+
+        const sub=useSelector(state=>state.subject.id);
+        const uni=useSelector(state=>state.unit.id);
+        const cla=useSelector(state=>state.class.id);
+
+        const requestOptions = {
+          method: 'GET',
+          mode:'cors',
+          headers: { 'Content-Type': 'application/json'},
+          credentials: 'include'
         };
-        fetch(`http://127.0.0.1:3000/api/question/${1}/${1}/${1}/${topicID}`, requestOptions)//class_id subject_id course_id topic_id
-        .then(response => response.json())
-                .then(data => {  
-                  console.log(JSON.stringify(data));
-                  setFields(data.Questions);
-                  setMatricaAO(data.Matrix.column_numbers);
-                  setMatricaD(data.Matrix.rows_D);
-                  setTopicName(data.Matrix.topic_name);
-                  setTopicDescription(data.Matrix.topic_description);
-                  setAssesment_objectives(data.Matrix.asessments_array);
-                  setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
-        })
+        fetch(`http://127.0.0.1:3000/api/question/${cla}/${sub}/${uni}/${topicID}`, requestOptions)//class_id subject_id course_id topic_id
+        .then((response)=>{
+          if(response.status===200)
+          {
+            Promise.resolve(response).then(response => response.json())
+              .then(data => {
+                setFields(data.Questions);
+                setMatricaAO(data.Matrix.column_numbers);
+                setMatricaD(data.Matrix.rows_D);
+                setTopicName(data.Matrix.topic_name);
+                setTopicDescription(data.Matrix.topic_description);
+                setAssesment_objectives(data.Matrix.asessments_array);
+                setSnackbarStatus("success");
+                setSnackbarText("Topic loaded successfully.");
+                setSnackbarOpen(true);
+                setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
+              })
+          }      
+          else{
+            setNoError(false);
+            setSnackbarStatus("error");
+            setErrorStatus(response.status);
+            setSnackbarText("Topic did not load successfully.")
+            setSnackbarOpen(true);
+        }})
         .catch((error)=>{
-            console.log('Error in fetch function '+ error);
-    });
-  }
+          setNoError(false);
+          setSnackbarStatus("error");
+          setErrorStatus("Oops");
+          setSnackbarText("Topic did not load successfully.")
+          setSnackbarOpen(true);
+          console.log('Error in fetch function '+ error);
+        });
+  };
+
   useEffect(() => {
      (!offline)&&GetQuestion();
-     window.scrollTo(0, 0)
+     window.scrollTo(0, 0);
    },[topicID]);
 
    
@@ -148,7 +181,8 @@ function Matrica(props)
 
   const classes = useStyles();
   return(
-    <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
+    (!noError)?<NotFound code={errorStatus}/>
+    :<div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
     {
       loading? 
       <div>
@@ -164,20 +198,42 @@ function Matrica(props)
                   <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName} </Typography></Grid>
                   <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
               </Grid>
-                <Grid direction="column" > 
+                {/* <Grid direction="column" > 
                   {opis.slice(0,matricaAO).map((AO)=>(<p style={{fontFamily:"Red Hat Display", color: "#4372ec"}}>AO={AO.ao} {AO.opis} </p>))}
-                </Grid>
+                </Grid> OVO SU AO-ovi SAMO UMISTO OPISA KORISTIT ASSESSMENT OBJE*/}
               <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
                   <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
               </Grid>
           </Grid>
-        </Grid>       
+        </Grid>
+        {
+          snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+          : null
+        }    
       </div>
     :
     <MatrixSkeleton/>
     }
+
     </div>
   )
 };
 
 export default Matrica;
+
+
+// .then((response)=>{
+//   if(response.status===200)
+//   {
+//     Promise.resolve(response).then(response => response.json())
+//       .then(data => {
+        
+//       })
+//   }      
+//   else{
+
+// }})
+// .catch((error)=>{
+
+//   console.log('Error in fetch function '+ error);
+// });

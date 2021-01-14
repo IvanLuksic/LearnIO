@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import 'reactjs-popup/dist/index.css';
 import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
-import offlineData from '../../../sampleData/admin/allTopics.json';
+import offlineData from '../../sampleData/admin/allTopics.json';
 
 
 const useStyles = makeStyles((theme)=>({
@@ -46,7 +46,6 @@ const useStyles = makeStyles((theme)=>({
     color: "#FFFFFF",
     fontFamily: "Lobster !important",
     borderRadius:"25px",
-    backgroundColor: "#8c8c8c",
     maxHeight: 30,
     '&:hover': {
     backgroundColor: "#595959",
@@ -68,13 +67,13 @@ export default function CustomAccordion(props) {
                     <Accordion style={{marginTop:'2px'}} expanded={props.expanded == course.course_id}  onClick={()=>props.handleChange(course)}>
                         <AccordionSummary  expandIcon={<ExpandMoreIcon />} >
                             <Typography className={classes.accHeading}>{course.course_name}</Typography>
-                            <Button className={classes.toggleButton} size="small" onClick={()=>props.pageProps.history.push(`/student/topics/${course.course_id}`)} > Open </Button>
+                            <Button className={classes.toggleButton} style={{backgroundColor: course.color}} size="small" onClick={()=>props.pageProps.history.push(`/student/topics/${course.course_id}`)} > Open </Button>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Grid  container direction="row" justify="center" alignItems="center" spacing={1}>
                                 <Grid container item md={9} xs={8} direction="column" justify="flex-start" alignItems="flex-start">
                                     {
-                                        course.topics.map((topic, index)=> <Typography>{topic.topic_name}</Typography>)
+                                        course.topics.map((topic, index)=> <Typography style={{color:"grey", marginLeft:"2rem"}}>{topic.topic_name}</Typography>)
                                     }
                                 </Grid>
                                 <Grid container item md={3} xs={4} direction="row" justify="flex-end" alignItems="center"> 

@@ -3,9 +3,9 @@ import { makeStyles,withStyles} from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import { DataGrid} from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button';
-import {useSelector} from 'react-redux';
 import fakeBackendAssociatedTopics from '../../sampleData/student/associatedTopics.json';
-
+import NotFound from '../common/NotFound';
+import CustomSnackbar from '../common/Snackbar.jsx';
 const ColorButton = withStyles((theme) => ({
     root: {
         border: 0,
@@ -75,14 +75,19 @@ const useStyles=makeStyles(theme =>({
 function WrongPU(props){//uzima samo closePopup 
     const [data,setData]=useState(()=>fakeBackendAssociatedTopics);//fakeBackendAssociatedTopics
     const classes=useStyles();
+    const [noError,setNoError]=useState(()=> true);
+    const [snackbarText,setSnackbarText]=useState(()=>"");
+    const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+    const [errorStatus,setErrorStatus]=useState(()=>"");
+    const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+
     const closePopup=(value)=>{
         if(Number.isInteger(value)){
             props.setTopicID(value);
             props.pageProps.history.push(`/student/topic/${value}`);
         };
         props.closePopup(false);
-    }
-
+    };
 
     const fetchAssociatedTopics=()=>{
 
@@ -94,12 +99,40 @@ function WrongPU(props){//uzima samo closePopup
         };
 
         fetch(`http://127.0.0.1:3000/api/student/topics/associated/${5}`, requestOptions)//topic id
-        .then(response => response.json())
-        .then(data => { setData(data.Associated);})
-        .catch((error)=>{
+        .then((response)=>{
+            if(response.status===200)
+            {
+              Promise.resolve(response).then(response => response.json())
+              .then(data => { 
+                  setData(data.Associated);
+                  setSnackbarStatus("success");
+                  setSnackbarText("Topic loaded successfully.")
+                  setSnackbarOpen(true);
+            })}      
+            else{
+                setNoError(false);
+                setSnackbarStatus("error");
+                setErrorStatus(response.status);
+                setSnackbarText("Topic did not load successfully.")
+                setSnackbarOpen(true);
+          }})
+          .catch((error)=>{
+            setNoError(false);
+            setSnackbarStatus("error");
+            setErrorStatus("Oops");
+            setSnackbarText("Topic did not load successfully.")
+            setSnackbarOpen(true);
             console.log('Error in fetch function '+ error);
-        });
-    }
+          });
+
+
+
+    };
+        // .then(data => { setData(data.Associated);})
+    //     .catch((error)=>{
+    //         console.log('Error in fetch function '+ error);
+    //     });
+    // }
 
     useEffect(()=>{
         fetchAssociatedTopics();
@@ -122,7 +155,8 @@ function WrongPU(props){//uzima samo closePopup
 
     let dataExists=(data!=null)?true:false;//nece radit data grid ako nema topica
     return(
-        <div>
+        (!noError)?<NotFound code={errorStatus}/>
+        :<div>
             <Grid className={classes.title}>
                 <h1>WRONG ANSWER</h1>
             </Grid>
@@ -139,6 +173,10 @@ function WrongPU(props){//uzima samo closePopup
             <Grid className={classes.button}>
                 <Button variant="contained" onClick={()=>closePopup(null)} className={classes.pickButton} style={{backgroundColor:"#EB4949", color:"white"}}>Close</Button>
             </Grid>
+            {
+                snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+                : null
+            }     
         </div>
     )
 }

@@ -90,7 +90,7 @@ export default function AddSubject(props) {
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/api/all/classes', requestOptions)
+        fetch('/api/all/classes', requestOptions)
         .then(response => response.json())
         .then(data => {  setClassIDs(data)})
         .catch((error)=>{handleIndex(3);setError('Error in fetch function '+ error);});
@@ -129,7 +129,7 @@ export default function AddSubject(props) {
                     body: JSON.stringify({...send}),
                     credentials: 'include'
                 };
-                fetch('http://127.0.0.1:3000/api/subject/insert', requestOptions)
+                fetch('/api/subject/insert', requestOptions)
                 .then((data)=>{            
                     if(data.status===200){
                         props.handleIndex(2);

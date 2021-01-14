@@ -26,6 +26,8 @@ import {topicSelected} from '../../redux/actions/topicID';
 import hat from '../../images/hat.png';
 import EditStudentPU from '../admin/editComponents/EditStudentPU';
 import fakeAllClasses from '../../sampleData/admin/allClasses.json'
+import NotFound from '../common/NotFound';
+import CustomSnackbar from '../common/Snackbar.jsx';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -185,8 +187,13 @@ function Students(){
     const [selectedClassID,setSelectedClassID]=useState(()=>null);
     const [selectedStudent,setSelectedStudent]=useState(()=>null);
     const [allClasses,setAllClasses]=useState(()=>fakeAllClasses);
+    const [snackbarText,setSnackbarText]=useState(()=>"");
+    const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+    const [errorStatus,setErrorStatus]=useState(()=>"");
+    const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
     const dispatch=useDispatch();
     const classes=useStyles();
+    const [noError,setNoError]=useState(()=> true);
 
     let listOfGroups=[{name:"All",id:-1},...allClasses];
 
@@ -199,14 +206,35 @@ function Students(){
         credentials: 'include'
       };
 
-      fetch('http://127.0.0.1:3000/api/results', requestOptions)
-      .then(response => response.json())
-      .then(dataFetch => {  
-              setAllClasses(dataFetch);
-              listOfGroups=[{name:"All",id:-1},...dataFetch];
-              setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
+      fetch('http://127.0.0.1:3000/api/classes', requestOptions)
+      .then(response => {
+        if(response.status===200)
+        {
+          Promise.resolve(response).then(response => response.json())
+          .then(dataFetch => {  
+            setAllClasses(dataFetch);
+            listOfGroups=[{name:"All",id:-1},...dataFetch];
+            setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
+            setSnackbarStatus("success");
+            setSnackbarText("Subjects did not load successfully.");
+            setSnackbarOpen(true);
+          })
+        }
+        else{
+          setNoError(false);
+          setAllClasses([]);
+          setSnackbarStatus("error");
+          setErrorStatus(response.status);
+          setSnackbarText("Subjects did not load successfully.");
+          setSnackbarOpen(true);
+        }
       })
       .catch((error)=>{
+        setNoError(false);
+        setSnackbarStatus("error");
+        setErrorStatus("Oops");
+        setSnackbarText("Subjects did not load successfully.");
+        setSnackbarOpen(true);
         console.log('Error in fetch function '+ error);
       });
     };
@@ -243,16 +271,46 @@ function Students(){
                   headers: { 'Content-Type': 'application/json'},
                   credentials: 'include'
                 };
+                let v;
+                if(value===-1){v=""}
+                else {v=value};
+
           
-                fetch('http://127.0.0.1:3000/api/', requestOptions)
-                .then(response => response.json())
-                .then(dataFetch => {  
+                fetch(`http://127.0.0.1:3000/api/students/${v}`, requestOptions)
+                .then((response)=>{
+                  if(response.status===200)
+                  {
+                    Promise.resolve(response).then(response => response.json())
+                      .then(dataFetch => {
                         setData(dataFetch);
                         setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
-                })
+                        setSnackbarStatus("success");
+                        setSnackbarText("Students loaded successfully.");
+                        setSnackbarOpen(true);
+                      })
+                  }      
+                  else{
+                    setSnackbarStatus("error");
+                    setSnackbarText("Students did not load successfully.");
+                    setSnackbarOpen(true);
+                }})
                 .catch((error)=>{
+                  setSnackbarStatus("error");
+                  setSnackbarText("Error in fetch function "+error);
+                  setSnackbarOpen(true);
                   console.log('Error in fetch function '+ error);
                 });
+
+
+
+                // .then(response => response.json())
+                // .then(dataFetch => {  
+                        // setData(dataFetch);
+                        // setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
+                // })
+                // .catch((error)=>{
+                //   console.log('Error in fetch function '+ error);
+                // });
       }
       else if(value!==-1&&offline){
                 let newData=[];
@@ -283,19 +341,33 @@ const editStudent=(studentToEdit)=>{
       method: 'GET',
       mode:'cors',
       headers: { 'Content-Type': 'application/json'},
-      credentials: 'include'
+      credentials: 'include',
+      body:JSON.stringify(studentToEdit)
     };
 
-    fetch('http://127.0.0.1:3000/api/', requestOptions)
-    .then(response => response.json())
-    .then(dataFetch => {  
-            setData(dataFetch);
-            setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
-    })
+    fetch(`http://127.0.0.1:3000/api/student/edit/${studentToEdit.id}`, requestOptions)
+    .then((response)=>{
+      if(response.status===200)
+      {
+        Promise.resolve(response).then(response => response.json())
+        .then(dataFetch => {  
+          changeOfClass(selectedClassID);
+          setSnackbarStatus("success");
+          setSnackbarText("Student edited successfully.");
+          setSnackbarOpen(true);
+        })
+      }      
+      else{
+        setSnackbarStatus("error");
+        setSnackbarText("Student did not edit successfully.");
+        setSnackbarOpen(true);
+    }})
     .catch((error)=>{
+      setSnackbarStatus("error");
+      setSnackbarText("Error in fetch function " + error);
+      setSnackbarOpen(true);
       console.log('Error in fetch function '+ error);
-    });
-  };
+    });};
 };
 
 /*=============================================================================================================================== */
@@ -310,14 +382,31 @@ const editStudent=(studentToEdit)=>{
           credentials: 'include'
         };
   
-        fetch('http://127.0.0.1:3000/api/', requestOptions)
-        .then(response => response.json())
-        .then(dataFetch => {  
-                setData(dataFetch);
+        fetch(`http://127.0.0.1:3000/api/student/delete/${selectedStudent.id}`, requestOptions)
+        .then((response)=>{
+          if(response.status===200)
+          {
+            Promise.resolve(response).then(response => response.json())
+              .then(data => {
+                changeOfClass(selectedClassID);
+                setSnackbarStatus("success");
+                setSnackbarText("Student deleted successfully.");
+                setSnackbarOpen(true);
                 setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
+              })
+          }
+          else{
+            setSnackbarStatus("error");
+            setErrorStatus(response.status);            
+            setSnackbarText("Student did not delete successfully.");
+            setSnackbarOpen(true);
+          }
         })
         .catch((error)=>{
-          console.log('Error in fetch function '+ error);
+          setSnackbarStatus("error");
+          setSnackbarText("Error in fetch function "+ error);
+          setSnackbarOpen(true);
+          console.log('Error in fetch function '+ error);        
         });
       }
       else if(offline){
@@ -355,7 +444,8 @@ const editStudent=(studentToEdit)=>{
     ];
 
     return(
-        <div style={{display: "flex", flexDirection: "column",justifyContent:"none", alignItems:"center"}} className={classes.background}>
+      (!noError)?<NotFound code={errorStatus}/>
+      :<div style={{display: "flex", flexDirection: "column",justifyContent:"none", alignItems:"center"}} className={classes.background}>
             <PopupDialog openPopup={editDialogOpen} setOpenPopup={setEditDialogOpen} clickAway={false} style={{minHeight:'30%',width:"35rem"}}>
               <EditStudentPU allClasses={allClasses} setOpenPopup={setEditDialogOpen} editStudent={editStudent} student={selectedStudent} style={{borderRadius:'25px'}}/>
             </PopupDialog>
@@ -397,6 +487,10 @@ const editStudent=(studentToEdit)=>{
                     }
                     </Grid>
                 </Grid>
+                {
+                  snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+                  : null
+                } 
          </div>
     )
 };

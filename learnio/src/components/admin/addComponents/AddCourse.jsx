@@ -89,7 +89,7 @@ export default function AddCourse(props) {
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch('http://127.0.0.1:3000/api/subjects/all/with/classes', requestOptions)
+        fetch('/api/subjects/all/with/classes', requestOptions)
         .then(response => response.json())
         .then(data => {  setSubjects(data);console.log(data);})
         .catch((error)=>{handleIndex(3);setError('Error in fetch function '+ error);});
@@ -130,7 +130,7 @@ export default function AddCourse(props) {
                     body: JSON.stringify({...send}),
                     credentials: 'include'
                 };
-                fetch('http://127.0.0.1:3000/api/course/insert', requestOptions)
+                fetch('/api/course/insert', requestOptions)
                 .then((data)=>{            
                     if(data.status===200){
                         props.handleIndex(3);
