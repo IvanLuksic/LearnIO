@@ -1,47 +1,38 @@
 const {Result_instance}=require('../../services');
 const {nodelogger}=require('../../loaders/logger');
 module.exports={
-    getAdminResults: async(req,res,next)=>//ako je došao do ovde onda je prijavljen kao ADMIN-> IMA PRAVA PREGLEDA REZULTATA
+    getResults: async(req,res,next)=>//ako je došao do ovde onda je prijavljen kao ADMIN-> IMA PRAVA PREGLEDA REZULTATA
     {
+        let results;
         try {
+            if(req.session.user_type==process.env.ADMIN)
             try {
-                var results=await Result_instance.getAllAdminResults();
+                 results=await Result_instance.getAllAdminResults();
             } catch (error) {
                 nodelogger.error('Error in fetching results from database');
                 throw(error);
+            }
+            else if(req.session.user_type==process.env.TEACHER)
+            {
+                try {
+                    results=await Result_instance.getAllTeacherResults(req.session.user);
+                } catch (error) {
+                    nodelogger.error('Error in fetching results from database');
+                    throw(error);
+                }
+            }
+            else {
+                try {
+                    results=await Result_instance.getAllStudentResults(req.session.user);//poslat user_id
+                } catch (error) {
+                    nodelogger.error('Error in fetching results from database');
+                    throw(error);
+                }
             }
             res.json(results);
         } catch (error) {
             nodelogger.error('Error in getAdminResults');
             next(error);//idii na error middleware handler
-        }
-    },
-    getTeacherResults:async (req,res,next)=>{
-        try {
-            try {
-                var results=await Result_instance.getAllTeacherResults(req.session.user);
-            } catch (error) {
-                nodelogger.error('Error in fetching results from database');
-                throw(error);
-            }
-            res.json(results);
-        } catch (error) {
-            nodelogger.error('Error in getTeacherResults');
-            next(error);
-        }
-    },
-    getStudentResults:async (req,res,next)=>{
-        try {
-            try {
-                var results=await Result_instance.getAllStudentResults(req.session.user);//poslat user_id
-            } catch (error) {
-                nodelogger.error('Error in fetching results from database');
-                throw(error);
-            }
-            res.json(results);
-        } catch (error) {
-            nodelogger.error('Error in  getStudentResults');
-            next(error);
         }
     }
 }

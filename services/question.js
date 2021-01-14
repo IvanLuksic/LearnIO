@@ -338,7 +338,7 @@ module.exports=class question{
                 for(let i=0;i<results.result_array_by_columns.length;i++)
                 points+=parseInt(results.result_array_by_columns[i],10);
                this.Logger.info('Points: '+points);
-                let grade=0;
+                var grade=0;
                 const percent=points*100/(rows*columns);//ukupni broj polja u matrici je broj redaka*broj stupaca
                 this.Logger.info(percent+'%');
                 if(percent<50)
