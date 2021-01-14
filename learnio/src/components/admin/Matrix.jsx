@@ -10,6 +10,8 @@ import fakeBackendQuestions from '../../sampleData/admin/allQuestionsOfTopic.jso
 import MatrixSkeleton from './matrixComponents/MatrixSkeleton';
 import {useDispatch, useSelector} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
+import NotFound from '../common/NotFound';
+import CustomSnackbar from '../common/Snackbar.jsx';
 
 const useStyles = makeStyles((theme) => ({
     background:{
@@ -91,8 +93,14 @@ function MatricaAdmin(props)
     const [matricaD,setMatricaD] = useState(()=>fakeBackendQuestions.rows);
     const [loading,setLoading]=useState(offline);//OFFLINE:potrebno ga postavit na false da bi radilo
     const [topicName,setTopicName]=useState(()=>fakeBackendQuestions.topic_name);
-    const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
+    const [topicID,setTopicID]=useState(useSelector(state=>state.topic.id));
     const [topicDescription,setTopicDescription]=useState(()=>fakeBackendQuestions.topic_description);
+    const [noError,setNoError]=useState(()=> true);
+    const [snackbarText,setSnackbarText]=useState(()=>"");
+    const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+    const [errorStatus,setErrorStatus]=useState(()=>"");
+    const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+
     const forceUpdate = useForceUpdate();
 
 
@@ -106,21 +114,39 @@ function MatricaAdmin(props)
             credentials: 'include'
         };
         fetch(`http://127.0.0.1:3000/api/admin/topics/edit/${topicID}`, requestOptions)//topic id
-        .then(response => response.json())
-        .then(data => {  
-                  console.log(JSON.stringify(data));
-                  setFetchedData(data.fields);
-                  setMatricaAO(data.columns);
-                  setMatricaD(data.rows);
-                  setTopicName(data.topic_name);
-                  setTopicDescription(data.topic_description)
-                  dispatch(topicSelected(topicID,topicName));
-                  setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
-        })
-        .catch((error)=>{
+        .then((response)=>{
+            if(response.status===200)
+            {
+              Promise.resolve(response).then(response => response.json())
+              .then(data => {  
+                setFetchedData(data.fields);
+                setMatricaAO(data.columns);
+                setMatricaD(data.rows);
+                setTopicName(data.topic_name);
+                setTopicDescription(data.topic_description)
+                dispatch(topicSelected(topicID,topicName));
+                setSnackbarStatus("success");
+                setSnackbarText("Topic loaded successfully.")
+                setSnackbarOpen(true);
+                setLoading(true);
+                })
+            }      
+            else{
+                setNoError(false);
+                setSnackbarStatus("error");
+                setErrorStatus(response.status);
+                setSnackbarText("Topic did not load successfully.")
+                setSnackbarOpen(true);
+          }})
+          .catch((error)=>{
+            setNoError(false);
+            setSnackbarStatus("error");
+            setErrorStatus("Oops");
+            setSnackbarText('Error in fetch function '+ error)
+            setSnackbarOpen(true);
             console.log('Error in fetch function '+ error);
-    });
-  }
+          });
+    };
 
 
    useEffect(() => {
@@ -235,8 +261,30 @@ function MatricaAdmin(props)
             credentials: 'include'
         };
         fetch(`http://127.0.0.1:3000/api/question/delete/${Ques.id}`, requestOptions)
-        .then(() =>{deleteQuestion(Ques,aoSelected,dSelected);})
-        .catch((error)=>{console.log('Error in fetch function '+ error);});
+        .then((response)=>{
+          if(response.status===200)
+          {
+            Promise.resolve(response).then(response => response.json())
+              .then(()=> {
+                deleteQuestion(Ques,aoSelected,dSelected);
+                setSnackbarStatus("success");
+                setSnackbarText("Question deleted successfully.");
+                setSnackbarOpen(true);
+              })
+          }      
+          else{
+            setSnackbarStatus("error");
+            setErrorStatus(response.status);
+            setSnackbarText("Question did not delete successfully.");
+            setSnackbarOpen(true);
+        }})
+        .catch((error)=>{
+            setSnackbarStatus("error");
+            setSnackbarText("Error in fetch function " + error);
+            setSnackbarOpen(true);
+          console.log('Error in fetch function '+ error);
+        });
+
     };
     const requestChangeQuestion=(Ques)=>{
         offline&&changeExpanded(false);
@@ -251,9 +299,30 @@ function MatricaAdmin(props)
             credentials: 'include'
         };
         fetch('http://127.0.0.1:3000/api/question/update', requestOptions)
-        .then(() =>{changeExpanded(false);changeQuestion(Ques);
-        })
-        .catch((error)=>{console.log('Error in fetch function '+ error);});
+        .then((response)=>{
+            if(response.status===200)
+            {
+              Promise.resolve(response).then(response => response.json())
+                .then(()=> {
+                    changeExpanded(false);
+                    changeQuestion(Ques);
+                    setSnackbarStatus("success");
+                    setSnackbarText("Question edited successfully.");
+                    setSnackbarOpen(true);
+                })
+            }      
+            else{
+                setSnackbarStatus("error");
+                setErrorStatus(response.status);
+                setSnackbarText("Question did not edit successfully.");
+                setSnackbarOpen(true);
+          }})
+          .catch((error)=>{
+            setSnackbarStatus("error");
+            setSnackbarText("Error in fetch function "+error);
+            setSnackbarOpen(true);
+            console.log('Error in fetch function '+ error);
+          });
     };
     const requestAddQuestion=(Ques,ID)=>{
         offline&&addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});
@@ -268,9 +337,32 @@ function MatricaAdmin(props)
             credentials: 'include'
         };
         fetch('http://127.0.0.1:3000/api/question/add', requestOptions)
-        .then(response => response.json())
-        .then(data => {if(data.id!=undefined){addQuestion({id:data.id,...Ques,row_D:dSelected,column_A:aoSelected});forceUpdate();}})
-        .catch((error)=>{console.log('Error in fetch function '+ error);});
+        .then((response)=>{
+            if(response.status===200)
+            {
+              Promise.resolve(response).then(response => response.json())
+                .then((data)=> {
+                    if(data.id!=undefined){
+                        addQuestion({id:data.id,...Ques,row_D:dSelected,column_A:aoSelected});
+                        forceUpdate();
+                        setSnackbarStatus("success");
+                        setSnackbarText("Question added successfully.");
+                        setSnackbarOpen(true);
+                    }                
+                })
+            }      
+            else{
+                setSnackbarStatus("error");
+                setErrorStatus(response.status);
+                setSnackbarText("Question did not add successfully.");
+                setSnackbarOpen(true);
+          }})
+          .catch((error)=>{
+            setSnackbarStatus("error");
+            setSnackbarText("Error in fetch function.");
+            setSnackbarOpen(true);
+            console.log('Error in fetch function '+ error);
+          });
 
     };
 
@@ -278,7 +370,8 @@ function MatricaAdmin(props)
     const classes = useStyles();
 
     return (
-        <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
+        (!noError)?<NotFound code={errorStatus}/>
+        :<div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         {loading?
             <Grid container direction="row" justify="center" alignItems="flex-start"  height="100%" >
                 <Grid container item md={6} direction="row" justify="flex-start" alignItems="flex-start" className={classes.wholeLeftGrid}>
@@ -294,6 +387,10 @@ function MatricaAdmin(props)
                 <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
                     <EditQuestion forceUpdate={forceUpdate} page={page} jumpToPage={getIndex} changePage={changePage} questChange={requestChangeQuestion} questAdd={requestAddQuestion} questDelete={requestDeleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions.length!==0) ? fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions : null }/>
                 </Grid>
+                {
+                    snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+                    : null
+                } 
             </Grid>
             :
             <MatrixSkeleton/>

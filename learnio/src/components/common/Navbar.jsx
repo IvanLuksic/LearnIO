@@ -59,11 +59,13 @@ const useStyles = makeStyles((theme) => ({
   },
     buttonBlue1: {
       //MarginRight: 0,
+      marginLeft:"10px",
       borderRadius: 25,
       color: "#FFFFFF",
-      backgroundColor: "#4373ec",
+      backgroundColor: "#27ae60",
       maxHeight: 35,
-      marginLeft: "auto"
+      backgroundColor: "#4373ec",
+
   },
   }));
 
@@ -127,12 +129,13 @@ function Navbar(){
                     {AdminFeatures&&<Box mr={8}><li><Link to="/results">Results</Link></li></Box>}
                     {AdminFeatures&&<Box mr={8}><li><Link to="/students">Students</Link></li></Box>}
                 </Hidden>
-                    {(!(AdminFeatures||StudentFeatures))&& 
+                    {/* {(!(AdminFeatures||StudentFeatures))&&  */}
                       <Box className={classes.buttonGreenSignUp}> 
                         <Button size="small" >
                           <Link to="/register" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1em",marginRight: "1em"}}>SignUp</Link>
                         </Button>
-                      </Box> }
+                      </Box> 
+                      {/* } */}
 
                     {(!(AdminFeatures||StudentFeatures))&&
                       <Box ml={1} className={classes.buttonGreenLogin}>

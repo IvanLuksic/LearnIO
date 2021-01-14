@@ -16,6 +16,8 @@ import backgroundIMG from '../../images/learniobg10-15.png';
 import { DataGrid } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
 import Filter from '../common/Filter';
+import NotFound from '../common/NotFound';
+import CustomSnackbar from '../common/Snackbar.jsx';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -138,11 +140,13 @@ function AdminTopics(props){
     const [openPopup,setOpenPopup]=useState(false);
     const [item,setItem]=useState(0);
     const classes=useStyles();
+    const [noError,setNoError]=useState(()=> true);
+    const [snackbarText,setSnackbarText]=useState(()=>"");
+    const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+    const [errorStatus,setErrorStatus]=useState(()=>"");
+    const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+    const [savedData,setSavedData]=useState(()=>data);
 
-    const [savedData,setSavedData]=useState(()=>fakeBackendTopics);
-    const [searched,setSearched]=useState(()=>null);
-    const [selectedProperty, setSelectedProperty]=useState(()=>null);
-    const [activeFilters, setActiveFilters]=useState(()=>[]);
 
     const fetchTopics=()=>{
       const requestOptions = {
@@ -153,14 +157,31 @@ function AdminTopics(props){
       };
 
       fetch('http://127.0.0.1:3000/api/admin/topics', requestOptions)
-      .then(response => response.json())
-      .then(data => {  
-        setData(data.Topics);
-        setLoading(true);
+      .then(response => {
+        if(response.status===200)
+        {
+        Promise.resolve(response).then(response => response.json())
+        .then(data => {
+          setData(data.Topics);
+          setSnackbarStatus("success");
+          setSnackbarText("Subjects loaded successfully.")
+          setSnackbarOpen(true);
+          setLoading(true);        })}
+        else{
+          setNoError(false);
+          setSnackbarStatus("error");
+          setErrorStatus(response.status);
+          setSnackbarText("Topics did not load successfully.")
+          setSnackbarOpen(true);
+        }
       })
       .catch((error)=>{
-          console.log('Error in fetch function '+ error);
-      });
+        setNoError(false);
+        setSnackbarStatus("error");
+        setErrorStatus("Oops");
+        setSnackbarText('Error in fetch function '+ error);
+        setSnackbarOpen(true);
+        console.log('Error in fetch function '+ error);      });
     };
 
     useEffect(()=>{
@@ -235,7 +256,8 @@ function AdminTopics(props){
     ];
 
     return(
-      <div>
+      (!noError)?<NotFound code={errorStatus}/>
+      :<div>
       { loading?(
         <div>
           <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this topic?" functionToConfirm={requestDeleteTopic}/>
@@ -252,6 +274,10 @@ function AdminTopics(props){
             </PopupDialog>
           </div>
           }
+          {
+              snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+              : null
+          } 
         </div> )
         :
           <div className={classes.skeleton}>

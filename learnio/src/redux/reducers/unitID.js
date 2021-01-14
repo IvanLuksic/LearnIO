@@ -1,10 +1,10 @@
-const topicReducer=(state=1, action)=>{
+const unitReducer=(state=1, action)=>{
     switch(action.type){
-        case 'TOPIC_SELECTED':
+        case 'UNIT_SELECTED':
             return action.id
         default:
             return state
     }
 }
 
-export default topicReducer;
+export default unitReducer;

@@ -42,13 +42,13 @@ const useStyles = makeStyles((theme) => ({
     }
     }))
 
-function NotFound() {
+function NotFound(props) {
     const classes=useStyles();
     return (
         // <div style={{display: "flex", flexDirection: "column"}} > 
             <Grid container direction="column" align="center" Justify="space-evenly" className={classes.background} >  
                 <Grid item xs={12} style={{ margin:"12em 0 0 0",}}>
-                    <strong className={classes.text}>404</strong>
+                    <strong className={classes.text}>{props.code!=undefined?props.code:"404"}</strong>
                 </Grid>
                 <Grid item  xs={12} >
                     <img src={caveman} alt={"Oops, even the 404 image got 404-ed..."}className={classes.Caveman}></img>
@@ -59,3 +59,5 @@ function NotFound() {
 }
 
 export default NotFound;
+
+//Oops, Homo neanderthalensis on the loose ...

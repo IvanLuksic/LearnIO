@@ -2,6 +2,7 @@
     {
         "course_name": "Course 1",
         "course_id": 1,
+        "color":"#4373ec",
         "topics":[
             {
                 "topic_name": "ime1"
@@ -20,6 +21,7 @@
     {
         "course_name": "Course 2",
         "course_id": 2,
+        "color":"#EB4949",
         "topics":[
             {
                 "topic_name": "ime1"
@@ -29,6 +31,7 @@
     {
         "course_name": "Course 3",
         "course_id":3,
+        "color":"#27ae60",
         "topics":[
             {
                 "topic_name": "ime1"
@@ -47,6 +50,7 @@
     {
         "course_name": "Course 4",
         "course_id": 4,
+        "color":"#8f8e8b",
         "topics":[]
     }
 ]

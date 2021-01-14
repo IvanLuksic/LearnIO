@@ -10,9 +10,12 @@ import {useSelector, useDispatch} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
 import fakeLoadingTopics from '../../sampleData/student/topics.json'
 import Skeleton from '@material-ui/lab/Skeleton';
+import NotFound from '../common/NotFound';
+import CustomSnackbar from '../common/Snackbar.jsx';
+import {unitSelected} from '../../redux/actions/unitID';
 
 //-------------------------------------
-import CustomAccordion from './AccordionTemp/Accordion.jsx';
+import CustomAccordion from './Accordion.jsx';
 //-------------------------------------
 
 const useStyles = makeStyles((theme) => ({
@@ -175,11 +178,16 @@ function CustomPagination(props) {
 
 function StudentTopics(props){
     const offline= useSelector(state=>state.offline);
-    const class_id=props.class_id;
-    const subject_id=props.subject_id;
     const dispatch=useDispatch();//rows su podaci
     const [data,setData]=useState(()=>{return fakeLoadingTopics});//koristi ove dok ne učita da ne bi bilo undefined
     const [loading,setLoading]=useState(offline);//OFFLINE:true
+    const [noError,setNoError]=useState(()=> true);
+    const [snackbarText,setSnackbarText]=useState(()=>"");
+    const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+    const [errorStatus,setErrorStatus]=useState(()=>"");
+    const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+    dispatch(unitSelected(parseInt(props.match.params.unit_id)));
+
     const classes = useStyles();
     //red 1, blue 2, grey 3, green 4 - ovo je mislavova signalizacija iz APIja
     function RenderStatusButton(id,status,name){
@@ -192,7 +200,6 @@ function StudentTopics(props){
     
     const renderGrade=(value)=>{
       switch(value){
-
         case 1:{
           return <p className={classes.redGrade}>{value}</p>;//return <Icon className={classes.blueGrade}>looks_1</Icon>;
         }
@@ -223,18 +230,36 @@ function StudentTopics(props){
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
-      fetch(`http://127.0.0.1:3000/api/topic/${1}/${1}/${1}`, requestOptions)// class subject course
-      .then(response => response.json())
-            .then(dataFetch => {  
-              console.log(JSON.stringify(dataFetch));
-              setData(dataFetch);
-              setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
-      })
+      fetch(`http://127.0.0.1:3000/api/topics/${props.match.params.unit_id}`, requestOptions)// class subject course
+      .then((response)=>{
+        if(response.status===200)
+        {
+          Promise.resolve(response).then(response => response.json())
+          .then(dataFetch => {  
+            setData(dataFetch);
+            setSnackbarStatus("success");
+            setSnackbarText("Topics loaded successfully.")
+            setSnackbarOpen(true);
+            setLoading(true);          
+          })
+        }      
+        else{
+          setNoError(false);
+          setSnackbarStatus("error");
+          setErrorStatus(response.status);
+          setSnackbarText("Topics did not load successfully.")
+          setSnackbarOpen(true);
+      }})
       .catch((error)=>{
-        console.log('Error in fetch function '+ error);
+        setNoError(false);
+        setSnackbarStatus("error");
+        setErrorStatus("Oops");
+        setSnackbarText('Error in fetch function '+ error)
+        setSnackbarOpen(true);
+        console.log('Error in fetch function '+ error);      
       });
     };
-      
+    
 
     useEffect(() => {
       (!offline)&&fetchData();
@@ -303,25 +328,33 @@ function StudentTopics(props){
     ];
 
 
-    return( 
-      loading?        
-        <div style={{display: "flex", flexDirection: "column", justifyContent:"none", alignItems:"center"}} className={classes.background} >
-          <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
-          <div className={classes.tabela}>
-            <DataGrid disableSelectionOnClick={true} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns}/>
-          </div>  
-          <div style={{width:"40vw", marginTop:"20vh", marginBottom:"40vh"}}>
-            <CustomAccordion/>
-          </div> 
-        </div>
-        :
-        <div className={classes.skeleton}>
-          <Skeleton variant="text" animation="wave" height={60}/> 
-          <Skeleton variant="reck" animation="wave" height={350}/>
-          <Skeleton variant="text" animation="wave"  height={60}/>
-        </div>
-    )
-
+    return(
+      (!noError)?<NotFound code={errorStatus}/>
+      :<div>
+        {
+          loading?        
+          <div style={{display: "flex", flexDirection: "column", justifyContent:"none", alignItems:"center"}} className={classes.background} >
+            <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
+            <div className={classes.tabela}>
+              <DataGrid disableSelectionOnClick={true} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns}/>
+            </div>  
+            <div style={{width:"40vw", marginTop:"20vh", marginBottom:"40vh"}}>
+              <CustomAccordion/>
+            </div> 
+            {
+              snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+              : null
+            } 
+          </div>
+          :
+          <div className={classes.skeleton}>
+            <Skeleton variant="text" animation="wave" height={60}/> 
+            <Skeleton variant="reck" animation="wave" height={350}/>
+            <Skeleton variant="text" animation="wave"  height={60}/>
+          </div>
+        }
+      </div>
+      )
 };
 
 export default StudentTopics;

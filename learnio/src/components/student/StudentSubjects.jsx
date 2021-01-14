@@ -1,5 +1,5 @@
 import { Typography } from "@material-ui/core";
-import React,{useState, useEffect, useRef,createRef} from 'react';
+import React,{useState, useEffect} from 'react';
 import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../../images/learniobg10-15.png';
 import { makeStyles} from '@material-ui/core/styles';
@@ -9,6 +9,8 @@ import MatrixSkeleton from './matrixComponents/MatrixSkeleton';
 import fakeSubjects from '../../sampleData/student/subjects.json'
 import Paper from '@material-ui/core/Paper';
 import Icon from '@material-ui/core/Icon';
+import NotFound from '../common/NotFound';
+import CustomSnackbar from '../common/Snackbar.jsx';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -124,8 +126,8 @@ const CardsOfSubjects=(props)=>{
   let classes=useStyles();
   //let colorFont
 
-  const handleClickCard=(subject_id)=>{
-    props.page.history.push(`/student/units/${subject_id}`);
+  const handleClickCard=(subject_id,class_id)=>{
+    props.page.history.push(`/student/units/${class_id}/${subject_id}`);
   };
 
   let i=0;
@@ -134,7 +136,7 @@ const CardsOfSubjects=(props)=>{
     i++;
     return(
       <Grid item xs={12} sm={6} lg={3} className={classes.card}>
-          <Paper elevation={3} className={classes.card} onClick={()=>handleClickCard(sub.subject_id)}> 
+          <Paper elevation={3} className={classes.card} onClick={()=>handleClickCard(sub.subject_id,sub.class_id)}> 
             <Grid container flexDirection="column" justify="center" alignItems="center" className={classes.cardContent}>
               <Grid item xs={12}>
                 {""}
@@ -176,7 +178,6 @@ function StudentSubjects(props)
           })
         })
       });
-      console.log(subs);
       return subs;
     };
     let subsStart=unpackClasses(fakeSubjects);
@@ -190,6 +191,12 @@ function StudentSubjects(props)
     const [numberOfBlocks,setNumberOfBlocks]=useState(()=>{return((subsStart.length+8-(subsStart.length%8))/8);});
     const [firstTime,setFirstTime]=useState(()=>true);
     const [arrayOfColors,setArrayOfColors]=useState(()=>[]);
+    const [noError,setNoError]=useState(()=> true);
+    const [snackbarText,setSnackbarText]=useState(()=>"");
+    const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+    const [errorStatus,setErrorStatus]=useState(()=>"");
+    const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+
 
     const getSubjects=()=>{
       let retData=[];
@@ -200,15 +207,43 @@ function StudentSubjects(props)
           credentials: 'include',
       };
       fetch(`http://127.0.0.1:3000/api/student/classes`, requestOptions)// class subject course
-      .then(response => response.json())
-      .then(data=>{let d=unpackClasses(data);setSubjects(d);setNumberOfBlocks((d.length+8-(d.length%8))/8);retData=d;setFirstTime(false);setLoading(true);
-        let ArOc=[];
-        for(let i=0;i<d.length;i++){
-          ArOc.push(randomColor());
+      .then((response)=>{
+        if(response.status===200)
+        {
+          Promise.resolve(response).then(response => response.json())
+            .then(data => {
+              let d=unpackClasses(data);
+              setSubjects(d);
+              setNumberOfBlocks((d.length+8-(d.length%8))/8);
+              retData=d;
+              setFirstTime(false);
+              setSnackbarStatus("success");
+              setSnackbarText("Subjects loaded successfully.")
+              setSnackbarOpen(true);
+              setLoading(true);
+              let ArOc=[];
+              for(let i=0;i<d.length;i++){
+                ArOc.push(randomColor());
+              };
+              setArrayOfColors(ArOc);
+            })
+        }      
+        else{
+          setNoError(false);
+          setSnackbarStatus("error");
+          setErrorStatus(response.status);
+          setSnackbarText("Subjects did not load successfully.")
+          setSnackbarOpen(true);
         };
-        setArrayOfColors(ArOc);
       })
-      .catch((error)=>{console.log('Error in fetch function '+ error)});    
+      .catch((error)=>{          
+        setNoError(false);
+        setSnackbarStatus("error");
+        setErrorStatus("Oops");
+        setSnackbarText('Error in fetch function '+ error);
+        setSnackbarOpen(true);
+        console.log('Error in fetch function '+ error);
+      });
       return retData;
     };
 
@@ -249,6 +284,7 @@ function StudentSubjects(props)
           ArOc.push(randomColor());
         };
         setArrayOfColors(ArOc);
+        setFirstTime(false);
       };
       }
       else if(window.innerWidth>=1280){handleScroll(currentBlockVisible,false);};
@@ -257,7 +293,8 @@ function StudentSubjects(props)
 
 
   return(
-    <div style={{display: "flex", flexDirection: "column", alignItems:"center"}} className={classes.background}> 
+    (!noError)?<NotFound code={errorStatus}/>
+    :<div style={{display: "flex", flexDirection: "column", alignItems:"center"}} className={classes.background}> 
     {
       loading? 
         <div>
@@ -292,6 +329,10 @@ function StudentSubjects(props)
               <Icon style={{fontSize:"2rem"}}>expand_more</Icon>
               <Typography>More</Typography>
             </div>
+            {
+              snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+              : null
+            } 
         </div>
     :
     <MatrixSkeleton/>

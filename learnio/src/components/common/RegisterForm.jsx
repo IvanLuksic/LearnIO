@@ -14,6 +14,10 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker,} from '@material-ui/pickers';
 import CustomSnackbar from './Snackbar'
+import { useSelector} from 'react-redux';
+import Icon from '@material-ui/core/Icon';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 
 import {Link} from 'react-router-dom';
 
@@ -27,7 +31,6 @@ const useStyles=makeStyles((theme)=>({
             display: 'block',
             width: "100%",
             marginBottom: "0.5em",
-    
         }, 
         loginHeadline:{
             fontFamily: "Lobster",
@@ -50,13 +53,13 @@ const useStyles=makeStyles((theme)=>({
 function RegisterForm(props){
 
     const classes=useStyles();
-
+    const roleOfUser=useSelector(state=>state.login);
     const [name, setName] = useState("");
     const [surname,setSurname]=useState("");
     const [username,setUsername]=useState("");
     const [email,setEmail]=useState("");
-    const [roleVisible, setRoleVisible]=useState(true);
-    const [role, setRole]=useState("teacher");
+    const [roleVisible, setRoleVisible]=useState(()=> {return((roleOfUser=="guest")?false:true)});
+    const [role, setRole]=useState(()=>"student");
     const [password,setPassword]=useState("");
     const [passwordCheck,setPasswordCheck]=useState("");
     const [showPassword,setShowPassword]=useState(false);
@@ -65,10 +68,9 @@ function RegisterForm(props){
     const [errors,setErrors]=useState({});
     const [openSnackbar,setOpenSnackbar]=useState(false);
 
+
     const handleChangeEmail=(event)=>{
         setEmail(event.target.value);
-        if(roleVisible==true)
-            setRole("student");
     }
     //provjerava jesu li sva polja unesena i da li se lozinke podudaraju
     const validation=()=>{   
@@ -196,13 +198,53 @@ function RegisterForm(props){
         {
             sendSignup();
             setOpenSnackbar(true);
-            console.log(object);
+            setErrors({});//nez zas je bug al je
+            setName("");
+            setSurname("");
+            setUsername("");
+            setEmail("");
+            setRole("student");
+            setPassword("");
+            setPasswordCheck("");
+            setShowPassword(false);
+            setShowPasswordCheck(false);
+            setBirthDate(new Date());
         }      
-    }
+    };
+
     const closeSnackbar=()=>{
         setOpenSnackbar(false);
-    }
+    };
     
+    const checkUsername=(temp)=>{
+
+        const requestOptions = {
+            method: 'GET',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            credentials: 'include'
+          };
+
+          fetch(`http://127.0.0.1:3000/api/checkusername/${temp}`, requestOptions)
+          .then(response => response.json())
+          .then(dataFetch => {  
+                  if(dataFetch.available==1){
+                    let ar=errors;
+                    ar.usernameError=true;
+                    ar.username=`This username is not available.`;
+                    setErrors(ar);
+                  }
+                  else{
+                    let ar=errors;
+                    ar.usernameError=false;
+                    ar.username=null;
+                    setErrors(ar);
+                  }
+          })
+          .catch((error)=>{
+            console.log('Error in fetch function '+ error);
+          });    
+    };
         
     
     return(
@@ -254,11 +296,41 @@ function RegisterForm(props){
                     type="username" 
                     label="Username" 
                     variant="filled" 
-                    onChange={(e)=>{setUsername(e.target.value)}}
-                    error
-                    {  ...( {error:errors.usernameError,helperText:errors.username})}
-                />
-                {roleVisible &&
+                    onChange={(e)=>{ checkUsername(e.target.value); setUsername(e.target.value);}}
+                    // onBlur={()=>{const temp=username; setUsername("");}}
+                    error={errors.usernameError}
+                    value={username}
+                    helperText={errors.username}                    
+                    InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="start">
+                            {(!errors.usernameError)&&(errors.usernameError!=undefined)&&<Icon fontSize="small" style={{color:"#27ae60"}}>check_mark</Icon>}
+                            {(errors.usernameError)&&(errors.usernameError!=undefined)&&<Icon fontSize="small" style={{color:"#EB4949"}}>clear</Icon>}
+                          </InputAdornment>
+                        ),
+                      }}
+                >
+                </TextField>
+                {
+                roleVisible&&<FormControl variant="filled" className={classes.fields}>
+                    <InputLabel id="demo-simple-select-filled-label">Role</InputLabel>
+                    <Select
+                    labelId="demo-simple-select-filled-label"
+                    disabled={!roleVisible}
+                    id="demo-simple-select-filled"
+                    value={role}
+                    onChange={(e)=>setRole(e.target.value)}
+                    fullWidth
+                    >
+                        <MenuItem value={"student"}>Student</MenuItem>
+                        <MenuItem value={"teacher"}>Teacher</MenuItem>
+                        <MenuItem value={"admin"}>Administrator</MenuItem>
+                    </Select>
+                </FormControl>
+                }
+
+
+                {/* {roleVisible &&
                 <TextField  fullWidth  className={classes.fields} 
                     type="role" 
                     label="Role" 
@@ -266,7 +338,7 @@ function RegisterForm(props){
                     value={"Student"}
                     //onChange={()=>{setRole("student")}}
                     
-                />}
+                />} */}
                 <FormControl  className={classes.fields} variant="filled" error {...({error:errors.passwordError})}>               
                     <InputLabel  variant="filled" htmlFor="filled-adornment-password" >Password</InputLabel>
                     <FilledInput fullWidth
@@ -313,7 +385,6 @@ function RegisterForm(props){
                 <Button variant="contained" className={classes.loginButton} style={{borderRadius: 25}} type="submit" color="primary" >
                     Sign Up              
                 </Button>
-                
             </form>
         </React.Fragment>
     )

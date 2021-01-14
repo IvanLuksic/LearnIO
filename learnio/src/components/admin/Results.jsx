@@ -7,7 +7,9 @@ import Pagination from '@material-ui/lab/Pagination';
 import fakeBackendResults from '../../sampleData/admin/allResults.json';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { useSelector} from 'react-redux';
-
+import NotFound from '../common/NotFound';
+import CustomSnackbar from '../common/Snackbar.jsx';
+import Filter from '../common/Filter';
 
 
 
@@ -137,7 +139,12 @@ function Results(){
     const[data,setData]=useState(()=>{return fakeBackendResults});
     const classes=useStyles();
     const [loading,setLoading]=useState(offline);//potrebno ga postavit na false da bi radilo
-    
+    const [noError,setNoError]=useState(()=> true);
+    const [snackbarText,setSnackbarText]=useState(()=>"");
+    const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+    const [errorStatus,setErrorStatus]=useState(()=>"");
+    const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+    const [savedData,setSavedData]=useState(()=>data);
 
     const renderGrade=(value)=>{
       switch(value){
@@ -172,15 +179,43 @@ function Results(){
       };
 
       fetch('http://127.0.0.1:3000/api/results', requestOptions)
-      .then(response => response.json())
-      .then(dataFetch => {  
-              setData(dataFetch);
-              setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
-      })
+      .then((response)=>{
+        if(response.status===200)
+        {
+          Promise.resolve(response).then(response => response.json())
+          .then(dataFetch => {  
+            setData(dataFetch);
+            setSnackbarStatus("success");
+            setSnackbarText("Results loaded successfully.");
+            setSnackbarOpen(true);
+            setLoading(true);
+          })
+        }      
+        else{
+          setNoError(false);
+          setSnackbarStatus("error");
+          setErrorStatus(response.status);
+          setSnackbarText("Results did not load successfully.");
+          setSnackbarOpen(true);
+      }})
       .catch((error)=>{
+        setNoError(false);
+        setSnackbarStatus("error");
+        setErrorStatus("Oops");
+        setSnackbarText('Error in fetch function '+ error);
+        setSnackbarOpen(true);
         console.log('Error in fetch function '+ error);
       });
     };
+    //   .then(response => response.json())
+      // .then(dataFetch => {  
+      //         setData(dataFetch);
+      //         setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
+      // })
+    //   .catch((error)=>{
+    //     console.log('Error in fetch function '+ error);
+    //   });
+    // };
 
     useEffect(() => {
       (!offline)&&fetchData();
@@ -250,7 +285,7 @@ function Results(){
         {field: "id", hide:true},
         {field: "topic_id", type:'number',headerAlign:'center', align:'center', renderHeader: () => (<strong>{"ID"}</strong>)},
         {field: "topic",width:150 ,type:'string',headerAlign:'center', align:'center', renderHeader: () => (<div ><strong>{"Topic"}</strong></div>),},
-        {field: "course",width:150, headerName:'Course',type:'string',headerAlign:'center', align:'center'},
+        {field: "course",width:150, headerName:'Unit',type:'string',headerAlign:'center', align:'center'},
         {field: "subject",width:150, headerName:'Subject',type:'string',headerAlign:'center', align:'center'},
         {field: "name", headerName:'Name',type:'string',headerAlign:'center', align:'center'},
         {field: "surname", headerName:'Surname',type:'string',headerAlign:'center', align:'center'},
@@ -262,13 +297,29 @@ function Results(){
     ];
 
     return(
-      <div>
+      (!noError)?<NotFound code={errorStatus}/>
+      :<div>
       {loading?(
         <div style={{display: "flex", flexDirection: "column",justifyContent:"none", alignItems:"center"}} className={classes.background}>
             <Typography color="primary" className={classes.topicTitle}>Results</Typography>
             <div className={classes.tabela}>
+              <Filter data={data} savedData={savedData} setData={setData} listOfProperties={[
+                {name:"topic_id",nameToDisplay:"Topic ID"},
+                {name:"topic",nameToDisplay:"Topic Name"},
+                {name:"course",nameToDisplay:"Unit"},
+                {name:"subject",nameToDisplay:"Subject"},
+                {name:"name",nameToDisplay:"Name"},
+                {name:"surname",nameToDisplay:"Surname"},
+                {name:"class_name",nameToDisplay:"Class"},
+                {name:"class_year",nameToDisplay:"Year"},
+                {name:"grade",nameToDisplay:"Grade"}
+              ]}/>
                 <DataGrid disableSelectionOnClick={true} pageSize={6} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
             </div>
+            {
+              snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+              : null
+            } 
         </div>
       )
       :

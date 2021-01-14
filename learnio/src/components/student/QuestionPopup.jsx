@@ -82,7 +82,7 @@ function QuestionPopup(props){
     const [showABC, setShowABC] =useState(()=>{return (props.questionToDisplay.question_type===1)?true:false});
     const [imageDisplay, setImageDisplay] =useState(()=>{return (props.questionToDisplay.question_image_path==null)?'none':'inline'});
     const classes=useStyles();
-    const topicID=useSelector(state=>state.studentTopic.id);
+    const topicID=useSelector(state=>state.topic.id);
 
     const handleChange = (event) => {
         setValue(event.target.value);

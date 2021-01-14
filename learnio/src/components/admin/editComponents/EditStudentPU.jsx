@@ -25,6 +25,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import ListItemText from '@material-ui/core/ListItemText';
+import { useSelector} from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,22 +62,6 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
-const ChipsArray=(props)=> {
-  const classes = useStyles();
-  return (
-    <Paper component="ul" className={classes.rootChips}>
-      {
-      props.wrongAnswers.map((data) => {
-        return (
-          <li key={data}>
-            <Chip style={{margin:"0 0.1em"}} label={data} onDelete={()=>{props.deleteWrongAnswer(data)}}/>
-          </li>
-        );
-      })}
-    </Paper>
-  );
-};
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -91,6 +76,7 @@ const MenuProps = {
 
 function EditStudentPU(props) {
   //states of elements-------------------
+  const offline= useSelector(state=>state.offline);
   const [username, setUsername] = useState(()=>props.student.username);
   const [disableUsername, setDisableUsername] = useState(()=>true);
   const [name, setName] = useState(()=>props.student.name);
@@ -99,7 +85,7 @@ function EditStudentPU(props) {
   const [disableSurname, setDisableSurname] = useState(()=>true);
   const [email, setEmail] = useState(()=>props.student.email);
   const [disableEmail, setDisableEmail] = useState(()=>true);
-  const [studentClasses, setStudentClasses] = useState(()=>props.student.classes);
+  const [studentClasses, setStudentClasses] = useState(()=>props.student.classes.map((cl)=>cl.id));
   const [disableStudentClasses, setDisableStudentClasses] = useState(()=>true);
   const [password, setPassword] = useState(()=>props.student.password);
   const [disablePassword, setDisablePassword] = useState(()=>true);
@@ -143,6 +129,7 @@ function EditStudentPU(props) {
     };
     props.editStudent(itemToSave);
     props.setOpenPopup(false);
+
   };
 
   const handleChangeClasses=(event)=>{
@@ -151,8 +138,10 @@ function EditStudentPU(props) {
 
   const checkIfIn=(oneClass)=>{
     let bool=false;
-    studentClasses.map((sCl)=>{
-      if(sCl.id===oneClass.id) bool=true;
+    props.student.classes.map((sCl)=>{
+      if(sCl.id===oneClass.id) {
+        bool=true;
+      }
     });
     return bool;
   };
@@ -237,14 +226,14 @@ function EditStudentPU(props) {
               
               <Grid container item xs={12}>
               <Grid item xs={10} >
-                <FormControl className={classes.fields}>
+                <FormControl variant="filled" className={classes.fields}>
                     <InputLabel >Classes</InputLabel>
-                    <Select  multiple value={studentClasses} onChange={handleChangeClasses}  disabled={disableStudentClasses} renderValue={(selected) => {let array=selected.map((selClass)=>`${selClass.name}`); return array.join(`, `);} } MenuProps={MenuProps}>
+                    <Select  multiple value={studentClasses} onChange={handleChangeClasses}  disabled={disableStudentClasses} renderValue={(selected) => {let array=selected.map((selClass)=>{for(let cl of props.allClasses){if(cl.id==selClass)return `${cl.name}`}}); return array.join(`, `);} } MenuProps={MenuProps}>
                       {props.allClasses.map((oneClass) => {
                         return(
-                          <MenuItem key={oneClass.id} value={oneClass}>
-                          <Checkbox checked={checkIfIn(oneClass)}/>
-                          <ListItemText primary={`${oneClass.name} #${oneClass.id}`} />
+                          <MenuItem key={oneClass.id} value={oneClass.id}>
+                          {/* <Checkbox checked={checkIfIn(oneClass)}/> */}
+                          <ListItemText primary={`${oneClass.name} #${oneClass.id}`}  />
                         </MenuItem>
                         )})}
                     </Select>
