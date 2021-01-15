@@ -7,25 +7,17 @@ import Pagination from '@material-ui/lab/Pagination';
 import fakeBackendStudents from '../../sampleData/admin/students.json';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { useSelector} from 'react-redux';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import SearchIcon from '@material-ui/icons/Search';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import Chip from '@material-ui/core/Chip';
-import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import fakeBackendTopics from '../../sampleData/admin/allTopics.json';
 import PopupDialog from '../common/PopupDialog';
 import ConfirmDialog from '../common/ConfirmDialog';
-import { useDispatch} from 'react-redux';
-import {topicSelected} from '../../redux/actions/topicID';
 import hat from '../../images/hat.png';
 import EditStudentPU from '../admin/editComponents/EditStudentPU';
-import fakeAllClasses from '../../sampleData/admin/allClasses.json'
+import fakeAllClasses from '../../sampleData/admin/class.json'
 import NotFound from '../common/NotFound';
 import CustomSnackbar from '../common/Snackbar.jsx';
 
@@ -160,23 +152,6 @@ function CustomPagination(props) {
   );
 };
 
-// const ChipsArray=(props)=> {
-//   const classes = useStyles();
-//   return (
-//     <Paper component="ul" className={classes.rootChips}>
-//       {
-//       props.filterRules.map((data) => {
-//         return (
-//           <li key={data}>
-//             <Chip style={{margin:"0 0.1em"}} label={data} onDelete={()=>{props.deleteWrongAnswer(data)}}/>
-//           </li>
-//         );
-//       })}
-//     </Paper>
-//   );
-// };
-
-
 function Students(){
     const offline= useSelector(state=>state.offline);
     const [fakeData, setFakeData]=useState(()=>fakeBackendStudents);
@@ -191,13 +166,11 @@ function Students(){
     const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
     const [errorStatus,setErrorStatus]=useState(()=>"");
     const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
-    const dispatch=useDispatch();
     const classes=useStyles();
     const [noError,setNoError]=useState(()=> true);
-
+    const [listOfGroups,setListOfGroups]=useState(()=>[{class_name:"All",class_id:-1},...allClasses]); 
     const role=useSelector(state=>state.login);
 
-    const [listOfGroups,setListOfGroups]=useState(()=>[{class_name:"All",class_id:-1},...allClasses]) 
     
     const fetchClasses=()=>{
       const requestOptions = {
@@ -217,8 +190,6 @@ function Students(){
         {
           Promise.resolve(response).then(response => response.json())
           .then(dataFetch => {  
-            console.log("tu smoo");
-            console.log([{class_name:"All",class_id:-1},...dataFetch]);
             setListOfGroups([{class_name:"All",class_id:-1},...dataFetch]);
             setAllClasses(dataFetch);
             setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
@@ -229,7 +200,6 @@ function Students(){
         }
         else{
           setNoError(false);
-          setAllClasses([]);
           setSnackbarStatus("error");
           setErrorStatus(response.status);
           setSnackbarText("Classes did not load successfully.");
@@ -250,14 +220,14 @@ function Students(){
       (!offline)&&fetchClasses();
     },[]);
 /*=====================================================================================================================================================================================0 */
- //lista razreda
-    const renderGroupsList=(listOfGroups)=>{
+ //lista razreda ZA TABLICUUU
+    const renderGroupsList=(list)=>{
       return(
           <FormControl className={classes.formControl2}>
             <InputLabel id="demo-simple-select-label">Classes</InputLabel>
             <Select>
             {
-              listOfGroups.map((group)=>{
+              list.map((group)=>{
                 return <MenuItem disabled value={group.name}>{group.name}</MenuItem>
               })
             }
@@ -269,73 +239,62 @@ function Students(){
 /*ZA -1 POKAZUJE SVE */
     const changeOfClass=(value)=>{
 
-
       if(!offline){
-                const requestOptions = {
-                  method: 'GET',
-                  mode:'cors',
-                  headers: { 'Content-Type': 'application/json'},
-                  credentials: 'include'
-                };
-                
-                let apiUri;
-                if(role==="admin"){
-                  if(value===-1){apiUri=`/api/admin/students/all/class`}
-                  else{apiUri=`/api/students/class/${value}`};
-                } 
-                else if(role==="teacher"){
-                  if(value===-1){apiUri=`/api/teacher/students/all/class`}
-                  else{apiUri=`/api/students/class/${value}`};
-                } ;
+          const requestOptions = {
+            method: 'GET',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            credentials: 'include'
+          };
           
-                fetch(apiUri, requestOptions)
-                .then((response)=>{
-                  if(response.status===200)
-                  {
-                    Promise.resolve(response).then(response => response.json())
-                      .then(dataFetch => {
-                        console.log("tu sam");
-                        console.log(dataFetch);
-                        setData(dataFetch);
-                        setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
-                        setSnackbarStatus("success");
-                        setSnackbarText("Students loaded successfully.");
-                        setSnackbarOpen(true);
-                      })
-                  }      
-                  else{
-                    setSnackbarStatus("error");
-                    setSnackbarText("Students did not load successfully.");
-                    setSnackbarOpen(true);
-                }})
-                .catch((error)=>{
-                  setSnackbarStatus("error");
-                  setSnackbarText("Error in fetch function "+error);
+          let apiUri;
+          if(role==="admin"){
+            if(value===-1){apiUri=`/api/admin/students/all/class`}
+            else{apiUri=`/api/students/class/${value}`};
+          } 
+          else if(role==="teacher"){
+            if(value===-1){apiUri=`/api/teacher/students/all/class`}
+            else{apiUri=`/api/students/class/${value}`};
+          };
+    
+          fetch(apiUri, requestOptions)
+          .then((response)=>{
+            if(response.status===200)
+            {
+              Promise.resolve(response).then(response => response.json())
+                .then(dataFetch => {
+                  setData(dataFetch);
+                  setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
+                  setSnackbarStatus("success");
+                  setSnackbarText("Students loaded successfully.");
                   setSnackbarOpen(true);
-                  console.log('Error in fetch function '+ error);
-                });
-
-
-
-                // .then(response => response.json())
-                // .then(dataFetch => {  
-                        // setData(dataFetch);
-                        // setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
-                // })
-                // .catch((error)=>{
-                //   console.log('Error in fetch function '+ error);
-                // });
+                })
+            }      
+            else{
+              setSnackbarStatus("error");
+              setSnackbarText("Students did not load successfully.");
+              setSnackbarOpen(true);
+          }})
+          .catch((error)=>{
+            setSnackbarStatus("error");
+            setSnackbarText("Error in fetch function "+error);
+            setSnackbarOpen(true);
+            console.log('Error in fetch function '+ error);
+          });
       }
       else if(value!==-1&&offline){
-                let newData=[];
-                fakeData.map((student)=>{let inClass=false; for(let group of student.classes){
-                                                                        if(group.id===value){inClass=true;}
-                                                                      };
-                                                                      if(inClass){newData.push(student)};
-                                                                    });
-                setData(newData);
+          let newData=[];
+          fakeData.map((student)=>{
+            let inClass=false;
+            for(let group of student.classes){
+              if(group.id===value){inClass=true;}
+            };
+            if(inClass){newData.push(student)};
+          });
+          setData(newData);
       }
       else setData(fakeData);
+
       setSelectedClassID(value);
 
     };
