@@ -12,6 +12,7 @@ import PopupDialog from '../../common/PopupDialog';
 import InviteLink from './InviteLink';
 import EditIcon from '@material-ui/icons/Edit';
 import AddTopicPU from './AddTopicPU';
+import { useSelector} from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   speedDial:{
@@ -38,20 +39,20 @@ function AddCourseSubjectClass() {
   const [years, setYears] = React.useState(undefined);
   const [snackOpen, setSnackOpen] = React.useState(false);
   const [snackIndex, setSnackIndex] = React.useState(0);
-  const [snackbarText,setSnackbarText]=useState(()=>"");
-  const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+  const [snackbarText,setSnackbarText]=React.useState(()=>"");
+  const [snackbarStatus,setSnackbarStatus]=React.useState(()=>"");
 
   const role=useSelector(state=>state.login);
 
   let actionsStart = [
     { icon: <Icon>apps</Icon>, name: 'Add topic', operation: 'addtopic' },
-    { icon: <Icon>class_icon</Icon>, name: 'Add class', operation: 'addclass' },
+    { icon: <Icon>list_icon</Icon>, name: 'Add course', operation: 'addcourse' },
     { icon: <Icon>insert_link_icon</Icon>, name: 'Invite Link' , operation: 'invitePopUp'},
   ];
 
   if(role=="admin"){
     actionsStart.push({ icon: <Icon>subject_icon</Icon>, name: 'Add subject', operation: 'addsubject' });
-    actionsStart.push({ icon: <Icon>list_icon</Icon>, name: 'Add course', operation: 'addcourse' }); 
+    actionsStart.push(    { icon: <Icon>class_icon</Icon>, name: 'Add class', operation: 'addclass' }); 
     actionsStart.push({ icon: <Icon>account_circle_sharp</Icon>, name: 'Add course', operation: 'adduser' });    
   };
 

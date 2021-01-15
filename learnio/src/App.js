@@ -119,7 +119,7 @@ function App() {
                     {/* {StudentFeatures&&<Route path="/topics"component={StudentTopics}/>} */}
                     {StudentFeatures&&<Route exact path="/student/topic/:class_id/:subject_id/:unit_id/:topic_id" component={StudentMatrix}/>}
                     {StudentFeatures&&<Route exact path="/student/subjects" component={StudentSubjects}/>}
-                    {StudentFeatures&&<Route exact path="/invite/:code" component={Invited}/>}
+                    {(StudentFeatures||GuestFeatures)&&<Route exact path="/invite/:code" component={Invited}/>}
                     {(AdminFeatures||TeacherFeatures)&&<Route exact path="/admin-topic/:id" component={AdminMatrix}/>}
                     {/* {AdminFeatures&&<Route exact path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>} */}
                     {(AdminFeatures||TeacherFeatures)&&<Route exact path="/AdminTopics" component={AdminTopics}/>}

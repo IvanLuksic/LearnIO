@@ -35,6 +35,17 @@ const useStyles = makeStyles((theme) => ({
           backgroundColor: "rgb(41, 97, 65)",
        },
     },
+    buttonBlueSignUp: {
+      MarginRight:0,
+      borderRadius: 25,
+      marginLeft: "auto",
+      color: "#FFFFFF",
+      backgroundColor: "#4373ec",
+      maxHeight: 35,
+      '&:hover': {
+        backgroundColor: "rgb(41, 97, 65)",
+     },
+  },
     buttonGreenLogin: {
       borderRadius: 25,
       color: "#FFFFFF",
@@ -62,7 +73,6 @@ const useStyles = makeStyles((theme) => ({
       marginLeft:"10px",
       borderRadius: 25,
       color: "#FFFFFF",
-      backgroundColor: "#27ae60",
       maxHeight: 35,
       backgroundColor: "#4373ec",
 
@@ -76,31 +86,38 @@ function Navbar(){
     const dispatch=useDispatch();
     var AdminFeatures=false;
     var StudentFeatures=false;
+    var TeacherFeatures=false;
+
   
     switch(loginStatus){
       case 'admin':{
         AdminFeatures=true;
         StudentFeatures=false;
+        TeacherFeatures=false;
         break;
       }
       case 'teacher':{//privremeno rjesenje za prvu iteraciju jer nema razlike teachera i admina
         AdminFeatures=true;
         StudentFeatures=false;
+        TeacherFeatures=true;
         break;
       }
       case 'student':{
         AdminFeatures=false;
         StudentFeatures=true;
+        TeacherFeatures=false;
         break;
       }
       case 'guest':{
         AdminFeatures=false;
         StudentFeatures=false;
+        TeacherFeatures=false;
         break;
       }
       default:{
         AdminFeatures=false;
         StudentFeatures=false;
+        TeacherFeatures=false;
       }
     }
 
@@ -129,22 +146,22 @@ function Navbar(){
                     {AdminFeatures&&<Box mr={8}><li><Link to="/results">Results</Link></li></Box>}
                     {AdminFeatures&&<Box mr={8}><li><Link to="/students">Students</Link></li></Box>}
                 </Hidden>
-                    {/* {(!(AdminFeatures||StudentFeatures))&&  */}
+                    {(!(AdminFeatures||StudentFeatures||TeacherFeatures))&&
                       <Box className={classes.buttonGreenSignUp}> 
                         <Button size="small" >
                           <Link to="/register" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1em",marginRight: "1em"}}>SignUp</Link>
                         </Button>
                       </Box> 
-                      {/* } */}
+                     }
 
-                    {(!(AdminFeatures||StudentFeatures))&&
+                    {(!(AdminFeatures||StudentFeatures||TeacherFeatures))&&
                       <Box ml={1} className={classes.buttonGreenLogin}>
                         <Button size="small"  >
                           <Link to="/login" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Login</Link>
                         </Button>
                       </Box> }
-                    {(AdminFeatures||StudentFeatures)&&
-                      <Box  className={classes.buttonBlue1}>
+                    {(AdminFeatures||StudentFeatures||TeacherFeatures)&&
+                      <Box  className={(!(AdminFeatures||StudentFeatures||TeacherFeatures))?classes.buttonBlue1:classes.buttonBlueSignUp}>
                         <Button size="small"  >
                             <Link to="/" onClick={()=>{headLogout();dispatch(logOut());}} style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Log Out</Link>
                         </Button>

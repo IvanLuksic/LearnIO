@@ -1,10 +1,10 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../images/learniobg10-15.png'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useDispatch, useSelector } from 'react-redux';
-import loginRedirect from '../redux/actions/loginRedirect';
+import {loginRedirect} from '../redux/actions/loginRedirect';
 
 const useStyles = makeStyles((theme) => ({
     background:{
@@ -42,26 +42,26 @@ const useStyles = makeStyles((theme) => ({
         fontWeight:"bolder"
     }
     }));
-const Redirected=(props)=>{props.page.history.push(`/login`); return(<CircularProgress style={{margin:"auto"}} />);};
+const Redirected=(props)=>{props.pageProps.history.push(`/login`); return(<CircularProgress style={{margin:"auto"}} />);};
 
-function Invited() {
+function Invited(props) {
     const classes=useStyles();
     const [joined,setJoined]=useState(()=>false);
     const [loading,setLoading]=useState(()=>true);
 
     const dispatch=useDispatch();
-    dispatch(loginRedirect(props.match.params.inivte_uri));
+    dispatch(loginRedirect("/invite/"+props.match.params.code));
     const role=useSelector(state=>state.login);
 
     const requestJoin=()=>{
         const requestOptions = {
-            method: 'GET',
+            method: 'HEAD',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch(`http://127.0.0.1:3000/topic/${1}/${1}/${1}`, requestOptions)// class subject course
-        .then(response => {if(response.status==200){setJoined(true)};})
+        fetch(`/api/invite/${props.match.params.code}`, requestOptions)// class subject course
+        .then(response => {if((response.status==(200))||(response.status==(201))){setJoined(true)};})
         .catch((error)=>{
         console.log('Error in fetch function '+ error);
         });
@@ -69,12 +69,15 @@ function Invited() {
         dispatch(loginRedirect('/'));
     };
 
-    if(role=="student")requestJoin();
+    useEffect(()=>{
+        if(role=="student")requestJoin();
+    },[])
+
 
     return (
         <Grid container direction="column" align="center" Justify="space-evenly" className={classes.background} >  
         {
-            (role=="guest")?<Redirected/>
+            (role=="guest")?<Redirected pageProps={props}/>
             :(role=="teacher"||role=="admin")?<p style={{margin:"auto"}}>Molimo prijavite se kao učenik :)</p>
             :loading?<CircularProgress style={{margin:"auto"}} />
             :joined?<p style={{margin:"auto"}}>Dodani ste :)</p>:<p style={{margin:"auto"}}>Niste dodani :(</p>
