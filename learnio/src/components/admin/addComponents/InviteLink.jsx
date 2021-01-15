@@ -57,6 +57,8 @@ function InviteLink(props){
     const [url,setUrl]=React.useState("");
     const textFieldRef = useRef(null);
     const [openSnackbar,setOpenSnackbar]=useState(false);
+    const role=useSelector(state=>state.login);
+
 
     const fetchClasses=()=>{
         const requestOptions = {
@@ -65,7 +67,12 @@ function InviteLink(props){
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch('/api/all/classes', requestOptions)
+
+        let apiUri;
+        if(role==="admin") apiUri='/api/all/classes'
+        else if(role==="teacher") apiUri='/api/all/classes';
+
+        fetch(apiUri, requestOptions)
         .then(response => response.json())
         .then(data => {  setAllClasses(data)})
         .catch((error)=>console.log('Error in fetch function '+ error));
@@ -83,7 +90,12 @@ function InviteLink(props){
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include',
         };
-        fetch(`/api/invite/to/class/${sub.class_id}`, requestOptions)// class subject course
+
+        let apiUri;
+        if(role==="admin") apiUri=`/api/invite/to/class/${sub.class_id}`
+        else if(role==="teacher") apiUri=`/api/invite/to/class/${sub.class_id}`;
+
+        fetch(apiUri, requestOptions)// class subject course
         .then(response => response.json())
         .then(data=>setUrl(`http://learnio.com/${data.link}`))
         .catch((error)=>{console.log('Error in fetch function '+ error)});

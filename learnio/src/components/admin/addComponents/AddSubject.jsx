@@ -82,6 +82,8 @@ export default function AddSubject(props) {
     const [classIDs, setClassIDs] = useState(()=>classIDOs);
     const [errorText, setError] = useState(()=>"");
 
+    const role=useSelector(state=>state.login);
+
     //dodaj stanje za classIDs
     const fetchClasses=()=>{
         const requestOptions = {
@@ -90,7 +92,12 @@ export default function AddSubject(props) {
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch('/api/all/classes', requestOptions)
+
+        let apiUri;
+        if(role==="admin") apiUri='/api/all/classes'
+        else if(role==="teacher") apiUri='/api/all/classes';
+
+        fetch(apiUri, requestOptions)
         .then(response => response.json())
         .then(data => {  setClassIDs(data)})
         .catch((error)=>{handleIndex(3);setError('Error in fetch function '+ error);});
@@ -129,7 +136,12 @@ export default function AddSubject(props) {
                     body: JSON.stringify({...send}),
                     credentials: 'include'
                 };
-                fetch('/api/subject/insert', requestOptions)
+
+                let apiUri;
+                if(role==="admin") apiUri='/api/subject/insert'
+                else if(role==="teacher") apiUri='/api/subject/insert';
+
+                fetch(apiUri, requestOptions)
                 .then((data)=>{            
                     if(data.status===200){
                         props.handleIndex(2);
@@ -163,11 +175,11 @@ export default function AddSubject(props) {
             <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Subject name"/>
             <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel>Subjects</InputLabel>
-                <Select  multiple label="Subjects" value={classCheck} onChange={handleClassCheck} renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.class_id} - ${selTop.class_name}`); return array.join(`, `);} } MenuProps={MenuProps}>
+                <Select  multiple label="Subjects" value={classCheck} onChange={handleClassCheck} renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.class_name}`); return array.join(`, `);} } MenuProps={MenuProps}>
                     {classIDs.map((classID) => (
                         <MenuItem key={classID.class_id} value={classID}>
                             <Checkbox checked={classCheck.indexOf(classID) > -1} />
-                            <ListItemText primary={`${classID.class_id} - ${classID.class_name}`} />
+                            <ListItemText primary={`#${classID.class_id}  ${classID.class_name}`} />
                         </MenuItem>
                     ))}
                 </Select>

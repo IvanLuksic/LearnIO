@@ -101,6 +101,7 @@ function MatricaAdmin(props)
     const [errorStatus,setErrorStatus]=useState(()=>"");
     const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
 
+    const role=useSelector(state=>state.login);
     const forceUpdate = useForceUpdate();
 
 
@@ -113,7 +114,12 @@ function MatricaAdmin(props)
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch(`/api/admin/topics/edit/${topicID}`, requestOptions)//topic id
+        
+        let apiUri;
+        if(role==="admin") apiUri=`/api/admin/topics/edit/${topicID}`
+        else if(role==="teacher") apiUri=`/api/admin/topics/edit/${topicID}`;
+
+        fetch(apiUri, requestOptions)//topic id
         .then((response)=>{
             if(response.status===200)
             {
@@ -260,7 +266,12 @@ function MatricaAdmin(props)
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch(`/api/question/delete/${Ques.id}`, requestOptions)
+
+        let apiUri;
+        if(role==="admin") apiUri=`/api/question/delete/${Ques.id}`
+        else if(role==="teacher") apiUri=`/api/question/delete/${Ques.id}`;
+
+        fetch(apiUri, requestOptions)
         .then((response)=>{
           if(response.status===200)
           {
@@ -299,7 +310,12 @@ function MatricaAdmin(props)
             body: JSON.stringify({...Ques}),
             credentials: 'include'
         };
-        fetch('/api/question/update', requestOptions)
+
+        let apiUri;
+        if(role==="admin") apiUri='/api/question/update'
+        else if(role==="teacher") apiUri='/api/question/update';
+
+        fetch(apiUri, requestOptions)
         .then((response)=>{
             if(response.status===200)
             {
@@ -337,7 +353,12 @@ function MatricaAdmin(props)
             body: JSON.stringify({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:Number(topicID)}),
             credentials: 'include'
         };
-        fetch('/api/question/add', requestOptions)
+
+        let apiUri;
+        if(role==="admin") apiUri='/api/question/add'
+        else if(role==="teacher") apiUri='/api/question/add';
+
+        fetch(apiUri, requestOptions)
         .then((response)=>{
             if(response.status===200)
             {

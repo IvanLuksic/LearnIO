@@ -76,7 +76,7 @@ const MenuProps = {
 
 function EditStudentPU(props) {
   //states of elements-------------------
-  const offline= useSelector(state=>state.offline);
+  const role=useSelector(state=>state.login);
   const [username, setUsername] = useState(()=>props.student.username);
   const [disableUsername, setDisableUsername] = useState(()=>true);
   const [name, setName] = useState(()=>props.student.name);
@@ -87,7 +87,7 @@ function EditStudentPU(props) {
   const [disableEmail, setDisableEmail] = useState(()=>true);
   const [studentClasses, setStudentClasses] = useState(()=>props.student.classes.map((cl)=>cl.id));
   const [disableStudentClasses, setDisableStudentClasses] = useState(()=>true);
-  const [password, setPassword] = useState(()=>props.student.password);
+  const [password, setPassword] = useState(()=>(role=="admin")?props.student.password:"");
   const [disablePassword, setDisablePassword] = useState(()=>true);
   const [showPassword, setShowPassword] = useState(()=>false);
 
@@ -117,6 +117,7 @@ function EditStudentPU(props) {
 
   const saveChanges=()=>{
     let itemToSave;
+    let st=studentClasses.map((cl)=>{for(let i of props.allClasses){if(i.id==cl){return {name:i.class_name,id:i.class_id}}}});
     itemToSave={
       id: props.student.id,
       created:props.student.created,
@@ -125,7 +126,7 @@ function EditStudentPU(props) {
       surname: surname,
       email: email,
       password: password,
-      classes: studentClasses
+      classes: st
     };
     props.editStudent(itemToSave);
     props.setOpenPopup(false);
@@ -202,7 +203,7 @@ function EditStudentPU(props) {
                 </Grid>
               </Grid>
 
-              <Grid container item xs={12}>
+              {(role=="admin")&&<Grid container item xs={12}>
                 {/* <TextField fullWidth  className={classes.fields} type="password" label="Password" variant="filled" defaultValue="JdakFoly0"/> */}
                 <Grid item xs={10} >
                   <FormControl className={classes.fields} variant="filled">
@@ -223,7 +224,7 @@ function EditStudentPU(props) {
                   </IconButton>
                 </Grid>
               </Grid>
-              
+              }
               <Grid container item xs={12}>
               <Grid item xs={10} >
                 <FormControl variant="filled" className={classes.fields}>

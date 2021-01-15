@@ -26,14 +26,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const actions = [
-  { icon: <Icon>apps</Icon>, name: 'add topic', operation: 'addtopic' },
-  { icon: <Icon>class_icon</Icon>, name: 'add class', operation: 'addclass' },
-  { icon: <Icon>subject_icon</Icon>, name: 'add subject', operation: 'addsubject' },
-  { icon: <Icon>list_icon</Icon>, name: 'add course', operation: 'addcourse' },
-  { icon: <Icon>insert_link_icon</Icon>, name: 'Invite Link' , operation: 'invitePopUp'},
-];
-
 function getYear() {
     return new Date().getFullYear();
 }
@@ -46,7 +38,27 @@ function AddCourseSubjectClass() {
   const [years, setYears] = React.useState(undefined);
   const [snackOpen, setSnackOpen] = React.useState(false);
   const [snackIndex, setSnackIndex] = React.useState(0);
- 
+  const [snackbarText,setSnackbarText]=useState(()=>"");
+  const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+
+  const role=useSelector(state=>state.login);
+
+  let actionsStart = [
+    { icon: <Icon>apps</Icon>, name: 'Add topic', operation: 'addtopic' },
+    { icon: <Icon>class_icon</Icon>, name: 'Add class', operation: 'addclass' },
+    { icon: <Icon>insert_link_icon</Icon>, name: 'Invite Link' , operation: 'invitePopUp'},
+  ];
+
+  if(role=="admin"){
+    actionsStart.push({ icon: <Icon>subject_icon</Icon>, name: 'Add subject', operation: 'addsubject' });
+    actionsStart.push({ icon: <Icon>list_icon</Icon>, name: 'Add course', operation: 'addcourse' }); 
+    actionsStart.push({ icon: <Icon>account_circle_sharp</Icon>, name: 'Add course', operation: 'adduser' });    
+  };
+
+  const actions = actionsStart;
+
+  
+
   // kupi sve godine od 2,3 generacije u buducnost do 50 godina prije nas, minjaj kako pase
   
   const fillYears = () => {
@@ -81,6 +93,9 @@ function AddCourseSubjectClass() {
     if(operation === "addclass") {
       fillYears();
       setIndex(3);
+    }
+    if(operation==="adduser"){
+      window.location.assign("/register");
     }
     setPopupOpen(true);
   };
@@ -129,12 +144,12 @@ function AddCourseSubjectClass() {
         </PopupDialog>
         : null
       }{
-        popupOpen && index === 2 ? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'40%'}}>
+        popupOpen && index === 2 && role=="admin"? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'40%'}}>
           <AddSubject closePopup={closePopup} handleOpen={handleSnackOpen} handleIndex={handleSnackIndex}/>
         </PopupDialog>
         : null
       }{
-        popupOpen && index === 3 ? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'40%'}}>
+        popupOpen && index === 3 && role=="admin"? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'40%'}}>
           <AddClass years={years} closePopup={closePopup} handleOpen={handleSnackOpen} handleIndex={handleSnackIndex}/>
         </PopupDialog>
         : null
@@ -145,7 +160,7 @@ function AddCourseSubjectClass() {
         : null
       }{
         popupOpen && index === 5 ? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
-          <AddTopicPU  closePopup={closePopup}/>
+          <AddTopicPU  closePopup={closePopup} setSnackbarOpen={()=>setSnackOpen} setSnackbarText={()=>setSnackbarText} setSnackbarStatus={()=>setSnackbarStatus} />
         </PopupDialog>
         : null
       }
@@ -159,7 +174,10 @@ function AddCourseSubjectClass() {
       }{
         snackOpen && snackIndex === 3 ? <CustomSnackbar handleClose={handleSnackClose} open={snackOpen} text="Course successfully added" status="success"/>
         : null
-      }
+      }{
+        snackOpen && index===5 ? <CustomSnackbar handleClose={handleSnackClose} open={snackOpen} text={snackbarText} status={snackbarStatus}/>
+        : null
+      } 
     </div>
   );
 }

@@ -11,6 +11,7 @@ import 'reactjs-popup/dist/index.css';
 import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
 import offlineData from '../../sampleData/admin/allTopics.json';
+import { useSelector} from 'react-redux';
 
 
 const useStyles = makeStyles((theme)=>({
@@ -56,6 +57,9 @@ const useStyles = makeStyles((theme)=>({
 export default function CustomAccordion(props) {
     const classes = useStyles();
     const nothing=(props.courses===undefined);
+    
+    const sub=useSelector(state=>state.subject);
+    const cla=useSelector(state=>state.class);
 
     return(
         nothing?
@@ -67,7 +71,7 @@ export default function CustomAccordion(props) {
                     <Accordion style={{marginTop:'2px'}} expanded={props.expanded == course.course_id}  onClick={()=>props.handleChange(course)}>
                         <AccordionSummary  expandIcon={<ExpandMoreIcon />} >
                             <Typography className={classes.accHeading}>{course.course_name}</Typography>
-                            <Button className={classes.toggleButton} style={{backgroundColor: course.color}} size="small" onClick={()=>props.pageProps.history.push(`/student/topics/${course.course_id}`)} > Open </Button>
+                            <Button className={classes.toggleButton} style={{backgroundColor: course.color}} size="small" onClick={()=>props.pageProps.history.push(`/student/topics/${cla}/${sub}/${course.course_id}`)} > Open </Button>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Grid  container direction="row" justify="center" alignItems="center" spacing={1}>

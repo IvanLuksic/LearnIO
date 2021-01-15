@@ -81,6 +81,7 @@ export default function AddCourse(props) {
     const [subjects, setSubjects] = useState(()=>subs);
     const [errorText, setError] = useState(()=>"");
 
+    const role=useSelector(state=>state.login);
 
     const fetchSubjects=()=>{
         const requestOptions = {
@@ -89,7 +90,12 @@ export default function AddCourse(props) {
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch('/api/subjects/all/with/classes', requestOptions)
+
+        let apiUri;
+        if(role==="admin") apiUri='/api/subjects/all/with/classes'
+        else if(role==="teacher") apiUri='/api/subjects/all/with/classes';
+
+        fetch(apiUri, requestOptions)
         .then(response => response.json())
         .then(data => {  setSubjects(data);console.log(data);})
         .catch((error)=>{handleIndex(3);setError('Error in fetch function '+ error);});
@@ -130,7 +136,13 @@ export default function AddCourse(props) {
                     body: JSON.stringify({...send}),
                     credentials: 'include'
                 };
-                fetch('/api/course/insert', requestOptions)
+
+                let apiUri;
+                if(role==="admin") apiUri='/api/course/insert'
+                else if(role==="teacher") apiUri='/api/course/insert';
+        
+
+                fetch(apiUri, requestOptions)
                 .then((data)=>{            
                     if(data.status===200){
                         props.handleIndex(3);

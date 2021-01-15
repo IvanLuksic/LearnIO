@@ -255,7 +255,9 @@ function AddTopicPU(props){
     const [AOL8,setAOL8]=useState(()=>3);
     const [AOL9,setAOL9]=useState(()=>3);
     const [AOL10,setAOL10]=useState(()=>3);
-    
+
+    const role=useSelector(state=>state.login);
+
 
     const fetchTopics=(sub)=>{
       let dataFetched;
@@ -265,17 +267,35 @@ function AddTopicPU(props){
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
     };
+
+    let apiUri;
+    if(role==="admin") apiUri=`/api/admin/topics/associated/${sub.subject_id}`
+    else if(role==="teacher") apiUri=`/api/admin/topics/associated/${sub.subject_id}`;
     
-    fetch(`/api/admin/topics/associated/${sub.subject_id}`, requestOptions)
-    .then(response => response.json())
-    .then(data => {  
-      setAssociatedTopicsPossible(data);
-      console.log(data);
-    })
+    fetch(apiUri, requestOptions)
+    .then((response)=>{
+      if(response.status===200)
+      {
+        Promise.resolve(response).then(response => response.json())
+        .then(data => {  
+          setAssociatedTopicsPossible(data);
+          props.setSnackbarStatus("success");
+          props.setSnackbarText("Associated topics loaded successfully.")
+          props.setSnackbarOpen(true);
+        })
+      }
+      else{
+        props.setSnackbarStatus("error");
+        props.setSnackbarText("Associated topics did not load successfully.")
+        props.setSnackbarOpen(true);
+    }})
     .catch((error)=>{
-        console.log('Error in fetch function '+ error);
+      props.setSnackbarStatus("error");
+      props.setSnackbarText('Error in fetch function '+ error);
+      props.setSnackbarOpen(true);
+      console.log('Error in fetch function '+ error);
     });
-    };
+  };
 
     const handleChangeTag = (event) => {
       setAssociatedTopic(event.target.value);
@@ -320,13 +340,33 @@ function AddTopicPU(props){
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
-      fetch(`/api/admin/topics/subject/course/pairs`, requestOptions)
-      .then(response => response.json())
-      .then(data => {  
-        setSubjectAndCourseList(data);
-      })
+
+      let apiUri;
+      if(role==="admin") apiUri=`/api/admin/topics/subject/course/pairs`
+      else if(role==="teacher") apiUri=`/api/admin/topics/subject/course/pairs`;
+
+      fetch(apiUri, requestOptions)
+      .then((response)=>{
+        if(response.status===200)
+        {
+          Promise.resolve(response).then(response => response.json())
+          .then(data => {  
+            setSubjectAndCourseList(data);
+            props.setSnackbarStatus("success");
+            props.setSnackbarText("Subjects-unit pairs loaded successfully.")
+            props.setSnackbarOpen(true);
+          })
+        }
+        else{
+          props.setSnackbarStatus("error");
+          props.setSnackbarText("Subjects-unit pairs did not load successfully.")
+          props.setSnackbarOpen(true);
+      }})
       .catch((error)=>{
-      console.log('Error in fetch function '+ error);
+        props.setSnackbarStatus("error");
+        props.setSnackbarText('Error in fetch function '+ error);
+        props.setSnackbarOpen(true);
+        console.log('Error in fetch function '+ error);
       });
     };
 
@@ -389,22 +429,42 @@ function AddTopicPU(props){
         });
         offline&&(props.closePopup!==undefined)&&props.closePopup();
 
-        fetch(`/api/add/topic`, requestOptions)
-        .then(response => response.json())
-        .then(data => {  
-          (props.addTopic!==undefined)&&props.addTopic({
-            topic_id:data.topic_id,
-            topic_name:valueText,
-            course_id:subjectAndCourse.course_id,
-            course_name:subjectAndCourse.course_name,
-            subject_id:subjectAndCourse.subject_id,
-            subject_name:subjectAndCourse.subject_name,
-            topic_description:valueDesc
-          });
-          props.closePopup();
+        let apiUri;
+        if(role==="admin") apiUri=`/api/add/topic`
+        else if(role==="teacher") apiUri=`/api/add/topic`;
+
+        fetch(apiUri, requestOptions)
+        .then((response)=>{
+          if(response.status===200)
+          {
+            Promise.resolve(response).then(response => response.json())
+              .then(data => {
+                (props.addTopic!==undefined)&&props.addTopic({
+                  topic_id:data.topic_id,
+                  topic_name:valueText,
+                  course_id:subjectAndCourse.course_id,
+                  course_name:subjectAndCourse.course_name,
+                  subject_id:subjectAndCourse.subject_id,
+                  subject_name:subjectAndCourse.subject_name,
+                  topic_description:valueDesc
+                });
+                props.closePopup();
+                props.setSnackbarStatus("success");
+                props.setSnackbarText("Subjects loaded successfully.")
+                props.setSnackbarOpen(true);
+              })
+            }
+            else{
+              props.setSnackbarStatus("error");
+              props.setSnackbarText("Subjects did not load successfully.")
+              props.setSnackbarOpen(true);
+            }
         })
         .catch((error)=>{
-        console.log('Error in fetch function '+ error);
+          props.setSnackbarStatus("error");
+          props.setSnackbarText('Error in fetch function '+ error);
+          props.setSnackbarOpen(true);
+          console.log('Error in fetch function '+ error);
         });
       }
     };

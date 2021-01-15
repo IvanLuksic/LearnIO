@@ -35,6 +35,10 @@ function App() {
   const loginStatus = useSelector(state=> state.login);
   let AdminFeatures=false;
   let StudentFeatures=false;
+  let TeacherFeatures=false;
+  let GuestFeatures=false;
+
+
   const dispatch = useDispatch();
 
   if(!offline)
@@ -66,26 +70,36 @@ function App() {
     case 'admin':{
       AdminFeatures=true;
       StudentFeatures=false;
+      TeacherFeatures=false;
+      GuestFeatures=false;
       break;      
     }
     case 'teacher':{//privremeno rjesenje za prvu iteraciju jer nema razlike teachera i admina
-      AdminFeatures=true;
+      AdminFeatures=false;
       StudentFeatures=false;
+      TeacherFeatures=true;
+      GuestFeatures=false;
       break;      
     }
     case 'student':{
       AdminFeatures=false;
       StudentFeatures=true;
+      TeacherFeatures=false;
+      GuestFeatures=false;
       break;
     }
     case 'guest':{
       AdminFeatures=false;
       StudentFeatures=false;
+      TeacherFeatures=false;
+      GuestFeatures=true;
       break;      
     }
     default:{
       AdminFeatures=false;
-      StudentFeatures=false;      
+      StudentFeatures=false;  
+      TeacherFeatures=false;    
+      GuestFeatures=true;
     }
   }
 
@@ -99,22 +113,22 @@ function App() {
                 <Switch>
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/login" component={Login}/>
-                    <Route exact path="/register" component={Register}/>
-                    {StudentFeatures&&<Route exact path="/student/topics/:unit_id"component={StudentUnit}/>}
+                    {(AdminFeatures||GuestFeatures)&&<Route exact path="/register" component={Register}/>}
+                    {StudentFeatures&&<Route exact path="/student/topics/:class_id/:subject_id/:unit_id"component={StudentUnit}/>}
                     {StudentFeatures&&<Route exact path="/student/units/:class_id/:subject_id" component={StudentCourses}/>}
                     {/* {StudentFeatures&&<Route path="/topics"component={StudentTopics}/>} */}
-                    {StudentFeatures&&<Route exact path="/student/topic/:topic_id" component={StudentMatrix}/>}
+                    {StudentFeatures&&<Route exact path="/student/topic/:class_id/:subject_id/:unit_id/:topic_id" component={StudentMatrix}/>}
                     {StudentFeatures&&<Route exact path="/student/subjects" component={StudentSubjects}/>}
                     {StudentFeatures&&<Route exact path="/invite/:code" component={Invited}/>}
-                    {AdminFeatures&&<Route exact path="/admin-topic/:id" component={AdminMatrix}/>}
+                    {(AdminFeatures||TeacherFeatures)&&<Route exact path="/admin-topic/:id" component={AdminMatrix}/>}
                     {/* {AdminFeatures&&<Route exact path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>} */}
-                    {AdminFeatures&&<Route exact path="/AdminTopics" component={AdminTopics}/>}
-                    {AdminFeatures&&<Route exact path="/results" component={Results}/>}
-                    {AdminFeatures&&<Route exact path="/students" component={Students}/>}
+                    {(AdminFeatures||TeacherFeatures)&&<Route exact path="/AdminTopics" component={AdminTopics}/>}
+                    {(AdminFeatures||TeacherFeatures)&&<Route exact path="/results" component={Results}/>}
+                    {(AdminFeatures||TeacherFeatures)&&<Route exact path="/students" component={Students}/>}
                     <Route component={NotFound} code={"404"}/>
                 </Switch>
               </div>
-              {AdminFeatures&&<AddCourseSubjectClass/>}
+              {(AdminFeatures||TeacherFeatures)&&<AddCourseSubjectClass/>}
 
           </ThemeProvider>
         </div>
@@ -123,3 +137,5 @@ function App() {
 }
 
 export default App;
+
+//setInterval(function(){alert("Hello")},3000);

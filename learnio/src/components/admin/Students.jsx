@@ -195,6 +195,8 @@ function Students(){
     const classes=useStyles();
     const [noError,setNoError]=useState(()=> true);
 
+    const role=useSelector(state=>state.login);
+
     let listOfGroups=[{name:"All",id:-1},...allClasses];
 
     
@@ -206,7 +208,11 @@ function Students(){
         credentials: 'include'
       };
 
-      fetch('http://127.0.0.1:3000/api/classes', requestOptions)
+      let apiUri;
+      if(role==="admin") apiUri=`/api/admin/topics/edit/${topicID}`
+      else if(role==="teacher") apiUri=`/api/admin/topics/edit/${topicID}`;
+
+      fetch(apiUri, requestOptions)
       .then(response => {
         if(response.status===200)
         {
@@ -349,8 +355,8 @@ const editStudent=(studentToEdit)=>{
     .then((response)=>{
       if(response.status===200)
       {
-        Promise.resolve(response).then(response => response.json())
-        .then(dataFetch => {  
+        Promise.resolve(response.status)
+        .then(() => {  
           changeOfClass(selectedClassID);
           setSnackbarStatus("success");
           setSnackbarText("Student edited successfully.");
@@ -386,8 +392,8 @@ const editStudent=(studentToEdit)=>{
         .then((response)=>{
           if(response.status===200)
           {
-            Promise.resolve(response).then(response => response.json())
-              .then(data => {
+            Promise.resolve(response.status).
+              .then(() => {
                 changeOfClass(selectedClassID);
                 setSnackbarStatus("success");
                 setSnackbarText("Student deleted successfully.");
@@ -410,9 +416,10 @@ const editStudent=(studentToEdit)=>{
         });
       }
       else if(offline){
-        setFakeData(fakeData.filter((student)=>student.id!==selectedStudent.id));
-        setData(data.filter((student)=>student.id!==selectedStudent.id));
-      }
+        setFakeData(fakeData.filter((student)=>student.id!==selectedStudent.id));      }
+        
+      setData(data.filter((student)=>student.id!==selectedStudent.id));
+
       }
 /*=================================================================================================================================00 */
     const RenderClassesList=()=>{

@@ -13,7 +13,8 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import NotFound from '../common/NotFound';
 import CustomSnackbar from '../common/Snackbar.jsx';
 import {unitSelected} from '../../redux/actions/unitID';
-
+import {subjectSelected} from '../../redux/actions/subjectID';
+import {classSelected} from '../../redux/actions/classID';
 //-------------------------------------
 import CustomAccordion from './Accordion.jsx';
 //-------------------------------------
@@ -177,11 +178,15 @@ function CustomPagination(props) {
 
 
 function StudentTopics(props){
-        
+    const dispatch=useDispatch();//rows su podaci
+    dispatch(subjectSelected(parseInt(props.match.params.subject_id)));
+    dispatch(classSelected(parseInt(props.match.params.class_id)));
+    dispatch(unitSelected(parseInt(props.match.params.unit_id)));
     const sub=useSelector(state=>state.subject);
     const cla=useSelector(state=>state.class);
+    const uni=useSelector(state=>state.unit);
+
     const offline= useSelector(state=>state.offline);
-    const dispatch=useDispatch();//rows su podaci
     const [data,setData]=useState(()=>{return fakeLoadingTopics});//koristi ove dok ne učita da ne bi bilo undefined
     const [loading,setLoading]=useState(offline);//OFFLINE:true
     const [noError,setNoError]=useState(()=> true);
@@ -191,14 +196,13 @@ function StudentTopics(props){
     const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
 
 
-    dispatch(unitSelected(parseInt(props.match.params.unit_id)));
 
     const classes = useStyles();
     //red 1, blue 2, grey 3, green 4 - ovo je mislavova signalizacija iz APIja
     function RenderStatusButton(id,status,name){
-      if(status==1) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonRed} component={Link} to={`/student/topic/${id}`} size="small"> Start </Button>);
-      else if(status==2) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonBlue} component={Link} to={`/student/topic/${id}`} size="small"> Continue </Button>);
-      else if(status==4) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonGreen} component={Link} to={`/student/topic/${id}`} size="small"> Revise </Button>);
+      if(status==1) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonRed} component={Link} to={`/student/topic/${cla}/${sub}/${uni}/${id}`} size="small"> Start </Button>);
+      else if(status==2) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonBlue} component={Link} to={`/student/topic/${cla}/${sub}/${uni}/${id}`} size="small"> Continue </Button>);
+      else if(status==4) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonGreen} component={Link} to={`/student/topic/${cla}/${sub}/${uni}/${id}`} size="small"> Revise </Button>);
       else return <p>UNLUCKY</p>;
     };
 

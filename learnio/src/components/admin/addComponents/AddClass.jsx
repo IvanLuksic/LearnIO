@@ -53,6 +53,7 @@ export default function AddCourse(props) {
     const [index, setIndex] = useState(0);
     const [open, setOpen] = useState(false);
     const [errorText, setError] = useState(()=>"");
+    const role=useSelector(state=>state.login);
 
 
     const handleYear = (value) => {
@@ -90,7 +91,12 @@ export default function AddCourse(props) {
                 body: JSON.stringify({...send}),
                 credentials: 'include'
             };
-            fetch('/api/class/insert', requestOptions)
+
+            let apiUri;
+            if(role==="admin") apiUri='/api/class/insert'
+            else if(role==="teacher") apiUri='/api/class/insert';
+
+            fetch(apiUri, requestOptions)
             .then((data)=>{
                 if(data.status===200){
                     props.handleIndex(1);

@@ -146,6 +146,7 @@ function AdminTopics(props){
     const [errorStatus,setErrorStatus]=useState(()=>"");
     const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
     const [savedData,setSavedData]=useState(()=>data);
+    const role=useSelector(state=>state.login);
 
 
     const fetchTopics=()=>{
@@ -156,7 +157,11 @@ function AdminTopics(props){
           credentials: 'include'
       };
 
-      fetch('/api/admin/topics', requestOptions)
+      let apiUri;
+      if(role==="admin") apiUri='/api/admin/topics'
+      else if(role==="teacher") apiUri='/api/admin/topics';
+
+      fetch(apiUri, requestOptions)
       .then(response => {
         if(response.status===200)
         {
@@ -225,7 +230,13 @@ function AdminTopics(props){
           headers: { 'Content-Type': 'application/json'},
           credentials: 'include'
       };
-      fetch(`/api/admin/topics/delete/${item}`, requestOptions)
+
+      let apiUri;
+      if(role==="admin") apiUri=`/api/admin/topics/delete/${item}`
+      else if(role==="teacher") apiUri=`/api/admin/topics/delete/${item}`;
+
+
+      fetch(apiUri, requestOptions)
       .then(() =>{handleDelete(item);})
       .catch((error)=>{console.log('Error in fetch function '+ error);});
     };

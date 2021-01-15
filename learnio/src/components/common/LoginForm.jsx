@@ -42,7 +42,7 @@ function LoginForm(props){
     const [username, setUsername]=useState("");
     const [password, setPassword]=useState("");
     let classes=props.classes;
-
+    const redirectUri=useSelector(state=>state.redirect);
     const dispatch = useDispatch();
 
     let object={
@@ -80,7 +80,7 @@ function LoginForm(props){
                         console.log(JSON.stringify(data)+data.role);
                         if(data.role==1){{dispatch(adminLogIn())};object.pageprops.history.push('/')}
                         else if(data.role==2){{dispatch(teacherLogIn())};object.pageprops.history.push('/')}
-                        else if(data.role==3){{dispatch(studentLogIn())};object.pageprops.history.push('/')}
+                        else if(data.role==3){{dispatch(studentLogIn())};object.pageprops.history.push(redirectUri)}
                 })
             }else  object.pageprops.history.push('/login')
         })
