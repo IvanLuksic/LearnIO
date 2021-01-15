@@ -159,7 +159,7 @@ function AdminTopics(props){
 
       let apiUri;
       if(role==="admin") apiUri='/api/admin/topics'
-      else if(role==="teacher") apiUri='/api/admin/topics';
+      else if(role==="teacher") apiUri='/api/teacher/topics';
 
       fetch(apiUri, requestOptions)
       .then(response => {

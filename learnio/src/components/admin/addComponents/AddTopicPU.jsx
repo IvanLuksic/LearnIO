@@ -343,7 +343,7 @@ function AddTopicPU(props){
 
       let apiUri;
       if(role==="admin") apiUri=`/api/admin/topics/subject/course/pairs`
-      else if(role==="teacher") apiUri=`/api/admin/topics/subject/course/pairs`;
+      else if(role==="teacher") apiUri=`/api/teacher/topics/subject/course/pairs`;
 
       fetch(apiUri, requestOptions)
       .then((response)=>{

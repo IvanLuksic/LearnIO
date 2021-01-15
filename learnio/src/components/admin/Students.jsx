@@ -209,8 +209,8 @@ function Students(){
       };
 
       let apiUri;
-      if(role==="admin") apiUri=`/api/admin/topics/edit/${topicID}`
-      else if(role==="teacher") apiUri=`/api/admin/topics/edit/${topicID}`;
+      if(role==="admin") apiUri=`/api/admin/all/classes`
+      else if(role==="teacher") apiUri=`/api/teacher/all/classes`;
 
       fetch(apiUri, requestOptions)
       .then(response => {
@@ -277,12 +277,18 @@ function Students(){
                   headers: { 'Content-Type': 'application/json'},
                   credentials: 'include'
                 };
-                let v;
-                if(value===-1){v=""}
-                else {v=value};
-
+                
+                let apiUri;
+                if(role==="admin"){
+                  if(value===-1){apiUri=`/api/admin/students/all/class`}
+                  else{apiUri=`/api/students/class/${value}`};
+                } 
+                else if(role==="teacher"){
+                  if(value===-1){apiUri=`/api/teacher/students/all/class`}
+                  else{apiUri=`/api/students/class/${value}`};
+                } ;
           
-                fetch(`http://127.0.0.1:3000/api/students/${v}`, requestOptions)
+                fetch(apiUri, requestOptions)
                 .then((response)=>{
                   if(response.status===200)
                   {
@@ -344,14 +350,14 @@ const editStudent=(studentToEdit)=>{
   }
   else if(!offline){
     const requestOptions = {
-      method: 'GET',
+      method: 'PUT',
       mode:'cors',
       headers: { 'Content-Type': 'application/json'},
       credentials: 'include',
       body:JSON.stringify(studentToEdit)
     };
 
-    fetch(`http://127.0.0.1:3000/api/student/edit/${studentToEdit.id}`, requestOptions)
+    fetch(`/api/students/update`, requestOptions)
     .then((response)=>{
       if(response.status===200)
       {
@@ -388,11 +394,11 @@ const editStudent=(studentToEdit)=>{
           credentials: 'include'
         };
   
-        fetch(`http://127.0.0.1:3000/api/student/delete/${selectedStudent.id}`, requestOptions)
+        fetch(`/api/students/delete/${selectedStudent.id}`, requestOptions)
         .then((response)=>{
           if(response.status===200)
           {
-            Promise.resolve(response.status).
+            Promise.resolve(response.status)
               .then(() => {
                 changeOfClass(selectedClassID);
                 setSnackbarStatus("success");
@@ -446,8 +452,8 @@ const editStudent=(studentToEdit)=>{
         {field: "email", width:200, headerName:'e-mail',type:'string',headerAlign:'center', align:'center'},
         {field: "created", width:150, headerName:'Created',type:'date',headerAlign:'center', align:'center'},
         {field: "classes", headerName:'Classes',type:'number',headerAlign:'center', align:'center',sortable: false , renderCell:(params)=>{ if(params.getValue('classes').length<2){return params.getValue('classes')[0].name}; return renderGroupsList(params.getValue('classes'))}},
-        {field: 'open', headerName: 'Edit',headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Button onClick={()=>{setSelectedStudent(params.data) ;setEditDialogOpen(true)}}><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button>)},
-        {field: 'delete', headerName: 'Delete ' ,headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Button onClick={()=>{setSelectedStudent(params.data); setConfirmDialogOpen(true);}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
+        {field: 'open', headerName: 'Edit',headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Button disabled={(role=="teacher")} onClick={()=>{setSelectedStudent(params.data) ;setEditDialogOpen(true)}}><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button>)},
+        {field: 'delete', headerName: 'Delete ' ,headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Button disabled={(role=="teacher")} onClick={()=>{setSelectedStudent(params.data); setConfirmDialogOpen(true);}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
     ];
 
     return(

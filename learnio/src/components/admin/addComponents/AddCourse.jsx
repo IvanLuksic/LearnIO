@@ -93,7 +93,7 @@ export default function AddCourse(props) {
 
         let apiUri;
         if(role==="admin") apiUri='/api/subjects/all/with/classes'
-        else if(role==="teacher") apiUri='/api/subjects/all/with/classes';
+        else if(role==="teacher") apiUri='/api/teacher/subjects/all/with/classes';
 
         fetch(apiUri, requestOptions)
         .then(response => response.json())
