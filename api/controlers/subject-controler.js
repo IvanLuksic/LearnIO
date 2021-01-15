@@ -21,14 +21,23 @@ module.exports={
             next(error);
         }
     },
-    getAllSubjectsWithAllClasses:async (req,res,next)=>
+    getAllSubjectsWithAllClassesAdmin:async (req,res,next)=>
     {
         try {
             const subjects=await Subject_instance.getAllSubjectsWithClasses();
             res.json(subjects);
         } catch (error) {
-            nodelogger.error('Error in function  getAllSubjectsWithAllClasses');
+            nodelogger.error('Error in function  getAllSubjectsWithAllClassesAdmin');
             next(error);
+        }
+    },
+    getAllSubjectsWithAllClassesTeacher:async(req,res,next)=>
+    {
+        try {
+            const subjects=await Subject_instance.getAllSubjectsWithClassesForTeacher(req.session.user);
+            res.json(subjects);
+        } catch (error) {
+            
         }
     }
 }

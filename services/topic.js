@@ -454,6 +454,55 @@ module.exports=class topic{
             throw(error);
         }
     }
+    async getSubject_CoursePairsForTeacher(teachers_id)
+    {
+        try {
+            try {
+                var pairs=await this.User.findAll({
+                    attributes:['id'],
+                    include:{
+                        model:this.Subject,
+                        as:'subjects_teacher',
+                        through: { attributes: []},
+                        include:{
+                            model:this.Course,
+                            as:'courses_subject',
+                            through: { attributes: []}
+                        }
+                    },
+                    where:{//samo od tog ucitrlja razrede i kurseve
+                        id:teachers_id
+                    }
+                });
+            } catch (error) {
+                this.Logger.error('Error in fetching subject course pairs from datatabse');
+                throw(error);
+            }
+            this.Logger.info('Subject course pairs for teacher fetched succesfuly');
+            let temp={};
+            let format=[];
+            for(let i=0;i<pairs[0].subjects_teacher.length;i++)//samo 1 član u glavnon nizu koji imat id od ucitelja->indeks [0]
+            {
+                for(let j=0;j<pairs[0].subjects_teacher[i].courses_subject.length;j++)
+                {
+                    temp={
+                        subject_id:pairs[0].subjects_teacher[i].id,
+                        subject_name:pairs[0].subjects_teacher[i].name,
+                        course_id:pairs[0].subjects_teacher[i].courses_subject[j].id,
+                        course_name:pairs[0].subjects_teacher[i].courses_subject[j].name
+                    };
+                    format.push(temp);
+                    temp={};
+                }
+            }
+            for(let pair of format)
+            this.Logger.info(JSON.stringify(pair));
+            return format;
+        } catch (error) {
+            this.Logger.error('Error in function getSubject_CoursePairsForTeacher'+error);
+            throw(error);
+        }
+    }
     async addTopic(properties)//request body objekt saljemo
     {
         //Dodat u topic tablicu u course topic i tagsoftopic

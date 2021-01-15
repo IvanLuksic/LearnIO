@@ -15,6 +15,7 @@ module.exports=function (main_ruter){
     topic.get('/admin/topics/edit/:topic_id',authenticate_admin_or_teacher, topic_controler.getAdminTopicsEdit);//glavna matrica di se uređuje topic-> to mogu i admin i teacher
     topic.delete('/admin/topics/delete/:topic_id',authenticate_admin_or_teacher,topic_controler.deleteTopic);
     topic.get('/admin/topics/associated/:subject_id',authenticate_admin_or_teacher,topic_controler.getAssociatedFromSubject);
-    topic.get('/admin/topics/subject/course/pairs',authenticate_admin_or_teacher,topic_controler.getSubject_Courses);//kada dodajemo topic da može kliknit kojem će paru course subject pridružit taj topic
+    topic.get('/admin/topics/subject/course/pairs',authenticate_admin,topic_controler.getSubject_Courses);//kada dodajemo topic da može kliknit kojem će paru course subject pridružit taj topic
+    topic.get('/teacher/topics/subject/course/pairs',authenticate_teacher,topic_controler.getSubject_Courses_Teacher);//samo parove subject course koje teacher predaje
     topic.post('/add/topic',ShemaValidator.validate('addTopic') ,authenticate_admin_or_teacher,topic_controler.addTopics);
 }

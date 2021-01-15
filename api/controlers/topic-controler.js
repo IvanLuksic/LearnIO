@@ -134,6 +134,16 @@ module.exports={
             next(error);
         }
     },
+    getSubject_Courses_Teacher:async(req,res,next)=>
+    {
+        try {
+            var subject_course=await Topic_instance.getSubject_CoursePairsForTeacher(req.session.user);
+            res.json(subject_course);
+        } catch (error) {
+            nodelogger.error('Error in getSubject_Courses_Teacher');
+            next(error);
+        }
+    },
     getAssociatedFromSubject:async (req,res,next)=>
     {
         try {

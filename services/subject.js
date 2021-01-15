@@ -74,7 +74,7 @@ module.exports= class subject{
             throw(error);
         }
     }
-    async getAllSubjectsWithClasses()  //dohvaćanje svih predmeta s njohovim pridruzenim razredima kod unosa kursa
+    async getAllSubjectsWithClasses()  //dohvaćanje svih predmeta s njohovim pridruzenim razredima kod unosa kursa-> za ADMINA DOHVACAMO SVE
     {
         try {
             const subjects=await this.Subject.findAll({
@@ -114,6 +114,56 @@ module.exports= class subject{
         } catch (error) {
             this.Logger.error('Error in function  getAllSubjectsWithClasses'+error);
             throw(error);
+        }
+    }
+    async getAllSubjectsWithClassesForTeacher(teachers_id)//kad teacher unosi kurs moze odabrat samo one predemte kojima predaje
+    {
+        try {
+            const subjects=await this.User.findAll({
+                attributes:['id'],
+                include:{
+                    model:this.Subject,
+                    as:'subjects_teacher',
+                    through: { attributes: []},
+                    include:{
+                        model:this.Clas,
+                        as:'classes_subject',
+                        attributes:['name','school_year'],
+                        through: { attributes: [] },
+                    }
+                },
+                where:{
+                    id:teachers_id//samo za tog teachera
+                }
+            });
+            let format=[];
+            let format_clas=[];
+            let temp={};
+            for(let i=0;i<subjects[0].subjects_teacher.length;i++)//samo 1 teacher-> samo 1 clan subjects niza
+            {
+                for(let j=0;j<subjects[0].subjects_teacher[i].classes_subject.length;j++)
+                {
+                    temp={
+                        class_name:subjects[0].subjects_teacher[i].classes_subject[j].name,
+                        class_year:subjects[0].subjects_teacher[i].classes_subject[j].school_year
+                    };
+                    format_clas.push(temp);
+                    temp={};
+                }
+                temp={
+                    subject_id:subjects[0].subjects_teacher[i].id,
+                    subject_name:subjects[0].subjects_teacher[i].name,
+                    classes:format_clas
+                };
+                format.push(temp);
+                format_clas=[];
+                temp={};
+            }
+            this.Logger.info(JSON.stringify(format));
+            return format;
+        } catch (error) {
+            this.Logger.errro('Error in function getAllSubjectsWithClassesForTeacher'+error);
+            throw(error);   
         }
     }
 }
