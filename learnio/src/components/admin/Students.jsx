@@ -221,7 +221,7 @@ function Students(){
             console.log([{class_name:"All",class_id:-1},...dataFetch]);
             setListOfGroups([{class_name:"All",class_id:-1},...dataFetch]);
             setAllClasses(dataFetch);
-            setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
+           // setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
             setSnackbarStatus("success");
             setSnackbarText("Classes loaded successfully.");
             setSnackbarOpen(true);
