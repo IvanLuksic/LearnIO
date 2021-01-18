@@ -1,11 +1,17 @@
 const { Op } = require("sequelize");
 const { format } = require("winston");
 module.exports=class user {
-    constructor(user,clas,logger)
+    constructor(user,clas,class_student,result,save,session,teacher_subject,invite_links,logger)
     {
         this.User=user;
         this.Clas=clas;
-        this.Logger=logger
+        this.Class_student=class_student;
+        this.Result=result;
+        this.Save=save;
+        this.Session=session;
+        this.Teacher_subject=teacher_subject;
+        this.Invite_links=invite_links;
+        this.Logger=logger;
     }
     async addUser(properties)//ovdje ce doc req.body po unaprojed dogovorenom formatu
     {
@@ -291,12 +297,57 @@ module.exports=class user {
             throw(error);
         }
     }
-    async deleteStudentFromDB(student_id)
+    async deleteStudentFromDB(user_id)//izbrisi sve sta ima veze s userom u bazi
     {
         try {
+            // Prvo ispitat jeli teacher jer za njega moramo brisat dio u tablici teacher subject a za ADMINA ili TEACHERA BRISAT i dio u INVITE LINK
+           let user = await this.User.findOne({
+                attributes:['id'],
+                where:{
+                    id:user_id
+                }
+            });
+            //Sigurno postoji user jer ga inace nebi moga krenija brisat jer mu ne bi bio ponuden na ekranu
+            await this.Class_student.destroy({
+                where:{
+                    student_id:user_id
+                }
+            });
+            await this.Result.destroy({
+                where:{
+                    student_id:user_id
+                }
+            });
+            await this.Save.destroy({
+                where:{
+                    student_id:user_id
+                }
+            });
+            await this.Session.destroy({
+                where:{
+                    user_id:user_id
+                }
+            });
+            if(user.user_type==process.env.TEACHER)
+            {
+                await this.Teacher_subject.destroy({
+                    where:{
+                        teacher_id:user_id
+                    }
+                });
+            }
+            if(user.user_type==process.env.ADMIN && user.user_type==process.env.TEACHER)
+            {
+                await this.Invite_links.destroy({
+                    where:{
+                        creator_id:user_id
+                    }
+                });
+            }
+             //+ dodat da izbrise njegove session cookiese u mmeory store + vodit računa da se ne može logirat 2 puta ako već ima cookie-> ne dat mu login botun nigdi
             await this.User.destroy({
                 where:{
-                    id:student_id
+                    id:user_id
                 }
             });
         } catch (error) {

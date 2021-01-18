@@ -95,7 +95,7 @@ module.exports={
         try {
             nodelogger.info("parametar: "+req.params.topic_id);
             try {
-                var associated=await Topic_instance.associatedTopics(req.params.topic_id);
+                var associated=await Topic_instance.associatedTopics(req.params.subject_id,req.params.topic_id);
             } catch (error) {
                 nodelogger.error('Error in fetching asscoaited topics from database');
                 throw(error);

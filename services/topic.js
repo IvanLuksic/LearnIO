@@ -153,13 +153,13 @@ module.exports=class topic{
             throw(error);
         }
     }
-    async associatedTopics(topics_id)
+    async associatedTopics(subjects_id,topics_id)//moramo dodat subject_id kako bi znali na koji kurs preusmjerit korisnika kad klikne topic-> POVEZANI TOPIC CE BIT UNUTAR ISTOG PREDEMTA ALI MOZE BIT U NEKOM DRUGOM KURSU ALI CE BITI SAMO U 1 KURUS UNUTAR TOG PREDEMTA-> MORAMO SAZNAT KOJI JE TO PREKO SUBJECT ID-a
     {
         try {
             try {//POTREBNO DEFINIRAT ALIAS ZA TABLICU TOPIC JER 2 PUTA JOINAMO PO NJOJ
-               var association=await sequelize.query('SELECT * FROM topic t1 JOIN tags_of_topic  ON t1.id=tags_of_topic.source_topic JOIN topic t2 ON tags_of_topic.associated_topic=t2.id WHERE t1.id= :topic_id ',{
-                raw:true,
-                replacements: { topic_id: topics_id },
+               var association=await sequelize.query('SELECT * FROM tags_of_topic JOIN topic t1 ON tags_of_topic.associated_topic=t1.id JOIN course_topic c1 ON t1.id=c1.topic_id JOIN course_subject s1 ON c1.course_id=s1.course_id WHERE s1.subject_id= :subject_id AND tags_of_topic.source_topic= :topic_id',{
+                raw:true,// S OVIM QUERYEM SMO IZVUKLI ASSOCIATED TOPIC I VIDILI U KOJEM SE KURSU ON NALAZI UNUTAR ZADANOG PREDEMTA-> MOZE BITI U RAZLICITOM KURSU OD NASEG SOURCE TOPICA PA MORAMO OTKEITI U KOJEM JE ALI SE ON UVIJEK NALAZI UNUTAR KURSA KOJI JE UNUTAR PREDEMTA U KOJEM JE NAS SOURCE TOPIC I TO U SAMO 1 KURSU UNUTAR NJEGA-> ZAŠTO?-> ZATO ŠTA BIRAMO POVEZANE TOPICE SAMO UNUTR ISTOG PREDEMTA(ZNACI MOZE BIT U RAZLICITOM KURSU OD SOURCE TOPICA ALI TAJ KURS MORA BIT UNUTAR TOG PREDMETA)
+                replacements: { topic_id: topics_id, subject_id:subjects_id},//'SELECT * FROM topic t1 JOIN tags_of_topic  ON t1.id=tags_of_topic.source_topic JOIN topic t2 ON tags_of_topic.associated_topic=t2.id WHERE t1.id= :topic_id '
                 type: QueryTypes.SELECT
                })
                 this.Logger.info('Fetched asscoaited topics succesfuly');
@@ -176,7 +176,8 @@ module.exports=class topic{
                 temp={
                     topic_id:assoc.id,
                     name:assoc.name,
-                    required_level:assoc.required_level
+                    required_level:assoc.required_level,
+                    course_id:assoc.course_id
                 };
                 format.push(temp);
                 temp={};

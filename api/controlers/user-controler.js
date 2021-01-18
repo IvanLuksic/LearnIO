@@ -27,7 +27,7 @@ module.exports={
     getAllStudentsWithAllClasses:async(req,res,next)=>
     {
         try {
-            const students=await User_instance.Logger.getAllStudentsWithClassesAdmin();
+            const students=await User_instance.getAllStudentsWithClassesAdmin();
             res.json(students);
         } catch (error) {
             nodelogger.error('Error in getAllStudentsWithAllClasses');

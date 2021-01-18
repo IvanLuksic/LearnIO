@@ -9,7 +9,7 @@ module.exports=function (main_ruter){
     main_ruter.use('/',topic);
     topic.get('/student/topics/:class_id/:subject_id/:course_id',authenticate_student,topic_controler.getTopicsStudent);//za studenta->svi topici iz kursa u koji uđe-> prethodno su odabrali razred i predmet
     topic.get('/topics/:course_id',authenticate_admin_or_teacher,topic_controler.getTopicsFromCourse);//ovde dohvacamo sve topice za odabrani kurs kada admin ili teacher udu u njega
-    topic.get('/student/topics/associated/:topic_id',authenticate_student,topic_controler.associated);
+    topic.get('/student/topics/fetch/associated/:subject_id/:topic_id',authenticate_student,topic_controler.associated);
     topic.get('/admin/topics',authenticate_admin,topic_controler.getAdminTopics);//za admina svi topici
     topic.get('/teacher/topics',authenticate_teacher,topic_controler.getTeacherTopics);//dati sve topice kojima moze pristupiti ucitelj zajedno sa njihovin subject course parovima
     topic.get('/admin/topics/edit/:topic_id',authenticate_admin_or_teacher, topic_controler.getAdminTopicsEdit);//glavna matrica di se uređuje topic-> to mogu i admin i teacher

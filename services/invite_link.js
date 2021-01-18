@@ -1,9 +1,10 @@
 var uuid = require('node-uuid');//npm paket koji ce geneirat random string koji cemo zakacit na url od invite link
 module.exports=class invite_link{
-    constructor(invite_links,class_student,logger)
+    constructor(invite_links,class_student,clas,logger)
     {
         this.Invite_links=invite_links;
         this.Class_student=class_student;
+        this.Clas=clas;
         this.Logger=logger;
     }
     async generateInviteLink(created_by_id,clas_id)//saljemo id onoga tko je kreirao ovaj link i razred za koji je kreiran
@@ -51,8 +52,17 @@ module.exports=class invite_link{
                 this.Logger.error('Error in fetching invite link from invite_link table');
                 throw(error);
             }
-            this.Logger.info('Fetched invite link: loclahost:3000/invite/'+invite_link.unique_link_part);
+            this.Logger.info('Fetched invite link: localhost:3000/invite/'+invite_link.unique_link_part);
             try {
+                let temp={};
+                //moramo mu dohvatit razred u koji smo ga upisali da mu to mozemo ispisat
+                let clas= await this.Clas.findOne({
+                    where:{
+                        id:invite_link.class_id
+                    }
+                });
+                temp.class_name=clas.name;
+                temp.class_year=clas.school_year;
                 //upisi ucenika u razred ako vec nije upisan postoji
                 let is_enrolled=await this.Class_student.findOne({
                     where:{
@@ -67,11 +77,13 @@ module.exports=class invite_link{
                     student_id:students_id
                 });
                 this.Logger.info('Student enrolled succesfuly');
-                return 1;//vrati da znamo javit klijentu ako je vec upisan
+                temp.is_enrolled=1;
+                return temp;
                 }
                 else {
                     this.Logger.info('Student already enrolled into this class');
-                    return 0;
+                    temp.is_enrolled=0;
+                    return temp;
                 }
             } catch (error) {
                 this.Logger.error('Error in enrolling student into class');
