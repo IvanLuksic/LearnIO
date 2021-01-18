@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import fakeBackendAssociatedTopics from '../../sampleData/student/associatedTopics.json';
 import NotFound from '../common/NotFound';
 import CustomSnackbar from '../common/Snackbar.jsx';
+import {useSelector} from 'react-redux';
+
 const ColorButton = withStyles((theme) => ({
     root: {
         border: 0,
@@ -81,10 +83,18 @@ function WrongPU(props){//uzima samo closePopup
     const [errorStatus,setErrorStatus]=useState(()=>"");
     const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
 
+    const class_id=useSelector(state=>state.class);
+    const subject_id=useSelector(state=>state.subject);
+
+
     const closePopup=(value)=>{
         if(Number.isInteger(value)){
+            let chosenTopic;
+            for(let top of data){
+                if(top.topic_id===value)chosenTopic=top;
+            }
             props.setTopicID(value);
-            props.pageProps.history.push(`/student/topic/${value}`);
+            props.pageProps.history.push(`/student/topic/${class_id}/${subject_id}/${chosenTopic.course_id}/${value}`);
         };
         props.closePopup(false);
     };

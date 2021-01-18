@@ -11,6 +11,9 @@ import { useSelector} from 'react-redux';
 import WrongPU from './WrongPU';
 import MatrixSkeleton from './matrixComponents/MatrixSkeleton';
 import {topicSelected} from '../../redux/actions/topicID';
+import {unitSelected} from '../../redux/actions/unitID';
+import {subjectSelected} from '../../redux/actions/subjectID';
+import {classSelected} from '../../redux/actions/classID';
 import NotFound from '../common/NotFound';
 import CustomSnackbar from '../common/Snackbar.jsx';
 import {useDispatch} from 'react-redux';
@@ -83,6 +86,10 @@ function Matrica(props)
 {       
     const dispatch=useDispatch();//rows su podaci
     dispatch(topicSelected(parseInt(props.match.params.topic_id)));
+    dispatch(unitSelected(parseInt(props.match.params.unit_id)));
+    dispatch(subjectSelected(parseInt(props.match.params.subject_id)));
+    dispatch(classSelected(parseInt(props.match.params.class_id)));
+
 
     const offline= useSelector(state=>state.offline);
     const [fields, setFields]=useState(()=>{return fakeFetchResponse.Questions});//bilo data.Questions

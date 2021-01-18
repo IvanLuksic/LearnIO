@@ -192,7 +192,6 @@ function Students(){
           .then(dataFetch => {  
             setListOfGroups([{class_name:"All",class_id:-1},...dataFetch]);
             setAllClasses(dataFetch);
-            setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
             setSnackbarStatus("success");
             setSnackbarText("Classes loaded successfully.");
             setSnackbarOpen(true);
@@ -414,7 +413,7 @@ const editStudent=(studentToEdit)=>{
         {field: "surname", width:100, headerName:'Surname',type:'string',headerAlign:'center', align:'center'},
         {field: "email", width:200, headerName:'e-mail',type:'string',headerAlign:'center', align:'center'},
         {field: "created", width:150, headerName:'Created',type:'date',headerAlign:'center', align:'center'},
-        {field: "classes", headerName:'Classes',type:'number',headerAlign:'center', align:'center',sortable: false , renderCell:(params)=>{ if(params.getValue('classes').length<2){return params.getValue('classes')[0].name}else{return renderGroupsList(params.getValue('classes'))}}},
+        {field: "classes", headerName:'Classes',type:'number',headerAlign:'center', align:'center',sortable: false , renderCell:(params)=>{ if(params.getValue('classes').length==0){return "None"}else{return renderGroupsList(params.getValue('classes'))}}},
         {field: 'open', headerName: 'Edit',headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Button disabled={(role=="teacher")} onClick={()=>{setSelectedStudent(params.data) ;setEditDialogOpen(true)}}><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button>)},
         {field: 'delete', headerName: 'Delete ' ,headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Button disabled={(role=="teacher")} onClick={()=>{setSelectedStudent(params.data); setConfirmDialogOpen(true);}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
     ];

@@ -59,7 +59,7 @@ function RegisterForm(props){
     const [username,setUsername]=useState("");
     const [email,setEmail]=useState("");
     const [roleVisible, setRoleVisible]=useState(()=> {return((roleOfUser=="guest")?false:true)});
-    const [role, setRole]=useState(()=>"student");
+    const [role, setRole]=useState(()=>3);
     const [password,setPassword]=useState("");
     const [passwordCheck,setPasswordCheck]=useState("");
     const [showPassword,setShowPassword]=useState(false);
@@ -165,13 +165,14 @@ function RegisterForm(props){
         surname:surname,
         date_of_birth:birthDate,
         mail:email,
-        user_type:3,
+        user_type:role,
         username:username,
         password:password,
         
     };
     function sendSignup()
     {
+
         console.log(object);
             const requestOptions = {
               method: 'POST',
@@ -203,7 +204,7 @@ function RegisterForm(props){
             setSurname("");
             setUsername("");
             setEmail("");
-            setRole("student");
+            setRole(3);
             setPassword("");
             setPasswordCheck("");
             setShowPassword(false);
@@ -327,9 +328,9 @@ function RegisterForm(props){
                     onChange={(e)=>setRole(e.target.value)}
                     fullWidth
                     >
-                        <MenuItem value={"student"}>Student</MenuItem>
-                        <MenuItem value={"teacher"}>Teacher</MenuItem>
-                        <MenuItem value={"admin"}>Administrator</MenuItem>
+                        <MenuItem value={3}>Student</MenuItem>
+                        <MenuItem value={2}>Teacher</MenuItem>
+                        <MenuItem value={1}>Administrator</MenuItem>
                     </Select>
                 </FormControl>
                 }
