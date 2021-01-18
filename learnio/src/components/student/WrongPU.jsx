@@ -7,6 +7,7 @@ import fakeBackendAssociatedTopics from '../../sampleData/student/associatedTopi
 import NotFound from '../common/NotFound';
 import CustomSnackbar from '../common/Snackbar.jsx';
 import {useSelector} from 'react-redux';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const ColorButton = withStyles((theme) => ({
     root: {
@@ -82,9 +83,12 @@ function WrongPU(props){//uzima samo closePopup
     const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
     const [errorStatus,setErrorStatus]=useState(()=>"");
     const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+    const [loading,setLoading]=useState(()=>true);
 
     const class_id=useSelector(state=>state.class);
     const subject_id=useSelector(state=>state.subject);
+    const top_id=useSelector(state=>state.topic);
+
 
 
     const closePopup=(value)=>{
@@ -108,7 +112,7 @@ function WrongPU(props){//uzima samo closePopup
             credentials: 'include'
         };
 
-        fetch(`/api/student/topics/associated/${5}`, requestOptions)//topic id
+        fetch(`/api/student/topics/fetch/associated/${subject_id}/${5}`, requestOptions)//topic id
         .then((response)=>{
             if(response.status===200)
             {
@@ -118,6 +122,7 @@ function WrongPU(props){//uzima samo closePopup
                   setSnackbarStatus("success");
                   setSnackbarText("Topic loaded successfully.")
                   setSnackbarOpen(true);
+                  setLoading(false);
             })}      
             else{
                 setNoError(false);
@@ -165,29 +170,35 @@ function WrongPU(props){//uzima samo closePopup
 
     let dataExists=(data!=null)?true:false;//nece radit data grid ako nema topica
     return(
-        (!noError)?<NotFound code={errorStatus}/>
-        :<div>
-            <Grid className={classes.title}>
-                <h1>WRONG ANSWER</h1>
-            </Grid>
-            <Grid className={classes.subtitle} >
-                <p>You have answered that question wrong.</p>
-                <p>Go study associated topics.</p>
-                <p>That will help you to understand that question better.</p>
-            </Grid>
-            {dataExists&&
-             <div className={classes.tabela}>
-                <DataGrid disableSelectionOnClick={true} rows={rows} hideFooter={"true"} columns={columns} />
-            </div>
-            }
-            <Grid className={classes.button}>
-                <Button variant="contained" onClick={()=>closePopup(null)} className={classes.pickButton} style={{backgroundColor:"#EB4949", color:"white"}}>Close</Button>
-            </Grid>
+        <div>
             {
-                snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
-                : null
-            }     
+                (!noError)?<NotFound code={errorStatus}/>
+                :loading?<CircularProgress style={{margin:"auto"}}/>
+                :<div>
+                    <Grid className={classes.title}>
+                        <h1>WRONG ANSWER</h1>
+                    </Grid>
+                    <Grid className={classes.subtitle} >
+                        <p>You have answered that question wrong.</p>
+                        <p>Go study associated topics.</p>
+                        <p>That will help you to understand that question better.</p>
+                    </Grid>
+                    {dataExists&&
+                    <div className={classes.tabela}>
+                        <DataGrid disableSelectionOnClick={true} rows={rows} hideFooter={"true"} columns={columns} />
+                    </div>
+                    }
+                    <Grid className={classes.button}>
+                        <Button variant="contained" onClick={()=>closePopup(null)} className={classes.pickButton} style={{backgroundColor:"#EB4949", color:"white"}}>Close</Button>
+                    </Grid>
+                    {
+                        snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+                        : null
+                    }     
+                </div>
+            }
         </div>
+
     )
 }
 export default WrongPU;

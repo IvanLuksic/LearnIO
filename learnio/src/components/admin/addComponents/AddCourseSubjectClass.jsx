@@ -47,14 +47,15 @@ function AddCourseSubjectClass() {
   let actionsStart = [
     { icon: <Icon>apps</Icon>, name: 'Add topic', operation: 'addtopic' },
     { icon: <Icon>list_icon</Icon>, name: 'Add course', operation: 'addcourse' },
-    { icon: <Icon>insert_link_icon</Icon>, name: 'Invite Link' , operation: 'invitePopUp'},
   ];
 
   if(role=="admin"){
     actionsStart.push({ icon: <Icon>subject_icon</Icon>, name: 'Add subject', operation: 'addsubject' });
-    actionsStart.push(    { icon: <Icon>class_icon</Icon>, name: 'Add class', operation: 'addclass' }); 
+    actionsStart.push({ icon: <Icon>class_icon</Icon>, name: 'Add class', operation: 'addclass' }); 
     actionsStart.push({ icon: <Icon>account_circle_sharp</Icon>, name: 'Add user', operation: 'adduser' });    
   };
+
+  actionsStart.push({ icon: <Icon>insert_link_icon</Icon>, name: 'Invite Link' , operation: 'invitePopUp'});
 
   const actions = actionsStart;
 

@@ -47,7 +47,11 @@ const Redirected=(props)=>{props.pageProps.history.push(`/login`); return(<Circu
 function Invited(props) {
     const classes=useStyles();
     const [joined,setJoined]=useState(()=>false);
+    const [joinedAlready,setJoinedAlready]=useState(()=>false);
     const [loading,setLoading]=useState(()=>true);
+    const [class_name,setClass_name]=useState(()=>"");
+    const [class_year,setClass_year]=useState(()=>"");
+
 
     const dispatch=useDispatch();
     dispatch(loginRedirect("/invite/"+props.match.params.code));
@@ -55,16 +59,25 @@ function Invited(props) {
 
     const requestJoin=()=>{
         const requestOptions = {
-            method: 'HEAD',
+            method: 'GET',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
         fetch(`/api/invite/${props.match.params.code}`, requestOptions)// class subject course
-        .then(response => {if((response.status==(200))||(response.status==(201))){setJoined(true)};})
-        .catch((error)=>{
-        console.log('Error in fetch function '+ error);
-        });
+        .then(response => {       
+            if(response.status==(201))
+            {
+              Promise.resolve(response).then(response => response.json())
+              .then(data=>{setJoined(true);setClass_name(data.class_name);setClass_year(data.class_year);})
+            }
+            else if(response.status==(200))
+            {
+              Promise.resolve(response).then(response => response.json())
+              .then(data=>{setJoinedAlready(true);})
+        }}
+        ).catch((error)=>{
+            console.log('Error in fetch function '+ error)});
         setLoading(false);
         dispatch(loginRedirect('/'));
     };
@@ -77,10 +90,11 @@ function Invited(props) {
     return (
         <Grid container direction="column" align="center" Justify="space-evenly" className={classes.background} >  
         {
-            (role=="guest")?<Redirected pageProps={props}/>
-            :(role=="teacher"||role=="admin")?<p style={{margin:"auto"}}>Molimo prijavite se kao učenik :)</p>
+            (role==="guest")?<Redirected pageProps={props}/>
+            :(role==="teacher"||role==="admin")?<p style={{margin:"auto"}}>Molimo prijavite se kao učenik :)</p>
             :loading?<CircularProgress style={{margin:"auto"}} />
-            :joined?<p style={{margin:"auto"}}>Dodani ste :)</p>:<p style={{margin:"auto"}}>Niste dodani :(</p>
+            :joinedAlready?<p style={{margin:"auto"}}>Već ste bili dodani! :|</p>
+            :joined?<p style={{margin:"auto"}}>{`Dodani ste u ${class_name} ${class_year}:)`}</p>:<p style={{margin:"auto"}}>Niste dodani :(</p>
         }
         </Grid>
         

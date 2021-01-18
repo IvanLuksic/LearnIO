@@ -20,53 +20,22 @@ import AddCourseSubjectClass from './components/admin/addComponents/AddCourseSub
 import StudentCourses from './components/student/StudentCourses';
 import Invited from './pages/Invited';
 import { useDispatch} from 'react-redux';
-import {studentLogIn, adminLogIn, teacherLogIn} from './redux/actions/loginStatus';
+import {studentLogIn, adminLogIn, teacherLogIn , logOut} from './redux/actions/loginStatus';
 
 const theme = createMuiTheme({
     palette: {
       primary: {main: "#4372ec"},
       secondary: {main: "#EB4949"}
     },
-  });
+});
 
-function App() {
-  const offline= useSelector(state=>state.offline);
-  // const [openAddTopic,setOpenAddTopic]=useState(true);
-  const loginStatus = useSelector(state=> state.login);
-  let AdminFeatures=false;
-  let StudentFeatures=false;
-  let TeacherFeatures=false;
-  let GuestFeatures=false;
+const AppLoaded=(props)=>{
+  var AdminFeatures=false;
+  var StudentFeatures=false;
+  var TeacherFeatures=false;
+  var GuestFeatures=false;
 
-
-  const dispatch = useDispatch();
-
-  if(!offline)
-  {
-    const requestOptions = {
-      method: 'GET',
-      mode:'cors',
-      headers: { 'Content-Type': 'application/json'},
-      credentials: 'include'
-    };
-
-    fetch(`/api/checklogin`, requestOptions)//class_id subject_id course_id topic_id
-    .then((response)=>{
-      if(response.status===200)
-      {
-        Promise.resolve(response).then(response => response.json())
-          .then(data => {
-              if(data.role==1){{dispatch(adminLogIn())}}
-              else if(data.role==2){{dispatch(teacherLogIn())}}
-              else if(data.role==3){{dispatch(studentLogIn())}}
-          })
-      }      
-    })
-    .catch((error)=> {console.log('Error in fetch function '+ error);});
-  };
-
-
-  switch(loginStatus){
+  switch(props.loginStatus){
     case 'admin':{
       AdminFeatures=true;
       StudentFeatures=false;
@@ -103,7 +72,7 @@ function App() {
     }
   }
 
-    return (
+  return (
         <div className="App" style={{height: '100vh'}} >
           <ThemeProvider theme={theme}>
               <Navbar/>
@@ -119,7 +88,7 @@ function App() {
                     {/* {StudentFeatures&&<Route path="/topics"component={StudentTopics}/>} */}
                     {StudentFeatures&&<Route exact path="/student/topic/:class_id/:subject_id/:unit_id/:topic_id" component={StudentMatrix}/>}
                     {StudentFeatures&&<Route exact path="/student/subjects" component={StudentSubjects}/>}
-                    {(StudentFeatures||GuestFeatures)&&<Route exact path="/invite/:code" component={Invited}/>}
+                    {<Route exact path="/invite/:code" component={Invited}/>}
                     {(AdminFeatures||TeacherFeatures)&&<Route exact path="/admin-topic/:id" component={AdminMatrix}/>}
                     {/* {AdminFeatures&&<Route exact path="/addtopic"><AddTopicPU openAddTopic={openAddTopic} setOpenAddTopic={setOpenAddTopic}/></Route>} */}
                     {(AdminFeatures||TeacherFeatures)&&<Route exact path="/AdminTopics" component={AdminTopics}/>}
@@ -132,9 +101,65 @@ function App() {
 
           </ThemeProvider>
         </div>
-
     );
-}
+};
+
+function App() {
+  const offline= useSelector(state=>state.offline);
+  // const [openAddTopic,setOpenAddTopic]=useState(true);
+
+
+
+  const dispatch = useDispatch();
+  const loginStatus = useSelector(state=>state.login);
+  const [loading, setLoading] = useState(()=>true);
+
+
+  if((!offline)&&(loading))
+  {
+    const requestOptions = {
+      method: 'GET',
+      mode:'cors',
+      headers: { 'Content-Type': 'application/json'},
+      credentials: 'include'
+    };
+
+    fetch(`/api/checklogin`, requestOptions)//class_id subject_id course_id topic_id
+    .then((response)=>{
+      if(response.status===200)
+      {
+        Promise.resolve(response).then(response => response.json())
+          .then(data => {
+              if(data.role==1){{dispatch(adminLogIn());}}
+              else if(data.role==2){{dispatch(teacherLogIn());}}
+              else if(data.role==3){{dispatch(studentLogIn());}}
+              setLoading(false);
+              
+          })     
+    }
+    else if(response.status===401)
+    {
+      Promise.resolve(response).then(response => response.json())
+        .then(data => {
+            setLoading(false);
+        })     
+    }
+  })
+    .catch((error)=> { console.log('Error in fetch function '+ error);});
+  };
+
+  return(
+
+    loading?<div className="App" style={{height: '100vh'}} >
+              <ThemeProvider theme={theme}>
+                <Navbar/>
+              {/* <Button onClick={()=>{dispatch(studentLogIn());console.log(loginStatus);}}>Student </Button>
+              <Button  onClick={()=>{dispatch(adminLogIn());console.log(loginStatus);}}>Admin </Button> */}
+                </ThemeProvider>
+              </div>
+            :<AppLoaded loginStatus={loginStatus}/>
+  );
+};
 
 export default App;
 
