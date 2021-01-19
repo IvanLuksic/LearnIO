@@ -46,7 +46,7 @@ function AddCourseSubjectClass() {
 
   let actionsStart = [
     { icon: <Icon>apps</Icon>, name: 'Add topic', operation: 'addtopic' },
-    { icon: <Icon>list_icon</Icon>, name: 'Add course', operation: 'addcourse' },
+    { icon: <Icon>list_icon</Icon>, name: 'Add unit', operation: 'addcourse' },
   ];
 
   if(role=="admin"){
@@ -162,7 +162,7 @@ function AddCourseSubjectClass() {
         : null
       }{
         popupOpen && index === 5 ? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
-          <AddTopicPU  closePopup={closePopup} setSnackbarOpen={()=>setSnackOpen} setSnackbarText={()=>setSnackbarText} setSnackbarStatus={()=>setSnackbarStatus} />
+          <AddTopicPU  closePopup={closePopup} setSnackbarOpen={setSnackOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus} />
         </PopupDialog>
         : null
       }

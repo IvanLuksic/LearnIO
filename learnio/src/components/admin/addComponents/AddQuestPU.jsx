@@ -390,7 +390,7 @@ function AddQuestPU(props) {
         <ButtonGroup orientation="vertical" variant="contained">
           <Button variant="contained" onClick={() => [setShow1(true),setShow2(false),setShow3(false)]} className={classes.buttonsInGroup}>{show1&&<Icon>keyboard_arrow_right</Icon>}Question</Button>
           <Button variant="contained" onClick={() => [setShow1(false),setShow2(true),setShow3(false)]} className={classes.buttonsInGroup}>{show2&&<Icon>keyboard_arrow_right</Icon>}Answers</Button>
-          <Button variant="contained" onClick={() => [setShow1(false),setShow2(false),setShow3(true),ieSetTestCourses()]} className={classes.buttonsInGroup}>{show3&&<Icon>keyboard_arrow_right</Icon>}Insert existing</Button>
+          {/* <Button variant="contained" onClick={() => [setShow1(false),setShow2(false),setShow3(true),ieSetTestCourses()]} className={classes.buttonsInGroup}>{show3&&<Icon>keyboard_arrow_right</Icon>}Insert existing</Button> */}
         </ButtonGroup>
       </Grid>
       <Grid item>
@@ -457,7 +457,7 @@ function AddQuestPU(props) {
           </Grid>
           : null
         }
-        {
+        {/* {
           show3 ? // third case - insert existing
             <Grid container item className={classes.editText} xs={12} md={8} direction="column" spacing={5}>
               <Grid container item xs={12}>
@@ -499,7 +499,7 @@ function AddQuestPU(props) {
               </Grid>
             </Grid>
             : null
-          }
+          } */}
   </Grid>
   );
 }

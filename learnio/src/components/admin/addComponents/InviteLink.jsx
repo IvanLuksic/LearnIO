@@ -69,7 +69,7 @@ function InviteLink(props){
         };
 
         let apiUri;
-        if(role==="admin") apiUri='/api/all/classes'
+        if(role==="admin") apiUri='/api/admin/all/classes'
         else if(role==="teacher") apiUri='/api/teacher/all/classes';
 
         fetch(apiUri, requestOptions)

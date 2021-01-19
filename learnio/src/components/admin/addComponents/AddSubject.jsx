@@ -179,7 +179,7 @@ export default function AddSubject(props) {
                     {classIDs.map((classID) => (
                         <MenuItem key={classID.class_id} value={classID}>
                             <Checkbox checked={classCheck.indexOf(classID) > -1} />
-                            <ListItemText primary={`#${classID.class_id}  ${classID.class_name}`} />
+                            <ListItemText primary={`${classID.class_name}`} />
                         </MenuItem>
                     ))}
                 </Select>

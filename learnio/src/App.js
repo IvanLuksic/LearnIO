@@ -150,7 +150,7 @@ function App() {
 
   return(
 
-    loading?<div className="App" style={{height: '100vh'}} >
+    (loading&&(!offline))?<div className="App" style={{height: '100vh'}} >
               <ThemeProvider theme={theme}>
                 <Navbar/>
               {/* <Button onClick={()=>{dispatch(studentLogIn());console.log(loginStatus);}}>Student </Button>

@@ -282,7 +282,7 @@ function AdminTopics(props){
             </div>
 
             <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
-              <AddTopicPU closePopup={handleClose} addTopic={addQuestion} setSnackbarOpen={()=>setSnackbarOpen(true)} setSnackbarText={()=>setSnackbarText} setSnackbarStatus={()=>setSnackbarStatus}/>
+              <AddTopicPU closePopup={handleClose} addTopic={addQuestion} setSnackbarOpen={setSnackbarOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus}/>
             </PopupDialog>
           </div>
           }
