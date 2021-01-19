@@ -51,6 +51,7 @@ module.exports={
                 isNotEmpty:true,
                 items:{
                     type:"string",
+                    isNotEmpty:true,//ne smi bit prazan string unutar niza
                     maxLength:50
                 }
             }

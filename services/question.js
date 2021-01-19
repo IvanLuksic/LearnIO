@@ -317,6 +317,7 @@ module.exports=class question{
                     replacements: {pos:x,student_id:students_id,course_id:courses_id,subject_id:subjects_id,class_id:clas_id, topic_id: topics_id },
                     type: QueryTypes.SELECT
                    });//POS:X-> X JE STUPAC TOCNO ODGOVORENOG PITANJA -> TAJ ČLAN NIZA UVEĆAVAMO ZA 1
+                   this.Logger.info('Results array by columns updated');
             } catch (error) {
                 this.Logger.error('Error in updating results');
                 throw(error);

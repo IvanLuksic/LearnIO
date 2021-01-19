@@ -620,7 +620,7 @@ module.exports=class topic{
                 this.Logger.error('Error in fetching topic and grades from dattaabse');
                 throw(error);
             }
-            this.Logger.info('Topic id and grades succesguly fetched from datatabse');
+            this.Logger.info('Passed topics succesfuly loaded from database');
             for(let i=0;i<passed_topics.length;i++)
             this.Logger.info(JSON.stringify(passed_topics[i]));
             //2. IZVUC SE source topice KOJI SU U TABLICI TAGS_OF_TOPIC A KOJI SU ZAKLJUCANI-> NISU U TABLICI REZULTATIT-> LEFT JOIN
@@ -651,7 +651,7 @@ module.exports=class topic{
                     this.Logger.error('Error in fetching asscoaited topics and required level');
                     throw(error);
                 }
-
+                this.Logger.info('All associated topics for source_topic_id='+source.source_topic);
                 for(let i=0;i<associated.length;i++)
                 this.Logger.info(JSON.stringify(associated[i]));
                 //4. Za SVAKI povezani topic iz gornje dobivenog niza associated gledamo:
@@ -664,7 +664,7 @@ module.exports=class topic{
                     {
                         if(assoc.associated_topic==pass.topic_id && pass.grade>=assoc.required_level)//ako za NEKI povezani topic ovo ne vrijedi-> NISMO GA NASLIO U LISTI POLOZENIH ILI NIJE DOVOLJNA OCJENA-> break->MORA VRIJEDIT ZA SVE-> IZADI IZ PETLJE associated topoica i idi na listu povezanih topica od iduceg source topica
                         {
-                            this.Logger.info('nasli ga');
+                            this.Logger.info('nasli ga-> uvjet za '+assoc.associated_topic+' je zadovoljen');
                             temp=1;
                             break;//izadi iz petlje-> NASLI SMO GA I IMA ODGOVORAJUCU OCJENU-> PROVJERAVAMO TO ZA IDUCI ASSOCIATED
                         }
@@ -679,7 +679,8 @@ module.exports=class topic{
                 if(temp==0)//MOZE SE OTKLJUCATI-> UBACI GA U TABLICU REZULTATI->DA NE MOZE BIO BI temp=1!!!!
                 {
                     try {
-                        this.Result_instance.insertIntoResults(subjects_id,courses_id,source.source_topic,clas_id,students_id);//spremi u tabliocu rezultati preko funkcije definirane u result serviceima
+                        this.Logger.info('Uvjeti za otkljucavanje topica '+source.source_topic+' su zadovoljeni');
+                        await this.Result_instance.insertIntoResults(subjects_id,courses_id,source.source_topic,clas_id,students_id);//spremi u tabliocu rezultati preko funkcije definirane u result serviceima
                     } catch (error) {
                         this.Logger.error('Error in inserting into results table');
                         throw(error);

@@ -54,10 +54,10 @@ module.exports={
             next(error);
         }
     },
-    deleteStudent:async(req,res,next)=>
+    deleteUser:async(req,res,next)=>
     {
         try {
-            await User_instance.deleteStudentFromDB(req.params.student_id);
+            await User_instance.deleteUserFromDB(req.params.student_id);
             nodelogger.info('Student deleted from database');
             res.sendStatus(200);
         } catch (error) {

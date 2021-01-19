@@ -59,6 +59,9 @@ module.exports=class user {
                         id:clas_id
                     }
                 },
+                where:{//osiguramo se za svaki slucaj da dohvati samo studente
+                    user_type:process.env.STUDENT
+                }
             });
             let student_ids=[];
             for(let student of students)
@@ -74,7 +77,8 @@ module.exports=class user {
                 where:{
                     id:{
                         [Op.in]:student_ids
-                    }
+                    },
+                    user_type:process.env.STUDENT//doatno osiguranje da dohvati samo studente
                 }
             });
             let format=[];
@@ -139,6 +143,9 @@ module.exports=class user {
                         model:this.Clas,
                         as:'classes_student',
                         through: { attributes: [] },
+                    },
+                    where:{
+                        user_type:process.env.STUDENT
                     }
                 });
             } catch (error) {
@@ -196,7 +203,7 @@ module.exports=class user {
                         attributes:['id'],
                         through: { attributes: [] },
                         as:'classes_student',
-                        include:{
+                        include:{//JOINAT SVE RAZREDE S UCITELJEM-> OSTANU SAMO ONI RAZREDI KOJIMA PREDAJE TAJ UCITELJ
                             model:this.User,
                             attributes:['id'],
                             through: { attributes: [] },
@@ -205,6 +212,9 @@ module.exports=class user {
                                 id:teachers_id
                             }
                         }
+                    },
+                    where:{
+                        user_type:process.env.STUDENT//DOHVATI SAMO STUDENTE,OSIGURAMO SE ZA SVAKI SLUCAJ
                     }
                 });
                 this.Logger.info('Student ids fetched correctly');
@@ -271,7 +281,10 @@ module.exports=class user {
     {
         try {
             const students=await this.User.findAll({
-                attributes:['id','name','surname','mail','username','created_at']
+                attributes:['id','name','surname','mail','username','created_at'],
+                where:{
+                    user_type:process.env.STUDENT
+                }
             });
             let format=[];
             let temp={};
@@ -297,7 +310,7 @@ module.exports=class user {
             throw(error);
         }
     }
-    async deleteStudentFromDB(user_id)//izbrisi sve sta ima veze s userom u bazi
+    async deleteUserFromDB(user_id)//izbrisi sve sta ima veze s userom u bazi
     {
         try {
             // Prvo ispitat jeli teacher jer za njega moramo brisat dio u tablici teacher subject a za ADMINA ili TEACHERA BRISAT i dio u INVITE LINK
@@ -351,7 +364,7 @@ module.exports=class user {
                 }
             });
         } catch (error) {
-            this.Logger.error('Error in function deleteStudentFromDB'+error);
+            this.Logger.error('Error in function deleteUsertFromDB'+error);
             throw(error);
         }
     }

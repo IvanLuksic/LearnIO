@@ -17,6 +17,6 @@ module.exports=function(main_ruter)
     user.get('/admin/students/all/class',authenticate_admin,user_controler.getAllStudentsWithAllClasses);//dohvat svih studenta s razredima tim
     user.get('/teacher/students/all/class',authenticate_teacher,user_controler.getAllStudentsWithAllClassesForTeacher);//dohvat svih studenta kojima predaje taj ucitelj
     user.get('/students/all',authenticate_admin,user_controler.getAllStudentsForAdmin);//dohvat svih studenta bez razreda
-    user.delete('/students/delete/:student_id',authenticate_admin,user_controler.deleteStudent);
+    user.delete('/students/delete/:student_id',authenticate_admin,user_controler.deleteUser);
     user.put('/students/update',authenticate_admin,user_controler.updateStudent);
 }
