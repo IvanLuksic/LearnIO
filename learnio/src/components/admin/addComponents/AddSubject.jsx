@@ -174,8 +174,8 @@ export default function AddSubject(props) {
             <Typography className={classes.topicTitle}>Subject</Typography>
             <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Subject name"/>
             <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel>Subjects</InputLabel>
-                <Select  multiple label="Subjects" value={classCheck} onChange={handleClassCheck} renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.class_name}`); return array.join(`, `);} } MenuProps={MenuProps}>
+                <InputLabel>Classes</InputLabel>
+                <Select  multiple label="Classes" value={classCheck} onChange={handleClassCheck} renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.class_name}`); return array.join(`, `);} } MenuProps={MenuProps}>
                     {classIDs.map((classID) => (
                         <MenuItem key={classID.class_id} value={classID}>
                             <Checkbox checked={classCheck.indexOf(classID) > -1} />
