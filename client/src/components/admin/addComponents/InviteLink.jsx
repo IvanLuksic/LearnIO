@@ -97,7 +97,7 @@ function InviteLink(props){
 
         fetch(apiUri, requestOptions)// class subject course
         .then(response => response.json())
-        .then(data=>setUrl(`http://localhost:3001/invite/${data.link}`))
+        .then(data=>setUrl(`https://learn1o.herokuapp.com/invite/${data.link}`))
         .catch((error)=>{console.log('Error in fetch function '+ error)});
     };
     function copyToClipboard(e) {

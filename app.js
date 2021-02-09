@@ -18,19 +18,9 @@ async function start()
 
 start(); 
 
-app.get('/admin/*', (req,res) => {})
-app.get('/student/*', (req,res) => {})
-app.get('/teacher/*', (req,res) => {})
+app.get('/api/*', (req,res) => {})
+
 app.use(express.static(path.join(__dirname, '/client/build')))
 app.get('/', (req,res) => {
-    res.sendFile(path.join(__dirname, '/client/build', 'index.html'))
-})
-app.get('/login', (req,res) => {
-    res.sendFile(path.join(__dirname, '/client/build', 'index.html'))
-})
-app.get('/topics', (req,res) => {
-    res.sendFile(path.join(__dirname, '/client/build', 'index.html'))
-})
-app.get('/AdminTopics', (req,res) => {
     res.sendFile(path.join(__dirname, '/client/build', 'index.html'))
 })

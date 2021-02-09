@@ -66,11 +66,9 @@ module.exports={
             //STAVITI TRENUTAK LOGOUTA U SESSION TABLICI-> pronaći redak di je user_id iz sessiona i di je timestamp_LOGOUT =null jer može bit više zapisa prethodnih za tog usera ali u njima je vec prethodno postavljen LOGOUT na neko vrijeme
             Session_instance.Logout_time(req.session.user);//poslat user_id
             res.clearCookie('user_sid',{//BRISANJE COOKIEJA NAKON LOGOUT-> NAVEST IME COOKIEA I SVE OPCIJE
-                path: '/',
-                httpOnly: true,
-                domain:'localhost',
+                path: '/',   
                 sameSite:'lax',
-                secure:false
+                secure:true
             });
             req.session.destroy();//IZBRISE SESIJU IZ MEMORY STOREA
             res.sendStatus(204);//STATUS 204 No Content ako je sve dobro proslo
