@@ -13,7 +13,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import { useSelector} from 'react-redux';
 import Slider from '@material-ui/core/Slider';
-import fakeBackendTopics from '../../../sampleData/admin/allTopics.json';
+import fakeBackendTopics from '../../sampleData/admin/allTopics.json';
 
 
 const useStyles = makeStyles((theme)=>({
