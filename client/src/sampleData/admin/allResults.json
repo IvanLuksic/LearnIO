@@ -1,10 +1,7 @@
 [
     {
-<<<<<<< HEAD:client/src/components/admin/backendResults.json
-=======
         "student_id":1,
         "course_id":45,
->>>>>>> frontend:client/src/sampleData/admin/allResults.json
         "topic_id":1,
         "topic":"Trigonometry 1",
         "course": "Machine engineering",
@@ -20,11 +17,8 @@
         "class_year":"2019/2020"
     },
     {      
-<<<<<<< HEAD:client/src/components/admin/backendResults.json
-=======
         "student_id":3,
         "course_id":425,
->>>>>>> frontend:client/src/sampleData/admin/allResults.json
         "topic_id":2,
         "topic":"Trigonometry 1",
         "course": "Electric engineering",

@@ -38,11 +38,7 @@
                     "id":3,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Loredfsam ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -55,11 +51,7 @@
                     "id":4,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Loredfsam ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -72,11 +64,7 @@
                     "id":5,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, consectefadstur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -89,11 +77,7 @@
                     "id":6,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, conse123ctetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -107,11 +91,7 @@
                     "row_D":1,
                     "column_A":1,
                     "status":2,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, conseqwectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -124,11 +104,7 @@
                     "id":8,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, consecadsf543tetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":2,
                     "image_path":"https://cdn.jpegmini.com/user/images/slider_puffin_before_mobile.jpg",
                     "answer_a":null,
@@ -142,11 +118,7 @@
                     "row_D":1,
                     "column_A":1,
                     "id":9,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, consect43543etur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -165,11 +137,7 @@
                     "id":10,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, consectetur adip567756iscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -182,11 +150,7 @@
                     "id":212,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscifdsng elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -212,11 +176,7 @@
                     "id":68784,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, cfdsonsectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -229,11 +189,7 @@
                     "id":59789,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, consecvcbtetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -260,11 +216,7 @@
                     "row_D":1,
                     "column_A":1,
                     "status":2,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, consectdfgetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -277,11 +229,7 @@
                     "id":1568,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiqewqewscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":2,
                     "image_path":"https://cdn.jpegmini.com/user/images/slider_puffin_before_mobile.jpg",
                     "answer_a":null,
@@ -295,11 +243,7 @@
                     "row_D":1,
                     "column_A":1,
                     "id":9,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, consectetur adip,,,,,iscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -318,11 +262,7 @@
                     "id":17685,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, consectetur adi.piscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -335,11 +275,7 @@
                     "id":245,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, consectetur adi---piscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -365,11 +301,7 @@
                     "id":4532,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, consectetur adipisdsacing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
@@ -395,11 +327,7 @@
                     "id":1235,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lorem ipsum dolor sit amet, consectetur adipiscfdsing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",
