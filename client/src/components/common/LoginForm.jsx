@@ -71,11 +71,7 @@ function LoginForm(props){
             body: JSON.stringify({username:object.usernames, password:object.passwords}),
             credentials: 'include'
         };
-<<<<<<< HEAD:client/src/components/common/LoginForm.jsx
-        fetch('https://learn1o.herokuapp.com/login', requestOptions)
-=======
         fetch('/api/login', requestOptions)
->>>>>>> frontend:learnio/src/components/common/LoginForm.jsx
         .then((response)=>{
             if(response.status===200)
             {

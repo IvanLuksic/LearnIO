@@ -128,11 +128,7 @@ function Navbar(){
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
-<<<<<<< HEAD:client/src/components/common/Navbar.jsx
-      fetch(`https://learn1o.herokuapp.com/logout`, requestOptions)
-=======
       fetch(`/api/logout`, requestOptions)
->>>>>>> frontend:learnio/src/components/common/Navbar.jsx
       .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
 
