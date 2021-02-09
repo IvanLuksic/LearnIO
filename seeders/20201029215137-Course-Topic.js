@@ -16,10 +16,6 @@ module.exports = {
       topic_id:3
     },
     {
-     course_id:2,
-      topic_id:1
-    },
-    {
       course_id:3,
       topic_id:4
     }

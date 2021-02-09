@@ -8,22 +8,22 @@ module.exports={
                 minimum:1
             },
             answer_a:{
-                type:["number", "string"],
+                type:["null","number", "string"],
                 isNotEmpty: true,//definiran keyword u shema validatoru
                 maxLength:1000
             },
             answer_b:{
-                type:["number", "string"],
+                type:["null","number", "string"],
                 isNotEmpty: true,
                 maxLength:1000
             },
             answer_c:{
-                type:["number", "string"],
+                type:["null","number", "string"],
                 isNotEmpty: true,
                 maxLength:1000
             },
             answer_d:{
-                type:["number", "string"],
+                type:["null","number", "string"],
                 isNotEmpty: true,
                 maxLength:1000
             },
@@ -67,22 +67,22 @@ module.exports={
                 minimum:1
             },
             answer_a:{
-                type:["number", "string"],
+                type:["null","number", "string"],
                 isNotEmpty: true,
                 maxLength:1000
             },
             answer_b:{
-                type:["number", "string"],
+                type:["null","number", "string"],
                 isNotEmpty: true,
                 maxLength:1000
             },
             answer_c:{
-                type:["number", "string"],
+                type:["null","number", "string"],
                 isNotEmpty: true,
                 maxLength:1000
             },
             answer_d:{
-                type:["number", "string"],
+                type:["null","number", "string"],
                 isNotEmpty: true,
                 maxLength:1000
             },

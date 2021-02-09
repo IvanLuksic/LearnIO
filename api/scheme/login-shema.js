@@ -4,18 +4,30 @@ login:{
     type: "object",
     properties:{
         username:{
-            title:"username od korisnika",
             type:"string",
             isNotEmpty: true,
-            minLength:1
+            minLength:5,
+            maxLength:20
         },
         password:{
-            title:"Password od korosnika",
             type:"string",
             isNotEmpty: true,
-            minLength: 7
+            minLength: 7,
+            maxLength:70
         }
     },
     required:["username","password"]
+},
+username:{
+    title:"Shema za provjeru jeli username zauzet prije nego se posalje zahtjev za registraciju",
+    type:"object",
+    properties:{
+        username:{
+            type:"string",
+            isNotEmpty: true,
+            minLength:5,
+            maxLength:20
+        }
+    }
 }
 }

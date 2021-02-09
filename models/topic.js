@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
      /* this.belongsToMany(models.topic,{through: models.tags_of_topic,as: 'Sources',foreignKey: 'associated_topic'});
       this.belongsToMany(models.topic,{through: models.tags_of_topic,as: 'Associateds',foreignKey: 'source_topic'});*/
       this.belongsToMany(models.course,{through:'course_topic',as:'courses_topic',foreignKey: 'topic_id'});
-      this.belongsToMany(models.subject,{through:'topic_subject',as:'subject_topics',foreignKey:'subject_id'});
+      this.belongsToMany(models.asessment_objective,{through: 'topic_assesment',as: "assesments_topic",foreignKey:'topic_id'});
     }
   }
   topic.init({

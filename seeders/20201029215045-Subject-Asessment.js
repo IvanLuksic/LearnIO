@@ -2,29 +2,29 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-  await queryInterface.bulkInsert('subject_assesment',[
+  await queryInterface.bulkInsert('topic_assesment',[
     {
-      subject_id:1,
+      topic_id:1,
       asessment_id:1
     },
     {
-     subject_id:1,
+      topic_id:1,
       asessment_id:2
     },
     {
-     subject_id:1,
+      topic_id:1,
       asessment_id:3
     },
     {
-      subject_id:2,
+      topic_id:2,
       asessment_id:1
     },
     {
-      subject_id:2,
+      topic_id:2,
       asessment_id:2
     },
     {
-      subject_id:2,
+      topic_id:2,
       asessment_id:3
     }
   ]);
@@ -32,7 +32,7 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
   
-     await queryInterface.bulkDelete('subject_assesment', null, {});
+     await queryInterface.bulkDelete('topic_assesment', null, {});
      
   }
 };

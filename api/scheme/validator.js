@@ -1,7 +1,9 @@
 // Source: https://gist.github.com/CacheControl/79dd9f5c7e7f798f368e#file-medium-api-parameters-middleware-js
 const Ajv = require("ajv");//instalirat ovaj validator
 //VALIDATOR KOJI PROVJERAVA JESU LI DANI PODACI U SKLADU SA SHEMOM
+ addFormats=require('ajv-formats');//UKLJUCIT AJV FORMATE UZ NPM INSTALL TU SE NALAZE RAZNI FORMATI npr mail.date,....
 const ajv = new Ajv.default({ allErrors: true, removeAdditional: true });
+addFormats(ajv)
 ajv.addKeyword('isNotEmpty', {//SPRJEČAVA DA NE UNSEE PRAZAN STRING JER AKO STAVIMO minlength 1 onda prolazi prazan string sa space samo
   type: 'string',//SPRJEČAVA SVE VRSTE PRAZNIH STRINGOVA/SPACEOVA BILO KOJE DULJINE
   validate: function (schema, data) {

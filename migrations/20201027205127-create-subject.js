@@ -11,9 +11,6 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      column_number: {
-        type: Sequelize.INTEGER
-      },
     });
   },
   down: async (queryInterface, Sequelize) => {

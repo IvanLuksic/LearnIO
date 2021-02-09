@@ -9,8 +9,8 @@ const { QueryTypes } = require('sequelize');
                         STATUS 3=SIVO-> ZAKLJUCANO 
                         STATUS 4=ZELENO->TOCNO*/
 module.exports=class question{
-    constructor(question,topic,save,course,user,result,logger)//svi dependency modeli od ove klase
-    {
+    constructor(question,topic,save,course,user,result,topic_instance,logger)//svi dependency modeli od ove klase
+    {//topic instance nam treba kod otkljucavanja povezanih topic nakon tocno odgovorenig pitanja
         this.Question=question;
         this.Logger=logger;
         this.Topic=topic;
@@ -18,6 +18,7 @@ module.exports=class question{
         this.Course=course;
         this.User=user;
         this.Result=result;
+        this.Topic_instance=topic_instance;
     }
     //JSON.stringify RADI STRING, JSON.parse VRAĆA OBJEKT U JSON TIPU
      async getQuestionsFromSave(topics_id,courses_id,users_id,clas_id,subjects_id)//za odredeni topic,usera kurs razred i predmet izvuc pitanja iz tog topica i slozit ih po retcima i stupcima i vratit na frontend
@@ -32,6 +33,7 @@ module.exports=class question{
                 }
             });
         } catch (error) {
+            this.Logger.error('Error in fetching topic number of rows and columns');
             throw(error);//idi na vanjski error handler-> OVO RADIMO ZATO JER BI SE ODI HANDLEA ERROR I DALJE BI SE SVE NASTAVILO RADIT NORMALNO A MI ZELIMO SVE PREKINUTI I IZACI IZ FUNKCIJE PA IDEMO SKROZ DO VANJSKOG ERROR HANDLEARA
         }
         this.Logger.info(rows_columns.topic.rows_D+' '+rows_columns.topic.column_numbers);
@@ -48,6 +50,7 @@ module.exports=class question{
                 },
             });
         } catch (error) {
+            this.Logger.error('Error in fetching questions from table save');
             throw(error);
         }
         //3. soritraj pitanja po retcima i stupcima sa 2 for petlje-> matrica json objekata sa podacima od pitanja 
@@ -87,8 +90,8 @@ module.exports=class question{
         this.Logger.info(JSON.stringify(matrica[i]));
         return matrica;//nju vracamo-> U NJOJ BI TREBAO BITI ISPRAVAN REDOSLIJED PITANJA PO RETCIMA I STUPCIMA
     } catch (error) {
-            this.Logger.error('error in readingquestions '+ error);
-            throw(error);//za index.js catch
+            this.Logger.error('error in function getQuestionsFromSave'+ error);
+            throw(error);//za express error midleware
         }
 
     }
@@ -132,7 +135,7 @@ module.exports=class question{
                         });
                         this.Logger.info('Succesfully readquestions');
                     } catch (error) {
-                        this.Logger.error('Error in readingquestions fromquestionS table');
+                        this.Logger.error('Error in readingquestions from questions table');
                         throw(error);
                     }
                     random=Math.floor(Math.random() *questions_ij.length);//random broj izmedu 0 i duljine niza -1
@@ -171,7 +174,7 @@ module.exports=class question{
             }
 
         } catch (error) {
-            this.Logger.error('Error in generatingquestions '+error);
+            this.Logger.error('Error in function generateQuestions '+error);
             throw(error);//za index.js
         }
        
@@ -213,7 +216,7 @@ module.exports=class question{
             this.Logger.info(JSON.stringify(format[i]));
             return format;
         } catch (error) {
-            this.Logger.error('Error in getQuestionsForA0D '+error);
+            this.Logger.error('Error in function getQuestionsForAllA0D '+error);
             throw(error);
         }
     }
@@ -270,12 +273,12 @@ module.exports=class question{
             throw(new Error);
         }//JAVI ERROR JER SE U NORMALNIM OKOLNOSTIMA NEBI SMILO DOC DO POZIVA CHECKANSWER ZA ZAKLJUCANO PITANJE
         } catch (error) {
-            this.Logger.error('Error in checkAnswer '+error);
+            this.Logger.error('Error in function checkAnswer '+error);
             throw(error);
         }
 
     }
-    async unlockQuestionsAndUpdateResults(students_id,topics_id,courses_id,clas_id,subjects_id,questions_id)//promjena statusa questiona u tablici save
+    async unlockQuestionsAndUpdateResultsAndGrade(students_id,topics_id,courses_id,clas_id,subjects_id,questions_id)//promjena statusa questiona u tablici save
     {
         //1. saznaj poziciju u retku i stupcu od togquestiona
         try {
@@ -295,7 +298,7 @@ module.exports=class question{
                  } );
                 this.Logger.info('topic fetched succesfully from database');
             } catch (error) {
-                this.Logger.error('error in fetchingquestion from database '+error);
+                this.Logger.error('error in fetchingquestion from database ');
                 throw(error);
             }
             //koordinate tocnog pitanja u matrici
@@ -306,7 +309,7 @@ module.exports=class question{
             const rows=topic.rows_D;
             const columns=topic.column_numbers;
             this.Logger.info('Broj redaka i stupaca matrice: '+rows+columns);
-            //update rezultat-> povećaj vrijednost od tog stupca za 1 u tablici rezultati
+            //UPDATE REZULTAT-> povećaj vrijednost od tog stupca za 1 u tablici rezultati
             try {//KORISTILI RAW QUERY JER SA UPDATE NE RADI KO ZNA ZAŠTO
                 //U POSTGRESU SE ARRAY BROJI OD INDEKSA 1-> ako je x=2 onda je to drugi član niza
                 const result=await sequelize.query('UPDATE result SET result_array_by_columns[:pos]=result_array_by_columns[:pos]+1 WHERE student_id=:student_id AND topic_id=:topic_id AND course_id=:course_id AND class_id=:class_id AND subject_id=:subject_id ',{
@@ -314,8 +317,70 @@ module.exports=class question{
                     replacements: {pos:x,student_id:students_id,course_id:courses_id,subject_id:subjects_id,class_id:clas_id, topic_id: topics_id },
                     type: QueryTypes.SELECT
                    });//POS:X-> X JE STUPAC TOCNO ODGOVORENOG PITANJA -> TAJ ČLAN NIZA UVEĆAVAMO ZA 1
+                   this.Logger.info('Results array by columns updated');
             } catch (error) {
                 this.Logger.error('Error in updating results');
+                throw(error);
+            }
+            //UPDATE OCJENA->
+            try {
+                let results=await this.Result.findOne({
+                    attributes:['result_array_by_columns'],
+                    where:{
+                        student_id:students_id,
+                        class_id:clas_id,
+                        topic_id:topics_id,
+                        subject_id:subjects_id,
+                        course_id:courses_id
+                    }
+                });
+                let points=0;//zbroj svih bodova
+                //zbroji sve bodove pa onda vidi koliko je to % u odnosu na broj redaka i stupaca->NJIH IMAMO SPREMLJENE U ROWS I COLUMNS VARIJABLAMA
+                for(let i=0;i<results.result_array_by_columns.length;i++)
+                points+=parseInt(results.result_array_by_columns[i],10);
+               this.Logger.info('Points: '+points);
+                var grade=0;
+                const percent=points*100/(rows*columns);//ukupni broj polja u matrici je broj redaka*broj stupaca
+                this.Logger.info(percent+'%');
+                if(percent<50)
+                {
+                    grade=1;
+                }
+                else if(percent>=50 && percent<60)
+                {
+                    grade=2;
+                }
+                else if(percent>=60 && percent <75)
+                {
+                    grade=3;
+                }
+                else if(percent>=75 &&percent<90)
+                {
+                    grade=4;
+                }
+                else grade=5;
+                this.Logger.info('Grade: '+grade);
+                await this.Result.update({grade:grade},{
+                    where:{
+                        student_id:students_id,
+                        class_id:clas_id,
+                        topic_id:topics_id,
+                        subject_id:subjects_id,
+                        course_id:courses_id
+                    }
+                });
+            } catch (error) {
+                this.Logger.error('Error in reading results or updating grade');
+                throw(error);
+            }
+            if(grade>2)//VIDI JELI SE MOGU OTKLJUCAT NEKI TOPICI KOJIMA JE OVAJ TOPIC UVJET JER JE ZADOVLJEN MINIMALNI UVJET OCJENA=2,NEMA SMISLA PROVJERAVAT AKO JE OCJENA=1
+            {
+                try {
+                    await this.Topic_instance.unlockAssociatedTopics(students_id,clas_id,courses_id,subjects_id);
+                } catch (error) {
+                    this.Logger.error('Error in unlocking associated topics');
+                    throw(error);
+                }
             }
             //za pocetak otkljucaj susjedne-> otkljucaj livo desno i dole i gore ako postoje
             //vidit koji sve postoje pa onda citat iz baze a ne da citamo za svako pitanje-> bolje performanse i manje pristupa bazi
@@ -398,11 +463,11 @@ module.exports=class question{
                 });
                 this.Logger.info('question status changed succesfully');
             } catch (error) {
-                this.Logger.error('Error in updating status ofquestions '+error);
+                this.Logger.error('Error in updating status of questions');
                 throw(error);
             }
         } catch (error) {
-            this.Logger.error('Error in unlockingquestions '+error);
+            this.Logger.error('Error in function unlockQuestionsAndUpdateResultsAndGrade '+error);
             throw(error);
         }
     }
@@ -427,7 +492,7 @@ module.exports=class question{
                 throw(error);
             }
         } catch (error) {
-            this.Logger.error('Error in changing wrong answer status '+error);
+            this.Logger.error('Error in function wrongAnswer '+error);
             throw(error);
         }
     }
@@ -464,7 +529,7 @@ module.exports=class question{
             question.answer_c=request_body.answer_c;
             question.answer_d=request_body.answer_d;
             await question.save();
-            this.Logger.info('question updated succsefully');
+            this.Logger.info('question updated succesfully');
         } catch (error) {
             this.Logger.error('Error in function updateQuestion in dataabse '+error);
             throw(error);

@@ -12,10 +12,12 @@ module.exports={
                 throw(error);
             }
             if(user && user.password===password)//ako je user =NULL -> vratit ce NULL i nece uci u if
-            {   
-               
-                req.session.user=user.id;//ako je loadan napravimo mu session id
+            {  //KAD SE POZOVE req.session TADA SESSION MIDDLEWARE RADI COOKIE I SESSION OBJEKT SVE ZA NAS I DODAJE GA U REQUEST TAKO DA MU PRISTUPAMO PREKO req.session kao normalnom objektu kojen možemo i dodavat propertiese
+               nodelogger.info('Tu smooo'+user.id+user.user_type);
+                req.session.user=user.id;//REQ.SESSION JE COOKIE OBJEKT-> NA OVAJ NAČIN MU DODAJEMO COOKIE PROPERTIESE KOJI SE SPREMAJU NA SERVERSKOJ STRANI(U MEMORY STOREU U BAZI) A SAMO SE COOKIE PROPEERTIESI ŠALJU KLIJENTU
                 req.session.user_type=user.user_type;
+                nodelogger.info('Postavili smo:'+req.session.user+req.session.user_type);
+                nodelogger.info(req.sessionID);
                 try {
                     await Session_instance.createSession(user.id);//pohrani ga u sesiju za pracenje aktivnosti
                 } catch (error) {
@@ -44,33 +46,46 @@ module.exports={
                 res.status(401).json({role: null });
             }
         } catch (err) {
-            nodelogger.error('Error in login controler'+err);
+            nodelogger.error('Error in login controler-login');
             next(err);//idii na error middleware handler
         }
     },
-    restoresesion:async(req,res)=>{//ovdje dode kada login pozove next()-> ako je tu dosao onda je vec logiran unutra pa ga trebamo samo preusmjerit na zadanu rutu
-            if(req.session.user_type===1)//admin
-                {
-                nodelogger.info("Logging succesful");
-                res.redirect('/admin');
-                }
-                else if(req.session.user_type===2)//ucitelj
-                {
-                nodelogger.info("Logging succesful");
-                res.redirect('/teacher');
-                }
-                else {
-                nodelogger.info("Logging succesful");
-                res.redirect('/student');
-                }
-
+    restoreSession:async(req,res,next)=>{//ovdje dode kada login pozove next()-> ako je tu dosao onda POSTOJI SESSION COOKIE KOJI JOŠ VRIJEDI-> KORISNIK PRIPADA NEKOJ OD 3 ROLE unutra pa ga trebamo samo preusmjerit na zadanu rutu
+           try {//SAMO MU VRATIMO ROLU,AKO NIJE ULOGIRAN ONDA MU JE VEĆ VRAĆENA role=null u prethodnoj middleware funkciji
+            let format={};
+            format.role=req.session.user_type;
+            res.json(format);
+           } catch (error) {
+               nodelogger.error('Error in restoreSession');
+               next(error);
+           }
     },
     logout: async(req,res,next)=>{
         try {
-            req.session.destroy();//tribalo bi izbrisat sesiju iz memory storea
-            res.sendStatus(200);
+            nodelogger.info('User id:'+req.session.user);
+            //STAVITI TRENUTAK LOGOUTA U SESSION TABLICI-> pronaći redak di je user_id iz sessiona i di je timestamp_LOGOUT =null jer može bit više zapisa prethodnih za tog usera ali u njima je vec prethodno postavljen LOGOUT na neko vrijeme
+            Session_instance.Logout_time(req.session.user);//poslat user_id
+            res.clearCookie('user_sid',{//BRISANJE COOKIEJA NAKON LOGOUT-> NAVEST IME COOKIEA I SVE OPCIJE
+                path: '/',
+                httpOnly: true,
+                domain:'localhost',
+                sameSite:'lax',
+                secure:false
+            });
+            req.session.destroy();//IZBRISE SESIJU IZ MEMORY STOREA
+            res.sendStatus(204);//STATUS 204 No Content ako je sve dobro proslo
         } catch (error) {
-            nodelogger.info('Error in session deleting');
+            nodelogger.error('Error in session deleting-logout');
+            next(error);
+        }
+    },
+    checkUsername: async (req,res,next)=>
+    {
+        try {
+            let available=await Login_instance.checkAvailabilityOfUsername(req.body.username);//vrati objekt
+            res.json(available);
+        } catch (error) {
+            nodelogger.error('Error in checkUsername');
             next(error);
         }
     }

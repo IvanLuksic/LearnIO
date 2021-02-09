@@ -1,22 +1,29 @@
 const {Topic_instance,Question_instance}=require('../../services');
 const {nodelogger}=require('../../loaders/logger');
 module.exports={
-    getTopics:async (req,res,next)=>{//da bi dosaoo do ovde morao je proci autentikaciju-> ne treba se brinuti o tome ovde
+    getTopicsStudent:async (req,res,next)=>{//da bi dosaoo do ovde morao je proci autentikaciju-> ne treba se brinuti o tome ovde
         try {
-        const student_id= req.session.user;//u cookie se nalazi user id
-        nodelogger.info('Parametri: '+req.params.course_id+' '+req.params.subject_id+' '+student_id+' '+req.params.class_id);
+        nodelogger.info('Parametri: '+req.params.course_id+' '+req.params.subject_id+' '+req.session.user+' '+req.params.class_id);
         try {
-            var topics=await Topic_instance.getTopicsForUserAndCourse(student_id,req.params.course_id,req.params.subject_id,req.params.class_id);
+            var topics=await Topic_instance.getTopicsForStudent(req.session.user,req.params.course_id,req.params.subject_id,req.params.class_id);//dohvacamo za studenta samo one koji su mu otkljujcani odnosno nalaze se u tablici rezultati
         } catch (error) {
-            nodelogger.error('Error in fetching topics frrom database '+error);
+            nodelogger.error('Error in fetching topics frrom database ');
             throw(error);
         }
-        nodelogger.info('Fetched succesfuly from database');
         res.json(topics);//dodaj u resposne objekt-> RESPOSNE NEMA BODY OBJEKT-> OVAKO ŠALJEMO JSON OBJEKT U RESPOSNE BODYU
     } catch (error) {
-            nodelogger.error('Error in geting topics '+error);
+            nodelogger.error('Error in getTopics ');
             next(error);//idi na error midleware hadler-> on ce vratiti resposne i koja je greska
     }
+    },
+    getTopicsFromCourse:async (req,res,next)=>
+    {
+        try {
+            let topics=await Topic_instance.getAllTopicsFromCourse(req.params.course_id);
+            res.json(topics);
+        } catch (error) {
+            nodelogger.error('Eror in getTopicsFromCourse');
+        }
     },
     getAdminTopics:async(req,res,next)=>//AKO JE DOSAO DO OVDE ONDA JE ADMIN-> VRATI MU SVE TOPICE
     {
@@ -31,7 +38,24 @@ module.exports={
             response.Topics=topics;
             res.json(response);
         } catch (error) {
-            nodelogger.error('Error in fetching admin topics from database');
+            nodelogger.error('Error in getAdminTopics');
+            next(error);
+        }
+    },
+    getTeacherTopics:async (req,res,next)=>
+    {
+        try {
+            try {
+                var topics=await Topic_instance.getAllTopicsForTeacher(req.session.user);//dati mu id od ucitelja
+            } catch (error) {
+                nodelogger.error('Error in fetching topics for teacher');
+                throw(error);
+            }
+            let response={};
+            response.Topics=topics;
+            res.json(response);
+        } catch (error) {
+            nodelogger.error('Error in getTeacherTopics');
             next(error);
         }
     },
@@ -62,7 +86,7 @@ module.exports={
             response.fields=questions;
             res.json(response);
         } catch (error) {
-            nodelogger.error('Error in fetching topic info for admin');
+            nodelogger.error('Error in  getAdminTopicsEdit');
             next(error);
         }
     },
@@ -71,7 +95,7 @@ module.exports={
         try {
             nodelogger.info("parametar: "+req.params.topic_id);
             try {
-                var associated=await Topic_instance.associatedTopics(req.params.topic_id);
+                var associated=await Topic_instance.associatedTopics(req.params.subject_id,req.params.topic_id);
             } catch (error) {
                 nodelogger.error('Error in fetching asscoaited topics from database');
                 throw(error);
@@ -80,18 +104,18 @@ module.exports={
             response.Associated=associated;
             res.json(response);
         } catch (error) {
-            nodelogger.error('Error in getting associated topics');
+            nodelogger.error('Error in getting associated topics-associated');
             next(error);
         }
     },
     deleteTopic:async (req,res,next)=>
     {
         try {
-            await Topic_instance.deleteTopicFromEverywhere(req.params.topicID);
+            await Topic_instance.deleteTopicFromEverywhere(req.params.topic_id);
             nodelogger.info('Topic succesfuly deleted from database');
             res.sendStatus(200);
         } catch (error) {
-            nodelogger.error('Error in deleting topic form databaase'+error);
+            nodelogger.error('Error in deleteTopic');
             next(error);
         }
     },
@@ -106,16 +130,35 @@ module.exports={
             }
             res.json(subject_course);
         } catch (error) {
-            nodelogger.error('Error in getting subject courses pairs '+error);
+            nodelogger.error('Error in  getSubject_Courses');
+            next(error);
+        }
+    },
+    getSubject_Courses_Teacher:async(req,res,next)=>
+    {
+        try {
+            var subject_course=await Topic_instance.getSubject_CoursePairsForTeacher(req.session.user);
+            res.json(subject_course);
+        } catch (error) {
+            nodelogger.error('Error in getSubject_Courses_Teacher');
+            next(error);
+        }
+    },
+    getAssociatedFromSubject:async (req,res,next)=>
+    {
+        try {
+            var associated=await Topic_instance.getAllTopicsFromSubject(req.params.subject_id);
+            res.json(associated);
+        } catch (error) {
+            nodelogger.error('Error in getAssociatedFromSubject');
             next(error);
         }
     },
     addTopics: async (req,res,next)=>
     {
         try {
-            const {associated_topics_id,columns_AO,rows_D,course_id,subject_id,topic_name,topic_description}=req.body;
             try {
-                var added_topic_id=await Topic_instance.addTopic(associated_topics_id,columns_AO,rows_D,course_id,subject_id,topic_name,topic_description);
+                var added_topic_id=await Topic_instance.addTopic(req.body);
             } catch (error) {
                 nodelogger.info('Error in adding topic to database');
                 throw(error);
@@ -124,7 +167,7 @@ module.exports={
             response.topic_id=added_topic_id;
             res.json(response);
         } catch (error) {
-            nodelogger.error('Error in adding topic '+error);
+            nodelogger.error('Error in addTopics');
             next(error);
         }
     }

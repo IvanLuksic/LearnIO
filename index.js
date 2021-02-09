@@ -1,17 +1,27 @@
 const questionclass= require('./services/question');
 const topicclass= require('./services/topic');
 const resultclass=require('./services/result');
-const {question,sequelize,topic,save,course,user,subject,result,asessment_objective,clas}=require('./models');
+const clasclass=require('./services/class');
+const courseclass=require('./services/course');
+const subject_class=require('./services/subject');
+const userclass=require('./services/user');
+const inviteclass=require('./services/invite_link');
 const {nodelogger}=require('./loaders/logger');
-//const models=require('./models');
-instance=new questionclass(question,topic,save,course,user,result,nodelogger);
-//instance=new topicclass(models.topic,models.asessment_objective,models.course,models.subject,models.result,models.save,models.question,models.topic_subject,models.tags_of_topic,models.course_topic,nodelogger);
-//instance=new resultclass(result,user,subject,course,topic,asessment_objective,clas,nodelogger);
+const models=require('./models');
+//instance=new questionclass(question,topic,save,course,user,result,nodelogger);
+let result_instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger)
+let instance=new topicclass(models.topic,models.user,models.asessment_objective,models.topic_assesment, models.course,models.subject,models.result,models.save,models.question,models.tags_of_topic,models.course_topic,result_instance, nodelogger);
+//instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger);
+//instance=new clasclass(models.clas,models.user,models.class_student,models.subject,nodelogger);
+//instance=new courseclass(models.course,models.clas,models.subject,models.course_subject,models.topic,nodelogger);
+//instance=new subject_class(models.subject,models.clas,models.user,models.class_subject,nodelogger);
+//instance=new userclass(models.user,models.clas,models.class_student,models.result,models.save,models.session,models.teacher_subject,models.invite_links,nodelogger);
+//instance=new inviteclass(models.invite_links,models.class_student,models.clas,nodelogger);
 async function DatabaseConnection ()
 {
     console.log('Connecting to database....');
     try {
-        await sequelize.authenticate();
+        await models.sequelize.authenticate();
         console.log('Connected to database.');
     } catch (error) {
         console.log('Error in database connection '+error);
@@ -27,7 +37,7 @@ async function init()
        // const x= await instance.generateQuestions(1,1,1);
         //const x=await instance.unlockQuestions(1,1,1,17);//await zato jer vraca promise
          //const x=await instance.getTopicsForUserAndCourse(3,1,1);
-      // const x=await instance.getAsesmentsForTopic(1,1);
+      //const x=await instance.getAsesmentsForTopic(1);
        //nodelogger.info(JSON.stringify(x));
         //const x=await instance.associatedTopics(5);
        // nodelogger.info( await instance.isBlue(1,1,3));
@@ -45,9 +55,33 @@ async function init()
      //await instance.getAllTopicsForAdmin();
      //await instance.getTopicInfo(2);
      //await instance.getSubject_CoursePairs();
+    // await instance.getAllClassForStudent(5);
+    //await instance.getAllClassForTeacher(2);
+    //await instance.  getAllCoursesWithTopicsForSubject(2);
+   // await instance.getAllSubjectsForClass(1);
+        //await instance.unlockAssociatedTopics(3,1,1,1);
+        //await instance.getAllClassForAdmin();
+       //await instance.getAllStudentsForClass(2);
+      // await instance.getAllStudents();
+    // await instance.getSubject_CoursePairs();
+     //await instance.getAllSubjectsWithClasses();
+    // await instance.getAllClassAndSubjectsForStudent(5);
+    //await instance.getAllClassAndSubjectsForTeacher(2);
+    //await instance.getAllStudentResults(3);
+    //await instance.getAllAdminResults();
+   // await instance. getAllTeacherResults(2)
+   // await instance.getAllTopicsForTeacher(2)
+  // await instance.getSubject_CoursePairs();
+  //await instance.getAllTopicsFromSubject(1)
+  //await instance.generateInviteLink(1,1);
+  //await instance.enrollStudentInClass(2,'a14886c6-14dc-4431-b259-9b53cb0270a3');
+    //await instance.getAllTopicsFromCourse(1);
+   // await instance.getAllClasses();
+   //await instance.getClassesForTeacher(2);
+   await instance.associatedTopics(1,5);
         nodelogger.info('Uspjesno');
     } catch (error) {
-        console.log('Greska pri citanju rezultata'+error);
+        console.log('Greska u izvodenju'+error);
     }
     
 }

@@ -11,12 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.subject,{through: 'subject_assesment',as: "subjects_assesments",foreignKey:'asessment_id'});/*navodimo ovo da izbjegnemo slucaj u kojem ce sequelize korisititi svoja defaultna imena 
+      this.belongsToMany(models.topic,{through: 'topic_assesment',as: "topics_assesments",foreignKey:'asessment_id'});/*navodimo ovo da izbjegnemo slucaj u kojem ce sequelize korisititi svoja defaultna imena 
       za foreign keyove jer su njihova imena specificirana u migracijama a on ucitava samo modele pa s ovim overwritamo automatski geneirana sequelize imena FK,to nam inace stvara problem kod querya*/
     }
   };
   asessment_objective.init({
-    name: DataTypes.STRING
+    name: DataTypes.STRING     
   }, {
     sequelize,
     modelName: 'asessment_objective',
