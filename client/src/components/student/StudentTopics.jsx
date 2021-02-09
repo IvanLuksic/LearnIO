@@ -8,8 +8,16 @@ import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
-import fakeLoadingTopics from './fetchedTopics.json'
+import fakeLoadingTopics from '../../sampleData/student/topics.json'
 import Skeleton from '@material-ui/lab/Skeleton';
+import NotFound from '../common/NotFound';
+import CustomSnackbar from '../common/Snackbar.jsx';
+import {unitSelected} from '../../redux/actions/unitID';
+import {subjectSelected} from '../../redux/actions/subjectID';
+import {classSelected} from '../../redux/actions/classID';
+//-------------------------------------
+import CustomAccordion from './Accordion.jsx';
+//-------------------------------------
 
 const useStyles = makeStyles((theme) => ({
 
@@ -102,7 +110,55 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft:"25%",
       paddingRight:"25%",
       marginBottom:"0",
-    }
+    },
+    redGrade:{
+      backgroundColor: "#EB4949",
+      padding:"0 1.4em",
+      color: "#ffffff",
+      fontSize:"1.1em",
+      fontWeight:"bold",
+      borderRadius:"50%"
+    },
+    greyGrade:{
+      backgroundColor: "#8f8e8b",
+      padding:"0 1.4em",
+      color: "#ffffff",
+      fontSize:"1.1em",
+      fontWeight:"bold",
+      borderRadius:"50%"
+    },
+    blueGrade:{
+      backgroundColor: "#4373ec",
+      padding:"0 1.4em",
+      color: "#ffffff",
+      fontSize:"1.1em",
+      fontWeight:"bold",
+      borderRadius:"50%"
+    },
+    greenGrade:{
+      backgroundColor: "#27ae60",
+      padding:"0 1.4em",
+      color: "#ffffff",
+      fontSize:"1.1em",
+      fontWeight:"bold",
+      borderRadius:"50%"
+    },
+    goldGrade:{
+      padding:"0 1.4em",
+      backgroundColor: "#DAA520",
+      color: "#ffffff",
+      fontSize:"1.1em",
+      fontWeight:"bold",
+      borderRadius:"50%"
+    },
+    whiteGrade:{
+      padding:"0 1.4em",
+      backgroundColor: "#FFFFFF",
+      color: "#000000",
+      fontSize:"1.1em",
+      fontWeight:"bold",
+      borderRadius:"50%"
+    },
   }));
 
 function CustomPagination(props) {
@@ -123,26 +179,68 @@ function CustomPagination(props) {
 
 function StudentTopics(props){
     const dispatch=useDispatch();//rows su podaci
+    dispatch(subjectSelected(parseInt(props.match.params.subject_id)));
+    dispatch(classSelected(parseInt(props.match.params.class_id)));
+    dispatch(unitSelected(parseInt(props.match.params.unit_id)));
+    const sub=useSelector(state=>state.subject);
+    const cla=useSelector(state=>state.class);
+    const uni=useSelector(state=>state.unit);
+
+    const offline= useSelector(state=>state.offline);
     const [data,setData]=useState(()=>{return fakeLoadingTopics});//koristi ove dok ne učita da ne bi bilo undefined
-    const [loading,setLoading]=useState(false);//OFFLINE:true
+    const [loading,setLoading]=useState(offline);//OFFLINE:true
+    const [noError,setNoError]=useState(()=> true);
+    const [snackbarText,setSnackbarText]=useState(()=>"");
+    const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+    const [errorStatus,setErrorStatus]=useState(()=>"");
+    const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+
+
+
     const classes = useStyles();
-   //red 1, blue 2, grey 3, green 4 - ovo je mislavova signalizacija iz APIja
+    //red 1, blue 2, grey 3, green 4 - ovo je mislavova signalizacija iz APIja
     function RenderStatusButton(id,status,name){
-      if(status==1) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonRed} component={Link} to={`/topic/${id}`} size="small"> Start </Button>);
-      else if(status==2) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonBlue} component={Link} to={`/topic/${id}`} size="small"> Continue </Button>);
-      else if(status==4) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonGreen} component={Link} to={`/topic/${id}`} size="small"> Revise </Button>);
-      else return <p>sranje</p>;
+      if(status==1) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonRed} component={Link} to={`/student/topic/${cla}/${sub}/${uni}/${id}`} size="small"> Start </Button>);
+      else if(status==2) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonBlue} component={Link} to={`/student/topic/${cla}/${sub}/${uni}/${id}`} size="small"> Continue </Button>);
+      else if(status==4) return (<Button onClick={()=>{dispatch(topicSelected(id,name))}} style={{color:'#FFFFFF'}} className={classes.ColorButtonGreen} component={Link} to={`/student/topic/${cla}/${sub}/${uni}/${id}`} size="small"> Revise </Button>);
+      else return <p>UNLUCKY</p>;
     };
+
+    
+    const renderGrade=(value)=>{
+      switch(value){
+        case 1:{
+          return <p className={classes.redGrade}>{value}</p>;//return <Icon className={classes.blueGrade}>looks_1</Icon>;
+        }
+        case 2:{
+          return <p className={classes.greyGrade}>{value}</p>;
+        }
+        case 3:{
+          return <p className={classes.blueGrade}>{value}</p>;
+        }
+        case 4:{
+          return <p className={classes.greenGrade}>{value}</p>;
+        }
+        case 5:{
+          return <div className={classes.goldGrade}>{value}</div>;
+        }
+        default:{
+          return <p className={classes.whiteGrade}>{value}</p>;//return <Icon className={classes.blueGrade}>looks_1</Icon>;
+        }
+      }
+    }
     
 
 
     const fetchData=()=>{
+
       const requestOptions = {
         method: 'GET',
         mode:'cors',
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
+<<<<<<< HEAD:client/src/components/student/StudentTopics.jsx
       fetch(`https://learn1o.herokuapp.com/topic/${1}/${1}/${1}`, requestOptions)// class subject course
       .then(response => response.json())
             .then(dataFetch => {  
@@ -151,15 +249,41 @@ function StudentTopics(props){
               setData(dataFetch);
               setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
       })
+=======
+      fetch(`/api/student/topics/${cla}/${sub}/${props.match.params.unit_id}`, requestOptions)// class subject course
+      .then((response)=>{
+        if(response.status===200)
+        {
+          Promise.resolve(response).then(response => response.json())
+          .then(dataFetch => {  
+            setData(dataFetch);
+            setSnackbarStatus("success");
+            setSnackbarText("Topics loaded successfully.")
+            setSnackbarOpen(true);
+            setLoading(true);          
+          })
+        }      
+        else{
+          setNoError(false);
+          setSnackbarStatus("error");
+          setErrorStatus(response.status);
+          setSnackbarText("Topics did not load successfully.")
+          setSnackbarOpen(true);
+      }})
+>>>>>>> frontend:learnio/src/components/student/StudentTopics.jsx
       .catch((error)=>{
-        console.log('Error in fetch function '+ error);
+        setNoError(false);
+        setSnackbarStatus("error");
+        setErrorStatus("Oops");
+        setSnackbarText('Error in fetch function '+ error)
+        setSnackbarOpen(true);
+        console.log('Error in fetch function '+ error);      
       });
     };
-      
+    
 
     useEffect(() => {
-      console.log("saljem");
-      fetchData();
+      (!offline)&&fetchData();
     },[]);
 
     //podaci za datagrid se dobivaju restrukturiranjem fetchanih podataka tj. destrukturiranjem objekta niza stupaca u niz propertyja stupaca
@@ -195,7 +319,6 @@ function StudentTopics(props){
       
       rows=[...rows,{...fetchedDataRestructured,...destructuredColumns,...fetchedDataRestructured2}];
     }
-    console.log(rows);
 
     //ovo koristimo za tamplate u datagridu
     let destructuredColumnsDataGrid=[];
@@ -206,7 +329,7 @@ function StudentTopics(props){
           valueGetter: (params) => {
              var val=params.getValue(`ao${i+1}`);
              if(val===-1) return `∅`;
-             else return `${val}%`;
+             else return `${val}`;
           },
           sortComparator: (v1, v2, row1, row2) => {
           var c=`ao${i+1}`;
@@ -219,46 +342,40 @@ function StudentTopics(props){
     const columns = [
       { field: 'id', headerName:'ID',headerAlign:'center', align:'center', renderHeader: () => (<strong>{"ID"}</strong>)},
       { field: 'name',width:200, type:'string',headerAlign:'center', align:'center', renderHeader: () => (<strong>{"Topic"}</strong>),},
-      { field: 'grade',headerAlign:'center', align:'center', headerName:'Grade'},
+      { field: 'grade',headerAlign:'center', align:'center', headerName:'Grade',renderCell:(params)=>renderGrade(params.getValue('grade'))},
       ...destructuredColumnsDataGrid,
-      // { field: 'ao1', hide: true},
-      // { field: 'ao1P', headerName:'AO 1',
-      //   valueGetter: (params) => `${params.getValue('ao1')}%`,
-      //   sortComparator: (v1, v2, row1, row2) => row1.data.ao1 - row2.data.ao1,},
-      // { field: 'ao2', hide: true},
-      // { field: 'ao2P', headerName:'AO 2',
-      // valueGetter: (params) => `${params.getValue('ao2')}%`,
-      // sortComparator: (v1, v2, row1, row2) => row1.data.ao2 - row2.data.ao2,},
-      // { field: 'ao3', hide: true},
-      // { field: 'ao3P', headerName:'AO 3',
-      // valueGetter: (params) => `${params.getValue('ao3')}%`,
-      // sortComparator: (v1, v2, row1, row2) => row1.data.ao3 - row2.data.ao3,},
       { field: 'status', hide: true},
       { field: 'open', sortable:false,headerAlign:'center', align:'center', headerName: `${' '}`, renderCell: (params) => (RenderStatusButton(params.getValue('id'),params.getValue('status'),params.getValue('name'))) },
     ];
 
-    console.log(columns);
-    console.log(rows);
 
-    return( 
-    <div>
-    {loading?(
-      <div style={{display: "flex", flexDirection: "column", justifyContent:"none", alignItems:"center"}} className={classes.background} >
-        <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
-        <div className={classes.tabela}>
-            <DataGrid disableSelectionOnClick={true} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />
-        </div>   
-      </div>)
-    :
-      <div className={classes.skeleton}>
-        <Skeleton variant="text" animation="wave" height={60} /> 
-        <Skeleton variant="reck" animation="wave" height={350} />
-        <Skeleton variant="text" animation="wave"  height={60}/>
+    return(
+      (!noError)?<NotFound code={errorStatus}/>
+      :<div>
+        {
+          loading?        
+          <div style={{display: "flex", flexDirection: "column", justifyContent:"none", alignItems:"center"}} className={classes.background} >
+            <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
+            <div className={classes.tabela}>
+              <DataGrid disableSelectionOnClick={true} pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns}/>
+            </div>  
+            <div style={{width:"40vw", marginTop:"20vh", marginBottom:"40vh"}}>
+              <CustomAccordion/>
+            </div> 
+            {
+              snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+              : null
+            } 
+          </div>
+          :
+          <div className={classes.skeleton}>
+            <Skeleton variant="text" animation="wave" height={60}/> 
+            <Skeleton variant="reck" animation="wave" height={350}/>
+            <Skeleton variant="text" animation="wave"  height={60}/>
+          </div>
+        }
       </div>
-    }
-    </div>
-    );
-
+      )
 };
 
 export default StudentTopics;

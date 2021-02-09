@@ -42,13 +42,21 @@ const useStyles = makeStyles((theme) => ({
     }
     }))
 
+<<<<<<< HEAD:client/src/components/common/NotFound.jsx
 function NotFound() {
+=======
+function NotFound(props) {
+>>>>>>> frontend:learnio/src/components/common/NotFound.jsx
     const classes=useStyles();
     return (
         // <div style={{display: "flex", flexDirection: "column"}} > 
             <Grid container direction="column" align="center" Justify="space-evenly" className={classes.background} >  
                 <Grid item xs={12} style={{ margin:"12em 0 0 0",}}>
+<<<<<<< HEAD:client/src/components/common/NotFound.jsx
                     <strong className={classes.text}>404</strong>
+=======
+                    <strong className={classes.text}>{props.code!=undefined?props.code:"404"}</strong>
+>>>>>>> frontend:learnio/src/components/common/NotFound.jsx
                 </Grid>
                 <Grid item  xs={12} >
                     <img src={caveman} alt={"Oops, even the 404 image got 404-ed..."}className={classes.Caveman}></img>
@@ -58,4 +66,10 @@ function NotFound() {
     );
 }
 
+<<<<<<< HEAD:client/src/components/common/NotFound.jsx
 export default NotFound;
+=======
+export default NotFound;
+
+//Oops, Homo neanderthalensis on the loose ...
+>>>>>>> frontend:learnio/src/components/common/NotFound.jsx

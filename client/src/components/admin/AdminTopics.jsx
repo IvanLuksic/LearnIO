@@ -1,20 +1,23 @@
 import React,{useState,useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import backgroundIMG from '../../images/learniobg10-15.png';
-import { Typography } from '@material-ui/core';
-import { DataGrid } from '@material-ui/data-grid';
+import { Typography  } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
-import Pagination from '@material-ui/lab/Pagination';
-import AddTopicPU from './AddTopicPU';
+import AddTopicPU from './addComponents/AddTopicPU';
 import Icon from '@material-ui/core/Icon';
-import fakeBackendTopics from './topics.json';
+import fakeBackendTopics from '../../sampleData/admin/allTopics.json';
 import PopupDialog from '../common/PopupDialog';
 import ConfirmDialog from '../common/ConfirmDialog';
 import { useDispatch} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
 import Skeleton from '@material-ui/lab/Skeleton';
-
+import { useSelector} from 'react-redux';
+import backgroundIMG from '../../images/learniobg10-15.png';
+import { DataGrid } from '@material-ui/data-grid';
+import Pagination from '@material-ui/lab/Pagination';
+import Filter from '../common/Filter';
+import NotFound from '../common/NotFound';
+import CustomSnackbar from '../common/Snackbar.jsx';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -32,6 +35,16 @@ const useStyles = makeStyles((theme) => ({
         minHeight: "100vh",
       },
     },
+    rootChips: {
+      margin: "0 1rem 0 0",
+      display: "inline-flex",
+      boxShadow:"none !important",
+      justifyContent: 'center',
+      backgroundColor:"transparent",
+      flexWrap: 'wrap',
+      listStyle: 'none',
+      padding: theme.spacing(0.5),
+    },
     tabela:{
       borderColor: "transparent !important",
       height:"25em",
@@ -42,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
         width:"58%",
       },
       [theme.breakpoints.up('xl')]: {
-        width:"50%",
+        width:"53%",
       },
     },
     topicTitle:{
@@ -50,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
       fontSize:'8vh',
       marginTop:"15vh",
       marginBottom:"5vh",
+      textShadow:" -5px 5px #30303033"
     },
     addButton:{
       marginTop:"-0.12em",
@@ -72,6 +86,33 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft:"25%",
       paddingRight:"25%",
       marginBottom:"0",
+    },
+    buttonBlue: {
+      color: "#FFFFFF",
+      fontFamily: "Lobster !important",
+      borderRadius:"10px",
+      backgroundColor: "#4373ec",
+      maxHeight: 35,
+      '&:hover': {
+          backgroundColor: "#0e318b",
+    },},
+    search: {
+      display: "inline-flex",
+      verticalAlign: "middle",
+      margin:"16px",
+      backgroundColor:"white",
+      borderRadius:"10px"
+    },
+    searchBox:{
+      margin:"0 0 2rem 0",
+      display:"inline-block",
+      backgroundColor:"#f7f5f5",/* ededed */
+      border:"0.5px solid darkgrey",
+      borderRadius:"10px"
+    },
+    formControl: {
+      margin: `${theme.spacing(1)}px 2rem ${theme.spacing(1)}px 1rem`,
+      minWidth: 120,
     }
 }))
 
@@ -91,14 +132,22 @@ function CustomPagination(props) {
 }
 
 function AdminTopics(props){
-    console.log(props);
+    const offline= useSelector(state=>state.offline);
     const dispatch=useDispatch();
-    const [loading,setLoading]=useState(false);//OFFLINE:true
+    const [loading,setLoading]=useState(offline);//OFFLINE:true
     const [data,setData]=useState(()=>fakeBackendTopics);
     const [open,setOpen]=useState(false); 
     const [openPopup,setOpenPopup]=useState(false);
     const [item,setItem]=useState(0);
     const classes=useStyles();
+    const [noError,setNoError]=useState(()=> true);
+    const [snackbarText,setSnackbarText]=useState(()=>"");
+    const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+    const [errorStatus,setErrorStatus]=useState(()=>"");
+    const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+    const [savedData,setSavedData]=useState(()=>data);
+    const role=useSelector(state=>state.login);
+
 
     const fetchTopics=()=>{
       const requestOptions = {
@@ -108,15 +157,45 @@ function AdminTopics(props){
           credentials: 'include'
       };
 
+<<<<<<< HEAD:client/src/components/admin/AdminTopics.jsx
       fetch('https://learn1o.herokuapp.com/admin/topics', requestOptions)
       .then(response => response.json())
       .then(data => {  
         setData(data.Topics);
         setLoading(true);
+=======
+      let apiUri;
+      if(role==="admin") apiUri='/api/admin/topics'
+      else if(role==="teacher") apiUri='/api/teacher/topics';
+
+      fetch(apiUri, requestOptions)
+      .then(response => {
+        if(response.status===200)
+        {
+        Promise.resolve(response).then(response => response.json())
+        .then(data => {
+          setData(data.Topics);
+          setSavedData(data.Topics);
+          setSnackbarStatus("success");
+          setSnackbarText("Subjects loaded successfully.")
+          setSnackbarOpen(true);
+          setLoading(true);        })}
+        else{
+          setNoError(false);
+          setSnackbarStatus("error");
+          setErrorStatus(response.status);
+          setSnackbarText("Topics did not load successfully.")
+          setSnackbarOpen(true);
+        }
+>>>>>>> frontend:learnio/src/components/admin/AdminTopics.jsx
       })
       .catch((error)=>{
-          console.log('Error in fetch function '+ error);
-      });
+        setNoError(false);
+        setSnackbarStatus("error");
+        setErrorStatus("Oops");
+        setSnackbarText('Error in fetch function '+ error);
+        setSnackbarOpen(true);
+        console.log('Error in fetch function '+ error);      });
     };
 
     useEffect(()=>{
@@ -137,7 +216,6 @@ function AdminTopics(props){
     // dodavanje novog topica u listu i id tom topicu
     // problem s id kad se izbrise jedan i ide dodat novi ne radi!!!
    const addQuestion=(value)=>{
-      console.log(value);
       var polje=data;
       polje=[...polje,value];
       polje=polje.sort((a,b)=>(a.id-b.id));
@@ -152,24 +230,38 @@ function AdminTopics(props){
       setItem(data);
     };
     const requestDeleteTopic=()=>{
-      //OFFLINE:handleDelete(item);
-      console.log("ZAHTJEV ZA Brisanjem: ");
-      console.log({id:item});
+      offline&&handleDelete(item);
+
       const requestOptions = {
           method: 'DELETE',
           mode:'cors',
           headers: { 'Content-Type': 'application/json'},
           credentials: 'include'
       };
+<<<<<<< HEAD:client/src/components/admin/AdminTopics.jsx
       fetch(`https://learn1o.herokuapp.com/admin/topics/delete/${item}`, requestOptions)
+=======
+
+      let apiUri;
+      if(role==="admin") apiUri=`/api/admin/topics/delete/${item}`
+      else if(role==="teacher") apiUri=`/api/admin/topics/delete/${item}`;
+
+
+      fetch(apiUri, requestOptions)
+>>>>>>> frontend:learnio/src/components/admin/AdminTopics.jsx
       .then(() =>{handleDelete(item);})
       .catch((error)=>{console.log('Error in fetch function '+ error);});
-    }
+    };
+    
 
     let rows=[];
     for(let i=0;i<data.length;i++){
+      let topic_dig=Math.pow(10,(4-data[i].topic_id.toString().length))*data[i].topic_id;
+      let subject_dig=Math.pow(10,(4-data[i].subject_id.toString().length))*data[i].subject_id;
+      let course_dig=Math.pow(10,(4-data[i].course_id.toString().length))*data[i].course_id;
+
       rows=[...rows,{
-        id: ''+data[i].topic_id+data[i].course_id+data[i].subject_id,
+        id: ''+subject_dig+topic_dig+course_dig,
         topic_id:data[i].topic_id,
         name: data[i].topic_name,
         course: data[i].course_name,
@@ -188,21 +280,28 @@ function AdminTopics(props){
     ];
 
     return(
-      <div>
+      (!noError)?<NotFound code={errorStatus}/>
+      :<div>
       { loading?(
         <div>
-          <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this question?" functionToConfirm={requestDeleteTopic}/>
+          <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this topic?" functionToConfirm={requestDeleteTopic}/>
           {
           <div style={{display: "flex", flexDirection: "column",justifyContent:"none", alignItems:"center"}} className={classes.background}>
             <Typography color="primary" className={classes.topicTitle}>Topics</Typography>
             <div className={classes.tabela}>
-                <DataGrid disableSelectionOnClick={true}  pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
+              <Filter data={data} savedData={savedData} setData={setData} listOfProperties={[{name:"topic_id",nameToDisplay:"ID"},{name:"topic_name",nameToDisplay:"Topic"},{name:"course_name",nameToDisplay:"Course"},{name:"subject_name",nameToDisplay:"Subject"}]}/>
+              <DataGrid disableSelectionOnClick={true}  pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
             </div>
+
             <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
-              <AddTopicPU closePopup={handleClose} addTopic={addQuestion}  fetchedTopics={data}/>
+              <AddTopicPU closePopup={handleClose} addTopic={addQuestion} setSnackbarOpen={setSnackbarOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus}/>
             </PopupDialog>
           </div>
           }
+          {
+              snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+              : null
+          } 
         </div> )
         :
           <div className={classes.skeleton}>

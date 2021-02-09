@@ -60,7 +60,11 @@ const useStyles=makeStyles(theme =>({
 function PopupDialog(props){ 
     const classes=useStyles();
     return(
+<<<<<<< HEAD:client/src/components/common/PopupDialog.jsx
             <Dialog open={props.openPopup} classes={{paper: classes.dialogWrapper}} PaperProps={{style: props.style,}} >
+=======
+            <Dialog open={props.openPopup} classes={{paper: classes.dialogWrapper}} PaperProps={{style: props.style}} >
+>>>>>>> frontend:learnio/src/components/common/PopupDialog.jsx
                 <ClickAwayListener onClickAway={()=>{props.clickAway&&props.setOpenPopup(false);}}>
                     <div> 
                         <DialogTitle className={classes.dialogPart1}>

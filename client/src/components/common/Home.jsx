@@ -20,7 +20,9 @@ const useStyles = makeStyles((theme) => ({
       backgroundRepeat: "repeat-y",
       width: "100%",
       [theme.breakpoints.down('sm')]: {
-        minHeight: "200vh",
+        minHeight: "100vh",
+        overflowY: "show",
+
       },
       [theme.breakpoints.up('md')]: {
         minHeight: "200vh",
@@ -38,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
         padding:"6em 0 8em 0",
         flexDirection:'column',
       },
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up('md')]: {
         padding:"35vh 0 30vh 0",
         flexDirection:'row'
       },
@@ -46,10 +48,11 @@ const useStyles = makeStyles((theme) => ({
 
     cont2:{
       [theme.breakpoints.down('sm')]: {
-        padding:"2em 0 0 0",
+        padding:"2em 0 25em 0",
         flexDirection:'column-reverse',
+        display:"none",
       },
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up('md')]: {
         padding:"35vh 0 30vh 0",
         flexDirection:'row'
       },
@@ -59,16 +62,16 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.down('sm')]: {
         padding:" 0 1em 0 1em",
       },
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up('md')]: {
         paddingLeft:"5vw",
         paddingRight:"5vw"      
       },
     },
     block2:{
       [theme.breakpoints.down('sm')]: {
-        padding:"0em 4em 0em 4em",
+        padding:"3em 3em 0em 3em",
       },
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up('md')]: {
         paddingLeft:"5vw",
         paddingRight:"5vw"      
       },
@@ -77,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.down('sm')]: {
         padding:"0em 4em 0em 4em",
       },
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up('md')]: {
         padding:"0  3em 0 8em",
       },
     },
@@ -85,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.down('sm')]: {
         padding:"15em 2em 4em 2em",
       },
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up('md')]: {
         padding:"3.3em 7em 0 10em ",
       },
     },
@@ -95,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
       lineHeight: "1.2em",
       [theme.breakpoints.down('sm')]: {
         textAlign:'justify',
-        fontSize: "1.5em",
+        fontSize: "1.3em",
       },
       [theme.breakpoints.up('md')]: {
         fontSize: "1.5em",
@@ -114,10 +117,9 @@ const useStyles = makeStyles((theme) => ({
       },
     },
     carousel:{
-
       [theme.breakpoints.down('sm')]: {
         width:"80%",
-        padding:" 1em 3em"
+        margin:" 1em auto"
       },
       [theme.breakpoints.up('md')]: {
         padding:" 0 0 0 2em",
@@ -140,13 +142,13 @@ function Home(){
         </Grid>
         <Grid item xs={12} md={6} className={classes.block2} >
             <span className={classes.txtS}>Welcome to LearnIO </span>
-            <p className={classes.txtP} >LearnIO is a half-intelligent WebApp that will help you learn only things you need to learn. LearnIO is a half-intelligent WebApp that will help you learn only things you need to learn.</p> 
+            <p className={classes.txtP} >LearnIO is a new way of going about learning. It helps students and teachers alike by allowing students to learn only what they need to learn. How does it work? Find out!</p> 
         </Grid>
       </Grid>
       <Grid container justify="center" alignItems="center" className={classes.cont2} >
       <Grid item xs={12} md={6} className={classes.block3} >
-          <span className={classes.txtS}>Welcome to LearnIO </span>
-          <p className={classes.txtP}>LearnIO is a half-intelligent WebApp that will help you learn only things you need to learn. LearnIO is a half-intelligent WebApp that will help you learn only things you need to learn.</p> 
+          <span className={classes.txtS}>Coming soon.... </span>
+          <p className={classes.txtP}>Learnio is a semi-intelligent online learning service being developed using technologies such as ReactJS, NodeJS, expressJS and PostgresSQL. It will be ready soon, and you are the first ones seeeing it!</p> 
         </Grid>
         <Grid item xs={12} md={6} className={classes.block4}>
           <Carousel navButtonsAlwaysInvisible={true} animation={"slide"} autoPlay={true} interval={2500} timeout={400} className={classes.carousel}>

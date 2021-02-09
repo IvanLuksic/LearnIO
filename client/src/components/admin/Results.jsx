@@ -4,9 +4,18 @@ import backgroundIMG from '../../images/learniobg10-15.png';
 import { Typography } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
+<<<<<<< HEAD:client/src/components/admin/Results.jsx
 import fakeBackendResults from './backendResults.json';
 import Skeleton from '@material-ui/lab/Skeleton';
 
+=======
+import fakeBackendResults from '../../sampleData/admin/allResults.json';
+import Skeleton from '@material-ui/lab/Skeleton';
+import { useSelector} from 'react-redux';
+import NotFound from '../common/NotFound';
+import CustomSnackbar from '../common/Snackbar.jsx';
+import Filter from '../common/Filter';
+>>>>>>> frontend:learnio/src/components/admin/Results.jsx
 
 
 
@@ -41,6 +50,11 @@ const useStyles = makeStyles((theme) => ({
       fontSize:'8vh',
       marginTop:"15vh",
       marginBottom:"5vh",
+<<<<<<< HEAD:client/src/components/admin/Results.jsx
+=======
+      textShadow:" -5px 5px #30303033"
+
+>>>>>>> frontend:learnio/src/components/admin/Results.jsx
     },
     addButton:{
       marginTop:"-0.12em",
@@ -129,11 +143,25 @@ function CustomPagination(props) {
   );
 }
 
+<<<<<<< HEAD:client/src/components/admin/Results.jsx
 function AdminTopics(){
     const[data,setData]=useState(()=>{return fakeBackendResults});
     const classes=useStyles();
     const [loading,setLoading]=useState(false);//potrebno ga postavit na false da bi radilo
     
+=======
+function Results(){
+    const offline= useSelector(state=>state.offline);
+    const[data,setData]=useState(()=>{return fakeBackendResults});
+    const classes=useStyles();
+    const [loading,setLoading]=useState(offline);//potrebno ga postavit na false da bi radilo
+    const [noError,setNoError]=useState(()=> true);
+    const [snackbarText,setSnackbarText]=useState(()=>"");
+    const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+    const [errorStatus,setErrorStatus]=useState(()=>"");
+    const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+    const [savedData,setSavedData]=useState(()=>data);
+>>>>>>> frontend:learnio/src/components/admin/Results.jsx
 
     const renderGrade=(value)=>{
       switch(value){
@@ -167,6 +195,7 @@ function AdminTopics(){
         credentials: 'include'
       };
 
+<<<<<<< HEAD:client/src/components/admin/Results.jsx
       fetch('https://learn1o.herokuapp.com/results', requestOptions)
       .then(response => response.json())
             .then(dataFetch => {  
@@ -181,6 +210,50 @@ function AdminTopics(){
     useEffect(() => {
       console.log("saljem");
       fetchData();
+=======
+      fetch('/api/results', requestOptions)
+      .then((response)=>{
+        if(response.status===200)
+        {
+          Promise.resolve(response).then(response => response.json())
+          .then(dataFetch => {  
+            setData(dataFetch);
+            setSavedData(dataFetch);
+            setSnackbarStatus("success");
+            setSnackbarText("Results loaded successfully.");
+            setSnackbarOpen(true);
+            setLoading(true);
+          })
+        }      
+        else{
+          setNoError(false);
+          setSnackbarStatus("error");
+          setErrorStatus(response.status);
+          setSnackbarText("Results did not load successfully.");
+          setSnackbarOpen(true);
+      }})
+      .catch((error)=>{
+        setNoError(false);
+        setSnackbarStatus("error");
+        setErrorStatus("Oops");
+        setSnackbarText('Error in fetch function '+ error);
+        setSnackbarOpen(true);
+        console.log('Error in fetch function '+ error);
+      });
+    };
+    //   .then(response => response.json())
+      // .then(dataFetch => {  
+      //         setData(dataFetch);
+      //         setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
+      // })
+    //   .catch((error)=>{
+    //     console.log('Error in fetch function '+ error);
+    //   });
+    // };
+
+    useEffect(() => {
+      (!offline)&&fetchData();
+>>>>>>> frontend:learnio/src/components/admin/Results.jsx
     },[]);
 
     //podaci za datagrid se dobivaju restrukturiranjem fetchanih podataka tj. destrukturiranjem objekta niza stupaca u niz propertyja stupaca
@@ -189,11 +262,25 @@ function AdminTopics(){
     for(let j=0;j<data.length;j++){
       if(maxNumberOfColumns<data[j].columns) maxNumberOfColumns=data[j].columns;
     };
+<<<<<<< HEAD:client/src/components/admin/Results.jsx
 
     let rows=[];
     for(let j=0;j<data.length;j++){
       let fetchedDataRestructured={
         id: data[j].topic_id,
+=======
+    
+
+    let rows=[];
+    for(let j=0;j<data.length;j++){
+      let topic_dig=Math.pow(10,(4-data[j].topic_id.toString().length))*data[j].topic_id;
+      let student_dig=Math.pow(10,(4-data[j].student_id.toString().length))*data[j].student_id;
+      let course_dig=Math.pow(10,(4-data[j].course_id.toString().length))*data[j].course_id;
+
+      let fetchedDataRestructured={
+        id: ""+topic_dig+student_dig+course_dig+ data[j].class_name,
+        topic_id: data[j].topic_id,
+>>>>>>> frontend:learnio/src/components/admin/Results.jsx
         topic: data[j].topic,
         course: data[j].course,
         subject: data[j].subject,
@@ -218,7 +305,10 @@ function AdminTopics(){
 
       rows=[...rows,{...fetchedDataRestructured,...destructuredColumns}];
     }
+<<<<<<< HEAD:client/src/components/admin/Results.jsx
     console.log(rows);
+=======
+>>>>>>> frontend:learnio/src/components/admin/Results.jsx
 
     //ovo koristimo za tamplate u datagridu
     let destructuredColumnsDataGrid=[];
@@ -239,9 +329,16 @@ function AdminTopics(){
     }
 
     const columns=[
+<<<<<<< HEAD:client/src/components/admin/Results.jsx
         {field: "id", type:'number',headerAlign:'center', align:'center', renderHeader: () => (<strong>{"ID"}</strong>)},
         {field: "topic",width:150 ,type:'string',headerAlign:'center', align:'center', renderHeader: () => (<div ><strong>{"Topic"}</strong></div>),},
         {field: "course",width:150, headerName:'Course',type:'string',headerAlign:'center', align:'center'},
+=======
+        {field: "id", hide:true},
+        {field: "topic_id", type:'number',headerAlign:'center', align:'center', renderHeader: () => (<strong>{"ID"}</strong>)},
+        {field: "topic",width:150 ,type:'string',headerAlign:'center', align:'center', renderHeader: () => (<div ><strong>{"Topic"}</strong></div>),},
+        {field: "course",width:150, headerName:'Unit',type:'string',headerAlign:'center', align:'center'},
+>>>>>>> frontend:learnio/src/components/admin/Results.jsx
         {field: "subject",width:150, headerName:'Subject',type:'string',headerAlign:'center', align:'center'},
         {field: "name", headerName:'Name',type:'string',headerAlign:'center', align:'center'},
         {field: "surname", headerName:'Surname',type:'string',headerAlign:'center', align:'center'},
@@ -253,13 +350,38 @@ function AdminTopics(){
     ];
 
     return(
+<<<<<<< HEAD:client/src/components/admin/Results.jsx
       <div>
+=======
+      (!noError)?<NotFound code={errorStatus}/>
+      :<div>
+>>>>>>> frontend:learnio/src/components/admin/Results.jsx
       {loading?(
         <div style={{display: "flex", flexDirection: "column",justifyContent:"none", alignItems:"center"}} className={classes.background}>
             <Typography color="primary" className={classes.topicTitle}>Results</Typography>
             <div className={classes.tabela}>
+<<<<<<< HEAD:client/src/components/admin/Results.jsx
                 <DataGrid disableSelectionOnClick={true} pageSize={6} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
             </div>
+=======
+              <Filter data={data} savedData={savedData} setData={setData} listOfProperties={[
+                {name:"topic_id",nameToDisplay:"Topic ID"},
+                {name:"topic",nameToDisplay:"Topic Name"},
+                {name:"course",nameToDisplay:"Unit"},
+                {name:"subject",nameToDisplay:"Subject"},
+                {name:"name",nameToDisplay:"Name"},
+                {name:"surname",nameToDisplay:"Surname"},
+                {name:"class_name",nameToDisplay:"Class"},
+                {name:"class_year",nameToDisplay:"Year"},
+                {name:"grade",nameToDisplay:"Grade"}
+              ]}/>
+                <DataGrid disableSelectionOnClick={true} pageSize={6} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
+            </div>
+            {
+              snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+              : null
+            } 
+>>>>>>> frontend:learnio/src/components/admin/Results.jsx
         </div>
       )
       :
@@ -274,5 +396,9 @@ function AdminTopics(){
       </div>
     )
 };
+<<<<<<< HEAD:client/src/components/admin/Results.jsx
 export default AdminTopics;
+=======
+export default Results;
+>>>>>>> frontend:learnio/src/components/admin/Results.jsx
 
