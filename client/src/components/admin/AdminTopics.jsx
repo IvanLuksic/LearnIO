@@ -230,9 +230,6 @@ function AdminTopics(props){
           headers: { 'Content-Type': 'application/json'},
           credentials: 'include'
       };
-<<<<<<< HEAD:client/src/components/admin/AdminTopics.jsx
-      fetch(`https://learn1o.herokuapp.com/admin/topics/delete/${item}`, requestOptions)
-=======
 
       let apiUri;
       if(role==="admin") apiUri=`/api/admin/topics/delete/${item}`
@@ -240,7 +237,6 @@ function AdminTopics(props){
 
 
       fetch(apiUri, requestOptions)
->>>>>>> frontend:learnio/src/components/admin/AdminTopics.jsx
       .then(() =>{handleDelete(item);})
       .catch((error)=>{console.log('Error in fetch function '+ error);});
     };
