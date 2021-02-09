@@ -34,11 +34,8 @@
         "class_year":"2019/2020"
     },
     {
-<<<<<<< HEAD:client/src/components/admin/backendResults.json
-=======
         "course_id":145,
         "student_id":2,
->>>>>>> frontend:client/src/sampleData/admin/allResults.json
         "topic_id":3,
         "topic":"Trigonometry 1",
         "course": "Economics",
