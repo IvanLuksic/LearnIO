@@ -114,21 +114,6 @@ function MatricaAdmin(props)
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-<<<<<<< HEAD:client/src/components/admin/MatricaAdmin.jsx
-        fetch(`https://learn1o.herokuapp.com/admin/topics/edit/${topicID}`, requestOptions)//topic id
-        .then(response => response.json())
-        .then(data => {  
-                  console.log(JSON.stringify(data));
-                  setFetchedData(data.fields);
-                  setMatricaAO(data.columns);
-                  setMatricaD(data.rows);
-                  setTopicName(data.topic_name);
-                  setTopicDescription(data.topic_description)
-                  dispatch(topicSelected(topicID,topicName));
-                  setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
-        })
-        .catch((error)=>{
-=======
         
         let apiUri;
         if(role==="admin") apiUri=`/api/admin/topics/edit/${topicID}`
@@ -165,7 +150,6 @@ function MatricaAdmin(props)
             setErrorStatus("Oops");
             setSnackbarText('Error in fetch function '+ error)
             setSnackbarOpen(true);
->>>>>>> frontend:client/src/components/admin/Matrix.jsx
             console.log('Error in fetch function '+ error);
           });
     };
@@ -282,11 +266,6 @@ function MatricaAdmin(props)
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-<<<<<<< HEAD:client/src/components/admin/MatricaAdmin.jsx
-        fetch(`https://learn1o.herokuapp.com/question/delete/${Ques.id}`, requestOptions)
-        .then(() =>{deleteQuestion(Ques,aoSelected,dSelected);})
-        .catch((error)=>{console.log('Error in fetch function '+ error);});
-=======
 
         let apiUri;
         if(role==="admin") apiUri=`/api/question/delete/${Ques.id}`
@@ -318,7 +297,6 @@ function MatricaAdmin(props)
           console.log('Error in fetch function '+ error);
         });
 
->>>>>>> frontend:client/src/components/admin/Matrix.jsx
     };
     const requestChangeQuestion=(Ques)=>{
         offline&&changeExpanded(false);
@@ -332,12 +310,6 @@ function MatricaAdmin(props)
             body: JSON.stringify({...Ques}),
             credentials: 'include'
         };
-<<<<<<< HEAD:client/src/components/admin/MatricaAdmin.jsx
-        fetch('https://learn1o.herokuapp.com/question/update', requestOptions)
-        .then(() =>{changeExpanded(false);changeQuestion(Ques);
-        })
-        .catch((error)=>{console.log('Error in fetch function '+ error);});
-=======
 
         let apiUri;
         if(role==="admin") apiUri='/api/question/update'
@@ -368,7 +340,6 @@ function MatricaAdmin(props)
             setSnackbarOpen(true);
             console.log('Error in fetch function '+ error);
           });
->>>>>>> frontend:client/src/components/admin/Matrix.jsx
     };
     const requestAddQuestion=(Ques,ID)=>{
         offline&&addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});
@@ -382,12 +353,6 @@ function MatricaAdmin(props)
             body: JSON.stringify({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:Number(topicID)}),
             credentials: 'include'
         };
-<<<<<<< HEAD:client/src/components/admin/MatricaAdmin.jsx
-        fetch('https://learn1o.herokuapp.com/question/add', requestOptions)
-        .then(response => response.json())
-        .then(data => {addQuestion({id:data.id,...Ques,row_D:dSelected,column_A:aoSelected});forceUpdate();})
-        .catch((error)=>{console.log('Error in fetch function '+ error);});
-=======
 
         let apiUri;
         if(role==="admin") apiUri='/api/question/add'
@@ -420,7 +385,6 @@ function MatricaAdmin(props)
             setSnackbarOpen(true);
             console.log('Error in fetch function '+ error);
           });
->>>>>>> frontend:client/src/components/admin/Matrix.jsx
 
     };
 

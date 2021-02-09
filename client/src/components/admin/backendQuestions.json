@@ -12,15 +12,9 @@
                     "id":1,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "question_type":1,
-                    "image_path":null,
-=======
                     "text":"Loredsafdsm ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                     "question_type":1,
                     "image_path": "https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "answer_a":"amet",
                     "answer_b":"tempor",
                     "answer_c":"eiusmod",
@@ -31,11 +25,7 @@
                     "id":2,
                     "row_D":1,
                     "column_A":1,
-<<<<<<< HEAD:client/src/components/admin/backendQuestions.json
-                    "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-=======
                     "text":"Lordfsaem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
->>>>>>> frontend:client/src/sampleData/admin/allQuestionsOfTopic.json
                     "question_type":1,
                     "image_path":null,
                     "answer_a":"amet",

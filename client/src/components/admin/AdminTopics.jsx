@@ -157,13 +157,6 @@ function AdminTopics(props){
           credentials: 'include'
       };
 
-<<<<<<< HEAD:client/src/components/admin/AdminTopics.jsx
-      fetch('https://learn1o.herokuapp.com/admin/topics', requestOptions)
-      .then(response => response.json())
-      .then(data => {  
-        setData(data.Topics);
-        setLoading(true);
-=======
       let apiUri;
       if(role==="admin") apiUri='/api/admin/topics'
       else if(role==="teacher") apiUri='/api/teacher/topics';
@@ -187,7 +180,6 @@ function AdminTopics(props){
           setSnackbarText("Topics did not load successfully.")
           setSnackbarOpen(true);
         }
->>>>>>> frontend:learnio/src/components/admin/AdminTopics.jsx
       })
       .catch((error)=>{
         setNoError(false);

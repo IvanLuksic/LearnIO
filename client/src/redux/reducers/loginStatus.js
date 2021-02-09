@@ -1,8 +1,4 @@
-<<<<<<< HEAD:client/src/redux/reducers/loginStatus.js
-const loginStatusReducer=(state='admin', action)=>{//OFFLINE:'guest'->'admin'
-=======
 const loginStatusReducer=(state='guest', action)=>{//OFFLINE:'guest'->'admin'
->>>>>>> frontend:learnio/src/redux/reducers/loginStatus.js
     switch(action.type){
         case 'ADMIN_LOGGED_IN':
             return 'admin'

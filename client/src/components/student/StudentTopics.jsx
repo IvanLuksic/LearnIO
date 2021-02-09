@@ -240,16 +240,6 @@ function StudentTopics(props){
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
-<<<<<<< HEAD:client/src/components/student/StudentTopics.jsx
-      fetch(`https://learn1o.herokuapp.com/topic/${1}/${1}/${1}`, requestOptions)// class subject course
-      .then(response => response.json())
-            .then(dataFetch => {  
-              console.log(JSON.stringify(dataFetch));
-              console.log(dataFetch[0].grade+dataFetch[0].result_array_by_columns);
-              setData(dataFetch);
-              setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
-      })
-=======
       fetch(`/api/student/topics/${cla}/${sub}/${props.match.params.unit_id}`, requestOptions)// class subject course
       .then((response)=>{
         if(response.status===200)
@@ -270,7 +260,6 @@ function StudentTopics(props){
           setSnackbarText("Topics did not load successfully.")
           setSnackbarOpen(true);
       }})
->>>>>>> frontend:learnio/src/components/student/StudentTopics.jsx
       .catch((error)=>{
         setNoError(false);
         setSnackbarStatus("error");

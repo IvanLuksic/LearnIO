@@ -340,13 +340,6 @@ function AddTopicPU(props){
         headers: { 'Content-Type': 'application/json'},
         credentials: 'include'
       };
-<<<<<<< HEAD:client/src/components/admin/AddTopicPU.jsx
-      fetch(`https://learn1o.herokuapp.com/admin/topics/subject/course/pairs`, requestOptions)
-      .then(response => response.json())
-      .then(data => {  
-        setSubjectAndCourseList(data);
-      })
-=======
 
       let apiUri;
       if(role==="admin") apiUri=`/api/admin/topics/subject/course/pairs`
@@ -369,7 +362,6 @@ function AddTopicPU(props){
           props.setSnackbarText("Subjects-unit pairs did not load successfully.")
           props.setSnackbarOpen(true);
       }})
->>>>>>> frontend:client/src/components/admin/addComponents/AddTopicPU.jsx
       .catch((error)=>{
         props.setSnackbarStatus("error");
         props.setSnackbarText('Error in fetch function '+ error);
@@ -425,32 +417,6 @@ function AddTopicPU(props){
           body: JSON.stringify(send),
           credentials: 'include'
         };
-<<<<<<< HEAD:client/src/components/admin/AddTopicPU.jsx
-        // OFFLINE:props.addTopic({
-        //   topic_id:Math.floor(Math.random()*10000),
-        //   topic_name:valueText,
-        //   course_id:subjectAndCourse.course_id,
-        //   course_name:subjectAndCourse.course_name,
-        //   subject_id:subjectAndCourse.subject_id,
-        //   subject_name:subjectAndCourse.subject_name,
-        //   topic_description:valueDesc
-        // });
-        // props.closePopup();
-
-        fetch(`https://learn1o.herokuapp.com/admin/add/topic`, requestOptions)
-        .then(response => response.json())
-        .then(data => {  
-          props.addTopic({
-            topic_id:data.topic_id,
-            topic_name:valueText,
-            course_id:subjectAndCourse.course_id,
-            course_name:subjectAndCourse.course_name,
-            subject_id:subjectAndCourse.subject_id,
-            subject_name:subjectAndCourse.subject_name,
-            topic_description:valueDesc
-          });
-          props.closePopup();
-=======
 
         offline&&(props.addTopic!==undefined)&&props.addTopic({
           topic_id:Math.floor(Math.random()*10000),
@@ -493,7 +459,6 @@ function AddTopicPU(props){
               props.setSnackbarText("Subjects did not load successfully.")
               props.setSnackbarOpen(true);
             }
->>>>>>> frontend:client/src/components/admin/addComponents/AddTopicPU.jsx
         })
         .catch((error)=>{
           props.setSnackbarStatus("error");
