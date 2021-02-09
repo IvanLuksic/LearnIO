@@ -39,7 +39,7 @@ module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcij
       prunesessionInterval:60//svako 60 sekundi brise sesije koje se expireale
     }),
     cookie:{
-     path: '/',domain: "learn1o.herokuapp.com", sameSite:'lax', secure:true, maxAge: 1000*60*60*60 //60 sec, POSTAVTI NA NEKI RAZUMNI BROJ->defulte vrijednosti-> maxage null znaci da se brise kada izade iz browsera,BROJ MILISKEUNDI KOLIKO TRAJE COOKIE
+     path: '/',secureProxy: true, sameSite:'lax', secure:true, maxAge: 1000*60*60*60 //60 sec, POSTAVTI NA NEKI RAZUMNI BROJ->defulte vrijednosti-> maxage null znaci da se brise kada izade iz browsera,BROJ MILISKEUNDI KOLIKO TRAJE COOKIE
     }//PROBLEM S maxage=null je sta se nece pruneat nikako u bazi pa bolje postavti na neko odredeno vrijeme->DOGOVORIT SE
   }))//SVE RUTE U MAINRUTERU SSE ODNOSE RELATIVNO U ODNOSU NA /ovajstringiz.enva, KAO DA IM NA POCETAK SVAKOG PATHA DODAMO /ovajstringiz.enva
   app.use(`/${process.env.ROOTPATH}`,Main_ruter);//>VEŽEMO Main_ruter NA NEKI PATH IZ ENV KOJI MOZMO PODESAVATI> KADA URL BUDE TAJ PATH ili bilo koji drugi ->onda će aplikacija gledati u Main_ruter i ako je tamo definiran get request za / izvršit će taj request-> RUTE SE U Main_ruter definiraju u odnosu prema / ruti-> ako imamo /foo rutu u Main_ruteru onda će to predstavljat /foo rutu APLIKACIJE
