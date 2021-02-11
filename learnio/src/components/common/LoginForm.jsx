@@ -1,4 +1,5 @@
 import React from 'react';
+import sha256 from 'js-sha256';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
@@ -64,11 +65,15 @@ function LoginForm(props){
 
         console.log(JSON.stringify(object));
 
+        var hash = sha256.create();
+        hash.update(object.passwords);
+        console.log(hash.hex());
+        
         const requestOptions = {
             method: 'POST',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({username:object.usernames, password:object.passwords}),
+            body: JSON.stringify({username:object.usernames, password:hash.hex()}),
             credentials: 'include'
         };
         fetch('/api/login', requestOptions)

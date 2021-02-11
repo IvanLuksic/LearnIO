@@ -450,13 +450,13 @@ function AddTopicPU(props){
                 });
                 props.closePopup();
                 props.setSnackbarStatus("success");
-                props.setSnackbarText("Subjects loaded successfully.")
+                props.setSnackbarText("Topic added successfully.")
                 props.setSnackbarOpen(true);
               })
             }
             else{
               props.setSnackbarStatus("error");
-              props.setSnackbarText("Subjects did not load successfully.")
+              props.setSnackbarText("Topic hasn't been added successfully.")
               props.setSnackbarOpen(true);
             }
         })
