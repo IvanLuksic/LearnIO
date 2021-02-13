@@ -1,9 +1,10 @@
 const {Login_instance, Session_instance}=require('../../services');//object destrucuturing(jer require vrati objekt) + automatski trazi index.js file u service folderu
 const {nodelogger}=require('../../loaders/logger');//-> cacheano je
+const config=require('../../config');
+const bcrypt=require('bcrypt');
 module.exports={
     login:async (req,res,next)=>{
         try {
-            nodelogger.info(req.body);
             const {username,password}=req.body;//object destrucutiring,uz preptostavku da saljemo JSON body pa ne parsiramo
             try {
                 var user=await Login_instance.getUser(username);
@@ -11,30 +12,32 @@ module.exports={
                 nodelogger.error('Error in fetching user from database');
                 throw(error);
             }
-            if(user && user.password===password)//ako je user =NULL -> vratit ce NULL i nece uci u if
+            let is_correct_password;//true ako je isti hash
+            //compare funckija od bcrypta sitit od timing napada+ vraća true ili false
+            if(user && (is_correct_password=await bcrypt.compare(password,user.password)))//ako je user =NULL -> vratit ce NULL i nece uci u if
             {  //KAD SE POZOVE req.session TADA SESSION MIDDLEWARE RADI COOKIE I SESSION OBJEKT SVE ZA NAS I DODAJE GA U REQUEST TAKO DA MU PRISTUPAMO PREKO req.session kao normalnom objektu kojen možemo i dodavat propertiese
                nodelogger.info('Tu smooo'+user.id+user.user_type);
                 req.session.user=user.id;//REQ.SESSION JE COOKIE OBJEKT-> NA OVAJ NAČIN MU DODAJEMO COOKIE PROPERTIESE KOJI SE SPREMAJU NA SERVERSKOJ STRANI(U MEMORY STOREU U BAZI) A SAMO SE COOKIE PROPEERTIESI ŠALJU KLIJENTU
                 req.session.user_type=user.user_type;
                 nodelogger.info('Postavili smo:'+req.session.user+req.session.user_type);
-                nodelogger.info(req.sessionID);
+                nodelogger.info('SessionID:'+req.sessionID);
                 try {
                     await Session_instance.createSession(user.id);//pohrani ga u sesiju za pracenje aktivnosti
                 } catch (error) {
                     throw(error);//idi na iduci catch handler-> ovi skroz doli
                 }
-                if(user.user_type == process.env.ADMIN)//admin->STAVI == JER JE ADMIN env varijabla string
+                if(user.user_type == config.roles.admin)//admin->STAVI == JER JE ADMIN env varijabla string
                 {
-               res.json({role: process.env.ADMIN });
+               res.json({role: config.roles.admin });
                 }
-                else if(user.user_type==process.env.TEACHER)//ucitelj
+                else if(user.user_type==config.roles.teacher)//ucitelj
                 {
                 nodelogger.info("Logging succesful");
-                res.json({role: process.env.TEACHER });
+                res.json({role: config.roles.teacher });
                 }
                 else {//student
                 nodelogger.info("Logging succesful");
-                res.json({role: process.env.STUDENT });
+                res.json({role: config.roles.student });
                 }
 
              } else if(!user) {

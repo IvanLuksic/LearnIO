@@ -1,5 +1,6 @@
 const {User_instance}=require('../../services');
 const {nodelogger}=require('../../loaders/logger');
+const config=require('../../config');
 module.exports={
     insertUser:async (req,res,next)=>
     {
@@ -14,10 +15,7 @@ module.exports={
     getAllStudentsForClassWithAllClasses:async (req,res,next)=>
     {
         try {
-            let isadmin=false;
-            if(req.session.user_type==process.env.ADMIN)
-                 isadmin=true;
-            const students=await User_instance.getAllStudentsWithClassForClass(req.params.classID,isadmin);//posaljemo flag da znamo jeli admin ili teacher pa da izostavimo prikaz passworda
+            const students=await User_instance.getAllStudentsWithClassForClass(req.params.classID);
             res.json(students);
         } catch (error) {
             nodelogger.error('Error in  getStudentsFromClass');

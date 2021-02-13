@@ -1,5 +1,6 @@
 const { Op } = require("sequelize");//izvuc ga iz sequelizea koji vraca index.js file u modelsima
 const {sequelize}=require('../models');
+const config=require('../config');
 const queryInterface = sequelize.getQueryInterface();
 const { QueryTypes } = require('sequelize');
 
@@ -142,13 +143,13 @@ module.exports=class question{
                     //dodati atribute objektu prije nego ga dodamo u niz-> sve atribute koji trebaju tablici save
                     if(i==1&&j==1)//prvo pitanje moramo otkljucat
                     {
-                        status_flag=process.env.BLUE;//otkljucano-> 
+                        status_flag=config.colors.blue;//otkljucano-> 
                         /*STATUS 4=ZELENO->TOCNO
                         STATUS 1=CRVENO-> NETOCNO
                         STATUS 2=PLAVO-> OTKLJUCANO
                         STATUS 3=SIVO-> ZAKLJUCANO */
                     }
-                   else status_flag=process.env.GREY;//zakljucani svi osim prvog
+                   else status_flag=config.colors.grey;//zakljucani svi osim prvog
                     temp={
                         row_D:i,
                         column_A:j,
@@ -245,7 +246,7 @@ module.exports=class question{
                 this.Logger.error('Errror in fetching status of question from save');
                 throw(error);
             }
-            if(question_status.status==process.env.BLUE)//-> ako neko npr pomocu fetch api iz browsera ide sanzat otcno rjesenje pitanja koje je zakljucano
+            if(question_status.status==config.colors.blue)//-> ako neko npr pomocu fetch api iz browsera ide sanzat otcno rjesenje pitanja koje je zakljucano
             {//SAMO OTKLJUCANIM PITANJIMA MOZEMO PRIVHERAVAT ODGOVORE
             try {
                 var question=await this.Question.findOne({
@@ -436,7 +437,7 @@ module.exports=class question{
             try {
                 for(let k=0;k<check_status.length;k++)
                 {
-                var questions_status=await this.Save.update({status:process.env.BLUE},{//postavi status na 2
+                var questions_status=await this.Save.update({status:config.colors.blue},{//postavi status na 2
                     where:{
                         row_D:check_status[k].cor_y,//probat nać kako usporedit s jednin pristupon bazi
                         column_A:check_status[k].cor_x,
@@ -445,11 +446,11 @@ module.exports=class question{
                         student_id:students_id,
                         class_id:clas_id,
                         subject_id:subjects_id,
-                        status:process.env.GREY//ako su zaklucana promini ih u otkljucane
+                        status:config.colors.grey//ako su zaklucana promini ih u otkljucane
                     }
                 });
                 }
-                var correct_question=await this.Save.update({status:process.env.GREEN},{
+                var correct_question=await this.Save.update({status:config.colors.green},{
                     where:{
                         row_D:y,//koordinate tocno odgovorenog pitanja u bazi
                         column_A:x,
@@ -476,7 +477,7 @@ module.exports=class question{
         //+ DODAT U RESPONSE flag koji ce njima oznacit jeli tocno ili netocno
         try {
             try {
-               const wrong_question=await this.Save.update({status:process.env.RED},{//zakljucaj prethodno otkljucano pitanje
+               const wrong_question=await this.Save.update({status:config.colors.red},{//zakljucaj prethodno otkljucano pitanje
                 where:{
                         course_id:courses_id,
                         topic_id:topics_id,

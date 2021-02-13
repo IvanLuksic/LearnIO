@@ -1,5 +1,5 @@
 const {DatabaseConnection}=require('./sequelize');
-const exprr=require('./express');
+const exprr=require('./express');//za loadanje expressa
 const {httplogger,nodelogger}=require('./logger.js');//ubacivat loggere po dependency injectionu pa ako budemo mijenjali novi logir onda ga requiramo u ovoj datoteci i pošaljemo samo drugi u sequelize i express
 module.exports={
     load: async function(app){

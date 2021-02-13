@@ -10,8 +10,8 @@ module.exports = {
     },
     {
       source_topic:3,
-      associated_topic:2,
-      required_level:2
+      associated_topic:1,
+      required_level:5
     },
     {
       source_topic:5,

@@ -1,5 +1,6 @@
 const { nodelogger } = require('../../loaders/logger');
 const {Login_instanca}=require('../../services');
+const config=require('../../config');
 module.exports={
     authenticate_student:(req,res,next)=>{
         if(!req.session.user)//nije ulogiran
@@ -10,7 +11,7 @@ module.exports={
         }
         else //provjeri jeli student
         {
-            if(req.session.user_type!=parseInt(process.env.STUDENT,10))
+            if(req.session.user_type!=parseInt(config.roles.student,10))
             {
                 res.sendStatus(404);//IZVAN NJEGOVIH PRAVA
             }else next();   //pozovi sljedeci middleware za taj request za tu rutu-> ULOGIRAN JE KAO STUDENT I IMA PRAVA
@@ -23,7 +24,7 @@ module.exports={
         }
         else //provjeri jeli admin
         {
-            if(req.session.user_type!=parseInt(process.env.ADMIN,10))
+            if(req.session.user_type!=parseInt(config.roles.admin,10))
             {
                 res.sendStatus(404);
             }
@@ -37,7 +38,7 @@ module.exports={
         }
         else //provjeri jeli teacher
         {
-            if(req.session.user_type!=parseInt(process.env.TEACHER,10))
+            if(req.session.user_type!=parseInt(config.roles.teacher,10))
             {
                 res.sendStatus(404);
             }else next();   //pozovi sljedeci middleware za taj request za tu rutu
@@ -51,7 +52,7 @@ module.exports={
         }
         else //provjeri jeli teacher ili admin
         {
-            if(req.session.user_type!=parseInt(process.env.TEACHER,10)&&req.session.user_type!=parseInt(process.env.ADMIN,10))
+            if(req.session.user_type!=parseInt(config.roles.teacher,10)&&req.session.user_type!=parseInt(config.roles.admin,10))
             {
                 res.sendStatus(404);
             }else next();   //pozovi sljedeci middleware za taj request za tu rutu
@@ -65,7 +66,7 @@ module.exports={
         }
         else //provjeri jeli teacher ili admin
         {
-            if(req.session.user_type!=parseInt(process.env.TEACHER,10)&&req.session.user_type!=parseInt(process.env.STUDENT,10))
+            if(req.session.user_type!=parseInt(config.roles.teacher,10)&&req.session.user_type!=parseInt(config.roles.student,10))
             {
                 res.sendStatus(404);
             }else next();   //pozovi sljedeci middleware za taj request za tu rutu

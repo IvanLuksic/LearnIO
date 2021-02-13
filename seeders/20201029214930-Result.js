@@ -1,12 +1,12 @@
 'use strict';
-
+const config=require('../config');
 module.exports = {
   up: async (queryInterface, Sequelize) => {
    await queryInterface.bulkInsert('result',[
      {
-       grade:3,
+       grade:4,
        result_array_by_columns:[4,5,4],
-       status:process.env.BLUE,
+       status:config.colors.red,
      subject_id:1,
       course_id:1,
       topic_id: 1,
@@ -16,7 +16,7 @@ module.exports = {
      {
       grade:2,
       result_array_by_columns:[4,3,4],
-      status:process.env.BLUE,
+      status:config.colors.red,
      subject_id:1,
       course_id:2,
      topic_id: 2,
@@ -26,7 +26,7 @@ module.exports = {
      {
       grade:1,
       result_array_by_columns:[0,0,0],
-      status:process.env.BLUE,
+      status:config.colors.red,
      subject_id:1,
      course_id:1,
      topic_id: 1,
@@ -36,7 +36,7 @@ module.exports = {
      {
       grade:1,
       result_array_by_columns:[0,0,0],
-      status:process.env.BLUE,
+      status:config.colors.red,
      subject_id:1,
      course_id:1,
      topic_id: 1,
@@ -45,8 +45,8 @@ module.exports = {
      },
      {
      grade:4,
-     result_array_by_columns:[5,5,5],
-     status:process.env.BLUE,
+     result_array_by_columns:[5,5,4],
+     status:config.colors.red,
       subject_id:1,
       course_id:1,
      topic_id: 2,

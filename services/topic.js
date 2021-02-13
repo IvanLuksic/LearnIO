@@ -5,6 +5,7 @@ const { QueryTypes } = require('sequelize');
 const { Op } = require("sequelize");
 const { format } = require('winston');
 const {sequelize}=require('../models');
+const config=require('../config');
 module.exports=class topic{
     constructor(topic,user,assesment,topic_assesment,course,subject,result,save,question,tags_of_topic,course_topic,result_instance,logger)//svi mogući dependenciesi, ako se neki ne budu korstili maknit
     {
@@ -208,10 +209,10 @@ module.exports=class topic{
                 this.Logger.error('error in fetching from database ');
                 throw(error);
             }
-            if(topic.status==process.env.RED)//nije se prethodno ulazilo u njega->KOD TOPICA JE CRVENA BOJA ZA ONE TOPICE U KOJE SE NIJE ULAZILO PRIJE-> updejtaj mu status u 1 jer je student kliknuo na njega i vrati 0
+            if(topic.status==config.colors.red)//nije se prethodno ulazilo u njega->KOD TOPICA JE CRVENA BOJA ZA ONE TOPICE U KOJE SE NIJE ULAZILO PRIJE-> updejtaj mu status u 1 jer je student kliknuo na njega i vrati 0
             {
                 try {
-                    await this.Result.update({status:process.env.BLUE},{
+                    await this.Result.update({status:config.colors.blue},{
                         where:{
                             course_id:topic.course_id,
                             topic_id:topic.topic_id,

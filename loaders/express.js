@@ -1,6 +1,7 @@
 const  { Main_ruter}=require('../api');//index.js u api gdje se loadaju svi ruteri
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');//za parsirat body od requesta
 const session=require('express-session');
+const config=require('../config');
 var PostgreSqlStore = require('connect-pg-simple')(session);
 var cors = require('cors')
 var corsOptions = {
@@ -34,7 +35,7 @@ module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcij
     //store: stavit sotre za postgres da ih sprema
     secret:'tajnaa',//This is the secret used to sign the session ID cookie-> KOD HASH FUNKCIJE DA OSIGURAMO INTEGIRTET JER JE JEDINO MI ZNAMO->DA NEBI NEKO DRUGI MOGA NESTO HASHIRAT I POSLAT->OČUVAN INTEGRITET SESIJE->NE MOZE NIKO MIJENJAT SESSION ID I PROBAT UPAST U TUĐU SESIJU
     store: new PostgreSqlStore({
-      conString:process.env.DATABASE_URL,
+      conString:config.database_url,
       tableName : 'user_session',
       prunesessionInterval:60//svako 60 sekundi brise sesije koje se expireale
     }),
@@ -42,7 +43,7 @@ module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcij
      path: '/',httpOnly: true,domain:'localhost',sameSite:'lax', secure:false, maxAge: 1000*60*60*60 //60 sec, POSTAVTI NA NEKI RAZUMNI BROJ->defulte vrijednosti-> maxage null znaci da se brise kada izade iz browsera,BROJ MILISKEUNDI KOLIKO TRAJE COOKIE
     }//PROBLEM S maxage=null je sta se nece pruneat nikako u bazi pa bolje postavti na neko odredeno vrijeme->DOGOVORIT SE
   }))//SVE RUTE U MAINRUTERU SSE ODNOSE RELATIVNO U ODNOSU NA /ovajstringiz.enva, KAO DA IM NA POCETAK SVAKOG PATHA DODAMO /ovajstringiz.enva
-  app.use(`/${process.env.ROOTPATH}`,Main_ruter);//>VEŽEMO Main_ruter NA NEKI PATH IZ ENV KOJI MOZMO PODESAVATI> KADA URL BUDE TAJ PATH ili bilo koji drugi ->onda će aplikacija gledati u Main_ruter i ako je tamo definiran get request za / izvršit će taj request-> RUTE SE U Main_ruter definiraju u odnosu prema / ruti-> ako imamo /foo rutu u Main_ruteru onda će to predstavljat /foo rutu APLIKACIJE
+  app.use(`/${config.rootpath}`,Main_ruter);//>VEŽEMO Main_ruter NA NEKI PATH IZ ENV KOJI MOZMO PODESAVATI> KADA URL BUDE TAJ PATH ili bilo koji drugi ->onda će aplikacija gledati u Main_ruter i ako je tamo definiran get request za / izvršit će taj request-> RUTE SE U Main_ruter definiraju u odnosu prema / ruti-> ako imamo /foo rutu u Main_ruteru onda će to predstavljat /foo rutu APLIKACIJE
       //DA SMO OVDE STAVILI /foo ONDA BI U Main_ruteru ruta / zapravo bilo ruta foo/ od aplikacije-> NA SVE RUTE U Main_ruteru na početak dodajemo /foo
   //next(err) kada bude pozvan ce odma ici do prve error midleware funkcije-> to je ova naša ulitmate error handler
   app.use((err, req, res, next) => {//midleware error handler-> ima 4 argumenta-> bit ce zadnja u midleware stacku i pozivom nexta u slucaju errora ce greska sigurno doci do nje i biti handleana i dobit cemo resposne
