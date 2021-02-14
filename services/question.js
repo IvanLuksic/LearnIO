@@ -536,21 +536,23 @@ module.exports=class question{
             throw(error);
         }
     }
-    async addQuestion(request_body)
+    async addQuestion(text,solution,question_type,row_D,column_A,answer_a,answer_b,answer_c,answer_d,topic_id,image_path,mime_type,image_size)
     {
         try {
             const question=await this.Question.create({
-                text:request_body.text,
-                solution:request_body.solution,
-                question_type:request_body.question_type,
-                row_D:request_body.row_D,
-                column_A:request_body.column_A,
-                image_path:request_body.image_path,
-                answer_a:request_body.answer_a,
-                answer_b:request_body.answer_b,
-                answer_c:request_body.answer_c,
-                answer_d:request_body.answer_d,
-                topic_id:request_body.topic_id
+                text:text,
+                solution:solution,
+                question_type:question_type,
+                row_D:row_D,
+                column_A:column_A,
+                image_path:image_path,
+                mime_type:mime_type,
+                image_size:image_size,
+                answer_a:answer_a,
+                answer_b:answer_b,
+                answer_c:answer_c,
+                answer_d:answer_d,
+                topic_id:topic_id
             });
             return question.id;
         } catch (error) {
@@ -558,5 +560,66 @@ module.exports=class question{
             throw(error);
         }
     }
-
+    async getQuestionImagePath(question_id)
+    {
+        try {
+            const question=await this.Question.findOne({
+                where:{
+                    id:question_id
+                }
+            });
+            let image_info={
+                image_path:question.image_path,
+                mime_type:question.mime_type,
+                image_size:question.image_size
+            };
+            return image_info;
+        } catch (error) {
+           this.Logger.error('Error in function getQuestionImagePath'+error);
+           throw(error); 
+        }
+    }
+    async checkSessionsWithQuestion(question_id)
+    {
+        try {
+            const question_session=await this.Save.findOne({
+                where:{
+                    question_id:question_id
+                }
+            });
+            if(!question_session)//ako ne postoji nijedna instanca u sesijui onda je null i moze se brisat
+            {
+                return true;
+            }
+            else return false;
+        } catch (error) {
+            this.Logger.error('Error in function checkSessionsWithQuestion'+error);
+            throw(error);
+        }
+    }
+    async replaceQuestionWithAnother(source_question,replace_with_question)
+    {
+        try {
+              //AKO JE PITANJE KOJE BRISEMO I MIJENJAMO BILO ZAKLJUCANO I NIJE OTOVRENO ONDA JE SVE OK, AKO JE BILO PLAVO OSTAT CE PLAVO AL AKO JE BILO ZELENO ILI CRVENO ONDA BI GA TREBALI VRATIT U PLAVO JER JE TO NOVO PITANJE I NIJE ISTO KIO PRETHODNO KOJE JE BILO TOCNO/KRIVO ODGOVORENO
+            await this.Save.update({status:config.colors.blue},{
+                where:{
+                    question_id:source_question,
+                    [Op.or]: [
+                        {status: config.colors.red },
+                        {status: config.colors.green },
+                      ]
+                }
+            });
+            //zamijeni ga s novim
+            await this.Save.update({question_id:replace_with_question},{
+                where:{
+                    question_id:source_question
+                }
+            });
+        
+        } catch (error) {
+            this.Logger.error('Error in function replaceQuestionWithAnother'+error);
+            throw(error);
+        }
+    }
 }

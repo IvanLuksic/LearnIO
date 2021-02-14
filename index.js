@@ -80,8 +80,7 @@ async function init()
    // await instance.getAllClasses();
    //await instance.getClassesForTeacher(2);
   // await instance.associatedTopics(1,5);
-  await hash('c6TYXm3');
-        nodelogger.info('Uspjesno');
+ // await hash('c6TYXm3');
     } catch (error) {
         console.log('Greska u izvodenju'+error);
     }

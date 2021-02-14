@@ -22,6 +22,10 @@ module.exports={
   },
   bcrypt:{
     saltRounds: parseInt(process.env.SALT_ROUNDS)
+  },
+  multer:{
+    question_images_storage: process.env.QUESTION_IMAGE_FOLDER_PATH,
+    question_images_root_path: process.env.QUESTION_IMAGE_ROOT_PATH,
+    maxImageFileSize:1024*1024//ui bajtovima , 1MB
   }
-
 }
