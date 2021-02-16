@@ -90,6 +90,7 @@ li {
 }
 .MuiDataGrid-columnsContainer {
     border-radius: 25px;
+    z-index: 0;
     /* width: max-content;ovo isto */
 }
 .MuiDataGrid-root {

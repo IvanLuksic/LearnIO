@@ -191,7 +191,7 @@ function AdminTopics(props){
     };
 
     useEffect(()=>{
-      fetchTopics();
+      if(!offline){fetchTopics()};
     },[]);
     const handleOpen = () => {
       setOpen(true);

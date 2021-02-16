@@ -21,9 +21,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 25,
     color: "#FFFFFF",
     maxHeight: "20",
-    position: "fixed",
-    bottom: "3rem",
-    right: "3rem"
+    position: "absolute",
+    bottom: "7%",
+    right: "5%"
   }
 }));
 
@@ -66,7 +66,7 @@ function AddCourseSubjectClass() {
   const fillYears = () => {
     const thisYear = getYear();
     let newYear = {};
-    let tempYears = [{value: "select year"}];
+    let tempYears = [];
     let yearValue = "";
 
     for(let i = -2; i < 50; i++) {

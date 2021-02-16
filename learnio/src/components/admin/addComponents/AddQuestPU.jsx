@@ -382,7 +382,18 @@ function AddQuestPU(props) {
 
   // \\ Insert existing //
 //------------------------
-
+  const upload = (file) => {
+    fetch('http://localhost:3000', { // Your POST endpoint
+      method: 'POST',
+      body: file // This is your file object
+    }).then(
+      response => response.json() // if the response is a JSON object
+    ).then(
+      success => console.log(success) // Handle the success response object
+    ).catch(
+      error => console.log(error) // Handle the error response object
+    );
+  };
   return(
     <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="flex-start" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
     <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
@@ -409,7 +420,7 @@ function AddQuestPU(props) {
               </Grid>
               <Grid container item direction="row" justify="center" alignItems="center" >
                 <Grid container item xs justify="center" alignItems="center">
-                  <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; setimageState(URL.createObjectURL(img)); setIMG(true) ;}}}/>
+                  <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; console.log(event.target.files[0]); upload(img); setimageState(URL.createObjectURL(img)); setIMG(true) ;}}}/>
                   <label htmlFor="contained-button-file">
                     <Button variant="contained" color="primary" component="span" className={classes.uploadButton}>
                       Upload photo

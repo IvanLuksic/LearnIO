@@ -8,6 +8,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import CustomSnackbar from '../../common/Snackbar.jsx';
 import { useSelector} from 'react-redux';
 import { Typography } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
 
 const useStyles = makeStyles((theme)=>({
     topicTitle:{
@@ -31,10 +34,11 @@ const useStyles = makeStyles((theme)=>({
         color:"white",
         paddingLeft:"3em",
         paddingRight:"3em",
-        marginTop:"1em",
-        backgroundColor: "#EB4949",
+        marginTop:"2.5em",
+        height:"2.7rem",
+        backgroundColor: "#27ae60",
         '&:hover': {
-        backgroundColor: "#b81414",
+        backgroundColor: "#13532e",
         },
     },
     gridStyle: {
@@ -42,13 +46,28 @@ const useStyles = makeStyles((theme)=>({
         marginRight:"5%",
         marginBottom:"5%",
     },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: "100%",
+      },
 }));
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
+        width: 200,
+      },
+    },
+};
 
 export default function AddCourse(props) {
     const offline= useSelector(state=>state.offline);
     const classes = useStyles();
     const [name,setName] = useState("");
-    const [year, setYear] = useState("select year");
+    const [year, setYear] = useState(null);
     const [message, setMessage] = useState("Incorrect year");
     const [index, setIndex] = useState(0);
     const [open, setOpen] = useState(false);
@@ -58,7 +77,7 @@ export default function AddCourse(props) {
 
     const handleYear = (value) => {
         setYear(value);
-        if(value!=="select year") setMessage("Correct year format");
+        if(value!=="Select year") setMessage("Correct year format");
         else setMessage("Incorrect year");
     }
     const handleName = (event) => {
@@ -79,9 +98,6 @@ export default function AddCourse(props) {
             let send={
                 class_name: name,
                 class_year: year,
-                // student_id: [
-                //     {id: 1},
-                // ],
             }
 
             const requestOptions = {
@@ -124,9 +140,20 @@ export default function AddCourse(props) {
         <Grid className={classes.gridStyle} container item direction="column" justify="space-between" alignItems="center" xs={12} md={10} spacing={1}>
             <Typography className={classes.topicTitle}>Class</Typography>
             <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Class name"/>
-
-            <YearPicker years={props.years} year={year} message={message} handleYear={handleYear}/>
-
+            {/* <YearPicker years={props.years} year={year} message={message} handleYear={handleYear}/> */}
+            <Grid item xs={12} className={classes.formControl}> 
+                <FormControl variant="outlined" className={classes.formControl}>
+                    <InputLabel>Year</InputLabel>
+                    <Select label="Year" value={year} onChange={(e)=>handleYear(e.target.value)} MenuProps={MenuProps}>
+                        {
+                            props.years.map((year)=>{
+                            return(
+                                <MenuItem value={year.value}>{year.value}</MenuItem>
+                            )})
+                        }
+                    </Select>
+                </FormControl>
+            </Grid>
             <Button variant="contained" className={classes.saveBtn} type="submit" onClick={() => handleSave()}>
                 SAVE  
                 <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}} >save_icon</Icon>
@@ -145,26 +172,26 @@ export default function AddCourse(props) {
     );
 }
 
-function YearPicker(props) {
+// function YearPicker(props) {
 
-    const handleChange = (event) => {
-        props.handleYear(event.target.value);
-    }
+//     const handleChange = (event) => {
+//         props.handleYear(event.target.value);
+//     }
     
-    return(
-        <TextField
-            style={{margin:"5%", width:"50%"}}
-            id="outlined-select-currency"
-            select
-            value={props.year}
-            onChange={handleChange}
-            variant="outlined"
-            helperText={props.message}>
-                {props.years.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                        {option.value}
-                    </MenuItem>
-                ))}
-        </TextField>
-    );
-};
+//     return(
+//         <TextField
+//             style={{margin:"5%", width:"50%"}}
+//             id="outlined-select-currency"
+//             select
+//             value={props.year}
+//             onChange={handleChange}
+//             variant="outlined"
+//             helperText={props.message}>
+//                 {props.years.map((option) => (
+//                     <MenuItem key={option.value} value={option.value}>
+//                         {option.value}
+//                     </MenuItem>
+//                 ))}
+//         </TextField>
+//     );
+// };

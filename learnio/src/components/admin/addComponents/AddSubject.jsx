@@ -36,10 +36,11 @@ const useStyles = makeStyles((theme)=>({
         color:"white",
         paddingLeft:"3em",
         paddingRight:"3em",
-        marginTop:"1em",
-        backgroundColor: "#EB4949",
+        marginTop:"2.5em",
+        height:"2.7rem",
+        backgroundColor: "#27ae60",
         '&:hover': {
-        backgroundColor: "#b81414",
+        backgroundColor: "#13532e",
         },
     },
     gridStyle: {

@@ -21,6 +21,7 @@ import StudentCourses from './components/student/StudentCourses';
 import Invited from './pages/Invited';
 import { useDispatch} from 'react-redux';
 import {studentLogIn, adminLogIn, teacherLogIn , logOut} from './redux/actions/loginStatus';
+import Profile from './components/common/Profile';
 
 const theme = createMuiTheme({
     palette: {
@@ -82,6 +83,7 @@ const AppLoaded=(props)=>{
                 <Switch>
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/login" component={Login}/>
+                    {(AdminFeatures||TeacherFeatures||StudentFeatures)&&<Route exact path="/profile" component={Profile}/>}
                     {(AdminFeatures||GuestFeatures)&&<Route exact path="/register" component={Register}/>}
                     {StudentFeatures&&<Route exact path="/student/topics/:class_id/:subject_id/:unit_id"component={StudentUnit}/>}
                     {StudentFeatures&&<Route exact path="/student/units/:class_id/:subject_id" component={StudentCourses}/>}
