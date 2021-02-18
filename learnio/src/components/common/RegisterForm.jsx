@@ -245,7 +245,6 @@ function RegisterForm(props){
                     ar.username=null;
                     setErrors(ar);
                   }
-                  setUsername(temp);
           })
           .catch((error)=>{
             console.log('Error in fetch function '+ error);
@@ -302,7 +301,7 @@ function RegisterForm(props){
                     type="username" 
                     label="Username" 
                     variant="filled" 
-                    onChange={(e)=>{ if(e.target.value.length>4){ checkUsername(e.target.value);}else{setUsername(e.target.value);}}}
+                    onChange={(e)=>{ if(e.target.value.length>4){setUsername(e.target.value); checkUsername(e.target.value);}else{setUsername(e.target.value);}}}
                     // onBlur={()=>{const temp=username; setUsername("");}}
                     error={errors.usernameError}
                     value={username}

@@ -13,6 +13,7 @@ import AdminTopics from './components/admin/AdminTopics';
 import {useSelector} from 'react-redux';
 import Results from "./components/admin/Results";
 import Students from "./components/admin/Students";
+import Teachers from "./components/admin/Teachers";
 import NotFound from './components/common/NotFound';
 import Register from './pages/Register';
 import StudentSubjects from './components/student/StudentSubjects';
@@ -96,6 +97,7 @@ const AppLoaded=(props)=>{
                     {(AdminFeatures||TeacherFeatures)&&<Route exact path="/AdminTopics" component={AdminTopics}/>}
                     {(AdminFeatures||TeacherFeatures)&&<Route exact path="/results" component={Results}/>}
                     {(AdminFeatures||TeacherFeatures)&&<Route exact path="/students" component={Students}/>}
+                    {(AdminFeatures)&&<Route exact path="/teachers" component={Teachers}/>}
                     <Route component={NotFound} code={"401"}/>
                 </Switch>
               </div>

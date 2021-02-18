@@ -38,7 +38,7 @@
 
         "row_D":1,
         "column_A":3,
-        "status":2,
+        "status":4,
         "question_id":4,
         "question_text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         "question_type":1,
@@ -108,7 +108,7 @@
     {
         "row_D":3,
         "column_A":2,
-        "status":2,
+        "status":1,
         "question_id":9,
         "question_text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         "question_type":2,
@@ -122,7 +122,7 @@
         {
         "row_D":3,
         "column_A":3,
-        "status":2,
+        "status":4,
         "question_id":16,
         "question_text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         "question_type":1,

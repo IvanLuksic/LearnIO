@@ -315,14 +315,15 @@ function Students(){
 
 /*=============================================================================================================================== */
 const editStudent=(studentToEdit)=>{
-  let array=data.filter((person)=>person.id!==studentToEdit.id);
-  array.push(studentToEdit);
-  setData(array);
 
   if(offline){
     array = fakeData.filter((person)=>person.id!==studentToEdit.id);
     array.push(studentToEdit);
     setFakeData(array);
+    let array=data.filter((person)=>person.id!==studentToEdit.id);
+    array.push(studentToEdit);
+    setData(array);
+  
     changeOfClass(selectedClassID);
   }
   else if(!offline){
@@ -345,6 +346,10 @@ const editStudent=(studentToEdit)=>{
           setSnackbarText("Student edited successfully.");
           setSnackbarOpen(true);
           changeOfClass(selectedClassID);//????????????????????????????
+          let array=data.filter((person)=>person.id!==studentToEdit.id);
+          array.push(studentToEdit);
+          setData(array);
+        
         })
       }      
       else{
@@ -389,6 +394,8 @@ const editStudent=(studentToEdit)=>{
                 setSnackbarText("Student deleted successfully.");
                 setSnackbarOpen(true);
                 setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
+                setData(data.filter((student)=>student.id!==selectedStudent.id));
+
               })
           }
           else{
@@ -406,10 +413,11 @@ const editStudent=(studentToEdit)=>{
         });
       }
       else if(offline){
-        setFakeData(fakeData.filter((student)=>student.id!==selectedStudent.id));      
+        setFakeData(fakeData.filter((student)=>student.id!==selectedStudent.id));    
+        setData(data.filter((student)=>student.id!==selectedStudent.id));
+  
       }
         
-        setData(data.filter((student)=>student.id!==selectedStudent.id));
 
       }
 /*=================================================================================================================================00 */

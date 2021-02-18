@@ -1,15 +1,9 @@
 import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
 import Icon from '@material-ui/core/Icon';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';
-import Paper from '@material-ui/core/Paper';
 import {  Typography } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
@@ -17,14 +11,7 @@ import FilledInput from '@material-ui/core/FilledInput';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import EditIcon from '@material-ui/icons/Edit';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import ListItemText from '@material-ui/core/ListItemText';
 import { useSelector} from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
@@ -73,20 +60,18 @@ const MenuProps = {
 };
 
 
-function EditStudentPU(props) {
+function EditTeacherPU(props) {
   //states of elements-------------------
   const offline= useSelector(state=>state.offline);
   const role=useSelector(state=>state.login);
-  const [username, setUsername] = useState(()=>props.student.username);
+  const [username, setUsername] = useState(()=>props.teacher.username);
   const [disableUsername, setDisableUsername] = useState(()=>true);
-  const [name, setName] = useState(()=>props.student.name);
+  const [name, setName] = useState(()=>props.teacher.name);
   const [disableName, setDisableName] = useState(()=>true);
-  const [surname, setSurname] = useState(()=>props.student.surname);
+  const [surname, setSurname] = useState(()=>props.teacher.surname);
   const [disableSurname, setDisableSurname] = useState(()=>true);
-  const [email, setEmail] = useState(()=>props.student.email);
+  const [email, setEmail] = useState(()=>props.teacher.email);
   const [disableEmail, setDisableEmail] = useState(()=>true);
-  const [studentClasses, setStudentClasses] = useState(()=>props.student.classes.map((cl)=>cl.id));
-  const [disableStudentClasses, setDisableStudentClasses] = useState(()=>true);
   const [usernameError,setUsernameError]=useState(()=>"");
   const [OTP,setOTP]=useState(()=>"");
   const [OTPVisible,setOTPVisible]=useState(()=>false);
@@ -94,47 +79,24 @@ function EditStudentPU(props) {
 
 
   const classes = useStyles();
-//dropdown button---------------------
-
-
-//   const handleSave= ()=>{
-//     let send={
-//       id:quest.id,
-//       text:text,
-//       question_type:(multipleAnswer?1:2),
-//       image_path:imageState,
-//       row_D:quest.row_D,
-//       column_A:quest.column_A,
-//       answer_a:((wrongAnswers.length>0)?wrongAnswers[0]:null),
-//       answer_b:((wrongAnswers.length>1)?wrongAnswers[1]:null),
-//       answer_c:((wrongAnswers.length>2)?wrongAnswers[2]:null),
-//       answer_d:((wrongAnswers.length>3)?wrongAnswers[3]:null),
-//       solution:correctAnswer
-//     }
-//     props.questChange(send);
-//     props.popUpClose(false);
-//   }
-// //------------------------
 
   const saveChanges=()=>{
     let itemToSave;
-    let st=studentClasses.map((cl)=>{for(let i of props.allClasses){if(i.id==cl){return {name:i.name,id:i.id}}}});
     itemToSave={
-      id: props.student.id,
-      created:props.student.created,
+      id: props.teacher.id,
+      created:props.teacher.created,
       username: username,
       name: name,
       surname: surname,
       email: email,
-      classes: st
     };
-    props.editStudent(itemToSave);
+    props.editTeacher(itemToSave);
     props.setOpenPopup(false);
 
   };
 
-  const checkUsername=(temp)=>{
-    
+
+const checkUsername=(temp)=>{
     const requestOptions = {
         method: 'POST',
         mode:'cors',
@@ -153,7 +115,6 @@ function EditStudentPU(props) {
                 else{
                   setUsernameError("");
                 }
-                // setUsername(temp);
         })
         .catch((error)=>{
           console.log('Error in fetch function '+ error);
@@ -162,11 +123,7 @@ function EditStudentPU(props) {
 
 };
 
-  const handleChangeClasses=(event)=>{
-    setStudentClasses(event.target.value);
-  };
-
-  const getOTP=()=>{
+const getOTP=()=>{
     if(offline){
       setOTP("fm934nduigtr4e");
     }
@@ -179,8 +136,8 @@ function EditStudentPU(props) {
         };
 
         let apiUri;
-        if(role==="admin") apiUri=`/api/OTP/${props.student.id}`
-        else if(role==="teacher") apiUri=`/api/OTP/${props.student.id}`;
+        if(role==="admin") apiUri=`/api/OTP/${props.teacher.id}`
+        else if(role==="teacher") apiUri=`/api/OTP/${props.teacher.id}`;
 
         fetch(apiUri, requestOptions)
         .then(response => response.json())
@@ -188,17 +145,7 @@ function EditStudentPU(props) {
         .catch((error)=>console.log('Error in fetch function '+ error));
     }
     setOTPVisible(true);
-  }
-
-  // const checkIfIn=(oneClass)=>{
-  //   let bool=false;
-  //   props.student.classes.map((sCl)=>{
-  //     if(sCl.id===oneClass.id) {
-  //       bool=true;
-  //     }
-  //   });
-  //   return bool;
-  // };
+};
 
 
 
@@ -233,7 +180,7 @@ function EditStudentPU(props) {
                   	{/* <TextField fullWidth className={classes.fields} disabled={disableUsername} type="string" label="Username" variant="filled" defaultValue={username} value={username} onChange={(event)=>{setUsername(event.target.value)}}/> */}
                 </Grid>
                 <Grid item xs={2} >
-                  <IconButton onClick={()=>{setDisableUsername(!disableUsername);setDisableEmail(true);setDisableName(true);setDisableSurname(true);setDisableStudentClasses(true)}} edge="end">
+                  <IconButton onClick={()=>{setDisableUsername(!disableUsername);setDisableEmail(true);setDisableName(true);setDisableSurname(true);}} edge="end">
                     {disableUsername ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
                   </IconButton>
                 </Grid>
@@ -244,7 +191,7 @@ function EditStudentPU(props) {
                   <TextField fullWidth  className={classes.fields} disabled={disableName} type="string" label="Name" variant="filled" defaultValue={name} value={name} onChange={(event)=>{setName(event.target.value)}}/>
                 </Grid>
                 <Grid item xs={2} >
-                  <IconButton onClick={()=>{setDisableName(!disableName);setDisableEmail(true);setDisableSurname(true);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
+                  <IconButton onClick={()=>{setDisableName(!disableName);setDisableEmail(true);setDisableSurname(true);setDisableUsername(true);}} edge="end">
                     {disableName ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
                   </IconButton>
                 </Grid>
@@ -255,7 +202,7 @@ function EditStudentPU(props) {
                   <TextField fullWidth  className={classes.fields} disabled={disableSurname} type="string" label="Surname" variant="filled" defaultValue={surname} value={surname} onChange={(event)=>{setSurname(event.target.value)}}/>
                 </Grid>
                 <Grid item xs={2} >
-                  <IconButton onClick={()=>{setDisableSurname(!disableSurname);setDisableEmail(true);setDisableName(true);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
+                  <IconButton onClick={()=>{setDisableSurname(!disableSurname);setDisableEmail(true);setDisableName(true);setDisableUsername(true);}} edge="end">
                     {disableSurname ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
                   </IconButton>
                 </Grid>
@@ -266,31 +213,9 @@ function EditStudentPU(props) {
                   <TextField fullWidth  className={classes.fields} disabled={disableEmail} type="e-mail" label="e-mail" variant="filled" defaultValue={email} value={email} onChange={(event)=>{setEmail(event.target.value)}}/>
                 </Grid>
                 <Grid item xs={2} >
-                        <IconButton onClick={()=>{setDisableEmail(!disableEmail);setDisableName(true);setDisableSurname(true);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
+                        <IconButton onClick={()=>{setDisableEmail(!disableEmail);setDisableName(true);setDisableSurname(true);setDisableUsername(true);}} edge="end">
                                   {disableEmail ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
                         </IconButton>
-                </Grid>
-              </Grid>
-
-              <Grid container item xs={12}>
-              <Grid item xs={10} >
-                <FormControl variant="filled" className={classes.fields}>
-                    <InputLabel >Classes</InputLabel>
-                    <Select  multiple value={studentClasses} onChange={handleChangeClasses}  disabled={disableStudentClasses} renderValue={(selected) => {let array=selected.map((selClass)=>{for(let cl of props.allClasses){if(cl.id==selClass)return `${cl.name}`}}); return array.join(`, `);} } MenuProps={MenuProps}>
-                      {props.allClasses.map((oneClass) => {
-                        return(
-                          <MenuItem key={oneClass.id} value={oneClass.id}>
-                          {/* <Checkbox checked={checkIfIn(oneClass)}/> */}
-                          <ListItemText primary={`${oneClass.name} #${oneClass.id}`}  />
-                        </MenuItem>
-                        )})}
-                    </Select>
-                </FormControl>
-                </Grid>
-                <Grid item xs={2} >
-                  <IconButton onClick={()=>{setDisableStudentClasses(!disableStudentClasses);setDisableEmail(true);setDisableName(true);setDisableSurname(true);setDisableUsername(true)}} edge="end">
-                            {setDisableStudentClasses ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
-                  </IconButton>
                 </Grid>
               </Grid>
 
@@ -324,4 +249,4 @@ function EditStudentPU(props) {
   )
 }
 
-export default EditStudentPU;
+export default EditTeacherPU;

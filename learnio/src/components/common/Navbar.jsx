@@ -121,6 +121,7 @@ function Navbar(){
     var AdminFeatures=false;
     var StudentFeatures=false;
     var TeacherFeatures=false;
+    var GuestFeatures=false;
 
   
     switch(loginStatus){
@@ -128,30 +129,35 @@ function Navbar(){
         AdminFeatures=true;
         StudentFeatures=false;
         TeacherFeatures=false;
+        GuestFeatures=false;
         break;
       }
       case 'teacher':{//privremeno rjesenje za prvu iteraciju jer nema razlike teachera i admina
-        AdminFeatures=true;
+        AdminFeatures=false;
         StudentFeatures=false;
         TeacherFeatures=true;
+        GuestFeatures=false;
         break;
       }
       case 'student':{
         AdminFeatures=false;
         StudentFeatures=true;
         TeacherFeatures=false;
+        GuestFeatures=false;
         break;
       }
       case 'guest':{
         AdminFeatures=false;
         StudentFeatures=false;
         TeacherFeatures=false;
+        GuestFeatures=true;
         break;
       }
       default:{
         AdminFeatures=false;
         StudentFeatures=false;
         TeacherFeatures=false;
+        GuestFeatures=true;
       }
     }
 
@@ -183,24 +189,25 @@ function Navbar(){
                   <Box ml={8} mr={8}><li><Link to="/" className={classes.link}>Home</Link></li></Box>
                   {/* {StudentFeatures&&<Box mr={8}><li><Link to="/topics">Topics</Link></li></Box>} */}
                   {StudentFeatures&&<Box mr={8}><li><Link to="/student/subjects" className={classes.link}>Subjects</Link></li></Box>}
-                  {AdminFeatures&&<Box mr={8}><li><Link to="/AdminTopics" className={classes.link}>Topics</Link></li></Box>}
-                  {AdminFeatures&&<Box mr={8}><li><Link to="/results" className={classes.link}>Results</Link></li></Box>}
-                  {AdminFeatures&&<Box mr={8}><li><Link to="/students" className={classes.link}>Students</Link></li></Box>}
+                  {(AdminFeatures||TeacherFeatures)&&<Box mr={8}><li><Link to="/AdminTopics" className={classes.link}>Topics</Link></li></Box>}
+                  {(AdminFeatures||TeacherFeatures)&&<Box mr={8}><li><Link to="/results" className={classes.link}>Results</Link></li></Box>}
+                  {(AdminFeatures||TeacherFeatures)&&<Box mr={8}><li><Link to="/students" className={classes.link}>Students</Link></li></Box>}
+                  {AdminFeatures&&<Box mr={8}><li><Link to="/teachers" className={classes.link}>Teachers</Link></li></Box>}
                 </Hidden>
-                    {(!(AdminFeatures||StudentFeatures||TeacherFeatures))&&
+                    {GuestFeatures&&
                       <Box className={classes.buttonGreenSignUp}> 
                         <Button size="small" >
                           <Link to="/register" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1em",marginRight: "1em"}}>SignUp</Link>
                         </Button>
                       </Box> 
                     }
-                    {(!(AdminFeatures||StudentFeatures||TeacherFeatures))&&
+                    {GuestFeatures&&
                       <Box ml={1} className={classes.buttonGreenLogin}>
                         <Button size="small"  >
                           <Link to="/login" style={{fontSize:"15px",color: "white", fontFamily: "Lobster",marginLeft: "1.5em",marginRight: "1.5em"}}>Login</Link>
                         </Button>
                       </Box> }
-                    {(AdminFeatures||StudentFeatures||TeacherFeatures)&&
+                    {(!GuestFeatures)&&
                       <div onClick={()=>goToProfile()} className={classes.profileDiv}><p className={classes.profileButton}>{acro}</p></div>
                     }
                     {(AdminFeatures||StudentFeatures||TeacherFeatures)&&

@@ -177,22 +177,23 @@ const useStyles = makeStyles((theme) => ({
   }));
 
   
-const ChipsArray=(props)=> {
-  const classes = useStyles();
-  return (
-    <Paper component="ul" className={classes.rootChips}>
-      {
-      props.wrongAnswers.map((data) => {
-        return (
-          <li key={data}>
-            <Chip style={{margin:"0 0.1em"}} label={data} onDelete={()=>{props.deleteWrongAnswer(data)}}/>
-          </li>
-        );
-      })}
-    </Paper>
-  );
-};
-
+  const ChipsArray=(props)=> {
+    const classes = useStyles();
+    const abcd=['a','b','c','d']
+    return (
+      <Paper component="ul" className={classes.rootChips}>
+        {
+        props.wrongAnswers.map((data) => {
+          return (
+            <li key={data}>
+              <Chip style={{margin:"0 0.1em"}} label={abcd[props.wrongAnswers.indexOf(data)]+")    "+data} onDelete={()=>{props.deleteWrongAnswer(data)}}/>
+            </li>
+          );
+        })}
+      </Paper>
+    );
+  };
+  
 
 function AddQuestPU(props) {
   //states of elements-------------------
