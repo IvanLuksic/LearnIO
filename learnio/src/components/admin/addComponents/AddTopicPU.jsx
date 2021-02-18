@@ -224,27 +224,33 @@ const AOInput=(props)=>{
 function AddTopicPU(props){
 
     const offline= useSelector(state=>state.offline);
-    const [valueAO, setValueAO] = useState(null);
-    const [valueD, setValueD] = useState(null);
-    const [valueText,setValueText]= useState('');
+    const [addOrEdit,setAddOrEdit]=useState(()=>props.addOrEdit);
+    const [valueAO, setValueAO] = useState(()=>{if(props.columns_AO!==undefined){return props.columns_AO} else{return null}});
+    const [valueD, setValueD] = useState(()=>{if(props.rows_D!==undefined){return props.rows_D} else{return null}});
+    const [valueText,setValueText]= useState(()=>{if(props.topic_name!==undefined){return props.topic_name} else{return ""}});
     const [show1, setShow1] = useState(true);
     const [show2, setShow2] = useState(false);
-    const [valueDesc,setValueDesc]=useState();
-    const [associatedTopic, setAssociatedTopic] = useState([null]);
-    const [associatedTopicVisible, setAssociatedTopicVisible] = useState(false);
+    const [valueDesc,setValueDesc]=useState(()=>{if(props.topic_description!==undefined){return props.topic_description} else{return ""}});
+    const [associatedTopic, setAssociatedTopic] = useState(()=>{if(props.associated_topics!==undefined){return props.associated_topics} else{return [null]}});
+    const [associatedTopicVisible, setAssociatedTopicVisible] = useState((!props.addOrEdit));
     const [associatedTopicsPossible, setAssociatedTopicsPossible] = useState([{topic_id:-1,topic_name:""}]);
     const [subjectAndCourseList, setSubjectAndCourseList]=useState(()=>subjectCoursePairs);
-    const [subjectAndCourse, setSubjectAndCourse]=useState(null);
-    const [AOI1,setAOI1]=useState(()=>"");
-    const [AOI2,setAOI2]=useState(()=>"");
-    const [AOI3,setAOI3]=useState(()=>"");
-    const [AOI4,setAOI4]=useState(()=>"");
-    const [AOI5,setAOI5]=useState(()=>"");
-    const [AOI6,setAOI6]=useState(()=>"");
-    const [AOI7,setAOI7]=useState(()=>"");
-    const [AOI8,setAOI8]=useState(()=>"");
-    const [AOI9,setAOI9]=useState(()=>"");
-    const [AOI10,setAOI10]=useState(()=>"");
+    const [subjectAndCourse, setSubjectAndCourse]=useState(()=>{
+      if(props.course_id!==undefined&&props.course_name!==undefined&&props.subject_id!==undefined&&props.subject_name!==undefined){
+        return {course_id:props.course_id,course_name:props.course_name,subject_id:props.subject_id,subject_name:props.subject_name}
+      }
+      else return null;
+    });
+    const [AOI1,setAOI1]=useState(()=>{if(props.asessments_array[0]!==undefined){return props.asessments_array[0]}else{ return ""}});
+    const [AOI2,setAOI2]=useState(()=>{if(props.asessments_array[1]!==undefined){return props.asessments_array[1]}else{ return ""}});
+    const [AOI3,setAOI3]=useState(()=>{if(props.asessments_array[2]!==undefined){return props.asessments_array[2]}else{ return ""}});
+    const [AOI4,setAOI4]=useState(()=>{if(props.asessments_array[3]!==undefined){return props.asessments_array[3]}else{ return ""}});
+    const [AOI5,setAOI5]=useState(()=>{if(props.asessments_array[4]!==undefined){return props.asessments_array[4]}else{ return ""}});
+    const [AOI6,setAOI6]=useState(()=>{if(props.asessments_array[5]!==undefined){return props.asessments_array[5]}else{ return ""}});
+    const [AOI7,setAOI7]=useState(()=>{if(props.asessments_array[6]!==undefined){return props.asessments_array[6]}else{ return ""}});
+    const [AOI8,setAOI8]=useState(()=>{if(props.asessments_array[7]!==undefined){return props.asessments_array[7]}else{ return ""}});
+    const [AOI9,setAOI9]=useState(()=>{if(props.asessments_array[8]!==undefined){return props.asessments_array[8]}else{ return ""}});
+    const [AOI10,setAOI10]=useState(()=>{if(props.asessments_array[9]!==undefined){return props.asessments_array[9]}else{ return ""}});
     const [AOL1,setAOL1]=useState(()=>3);
     const [AOL2,setAOL2]=useState(()=>3);
     const [AOL3,setAOL3]=useState(()=>3);
@@ -257,7 +263,6 @@ function AddTopicPU(props){
     const [AOL10,setAOL10]=useState(()=>3);
 
     const role=useSelector(state=>state.login);
-
 
     const fetchTopics=(sub)=>{
       let dataFetched;
@@ -309,7 +314,6 @@ function AddTopicPU(props){
         if(!offline){
           fetchTopics(event.target.value);
           setAssociatedTopicVisible(true);
-
         }
         else setAssociatedTopicsPossible(fakeBackendTopics);
         setAssociatedTopicVisible(true);
@@ -469,6 +473,102 @@ function AddTopicPU(props){
       }
     };
 
+
+
+    const handleEdit=()=>{
+      if(subjectAndCourse!==null){
+        let arrayAT=[];
+        let arrayAO=[];
+        if(associatedTopic!==[null]){
+          if(associatedTopic[0]!==undefined)arrayAT.push({...associatedTopic[0],required_level:AOL1});
+          if(associatedTopic[1]!==undefined)arrayAT.push({...associatedTopic[1],required_level:AOL2});
+          if(associatedTopic[2]!==undefined)arrayAT.push({...associatedTopic[2],required_level:AOL3});
+          if(associatedTopic[3]!==undefined)arrayAT.push({...associatedTopic[3],required_level:AOL4});
+          if(associatedTopic[4]!==undefined)arrayAT.push({...associatedTopic[4],required_level:AOL5});
+          if(associatedTopic[5]!==undefined)arrayAT.push({...associatedTopic[5],required_level:AOL6});
+          if(associatedTopic[6]!==undefined)arrayAT.push({...associatedTopic[6],required_level:AOL7});
+          if(associatedTopic[7]!==undefined)arrayAT.push({...associatedTopic[7],required_level:AOL8});
+          if(associatedTopic[8]!==undefined)arrayAT.push({...associatedTopic[8],required_level:AOL9});
+          if(associatedTopic[9]!==undefined)arrayAT.push({...associatedTopic[9],required_level:AOL10});
+
+        };
+        if(valueAO>0)arrayAO.push(AOI1);
+        if(valueAO>1)arrayAO.push(AOI2);
+        if(valueAO>2)arrayAO.push(AOI3);
+        if(valueAO>3)arrayAO.push(AOI4);
+        if(valueAO>4)arrayAO.push(AOI5);
+        if(valueAO>5)arrayAO.push(AOI6);
+        if(valueAO>6)arrayAO.push(AOI7);
+        if(valueAO>7)arrayAO.push(AOI8);
+        if(valueAO>8)arrayAO.push(AOI9);
+        if(valueAO>9)arrayAO.push(AOI10);
+        console.log(arrayAO);
+        let send={
+          topic_id: props.topic_id,
+          topic_name: valueText,
+          columns_AO:valueAO,
+          rows_D: valueD,
+          course_id:subjectAndCourse.course_id,
+          associated_topics: arrayAT,
+          topic_description:valueDesc,
+          asessments_array:arrayAO
+        };
+
+        const requestOptions = {
+          method: 'POST',
+          mode:'cors',
+          headers: { 'Content-Type': 'application/json'},
+          body: JSON.stringify(send),
+          credentials: 'include'
+        };
+
+        if(offline){
+          props.setTopicName(valueText);
+          console.log("Hej");
+          props.setTopicDescription(valueDesc);
+        };
+        offline&&(props.closePopup!==undefined)&&props.closePopup();
+
+        let apiUri;
+        if(role==="admin") apiUri=`/api/edit/topic`
+        else if(role==="teacher") apiUri=`/api/edit/topic`;
+
+        fetch(apiUri, requestOptions)
+        .then((response)=>{
+          if(response.status===200)
+          {
+            Promise.resolve(response).then(response => response.json())
+              .then(data => {
+                (props.addTopic!==undefined)&&props.addTopic({
+                  topic_id:props.topic_id,
+                  topic_name:valueText,
+                  course_id:subjectAndCourse.course_id,
+                  course_name:subjectAndCourse.course_name,
+                  subject_id:subjectAndCourse.subject_id,
+                  subject_name:subjectAndCourse.subject_name,
+                  topic_description:valueDesc
+                });
+                props.closePopup();
+                props.setSnackbarStatus("success");
+                props.setSnackbarText("Topic edited successfully.")
+                props.setSnackbarOpen(true);
+              })
+            }
+            else{
+              props.setSnackbarStatus("error");
+              props.setSnackbarText("Topic hasn't been edited successfully.")
+              props.setSnackbarOpen(true);
+            }
+        })
+        .catch((error)=>{
+          props.setSnackbarStatus("error");
+          props.setSnackbarText('Error in fetch function '+ error);
+          props.setSnackbarOpen(true);
+          console.log('Error in fetch function '+ error);
+        });
+      }
+    };
+
     const classes=useStyles();
     return(
         <Grid className={classes.popupStyle} container direction="column" justify="space-between" alignItems="center" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
@@ -484,7 +584,7 @@ function AddTopicPU(props){
                 </ButtonGroup>
               </Grid>
               <Grid item>          
-                <Button variant="contained" className={classes.saveBtn} type="submit" onClick={handleSave} >
+                <Button variant="contained" className={classes.saveBtn} type="submit" onClick={addOrEdit?handleSave:handleEdit} >
                     SAVE  
                 <Icon style={{marginLeft:"0.5em", fontSize:"1.3em"}} >save_icon</Icon>
                 </Button>

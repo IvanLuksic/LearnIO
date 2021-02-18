@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 25,
     color: "#FFFFFF",
     maxHeight: "20",
-    position: "absolute",
+    position: "fixed",
     bottom: "7%",
     right: "5%"
   }
@@ -162,7 +162,7 @@ function AddCourseSubjectClass() {
         : null
       }{
         popupOpen && index === 5 ? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
-          <AddTopicPU  closePopup={closePopup} setSnackbarOpen={setSnackOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus} />
+          <AddTopicPU addOrEdit={true} closePopup={closePopup} setSnackbarOpen={setSnackOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus} />
         </PopupDialog>
         : null
       }

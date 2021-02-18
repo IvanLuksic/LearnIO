@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Button,Typography } from "@material-ui/core";
 import React, { useState,useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../../images/learniobg10-15.png';
@@ -12,6 +12,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
 import NotFound from '../common/NotFound';
 import CustomSnackbar from '../common/Snackbar.jsx';
+import Icon from '@material-ui/core/Icon';
+import AddTopicPU from './addComponents/AddTopicPU'
+import PopupDialog from '../common/PopupDialog';
 
 const useStyles = makeStyles((theme) => ({
     background:{
@@ -42,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
     lobster: {
           fontFamily: "Lobster",
           textShadow:" -5px 5px #30303033",
+          display:"inline"
 
     },
     divider:{
@@ -81,7 +85,21 @@ function useForceUpdate() {
   }
 
 function MatricaAdmin(props)
-{
+{     
+    // topic_name: valueText,
+    // columns_AO:valueAO,
+    // rows_D: valueD,
+    // course_id:subjectAndCourse.course_id,
+    // course_name:subjectAndCourse.course_name,
+    // subject_id:subjectAndCourse.subject_id,
+    // subject_name:subjectAndCourse.subject_name,
+    // associated_topics: arrayAT,
+    // topic_description:valueDesc,
+    // asessments_array:arrayAO
+    // "course_id":123,
+    // "course_name": "Electrical engineering",
+    // "subject_id":245674,
+    // "subject_name":"Matematika 1",
     const offline= useSelector(state=>state.offline);
     let dispatch=useDispatch();
     const [aoSelected,setAoSelected]=useState(1);
@@ -95,11 +113,26 @@ function MatricaAdmin(props)
     const [topicName,setTopicName]=useState(()=>fakeBackendQuestions.topic_name);
     const [topicID,setTopicID]=useState(useSelector(state=>state.topic));
     const [topicDescription,setTopicDescription]=useState(()=>fakeBackendQuestions.topic_description);
+    const [course_id,setCourse_id]=useState(()=> 123);
+    const [course_name,setCourse_name]=useState(()=> "Electrical engineering");
+    const [subject_id,setSubject_id]=useState(()=> 245674);
+    const [subject_name,setSubject_name]=useState(()=> "Matematika 1");
+    const [associated_topics, setAssociated_topics]=useState(()=> {return[{
+        topic_id:8,
+        topic_name:"Ebbers-Moll",
+        course_id:123,
+        course_name: "Electrical engineering",
+        subject_id:245674,
+        subject_name:"Electronics",
+        topic_description:"Jako dobra tema."},]
+    });
+    const [asessments_array,setAsessments_array]=useState(()=>["super","jako","dobro"]);
     const [noError,setNoError]=useState(()=> true);
     const [snackbarText,setSnackbarText]=useState(()=>"");
     const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
     const [errorStatus,setErrorStatus]=useState(()=>"");
     const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+    const [popup,setPopup]=useState(()=>false);
 
     const role=useSelector(state=>state.login);
     const forceUpdate = useForceUpdate();
@@ -389,17 +422,74 @@ function MatricaAdmin(props)
     };
 
 
+    const openEdit=()=>{
+        const requestOptions = {
+            method: 'POST',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({topic_id:topicID}),
+            credentials: 'include'
+        };
+
+        let apiUri;
+        if(role==="admin") apiUri='/api/getSubjectCoursePair'
+        else if(role==="teacher") apiUri='/api/getSubjectCoursePair';
+
+        fetch(apiUri, requestOptions)
+        .then((response)=>{
+            if(response.status===200)
+            {
+              Promise.resolve(response).then(response => response.json())
+                .then((data)=> {
+                        setCourse_id(data.course_id);
+                        setCourse_name(data.course_name);
+                        setSubject_id(data.subject_id);
+                        setSubject_name(data.subject_name);
+                        setAsessments_array(data.asessments_array);
+                        setAssociated_topics(data.associated_topics);
+                        setSnackbarStatus("success");
+                        setSnackbarText("Edit started successfully.");
+                        setSnackbarOpen(true);
+                        
+                        setPopup(true);
+                })
+            }      
+            else{
+                setSnackbarStatus("error");
+                setErrorStatus(response.status);
+                setSnackbarText("Edit did not start successfully.");
+                setSnackbarOpen(true);
+          }})
+          .catch((error)=>{
+            setSnackbarStatus("error");
+            setSnackbarText("Error in fetch function.");
+            setSnackbarOpen(true);
+            console.log('Error in fetch function '+ error);
+          });
+
+          if(offline){setPopup(true);}
+
+    }
+
+
     const classes = useStyles();
 
     return (
         (!noError)?<NotFound code={errorStatus}/>
         :<div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         {loading?
+            <div>
+            {popup&& <PopupDialog openPopup={popup} setOpenPopup={setPopup} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
+            <AddTopicPU addOrEdit={false} columns_AO={matricaAO} rows_D={matricaD} topic_name={topicName} topic_id={topicID} topic_description={topicDescription} associated_topics={associated_topics} asessments_array={asessments_array} course_id={course_id} course_name={course_name} subject_id={subject_id} subject_name={subject_name} setTopicDescription={setTopicDescription} setTopicName={setTopicName}  setSnackbarOpen={setSnackbarOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus} closePopup={()=>{setPopup(false);}}/>
+            </PopupDialog>}
             <Grid container direction="row" justify="center" alignItems="flex-start"  height="100%" >
                 <Grid container item md={6} direction="row" justify="flex-start" alignItems="flex-start" className={classes.wholeLeftGrid}>
                     <Grid item xs={11} md={11} className={classes.topicTitle} direction="column" justify="flex-start" alignItems="flex-start"  container>
-                        <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName}</Typography></Grid>
-                        <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
+                        <Grid item xs={11} container style={{marginBottom:"3rem"}}>
+                            <Grid item xs={10}><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName}</Typography></Grid>
+                            <Grid item xs={2} style={{ textAlign:"center", alignSelf:"center"}}><Button onClick={()=>openEdit()}><Icon  style={{fontSize:"3rem", textShadow:" -5px 5px #30303033",color:"rgb(235, 73, 73)"}}>edit_outlined_icon</Icon></Button></Grid>
+                        </Grid>
+                        <Grid item xs={11}><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
                     </Grid>
                     <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="flex-start" alignItems="flex-start" >
                         <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fetchedData,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
@@ -414,6 +504,7 @@ function MatricaAdmin(props)
                     : null
                 } 
             </Grid>
+            </div>
             :
             <MatrixSkeleton/>
         }
