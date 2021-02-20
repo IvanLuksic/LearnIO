@@ -208,6 +208,7 @@ function AddQuestPU(props) {
   const [correctAnswer, setCorrectAnswers]=useState(()=>{ return "Točno"});
   const [multipleAnswer, setMultipleAnswers]=useState(()=>{ return false});
   const [ieQuestionList, setIeQuestionList] = useState([]);
+  const [file,setFile]=useState(()=>null);
   const [ieFilteredQuestionList, setIeFilteredQuestionList] = useState([]);
   const [ieCourseList, setIeCourseList] = useState([]);
   const [ieTopicList, setIeTopicList] = useState([]);
@@ -250,9 +251,10 @@ function AddQuestPU(props) {
 
   const handleSave= ()=>{
     let send={
+      questionImage:file,
       text:text,
       question_type:(multipleAnswer?1:2),
-      image_path:imageState,
+      // image_path:imageState,
       answer_a:((wrongAnswers.length>0)?wrongAnswers[0]:null),
       answer_b:((wrongAnswers.length>1)?wrongAnswers[1]:null),
       answer_c:((wrongAnswers.length>2)?wrongAnswers[2]:null),
@@ -421,7 +423,7 @@ function AddQuestPU(props) {
               </Grid>
               <Grid container item direction="row" justify="center" alignItems="center" >
                 <Grid container item xs justify="center" alignItems="center">
-                  <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; console.log(event.target.files[0]); upload(img); setimageState(URL.createObjectURL(img)); setIMG(true) ;}}}/>
+                  <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; console.log(event.target.files[0]); setFile(img); setimageState(URL.createObjectURL(img)); setIMG(true) ;}}}/>
                   <label htmlFor="contained-button-file">
                     <Button variant="contained" color="primary" component="span" className={classes.uploadButton}>
                       Upload photo

@@ -66,13 +66,16 @@ function EditTeacherPU(props) {
   const role=useSelector(state=>state.login);
   const [username, setUsername] = useState(()=>props.teacher.username);
   const [disableUsername, setDisableUsername] = useState(()=>true);
+  const [usernameError,setUsernameError]=useState(()=>null);
   const [name, setName] = useState(()=>props.teacher.name);
   const [disableName, setDisableName] = useState(()=>true);
+  const [nameError,setNameError]=useState(()=>null);
   const [surname, setSurname] = useState(()=>props.teacher.surname);
   const [disableSurname, setDisableSurname] = useState(()=>true);
+  const [surnameError,setSurnameError]=useState(()=>null);
   const [email, setEmail] = useState(()=>props.teacher.email);
   const [disableEmail, setDisableEmail] = useState(()=>true);
-  const [usernameError,setUsernameError]=useState(()=>"");
+  const [emailError,setEmailError]=useState(()=>null);
   const [OTP,setOTP]=useState(()=>"");
   const [OTPVisible,setOTPVisible]=useState(()=>false);
 
@@ -81,22 +84,31 @@ function EditTeacherPU(props) {
   const classes = useStyles();
 
   const saveChanges=()=>{
-    let itemToSave;
-    itemToSave={
-      id: props.teacher.id,
-      created:props.teacher.created,
-      username: username,
-      name: name,
-      surname: surname,
-      email: email,
+    checkEmail(email);
+    checkName(name);
+    checkSurname(surname);
+    checkUsername(username);
+    if((nameError==""||nameError==null)&&(surnameError==""||surnameError==null)&&(usernameError==""||usernameError==null)&&(emailError==""||emailError==null)){
+      let itemToSave;
+      itemToSave={
+        id: props.teacher.id,
+        created:props.teacher.created,
+        username: username,
+        name: name,
+        surname: surname,
+        email: email,
+      };
+      props.editTeacher(itemToSave);
+      props.setOpenPopup(false);
     };
-    props.editTeacher(itemToSave);
-    props.setOpenPopup(false);
-
   };
 
 
+
 const checkUsername=(temp)=>{
+
+    if(offline){setTimeout(()=>{if(username=="Username"){setUsernameError("nevalja")}else{setUsernameError("")}},500)};
+
     const requestOptions = {
         method: 'POST',
         mode:'cors',
@@ -121,6 +133,22 @@ const checkUsername=(temp)=>{
         });    
       }, 500);
 
+};
+
+const checkName=(temp)=>{
+  if(temp!==""){setNameError("")}
+  else{setNameError("Name is required.")}
+};
+
+const checkSurname=(temp)=>{
+  if(temp!==""){setSurnameError("")}
+  else{setSurnameError("Surname is required.")}
+};
+
+const checkEmail=(temp)=>{
+  if(temp==""){setEmailError("Email is required.")}
+  else if(!((/$^|.+@.+..+/).test(temp))) {setEmailError("Not a valid email.")}
+  else{setEmailError("")};
 };
 
 const getOTP=()=>{
@@ -162,15 +190,15 @@ const getOTP=()=>{
               <Grid container item md={12}>
                 <Grid item xs={10} >
                 <TextField  fullWidth className={classes.fields} disabled={disableUsername} type="string" label="Username" variant="filled" defaultValue={username} value={username} 
-                    onBlur={(e)=>{ if(e.target.value.length>4){setUsername(e.target.value); checkUsername(e.target.value);}else{setUsername(e.target.value);}}}
+                    onBlur={(e)=>{ if(e.target.value.length>4){checkUsername(e.target.value);}}}
                     // onBlur={()=>{const temp=username; setUsername("");}}
-                    error={(usernameError!=="")}
+                    error={(usernameError!==""&&usernameError!==null)}
                     helperText={usernameError}
                     onChange={(event)=>{setUsername(event.target.value)} }                   
                     InputProps={{
                         endAdornment: (
                           <InputAdornment position="start">
-                            {(!(usernameError!==""))&&(usernameError!=undefined)&&<Icon fontSize="small" style={{color:"#27ae60"}}>check_mark</Icon>}
+                            {(usernameError=="")&&<Icon fontSize="small" style={{color:"#27ae60"}}>check_mark</Icon>}
                             {(usernameError!=="")&&(usernameError!=undefined)&&<Icon fontSize="small" style={{color:"#EB4949"}}>clear</Icon>}
                           </InputAdornment>
                         ),
@@ -188,7 +216,7 @@ const getOTP=()=>{
 
               <Grid container item xs={12}>
                 <Grid item xs={10} >
-                  <TextField fullWidth  className={classes.fields} disabled={disableName} type="string" label="Name" variant="filled" defaultValue={name} value={name} onChange={(event)=>{setName(event.target.value)}}/>
+                  <TextField fullWidth  className={classes.fields} disabled={disableName} type="string" label="Name" variant="filled" defaultValue={name} value={name}  helperText={nameError} error={nameError!==""&&nameError!==null} onBlur={(e)=>checkName(e.target.value)}  onChange={(event)=>{setName(event.target.value)}}/>
                 </Grid>
                 <Grid item xs={2} >
                   <IconButton onClick={()=>{setDisableName(!disableName);setDisableEmail(true);setDisableSurname(true);setDisableUsername(true);}} edge="end">
@@ -199,7 +227,7 @@ const getOTP=()=>{
 
               <Grid container item xs={12}>
                 <Grid item xs={10} >
-                  <TextField fullWidth  className={classes.fields} disabled={disableSurname} type="string" label="Surname" variant="filled" defaultValue={surname} value={surname} onChange={(event)=>{setSurname(event.target.value)}}/>
+                  <TextField fullWidth  className={classes.fields} disabled={disableSurname} type="string" label="Surname" variant="filled" defaultValue={surname} value={surname}  helperText={surnameError} error={surnameError!==""&&surnameError!==null} onBlur={(e)=>checkSurname(e.target.value)} onChange={(event)=>{setSurname(event.target.value)}}/>
                 </Grid>
                 <Grid item xs={2} >
                   <IconButton onClick={()=>{setDisableSurname(!disableSurname);setDisableEmail(true);setDisableName(true);setDisableUsername(true);}} edge="end">
@@ -210,7 +238,7 @@ const getOTP=()=>{
 
               <Grid container item xs={12}>
                 <Grid item xs={10} >
-                  <TextField fullWidth  className={classes.fields} disabled={disableEmail} type="e-mail" label="e-mail" variant="filled" defaultValue={email} value={email} onChange={(event)=>{setEmail(event.target.value)}}/>
+                  <TextField fullWidth  className={classes.fields} disabled={disableEmail} type="e-mail" label="e-mail" variant="filled" defaultValue={email}  value={email} helperText={emailError} error={emailError!==""&&emailError!==null} onBlur={(e)=>checkEmail(e.target.value)}  onChange={(event)=>{setEmail(event.target.value)}}/>
                 </Grid>
                 <Grid item xs={2} >
                         <IconButton onClick={()=>{setDisableEmail(!disableEmail);setDisableName(true);setDisableSurname(true);setDisableUsername(true);}} edge="end">
