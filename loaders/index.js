@@ -4,11 +4,11 @@ const {httplogger,nodelogger}=require('./logger.js');//ubacivat loggere po depen
 module.exports={
     load: async function(app){
         try {
-            await DatabaseConnection(nodelogger);
-            nodelogger.info("Sequelize loadan");
+           await DatabaseConnection(nodelogger);
+            nodelogger.info("Sequelize loaded. Connected to database");
             try {
                 await exprr(app,httplogger);
-               nodelogger.info('express loadan');
+               nodelogger.info('Express loaded');
             } catch (error) {
                 nodelogger.error(error);
                 throw (new Error());

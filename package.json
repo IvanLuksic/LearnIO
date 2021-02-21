@@ -24,6 +24,7 @@
     "node-uuid": "^1.4.8",
     "pg": "^8.4.2",
     "pg-hstore": "^2.3.3",
+    "rate-limiter-flexible": "^2.2.1",
     "sequelize": "^6.3.5",
     "winston": "^3.3.3"
   }
