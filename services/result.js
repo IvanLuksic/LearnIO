@@ -1,4 +1,5 @@
 const { Op } = require("sequelize");
+const config=require('../config');
 module.exports= class result{
     constructor(result,user,subject,course,topic,assesment,clas,logger)
     {
@@ -35,7 +36,7 @@ module.exports= class result{
                 await this.Result.create({
                     grade:0,
                     result_array_by_columns:results,
-                    status:process.env.RED,
+                    status:config.colors.red,
                     subject_id:subjects_id,
                     course_id:courses_id,
                     topic_id:topics_id,

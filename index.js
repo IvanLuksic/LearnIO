@@ -7,6 +7,7 @@ const subject_class=require('./services/subject');
 const userclass=require('./services/user');
 const inviteclass=require('./services/invite_link');
 const {nodelogger}=require('./loaders/logger');
+const hash=require('./services/crypto');
 const models=require('./models');
 //instance=new questionclass(question,topic,save,course,user,result,nodelogger);
 let result_instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger)
@@ -78,8 +79,8 @@ async function init()
     //await instance.getAllTopicsFromCourse(1);
    // await instance.getAllClasses();
    //await instance.getClassesForTeacher(2);
-   await instance.associatedTopics(1,5);
-        nodelogger.info('Uspjesno');
+  // await instance.associatedTopics(1,5);
+ // await hash('c6TYXm3');
     } catch (error) {
         console.log('Greska u izvodenju'+error);
     }

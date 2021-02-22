@@ -21,6 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     row_D: DataTypes.SMALLINT,
     column_A: DataTypes.SMALLINT,
     image_path: DataTypes.STRING,
+    mime_type: DataTypes.STRING,
+    image_size: DataTypes.INTEGER,
     answer_a: DataTypes.STRING,
     answer_b: DataTypes.STRING,
     answer_c: DataTypes.STRING,

@@ -27,6 +27,14 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue:null
       },
+      mime_type:{
+        type: Sequelize.STRING,
+        defaultValue:null
+      },
+      image_size:{
+        type:Sequelize.INTEGER,
+        defaultValue:null
+      },
       answer_a: {
         type: Sequelize.STRING,
         defaultValue:null

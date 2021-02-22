@@ -1,5 +1,7 @@
 const { Op } = require("sequelize");
 const { format } = require("winston");
+const config=require('../config');
+const hash=require('./crypto');
 module.exports=class user {
     constructor(user,clas,class_student,result,save,session,teacher_subject,invite_links,logger)
     {
@@ -29,7 +31,7 @@ module.exports=class user {
                 mail:properties.mail,
                 date_of_birth:properties.date_of_birth,
                 username:properties.username,
-                password:properties.password,
+                password:await hash(properties.password),//string
                 created_at:new Date(),
                 user_type:properties.user_type,
             });
@@ -43,7 +45,7 @@ module.exports=class user {
             throw(error);
         }
     }
-    async getAllStudentsWithClassForClass(clas_id,isadmin)//za studente iz tog odabranog razreda dohvatit njihove podatke i sve ostale razrede u kojima se nalaze
+    async getAllStudentsWithClassForClass(clas_id)//za studente iz tog odabranog razreda dohvatit njihove podatke i sve ostale razrede u kojima se nalaze
     {
         try {
             //1.Dohvatit sve student idove iz tog razreda-> JER KAD BI JOINALI SA TIM RAZREDOM ONDA BI DOBILI SAMO PODTKE O STUDENTIMA A NAMA TREBAJU SVI RAZREDI OD TIH STUDENTA-> 2 PRISTUPA-> 1. JE DOHVATIT IDOVE STUDENTA IZ TOG RAZREDA I ZA NJIH DOHVACAT NJIOHVE RAZREDE
@@ -60,7 +62,7 @@ module.exports=class user {
                     }
                 },
                 where:{//osiguramo se za svaki slucaj da dohvati samo studente
-                    user_type:process.env.STUDENT
+                    user_type:config.roles.student
                 }
             });
             let student_ids=[];
@@ -68,7 +70,7 @@ module.exports=class user {
             student_ids.push(student.id);
             this.Logger.info(JSON.stringify(students));
             var students_with_classes=await this.User.findAll({
-                attributes:['id','name','surname','mail','username','password','created_at'],
+                attributes:['id','name','surname','mail','username','created_at'],
                 include:{
                     model:this.Clas,
                     as:'classes_student',
@@ -78,7 +80,7 @@ module.exports=class user {
                     id:{
                         [Op.in]:student_ids
                     },
-                    user_type:process.env.STUDENT//doatno osiguranje da dohvati samo studente
+                    user_type:config.roles.student//doatno osiguranje da dohvati samo studente
                 }
             });
             let format=[];
@@ -99,29 +101,15 @@ module.exports=class user {
                this.Logger.info(student.created_at)
                let date=new Date(Date.parse(student.created_at));
                let date_format=date.getDate().toString()+' '+(date.getMonth()+1).toString()+' '+date.getFullYear().toString()+' '+date.getHours().toString()+'h '+date.getMinutes().toString()+'m ';
-               if(isadmin)//admin ->dohvati password
-               {
                temp={
                 id:student.id,
                 name:student.name,
                 surname:student.surname,
                 email:student.mail,
                 username:student.username,
-                password:student.password,
                 created:date_format,
                 classes:format_classes
                };
-            }else {//ucitelj-> bez passworda
-                temp={
-                    id:student.id,
-                    name:student.name,
-                    surname:student.surname,
-                    email:student.mail,
-                    username:student.username,
-                    created:date_format,
-                    classes:format_classes
-                   };
-            }
                format.push(temp);
                format_classes=[];
                temp={};
@@ -138,14 +126,14 @@ module.exports=class user {
         try {
             try {
                 var students_with_classes=await this.User.findAll({
-                    attributes:['id','name','surname','mail','username','password','created_at'],
+                    attributes:['id','name','surname','mail','username','created_at'],
                     include:{
                         model:this.Clas,
                         as:'classes_student',
                         through: { attributes: [] },
                     },
                     where:{
-                        user_type:process.env.STUDENT
+                        user_type:config.roles.student
                     }
                 });
             } catch (error) {
@@ -177,7 +165,6 @@ module.exports=class user {
                 surname:student.surname,
                 email:student.mail,
                 username:student.username,
-                password:student.password,
                 created:date_format,
                 classes:format_classes
                };
@@ -214,7 +201,7 @@ module.exports=class user {
                         }
                     },
                     where:{
-                        user_type:process.env.STUDENT//DOHVATI SAMO STUDENTE,OSIGURAMO SE ZA SVAKI SLUCAJ
+                        user_type:config.roles.student//DOHVATI SAMO STUDENTE,OSIGURAMO SE ZA SVAKI SLUCAJ
                     }
                 });
                 this.Logger.info('Student ids fetched correctly');
@@ -283,7 +270,7 @@ module.exports=class user {
             const students=await this.User.findAll({
                 attributes:['id','name','surname','mail','username','created_at'],
                 where:{
-                    user_type:process.env.STUDENT
+                    user_type:config.roles.student
                 }
             });
             let format=[];
@@ -341,7 +328,7 @@ module.exports=class user {
                     user_id:user_id
                 }
             });
-            if(user.user_type==process.env.TEACHER)
+            if(user.user_type==config.roles.teacher)
             {
                 await this.Teacher_subject.destroy({
                     where:{
@@ -349,7 +336,7 @@ module.exports=class user {
                     }
                 });
             }
-            if(user.user_type==process.env.ADMIN && user.user_type==process.env.TEACHER)
+            if(user.user_type==config.roles.admin || user.user_type==config.roles.teacher)
             {
                 await this.Invite_links.destroy({
                     where:{
@@ -373,18 +360,25 @@ module.exports=class user {
         try {
             const student= await this.User.findOne({
                 where:{
-                    id:properties.id
+                    id:properties.id,
+                    user_type:config.roles.student
                 }
             });
+            if(student)//postoji student + novi username nije zauzet
+            {
             student.name=properties.name;
             student.surname=properties.surname;
-            student.email=properties.email;
+            student.mail=properties.email;
             student.username=properties.username;
-            student.password=properties.password;
+            student.password=await hash(properties.password);
+           // student.date_of_birth=properties.date_of_birth;
            // student.created_at:properties.created; zasad nepotrebno
             await student.save();
+            }
+            else throw(new Error('Student does not exist'));
         } catch (error) {
-            this.Logger.error('Error in function updateStudent')
+            this.Logger.error('Error in function updateStudent'+error);
+            throw(error);
         }
     }
 }

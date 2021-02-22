@@ -1,7 +1,7 @@
 const { Question_instance,Topic_instance}=require('../../services');
 const {nodelogger}=require('../../loaders/logger');
-const { response } = require('express');
-const { transport } = require('winston');
+const path = require('path');
+const config= require('../../config');
 module.exports={
     getQuestions: async (req,res,next)=>//ako je dosao do ovde onda je prosao provjere autentikacije
     {
@@ -137,7 +137,8 @@ module.exports={
     addQuestions: async (req,res,next)=>
     {
         try {
-           question_id= await Question_instance.addQuestion(req.body);
+            nodelogger.info(JSON.stringify(req.file));
+           question_id= await Question_instance.addQuestion(req.body.text,req.body.solution,req.body.question_type,req.body.row_D,req.body.column_A,req.body.answer_a,req.body.answer_b,req.body.answer_c,req.body.answer_d,req.body.topic_id,req.file.path,req.file.mimetype,req.file.size);
             nodelogger.info('Question succesfuly added to database');
             let response={
                 id:question_id
@@ -145,6 +146,43 @@ module.exports={
             res.json(response);
         } catch (error) {
             nodelogger.error('Error in  addQuestions');
+            next(error);
+        }
+    },
+    getQuestionImage:async (req,res,next)=>{
+        try {
+            const {image_path,mime_type,image_size}=await Question_instance.getQuestionImagePath(req.params.questionID);
+            nodelogger.info(__dirname);
+            let options = {
+                headers: {
+                    'Content-Type':mime_type,
+                    'Content-Length':image_size
+                }
+              };
+            res.sendFile(path.join(config.multer.question_images_root_path,image_path),options);
+        } catch (error) {
+            nodelogger.error('Error in getQuestionImage');
+            next(error);
+        }
+    },
+    checkQuestion:async (req,res,next)=>{
+        try {
+            let can_delete=await Question_instance.checkSessionsWithQuestion(req.params.questionID);
+            let response={
+                can_delete:can_delete
+            };
+            res.json(response);//ako se moze izbrisati odnosno ako se ne nalazi u nekoj od sesija onda je can_delete true
+        } catch (error) {
+            nodelogger.error('Error in checkQuestion');
+            next(error);
+        }
+    },
+    replaceQuestion:async (req,res,next)=>{
+        try {
+            await Question_instance.replaceQuestionWithAnother(req.body.source_question_id,req.body.new_question_id);
+            res.sendStatus(200);
+        } catch (error) {
+            nodelogger.error('Error in replaceQuestion');
             next(error);
         }
     }
