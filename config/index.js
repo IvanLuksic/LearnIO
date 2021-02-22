@@ -30,7 +30,7 @@ module.exports={
   },
   rateLimiter: {
     global: {//za sve rute ce se primijeniti-> ako neko napada jako brzo bilo koju rutu ukljucujući i login i register neće ga ovo propustiti
-      points: 5, //broj pokusaja
+      points: 25, //broj pokusaja
       duration: 1,//unutar intervala od 1 sekunde-> to je nemoguće postić za usera garant je neki napad-> blokiraj šta duže
       blockDuration:60*60*24,//blokiraj ga 1 dan
       tableName:'global_rate_limiter',
