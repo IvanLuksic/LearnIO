@@ -102,7 +102,7 @@ function Matrica(props)
     const [assesment_objectives,setAssesment_objectives]=useState();
     const [topicName,setTopicName]=useState(()=>fakeFetchResponse.Matrix.topic_name);
     const [topicDescription,setTopicDescription]=useState(()=>fakeFetchResponse.Matrix.topic_description);
-    const [topicID,setTopicID]=useState(useSelector(state=>state.studentTopic.id));
+    const [topicID,setTopicID]=useState(useSelector(state=>state.topicID));
 
 
     const GetQuestion=()=>{
