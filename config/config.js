@@ -10,6 +10,11 @@ module.exports= {
     use_env_variable: "DATABASE_URL",
     url: process.env.DATABASE_URL,
     dialect: "postgres",
+    dialectOptions: {
+      ssl: {
+          rejectUnauthorized: false
+      }
+  },  
     logging: (msg) => nodelogger.info(`Node logger: ${msg}`)
   },
   "production": {

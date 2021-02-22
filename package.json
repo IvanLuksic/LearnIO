@@ -13,7 +13,7 @@
     "server": "nodemon app.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild":      "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
     "front": "node app.js && cd client && npm run build"
   },
   "keywords": [],
@@ -35,7 +35,7 @@
     "pg": "^8.4.2",
     "pg-hstore": "^2.3.3",
     "rate-limiter-flexible": "^2.2.1",
-    "sequelize": "^6.3.5",
+    "sequelize": "^6.5.0",
     "winston": "^3.3.3"
   }
 }
