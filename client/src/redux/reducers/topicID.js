@@ -1,17 +1,10 @@
-const topicIDReducer=(state={id:1,name:"Topic"}, action)=>{
+const topicReducer=(state=1, action)=>{
     switch(action.type){
-        case 'TOPIC_SELECTED':{
-            state={
-                id: action.id,
-                name: action.name
-            }; 
-            break;
-        }
-
+        case 'TOPIC_SELECTED':
+            return action.id
         default:
-            state={id:1,name:"Topic N"};
+            return state
     }
-    return state;
 }
 
-export default topicIDReducer;
+export default topicReducer;
