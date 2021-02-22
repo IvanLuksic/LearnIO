@@ -37,14 +37,14 @@ module.exports={
       keyPrefix:'global'
     },
     loginPath: {//za logiranje ako ne napada toliko brzo ko u prvom primjeru nego sporije npr pogađa passworde
-      points: 5,//broj pokusaja
+      points: 25,//broj pokusaja
       duration: 60,//unutar intervala od 1 minute 5 puta falio password-> najvj neki drugi user pokusava upast-> blokiraj ga-> ako neko ide bruteforcat brzo onda će ga sprječit prvi rate limiter
       blockDuration:60*60,//blokiraj ga 1 sat
       tableName:'login_rate_limiter',
       keyPrefix:'login'
     },
     registerPath:{//za registraciju ako salje vise od 1 post requesta za registraciju-> nema dobre namjere-> blokiraj ga
-      points:1,
+      points:21,
       duration:60*60*24*30,//vise od 1 zahtjeva za registraciju unutar misec dana
       blockDuration:60*60*24*365,//blokiraj ga godinu dana
       tableName:'register_rate_limiter',
