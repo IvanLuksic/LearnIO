@@ -38,7 +38,7 @@ module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcij
     secret:'50794A91D858997DD137B114C6F1AB233D0907E1F869E3CC08BF5EEBBE78751C',//This is the secret used to sign the session ID cookie-> KOD HASH FUNKCIJE DA OSIGURAMO INTEGIRTET JER JE JEDINO MI ZNAMO->DA NEBI NEKO DRUGI MOGA NESTO HASHIRAT I POSLAT->OČUVAN INTEGRITET SESIJE->NE MOZE NIKO MIJENJAT SESSION ID I PROBAT UPAST U TUĐU SESIJU
     store: new PostgreSqlStore({
       conString:config.database_url,
-      tableName : 'session',
+      tableName : 'user_session',
       prunesessionInterval:60//svako 60 sekundi brise sesije koje se expireale
     }),
     cookie:{
