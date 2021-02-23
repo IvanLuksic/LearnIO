@@ -88,8 +88,8 @@ function Matrica(props)
     const changeToError=()=>{if(noError===true) setNoError(false);}
     const changeToNoError=()=>{if(noError===false) setNoError(true);}
     let dispatch=useDispatch();
-    if(Number(props.match.params.id)){changeToNoError();dispatch(topicSelected(props.match.params.id,"Topic"))};
-    if(!Number(props.match.params.id)){changeToError()};
+    //if(Number(props.match.params.id)){changeToNoError();dispatch(topicSelected(props.match.params.id,"Topic"))};
+    //if(!Number(props.match.params.id)){changeToError()};
     const [fields, setFields]=useState(()=>{return fakeFetchResponse.Questions});//bilo data.Questions
     const [aoSelected,setAoSelected]=useState(1);
     const [dSelected,setDSelected]=useState(1);
