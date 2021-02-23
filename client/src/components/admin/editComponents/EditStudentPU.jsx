@@ -117,7 +117,7 @@ function EditStudentPU(props) {
 
   const saveChanges=()=>{
     let itemToSave;
-    let st=studentClasses.map((cl)=>{for(let i of props.allClasses){if(i.class_id==cl){return {name:i.class_name,id:i.class_id}}}});
+    let st=studentClasses.map((cl)=>{for(let i of props.allClasses){if(i.id==cl){return {name:i.name,id:i.id}}}});
     itemToSave={
       id: props.student.id,
       created:props.student.created,
