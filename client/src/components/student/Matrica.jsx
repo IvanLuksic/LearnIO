@@ -103,6 +103,9 @@ function Matrica(props)
     const [topicName,setTopicName]=useState(()=>fakeFetchResponse.Matrix.topic_name);
     const [topicDescription,setTopicDescription]=useState(()=>fakeFetchResponse.Matrix.topic_description);
     const [topicID,setTopicID]=useState(useSelector(state=>state.topicID));
+    const sub=useSelector(state=>state.subject);
+    const cla=useSelector(state=>state.class);
+    const uni=useSelector(state=>state.unit);
 
 
     const GetQuestion=()=>{
@@ -112,7 +115,7 @@ function Matrica(props)
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include'
         };
-        fetch(`/api/question/${1}/${1}/${1}/${topicID}`, requestOptions)//class_id subject_id course_id topic_id
+        fetch(`/api/question/${cla}/${sub}/${uni}/${topicID}`, requestOptions)//class_id subject_id course_id topic_id
         .then(response => response.json())
                 .then(data => {  
                   console.log(JSON.stringify(data));
