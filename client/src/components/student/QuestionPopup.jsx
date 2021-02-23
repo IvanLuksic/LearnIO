@@ -82,6 +82,7 @@ function QuestionPopup(props){
     const [imageDisplay, setImageDisplay] =useState(()=>{return (props.questionToDisplay.question_image_path==null)?'none':'inline'});
     const classes=useStyles();
     const topicID=useSelector(state=>state.topic);
+    const courseID=useSelector(state=>state.unit);
     console.log(topicID);
 
     const handleChange = (event) => {
@@ -95,7 +96,7 @@ function QuestionPopup(props){
             method: 'POST',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({topic_id:topicID, course_id:1, question_id:props.questionToDisplay.question_id, solution: value}),
+            body: JSON.stringify({topic_id:topicID, course_id: courseID, question_id:props.questionToDisplay.question_id, solution: value}),
             credentials: 'include'
         };
 
