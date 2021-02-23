@@ -85,7 +85,7 @@ function EditStudentPU(props) {
   const [disableSurname, setDisableSurname] = useState(()=>true);
   const [email, setEmail] = useState(()=>props.student.email);
   const [disableEmail, setDisableEmail] = useState(()=>true);
-  const [studentClasses, setStudentClasses] = useState(()=>props.student.classes.map((cl)=>cl.class_id));
+  const [studentClasses, setStudentClasses] = useState(()=>props.student.classes.map((cl)=>cl.id));
   const [disableStudentClasses, setDisableStudentClasses] = useState(()=>true);
   const [password, setPassword] = useState(()=>(role=="admin")?props.student.password:"");
   const [disablePassword, setDisablePassword] = useState(()=>true);
