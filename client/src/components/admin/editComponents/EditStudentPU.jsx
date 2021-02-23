@@ -85,7 +85,7 @@ function EditStudentPU(props) {
   const [disableSurname, setDisableSurname] = useState(()=>true);
   const [email, setEmail] = useState(()=>props.student.email);
   const [disableEmail, setDisableEmail] = useState(()=>true);
-  const [studentClasses, setStudentClasses] = useState(()=>props.student.classes.map((cl)=>cl.id));
+  const [studentClasses, setStudentClasses] = useState(()=>props.student.classes.map((cl)=>cl.class_id));
   const [disableStudentClasses, setDisableStudentClasses] = useState(()=>true);
   const [password, setPassword] = useState(()=>(role=="admin")?props.student.password:"");
   const [disablePassword, setDisablePassword] = useState(()=>true);
@@ -117,7 +117,7 @@ function EditStudentPU(props) {
 
   const saveChanges=()=>{
     let itemToSave;
-    let st=studentClasses.map((cl)=>{for(let i of props.allClasses){if(i.id==cl){return {name:i.name,id:i.id}}}});
+    let st=studentClasses.map((cl)=>{for(let i of props.allClasses){if(i.class_id==cl){return {name:i.class_name,id:i.class_id}}}});
     itemToSave={
       id: props.student.id,
       created:props.student.created,
@@ -229,12 +229,12 @@ function EditStudentPU(props) {
               <Grid item xs={10} >
                 <FormControl variant="filled" className={classes.fields}>
                     <InputLabel >Classes</InputLabel>
-                    <Select  multiple value={studentClasses} onChange={handleChangeClasses}  disabled={disableStudentClasses} renderValue={(selected) => {let array=selected.map((selClass)=>{for(let cl of props.allClasses){if(cl.id==selClass)return `${cl.name}`}}); return array.join(`, `);} } MenuProps={MenuProps}>
+                    <Select  multiple value={studentClasses} onChange={handleChangeClasses}  disabled={disableStudentClasses} renderValue={(selected) => {let array=selected.map((selClass)=>{for(let cl of props.allClasses){if(cl.class_id==selClass)return `${cl.class_name}`}}); return array.join(`, `);} } MenuProps={MenuProps}>
                       {props.allClasses.map((oneClass) => {
                         return(
-                          <MenuItem key={oneClass.id} value={oneClass.id}>
+                          <MenuItem key={oneClass.class_id} value={oneClass.class_id}>
                           {/* <Checkbox checked={checkIfIn(oneClass)}/> */}
-                          <ListItemText primary={`${oneClass.name} #${oneClass.id}`}  />
+                          <ListItemText primary={`${oneClass.class_name} #${oneClass.class_id}`}  />
                         </MenuItem>
                         )})}
                     </Select>
