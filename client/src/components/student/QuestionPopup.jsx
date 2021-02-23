@@ -99,7 +99,7 @@ function QuestionPopup(props){
             credentials: 'include'
         };
 
-        fetch('https://learn1o.herokuapp.com/question/check', requestOptions)
+        fetch('https://learn1o.herokuapp.com/api/question/check', requestOptions)
         .then(response => response.json())
                 .then(data => {  
                   if(data.correct==false){props.setOpenPopupWrong(true)};
