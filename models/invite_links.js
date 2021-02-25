@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
   };
   invite_links.init({
     unique_link_part: DataTypes.STRING,
-    created_at:DataTypes.DATE
+    created_at:DataTypes.DATE,
+    max_number:DataTypes.SMALLINT,
+    current_number:DataTypes.SMALLINT
   }, {
     sequelize,
     modelName: 'invite_links',

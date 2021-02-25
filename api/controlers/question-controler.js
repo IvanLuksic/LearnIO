@@ -76,7 +76,7 @@ module.exports={
              {
                 response.correct=true;
                 try {
-                    await Question_instance.unlockQuestionsAndUpdateResultsAndGrade(student_id,topic_id,course_id,class_id,subject_id,question_id);
+                    await Question_instance.unlockQuestionsAndUpdateResultsAndGrade(solution,student_id,topic_id,course_id,class_id,subject_id,question_id);
                 } catch (error) {
                     nodelogger.error('Error in unlocking questions ');
                     throw(error);
@@ -93,7 +93,7 @@ module.exports={
              else {//netocno-> vrati response sa flagom correct:false + VRATI MU NIZ POVETZANIH TOPICA DA GA MOŽEMO ODVEST LINKOM NA NJIH
                 response.correct=false;
                 try {
-                   await  Question_instance.wrongAnswer(student_id,topic_id,course_id,class_id,subject_id,question_id);
+                   await  Question_instance.wrongAnswer(solution,student_id,topic_id,course_id,class_id,subject_id,question_id);
                 } catch (error) {
                     nodelogger.error('Error in locking question');
                     throw(error);
@@ -183,6 +183,17 @@ module.exports={
             res.sendStatus(200);
         } catch (error) {
             nodelogger.error('Error in replaceQuestion');
+            next(error);
+        }
+    },
+    getUserChoice:async (req,res,next)=>{
+        try {
+            let student_answer=await Question_instance.studentQuestionChoice(req.session.user,req.params.topic_id,req.params.course_id,req.params.subject_id,req.params.class_id,req.params.question_id);
+            res.json({
+                previous:student_answer
+            });
+        } catch (error) {
+            nodelogger.error('Error in getUserChoice');
             next(error);
         }
     }

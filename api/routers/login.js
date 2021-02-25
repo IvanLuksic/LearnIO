@@ -13,5 +13,7 @@ module.exports= function (main_router)//module.expots nece vise biti objekt nego
     login.post('/login',ShemaValidator.validate('login'),login_controler.login);
     login.head('/logout',login_controler.logout);//head request jer ne vraca ništa nazad pa da ne bude get
     login.post('/check/username',ShemaValidator.validate('username'),login_controler.checkUsername);
+    login.get('/OTP/:username',login_controler.generateOTP);
+    login.put('/change/password',login_controler.changePassword)//provejra prethodnog passworda ili OTP prije nego mu dozovlimo promjenu passworda
     //PROBAT DA SE NAKON ZATVARANJA TABA ILI BROWSERA LOGOUTA ALI JE ONDA PROBLEM STA GA TRIBA I PONOVO ZAPISAT KAD OPET DODE U SUSTAV A MI GA ZASAD UPISUJEMO SAMO KOD LOGIN KAD DOBIJE COOKIE-> MOŽDA IZBACIT SESSION TABLICU ILI VIDIT KAKO DRUGI GLEDAJU KO JE ONLINE OD KORISNIKA A KO NIJE
 }

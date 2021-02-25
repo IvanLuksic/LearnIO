@@ -16,4 +16,5 @@ module.exports=function (main_ruter){
     question.get('/question/image/:questionID',authenticate_student,question_controler.getQuestionImage);
     question.get('/question/check/sessions/:questionID',authenticate_admin_or_teacher,question_controler.checkQuestion)//provjera je li se pitanje koje se želi izbrisati već nalazi spremljeno u nekoj od sesija studenata-> ako nije onda ga možemo brisat a ako je onda moramo pitat korisnika s kojin ga pitanjen od pitanja za to polje želi zamijeniti
     question.put('/question/replace/with',ShemaValidator.validate('replaceQuestion'),authenticate_admin_or_teacher,question_controler.replaceQuestion);
+    question.get('/student/choice/:class_id/:subject_id/:course_id/:topic_id/:question_id',authenticate_student,question_controler.getUserChoice);
 }

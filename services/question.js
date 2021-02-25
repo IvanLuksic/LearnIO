@@ -278,8 +278,8 @@ module.exports=class question{
             throw(error);
         }
 
-    }
-    async unlockQuestionsAndUpdateResultsAndGrade(students_id,topics_id,courses_id,clas_id,subjects_id,questions_id)//promjena statusa questiona u tablici save
+    }//primamo odgovor koji je dao user kako bi mu znali restorat što je odgovorio
+    async unlockQuestionsAndUpdateResultsAndGrade(answer,students_id,topics_id,courses_id,clas_id,subjects_id,questions_id)//promjena statusa questiona u tablici save
     {
         //1. saznaj poziciju u retku i stupcu od togquestiona
         try {
@@ -313,10 +313,10 @@ module.exports=class question{
             //UPDATE REZULTAT-> povećaj vrijednost od tog stupca za 1 u tablici rezultati
             try {//KORISTILI RAW QUERY JER SA UPDATE NE RADI KO ZNA ZAŠTO
                 //U POSTGRESU SE ARRAY BROJI OD INDEKSA 1-> ako je x=2 onda je to drugi član niza
-                const result=await sequelize.query('UPDATE result SET result_array_by_columns[:pos]=result_array_by_columns[:pos]+1 WHERE student_id=:student_id AND topic_id=:topic_id AND course_id=:course_id AND class_id=:class_id AND subject_id=:subject_id ',{
+               await sequelize.query('UPDATE result SET result_array_by_columns[:pos]=result_array_by_columns[:pos]+1 WHERE student_id=:student_id AND topic_id=:topic_id AND course_id=:course_id AND class_id=:class_id AND subject_id=:subject_id ',{
                     raw:true,
                     replacements: {pos:x,student_id:students_id,course_id:courses_id,subject_id:subjects_id,class_id:clas_id, topic_id: topics_id },
-                    type: QueryTypes.SELECT
+                    type: QueryTypes.UPDATE
                    });//POS:X-> X JE STUPAC TOCNO ODGOVORENOG PITANJA -> TAJ ČLAN NIZA UVEĆAVAMO ZA 1
                    this.Logger.info('Results array by columns updated');
             } catch (error) {
@@ -450,7 +450,7 @@ module.exports=class question{
                     }
                 });
                 }
-                var correct_question=await this.Save.update({status:config.colors.green},{
+                var correct_question=await this.Save.update({status:config.colors.green,user_answer:answer},{//update statusa pitanja u zeleno jer je tocno dogovorio i spremimo što je odgovorio da može kasnije pregledat
                     where:{
                         row_D:y,//koordinate tocno odgovorenog pitanja u bazi
                         column_A:x,
@@ -459,7 +459,8 @@ module.exports=class question{
                         student_id:students_id,
                         class_id:clas_id,
                         subject_id:subjects_id,
-                       question_id:questions_id
+                       question_id:questions_id,
+
                     }
                 });
                 this.Logger.info('question status changed succesfully');
@@ -472,12 +473,12 @@ module.exports=class question{
             throw(error);
         }
     }
-    async wrongAnswer(students_id,topics_id,courses_id,clas_id,subjects_id,questions_id)//ALGORITAM KADA NETOCNO ODGOVORI->ova 4(dovoljna prva 3 ali kad imamo 4. iskoristimo ga) argumenta jedinstveno odreduju redak u tablici save-> samo mu promijenimo status
+    async wrongAnswer(answer,students_id,topics_id,courses_id,clas_id,subjects_id,questions_id)//ALGORITAM KADA NETOCNO ODGOVORI->ova 4(dovoljna prva 3 ali kad imamo 4. iskoristimo ga) argumenta jedinstveno odreduju redak u tablici save-> samo mu promijenimo status
     {
         //+ DODAT U RESPONSE flag koji ce njima oznacit jeli tocno ili netocno
         try {
             try {
-               const wrong_question=await this.Save.update({status:config.colors.red},{//zakljucaj prethodno otkljucano pitanje
+               const wrong_question=await this.Save.update({status:config.colors.red,user_answer:answer},{//zakljucaj prethodno otkljucano pitanje
                 where:{
                         course_id:courses_id,
                         topic_id:topics_id,
@@ -619,6 +620,25 @@ module.exports=class question{
         
         } catch (error) {
             this.Logger.error('Error in function replaceQuestionWithAnother'+error);
+            throw(error);
+        }
+    }
+    async studentQuestionChoice(student_id,topic_id, course_id, subject_id,class_id,question_id)//za dobit odgovor studenta na to pitanje kako bi mu ga mogli prikazat
+    {
+        try {
+            let question=await this.Save.findOne({
+                where:{
+                    subject_id:subject_id,
+                    topic_id:topic_id,
+                    course_id:course_id,
+                    class_id:class_id,
+                    question_id:question_id,
+                    student_id:student_id
+                }
+            });
+            return question.user_answer;
+        } catch (error) {
+            this.Logger.error('Error in function userQuestionChoice'+error);
             throw(error);
         }
     }

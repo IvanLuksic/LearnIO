@@ -14,6 +14,10 @@ module.exports={
     teacher:process.env.TEACHER,
     student:process.env.STUDENT
   },
+  express_session:{
+    signature_secret:process.env.SESSION_SECRET
+  },
+  otp_length:parseInt(process.env.OTP_LENGTH),
   colors:{
     red:process.env.RED,
     blue:process.env.BLUE,
@@ -49,6 +53,13 @@ module.exports={
       blockDuration:60*60*24*365,//blokiraj ga godinu dana
       tableName:'register_rate_limiter',
       keyPrefix:'register'
+    },
+    checkLoginPath:{
+      points: 10,
+      duration:1,
+      blockDuration:60*60,//blokiraj 1 sat
+      tableName:'check_login_rate_limiter',
+      keyPrefix:'check_login'
     }
   }
 }

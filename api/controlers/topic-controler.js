@@ -170,5 +170,28 @@ module.exports={
             nodelogger.error('Error in addTopics');
             next(error);
         }
+    },
+    topicInfo:async (req,res,next)=>
+    {
+        try {
+            let response=await Topic_instance.getTopicSubjectAndCourse(req.params.topic_id);//vrati predmet i kurs kojem pripada topic
+            response.associated_topics=await Topic_instance.associatedTopics(response.subject_id,req.params.topic_id);//vrati povezane topice i kojin kursevi oni pripadaju unutar tog predmeta
+            response.asessments_array=await Topic_instance.getOnlyAsesmentsForTopic(req.params.topic_id);
+            nodelogger.info(JSON.stringify(response));
+            res.json(response);
+        } catch (error) {
+            nodelogger.error('Error in topicInfo');
+            next(error);
+        }
+    },
+    updateTopic: async (req,res,next)=>
+    {
+        try {
+            await Topic_instance.updateTopic(req.body);
+            res.sendStatus(204);
+        } catch (error) {
+            nodelogger.error('Error in updateTopic');
+            next(error);
+        }
     }
 }

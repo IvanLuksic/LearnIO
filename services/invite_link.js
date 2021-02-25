@@ -1,4 +1,6 @@
 var uuid = require('node-uuid');//npm paket koji ce geneirat random string koji cemo zakacit na url od invite link
+const { QueryTypes } = require('sequelize');
+const {sequelize}=require('../models');
 module.exports=class invite_link{
     constructor(invite_links,class_student,clas,logger)
     {
@@ -7,7 +9,7 @@ module.exports=class invite_link{
         this.Clas=clas;
         this.Logger=logger;
     }
-    async generateInviteLink(created_by_id,clas_id)//saljemo id onoga tko je kreirao ovaj link i razred za koji je kreiran
+    async generateInviteLink(created_by_id,clas_id,max_joins)//saljemo id onoga tko je kreirao ovaj link i razred za koji je kreiran
     {
         try {
             //1. kreiramo unique URL koji cemo zakacit na http://localhost:3000/api/invite
@@ -18,6 +20,7 @@ module.exports=class invite_link{
                     unique_link_part:randomID,
                     class_id:clas_id,
                     creator_id:created_by_id,
+                    max_number:max_joins,
                     created_at:new Date()
                 });
             } catch (error) {
@@ -40,7 +43,7 @@ module.exports=class invite_link{
     {
         try {
             let unique_URL_part=decodeURI(unique_URL);//prvo dekodiramo URL karaktere u normalni format koji je spremljen u bazi
-            this.Logger.info('URL encodede: '+unique_URL+' URL decoded: '+unique_URL_part);
+            this.Logger.info('URL encoded: '+unique_URL+' URL decoded: '+unique_URL_part);
             //1.Pronađi razred u koji ga treba upisa preko unique_Url dijela
             try {
                 var invite_link=await this.Invite_links.findOne({
@@ -63,6 +66,13 @@ module.exports=class invite_link{
                 });
                 temp.class_name=clas.name;
                 temp.class_year=clas.school_year;
+                //provjeri je li premasen maksimalan broj upisanih studenata
+                if(invite_link.current_number>=invite_link.max_number)
+                {
+                    this.Logger.info('No left space in class');
+                    temp.is_enrolled=0;
+                    return temp;
+                }
                 //upisi ucenika u razred ako vec nije upisan postoji
                 let is_enrolled=await this.Class_student.findOne({
                     where:{
@@ -76,6 +86,11 @@ module.exports=class invite_link{
                     class_id:invite_link.class_id,
                     student_id:students_id
                 });
+                await sequelize.query('UPDATE invite_links SET current_number=current_number+1 WHERE id=:id ',{
+                    raw:true,
+                    replacements: {id:invite_link.id },
+                    type: QueryTypes.UPDATE
+                   });
                 this.Logger.info('Student enrolled succesfuly');
                 temp.is_enrolled=1;
                 return temp;

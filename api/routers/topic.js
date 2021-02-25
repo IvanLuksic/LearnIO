@@ -18,4 +18,6 @@ module.exports=function (main_ruter){
     topic.get('/admin/topics/subject/course/pairs',authenticate_admin,topic_controler.getSubject_Courses);//kada dodajemo topic da može kliknit kojem će paru course subject pridružit taj topic
     topic.get('/teacher/topics/subject/course/pairs',authenticate_teacher,topic_controler.getSubject_Courses_Teacher);//samo parove subject course koje teacher predaje
     topic.post('/add/topic',ShemaValidator.validate('addTopic') ,authenticate_admin_or_teacher,topic_controler.addTopics);
+    topic.get('/topic/info/:topic_id',authenticate_admin_or_teacher,topic_controler.topicInfo);
+    topic.put('/topic/edit',authenticate_admin_or_teacher,topic_controler.updateTopic);
 }

@@ -5,10 +5,18 @@ const { RateLimiterPostgres } = require("rate-limiter-flexible");
 const { rateLimiterTooManyRequests}=require('../middleware/rate-limiter-global');//funkcija za handleanje slučajeva kada se prevrši broj mogućih kredita
 const bcrypt=require('bcrypt');
 const {sequelize}=require('../../models');//instanca baze za povezivanje rate limitera na bazu
+//Login rate limiter
 let rate_limiter_login_options=config.rateLimiter.loginPath;
 rate_limiter_login_options.storeClient=sequelize;//dodajemo klijenta nakon što se povežemo na bazu kako bi se mogli spremat podaci u bazu
 // Postavke rate limitera za login
 const loginRateLimiter = new RateLimiterPostgres(rate_limiter_login_options);
+
+//Check login rate limiter
+let rate_limiter_check_login_options=config.rateLimiter.checkLoginPath;
+rate_limiter_check_login_options.storeClient=sequelize;
+
+// Postavke rate limitera za check login
+const checkLoginRateLimiter=new RateLimiterPostgres(rate_limiter_check_login_options);
 module.exports={
     login:async (req,res,next)=>{
         try {
@@ -58,31 +66,88 @@ module.exports={
                 } catch (error) {
                     throw(error);//idi na iduci catch handler-> ovi skroz doli
                 }
+                let acronim=new String();//prvo slovo imena i prezimena
+                nodelogger.info(user.name);
+                acronim=user.name.slice(0,1)+user.surname.slice(0,1);
                 if(user.user_type == config.roles.admin)//admin->STAVI == JER JE ADMIN env varijabla string
                 {
-               res.json({role: config.roles.admin });
+                    nodelogger.info("Logging succesful");
+                res.json({
+                   acronim:acronim.toUpperCase(),
+                   role: config.roles.admin });
                 }
                 else if(user.user_type==config.roles.teacher)//ucitelj
                 {
                 nodelogger.info("Logging succesful");
-                res.json({role: config.roles.teacher });
+                res.json({
+                    acronim:acronim.toUpperCase(),
+                    role: config.roles.teacher });
                 }
                 else {//student
                 nodelogger.info("Logging succesful");
-                res.json({role: config.roles.student });
+                res.json({
+                    acronim:acronim.toUpperCase(),
+                    role: config.roles.student });
                 }
             }
-            else {//ovde mu brojimo slučajeve i kad falije username i kad falije password
-                nodelogger.error('Login failed');
-                //POTROŠI MU KREDIT ZA RATE LIMIT
-                    try {
-//!!!!!!!!VAŽNOOOOO-> ZAPIS U TABLICI SE KONSTRUIRA TEK NAKON ŠTO SE POZOVE consume FUNKCIJA prije toga će get vraćat null ILI AKO TO OĆEMO NAPRAVIT PRIJE TO RADIMO SA SET FUNKCIJOM
-                        await loginRateLimiter.consume(req.ip,points = 1);
-                    } catch (error) {
-                        nodelogger.error('Errro in consuming rate limiter credit'+error);
-                        throw(error);
+            else {//!!!!!OVDE MU BROJIMO SLUČAJEVE I KAD FALIOJE USERNAME ILI PASSWORD
+                //PROVJERI IMA LI MOŽDA OTP JER JE ZABORAVIO LOZINKU
+                if(user&&(is_correct_password=await Login_instance.checkForOTP(user.id,password)))//ako vrati true onda ima validan OTP-> napravi mu sesiju
+                {
+                    req.session.user=user.id;//REQ.SESSION JE COOKIE OBJEKT-> NA OVAJ NAČIN MU DODAJEMO COOKIE PROPERTIESE KOJI SE SPREMAJU NA SERVERSKOJ STRANI(U MEMORY STOREU U BAZI) A SAMO SE COOKIE PROPEERTIESI ŠALJU KLIJENTU
+                    req.session.user_type=user.user_type;
+                    nodelogger.info('Postavili smo:'+req.session.user+req.session.user_type);
+                    nodelogger.info('SessionID:'+req.sessionID);
+                    if(login_limiter_response&&login_limiter_response.consumedPoints>0)
+                    {
+                        try {
+                            await loginRateLimiter.delete(req.ip);
+                            nodelogger.info('izbrisano');
+                        } catch (error) {
+                            nodelogger.error('Error in deleting field from rate limiter table'+error);
+                            throw(error);
+                        }
                     }
-                res.status(401).json({role: null });
+                    try {
+                        await Session_instance.createSession(user.id);//pohrani ga u sesiju za pracenje aktivnosti
+                    } catch (error) {
+                        throw(error);//idi na iduci catch handler-> ovi skroz doli
+                    }
+                    let acronim=new String();//prvo slovo imena i prezimena
+                    acronim=user.name.slice(0,1)+user.surname.slice(0,1);
+                    if(user.user_type == config.roles.admin)//admin->STAVI == JER JE ADMIN env varijabla string
+                    {
+                        nodelogger.info("Logging succesful");
+                    res.json({
+                        acronim:acronim.toUpperCase(),
+                       role: config.roles.admin });
+                    }
+                    else if(user.user_type==config.roles.teacher)//ucitelj
+                    {
+                    nodelogger.info("Logging succesful");
+                    res.json({
+                        acronim:acronim.toUpperCase(),
+                        role: config.roles.teacher });
+                    }
+                    else {//student
+                    nodelogger.info("Logging succesful");
+                    res.json({
+                        acronim:acronim.toUpperCase(),
+                        role: config.roles.student });
+                    }
+                }
+                else {
+                    nodelogger.error('Login failed');
+                    //POTROŠI MU KREDIT ZA RATE LIMIT
+                        try {
+    //!!!!!!!!VAŽNOOOOO-> ZAPIS U TABLICI SE KONSTRUIRA TEK NAKON ŠTO SE POZOVE consume FUNKCIJA prije toga će get vraćat null ILI AKO TO OĆEMO NAPRAVIT PRIJE TO RADIMO SA SET FUNKCIJOM
+                            await loginRateLimiter.consume(req.ip,points = 1);
+                        } catch (error) {
+                            nodelogger.error('Errro in consuming rate limiter credit'+error);
+                            throw(error);
+                        }
+                    res.status(401).json({role: null });
+                }
             }
         } catch (err) {
             nodelogger.error('Error in login controler function login');
@@ -90,14 +155,30 @@ module.exports={
         }
     },
     restoreSession:async(req,res,next)=>{//ovdje dode kada login pozove next()-> ako je tu dosao onda POSTOJI SESSION COOKIE KOJI JOŠ VRIJEDI-> KORISNIK PRIPADA NEKOJ OD 3 ROLE unutra pa ga trebamo samo preusmjerit na zadanu rutu
-           try {//SAMO MU VRATIMO ROLU,AKO NIJE ULOGIRAN ONDA MU JE VEĆ VRAĆENA role=null u prethodnoj middleware funkciji
+    try {//SAMO MU VRATIMO ROLU,AKO NIJE ULOGIRAN ONDA MU JE VEĆ VRAĆENA role=null u prethodnoj middleware funkciji
+            
+        try {
+            let check_login_rate_limiter_response=await checkLoginRateLimiter.get(req.ip);
+                  //AKO ZAPIS NE POSTOJI(ZNAMO DA ĆE POSTOJAT JER ĆE GA UPISAT AKO JE PO PRVI PUT odnosno ako nema zapisa u tablici,NE TREBA NAM SET FUNKCIJA) ILI JE ISTEKAO TAJ KEY-> VRAĆA NULL INAČE VRAĆA RateLimiterRes OBJEKT
+            //>= zato što se consuma nakon provjere pa će onda kad bude 5 bit consumano 5 puta pa ako ga propustimo sa > on će ga propustit i doli će javit erro kad ga ide consumat 6. put
+           if(check_login_rate_limiter_response && check_login_rate_limiter_response.consumedPoints>= rate_limiter_check_login_options.points)//AKO JE NULL-> NIJE POSTAVLJEN KEY-> TO NAM SE NEČE DOGODIT JER ĆE SE POSTAVIT,INAČE SE RESSOLVA SA RateLimiterRes OBJEKTON KOJEN MOŽEMO PRISTUPAT PARAMETRIMA
+           {//ako je ispunjen gornji slučaj onda je konzumirano više od dozovljenog-> javi error
+               //PROBLEM-> AKO GA NE BLOKIRAMO NA NAČIN DA OVERCONSUMAMO ZA 1 DODATNI POINT ŠTO ĆE THROWAT ERROR ONDA ĆE GA RATE LIMITER BLOKIRAT duration time ODNOSNO ZA PREOSTALO VRIJEME OD TOG INTERVALA I NJEGOVOG POČETKA-> MANJE OD SAMOG duration TIMEA-> A NE blockDuration TIME PA GA ZATO NAMJERNO OVERCONSUMAMO 1 DODATNI PUT KAKO BI TO REALIZIRALI ŠTO RADIMO U DONJE POZVANIOJ FUNKCIJI
+               rateLimiterTooManyRequests(checkLoginRateLimiter,req,res,rate_limiter_check_login_options.points);//rate limiter response objekt,express response objekt i dozovoljeni mogući broj pointova odnosno pokusaja
+               return;
+           }
+           else await checkLoginRateLimiter.consume(req.ip,points = 1);//ako ima još pointova onda ih konzumiraj
+            } catch (error) {
+                nodelogger.error('Error in rate limiter'+error);
+                throw(error);
+            }
             let format={};
             format.role=req.session.user_type;
             res.json(format);
-           } catch (error) {
-               nodelogger.error('Error in restoreSession');
-               next(error);
-           }
+    } catch (error) {
+        nodelogger.error('Error in restoreSession');
+        next(error);
+    }
     },
     logout: async(req,res,next)=>{
         try {
@@ -125,6 +206,26 @@ module.exports={
             res.json(available);
         } catch (error) {
             nodelogger.error('Error in checkUsername');
+            next(error);
+        }
+    },
+    generateOTP:async (req,res,next)=>//generiranje OTP ako je zaboravio lozinku
+    {
+        try {
+            await Login_instance.createOTP(req.params.username);
+            res.sendStatus(201);
+        } catch (error) {
+            nodelogger.error('Error in generateOTP');
+            next(error);
+        }
+    },
+    changePassword:async (req,res,next)=>
+    {
+        try {
+            await Login_instance.changePassword(req.body.user_id,req.body.previous,req.body.new);
+            res.status(204);
+        } catch (error) {
+            nodelogger.error('Error in changePassword');
             next(error);
         }
     }

@@ -6,6 +6,7 @@ const { Op } = require("sequelize");
 const { format } = require('winston');
 const {sequelize}=require('../models');
 const config=require('../config');
+const { nodelogger } = require('../loaders/logger');
 module.exports=class topic{
     constructor(topic,user,assesment,topic_assesment,course,subject,result,save,question,tags_of_topic,course_topic,result_instance,logger)//svi mogući dependenciesi, ako se neki ne budu korstili maknit
     {
@@ -148,7 +149,7 @@ module.exports=class topic{
                 asessments_array:assesments_niz
             };
             this.Logger.info(JSON.stringify(matrica));
-            return matrica;//vrati fomratiranu matricu*/
+            return matrica;//vrati formatiranu matricu*/
         } catch (error) {
             this.Logger.error('Error in function getAsesmentsForTopic '+error);
             throw(error);
@@ -691,6 +692,134 @@ module.exports=class topic{
         }
         } catch (error) {
             this.Logger.error('Error in function unlockAsscoiatedTopics '+error);
+            throw(error);
+        }
+    }
+    async getTopicSubjectAndCourse(topic_id)
+    {
+        try {
+            let topic_course=await this.Topic.findOne({
+               include:{
+                model:this.Course,
+                as:'courses_topic',
+                through: { attributes: []},
+               },
+               where:{
+                   id:topic_id
+               }
+            });
+            let topic_subject=await this.Course.findOne({
+                include:{
+                    model:this.Subject,
+                    as: "subjects_course",
+                    through: { attributes: []},
+                },
+                where:{
+                    id:topic_course.courses_topic[0].id
+                }
+            });
+            let format={
+                course_id:topic_course.courses_topic[0].id,
+                course_name:topic_course.courses_topic[0].name,
+                subject_id:topic_subject.subjects_course[0].id,
+                subject_name:topic_subject.subjects_course[0].name
+            }
+            nodelogger.info(JSON.stringify(format));
+            return format;
+        } catch (error) {
+            this.Logger.error('Error in function getTopicSubjectAndCourse'+error);
+            throw(error);
+        }
+    }
+    async getOnlyAsesmentsForTopic(topic_id)
+    {
+        try {
+            let assesments=await this.Topic.findAll({
+                attributes:['id'],
+                include:{
+                    model:this.Assesment,//JOIN sa predmetima od tog topica
+                    attributes:['id','name'],
+                    as:'assesments_topic',
+                    through: { attributes: [] },
+                },
+            where:{
+               id:topic_id//za topic ciji smo id primili
+            }
+            });
+            this.Logger.info('Assesments succesfully fetched from database');
+            var matrica={};//formatirat za response
+            var format={};
+            var assesments_niz=[];//tu cemo stavit sve asesmente
+            for(let i=0;i<assesments[0].assesments_topic.length;i++)
+            {
+                format={
+                asessment_id:assesments[0].assesments_topic[i].id,
+                asessment_name:assesments[0].assesments_topic[i].name
+                };
+                assesments_niz.push(format);
+                format={};
+            }
+            return assesments_niz;
+        } catch (error) {
+            this.Logger.error('Error in function getOnlyAsessmentsForTopic'+error);
+            throw(error);
+        }
+    }
+    async updateTopic(properties)
+    {
+        try {
+            let topic=await this.Topic.findOne({
+                where:{
+                    id:topic_id
+                }
+            });
+            topic.name=properties.topic_name;
+            topic.rows_D=properties.rows_D;
+            topic.column_numbers=properties.columns_AO;
+            topic.description=properties.topic_description;
+            await this.Course_topic.findOrCreate({//ako je promijenio course_id
+                where:{
+                topic_id:new_topic.id,
+                course_id:properties.course_id
+                },
+                default:{
+                    topic_id:new_topic.id,
+                    course_id:properties.course_id
+                }
+            });
+            let associated_topics_ids=[];
+            for(let i=0;i<properties.associated_topics.length;i++)//associated topcis je NIZ koji sadrži idove povezanih topica
+            {
+                associated_topics_ids[i]=properties.associated_topics[i].topic_id;
+            } 
+            await this.Tags_of_topic.destroy({//unisiti one koji su promjenjeni odnosno vise nisu associated sa tim topicom
+                where:{
+                    [Op.and]: [
+                        { source_topic:topic_id},
+                        {associated_topic:{
+                            [Op.notIn]:properties.associated_topics_ids//izbrisi sve koji posotje u tablici a nisu u dobivenom nizu-> IZBRISAO IH JE KORISNIK
+                        }
+                    }
+                    ]
+                }
+            })
+            for(let i=0;i<properties.associated_topics.length;i++)//associated topcis je NIZ koji sadrži idove povezanih topica
+            {
+                //sosaj nove ako su dodani novi associated
+            await this.Tags_of_topic.findOrCreate({//voit racuna p promjeni tezine kako to ispitat
+                source_topic:topic_id,
+                associated_topic:properties.associated_topics[i].topic_id,
+                required_level:properties.associated_topics[i].required_level//zasasd spremamio po defaultu na 3
+            });
+            }
+            //RAZRADIT JOŠ KAKO ĆEMO-> MOŽDA SVAKI PUT OBRISAT SVE I RADIT NOVE
+            for(let i=0;i<properties.asessments_array.length;i++)//moze minjat ime i velcicinu niza ako promini broj stupaca
+            {
+
+            }
+            await topic.save();
+        } catch (error) {
+            this.Logger.error('Error in function updateTopic'+error);
             throw(error);
         }
     }
