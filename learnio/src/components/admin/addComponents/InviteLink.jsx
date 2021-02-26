@@ -87,7 +87,6 @@ function InviteLink(props){
 
     const handleClass=(event)=>{
         setSelectedClass(event.target.value);   
-        getURL(event.target.value);
     };
 
     //funkcija za dobit url za svaki class posebno
@@ -119,7 +118,7 @@ function InviteLink(props){
     };
 
     useEffect(()=>{
-        (!offline)&&fetchClasses();
+        if(!offline){fetchClasses()};
     },[])
     return(
         <Grid>
@@ -148,6 +147,9 @@ function InviteLink(props){
             </Grid>
             <Grid item xs={12} className={classes.copyButton}>
                 <Button variant="contained" color="primary" size="large" onClick={copyToClipboard}>Copy</Button>
+            </Grid>
+            <Grid item xs={12} className={classes.copyButton}>
+                <Button variant="contained" color="primary" size="large" onClick={()=>getURL(SelectedClass)}>Generate link</Button>
             </Grid>
         </Grid>                
     );

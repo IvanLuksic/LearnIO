@@ -375,6 +375,22 @@ function MatricaAdmin(props)
           });
     };
     const requestAddQuestion=(Ques,ID)=>{
+        const formData = new FormData()
+        formData.append('questionImage', Ques.questionImage);
+        formData.append('text', Ques.text);
+        formData.append('question_type', Ques.question_type);
+        formData.append('answer_a', Ques.answer_a);
+        formData.append('answer_b', Ques.answer_b);
+        formData.append('answer_c', Ques.answer_c);
+        formData.append('answer_d', Ques.answer_d);
+        formData.append('solution', Ques.solution);
+        formData.append('row_D', dSelected);
+        formData.append('column_A', aoSelected);
+        formData.append('topic_id', Number(topicID));
+
+
+
+
         offline&&addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});
         offline&&forceUpdate();
         // console.log("ZAHTJEV ZA DODAVANJE: ");
@@ -382,8 +398,9 @@ function MatricaAdmin(props)
         const requestOptions = {
             method: 'POST',
             mode:'cors',
-            headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:Number(topicID)}),
+            // headers: { 'Content-Type': 'application/json'},
+
+            body: formData,
             credentials: 'include'
         };
 
@@ -424,16 +441,15 @@ function MatricaAdmin(props)
 
     const openEdit=()=>{
         const requestOptions = {
-            method: 'POST',
+            method: 'GET',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({topic_id:topicID}),
             credentials: 'include'
         };
 
         let apiUri;
-        if(role==="admin") apiUri='/api/getSubjectCoursePair'
-        else if(role==="teacher") apiUri='/api/getSubjectCoursePair';
+        if(role==="admin") apiUri=`/api/topic/info/${topicID}`
+        else if(role==="teacher") apiUri=`/api/topic/info/${topicID}`;
 
         fetch(apiUri, requestOptions)
         .then((response)=>{

@@ -184,7 +184,7 @@ function Teachers(){
               credentials: 'include'
             };
       
-            fetch(`/api/admin/students/all/class`, requestOptions)
+            fetch(`/api/admin/teachers`, requestOptions)
             .then((response)=>{
               if(response.status===200)
               {
@@ -193,13 +193,13 @@ function Teachers(){
                     setData(dataFetch);
                     setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
                     setSnackbarStatus("success");
-                    setSnackbarText("Students loaded successfully.");
+                    setSnackbarText("Teachers loaded successfully.");
                     setSnackbarOpen(true);
                   })
               }      
               else{
                 setSnackbarStatus("error");
-                setSnackbarText("Students did not load successfully.");
+                setSnackbarText("Teachers did not load successfully.");
                 setSnackbarOpen(true);
             }})
             .catch((error)=>{

@@ -9,12 +9,12 @@
         "password":"aefaefAsfea",
         "classes":[
             {
-                "name":"Group 1",
-                "id":1
+                "class_name":"Group 1",
+                "class_id":1
             },
             {
-                "name":"Group 2",
-                "id":2
+                "class_name":"Group 2",
+                "class_id":2
             }
         ]
     },
@@ -28,12 +28,12 @@
         "password":"aefaefAsfea",
         "classes":[
             {
-                "name":"Group 2",
-                "id":2
+                "class_name":"Group 2",
+                "class_id":2
             },
             {
-                "name":"Group 3",
-                "id":3
+                "class_name":"Group 3",
+                "class_id":3
             }
         ]
     },
@@ -47,12 +47,12 @@
         "password":"aefaefAsfea",
         "classes":[
             {
-                "name":"Group 1",
-                "id":1
+                "class_name":"Group 1",
+                "class_id":1
             },
             {
-                "name":"Group 3",
-                "id":3
+                "class_name":"Group 3",
+                "class_id":3
             }
         ]
     },
@@ -66,12 +66,12 @@
         "password":"aefaefAsfea",
         "classes":[
             {
-                "name":"Group 1",
-                "id":1
+                "class_name":"Group 1",
+                "class_id":1
             },
             {
-                "name":"Group 2",
-                "id":2
+                "class_name":"Group 2",
+                "class_id":2
             }
         ]
     },
@@ -85,12 +85,12 @@
         "password":"aefaefAsfea",
         "classes":[
             {
-                "name":"Group 1",
-                "id":1
+                "class_name":"Group 1",
+                "class_id":1
             },
             {
-                "name":"Group 3",
-                "id":3
+                "class_name":"Group 3",
+                "class_id":3
             }
         ]
     },
@@ -104,12 +104,12 @@
         "password":"aefaefAsfea",
         "classes":[
             {
-                "name":"Group 2",
-                "id":2
+                "class_name":"Group 2",
+                "class_id":2
             },
             {
-                "name":"Group 3",
-                "id":3
+                "class_name":"Group 3",
+                "class_id":3
             }
         ]
     },
@@ -123,12 +123,12 @@
         "password":"aefaefAsfea",
         "classes":[
             {
-                "name":"Group 1",
-                "id":1
+                "class_name":"Group 1",
+                "class_id":1
             },
             {
-                "name":"Group 3",
-                "id":3
+                "class_name":"Group 3",
+                "class_id":3
             }
         ]
     },
@@ -142,12 +142,12 @@
         "password":"aefaefAsfea",
         "classes":[
             {
-                "name":"Group 1",
-                "id":1
+                "class_name":"Group 1",
+                "class_id":1
             },
             {
-                "name":"Group 3",
-                "id":3
+                "class_name":"Group 3",
+                "class_id":3
             }
         ]
     }

@@ -216,7 +216,7 @@ const AOInput=(props)=>{
   const classes=useStyles();
   return(
       <Grid item xs={5}>
-        <TextField className={classes.textField1} value={props.AOI} multiline rows={1} id="outlined-basic" variant="outlined" label={`AO${props.i}`} onChange={(e)=>{props.setAOI(e.target.value);}} />
+        <TextField className={classes.textField1} value={props.addOrEdit?props.AOI:props.AOI.asessment_name} multiline rows={1} id="outlined-basic" variant="outlined" label={`AO${props.i}`} onChange={(e)=>{if(props.addOrEdit){props.setAOI(e.target.value)}else{props.setAOI({asessment_id:props.AOI.id, asessment_name:e.target.value})}}} />
       </Grid>
   );
 };
@@ -515,7 +515,7 @@ function AddTopicPU(props){
         };
 
         const requestOptions = {
-          method: 'POST',
+          method: 'PUT',
           mode:'cors',
           headers: { 'Content-Type': 'application/json'},
           body: JSON.stringify(send),
@@ -530,8 +530,8 @@ function AddTopicPU(props){
         offline&&(props.closePopup!==undefined)&&props.closePopup();
 
         let apiUri;
-        if(role==="admin") apiUri=`/api/edit/topic`
-        else if(role==="teacher") apiUri=`/api/edit/topic`;
+        if(role==="admin") apiUri=`/api/topic/edit`
+        else if(role==="teacher") apiUri=`/api/topic/edit`;
 
         fetch(apiUri, requestOptions)
         .then((response)=>{
@@ -602,35 +602,36 @@ function AddTopicPU(props){
                                     <TextField className={classes.textField2} multiline rows={3} id="outlined-basic" variant="outlined" label="Description" value={valueDesc} onChange={handleChangeDesc}/>
                                   </Grid>
                                 </Grid>
-                                <Grid className={classes.dropMenus} container item direction="row" justify="space-evenly" alignItems="center" xs={12} spacing={3}>
-                                  <Grid container item direction="row" justify="center" alignItems="center"  xs={12} md={6} >
-                                    <p className={classes.dropText}>Select levels of AO :</p>                            
-                                    <InputLabel id="demo-simple-select-label-AO"></InputLabel>
-                                    <Select style={{width:"20%"}} labelId="demo-simple-select-label" id="demo-simple-select" value={valueAO} onChange={handleChangeAO}>
-                                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((valuesAO) => (
-                                      <MenuItem key={valuesAO} value={valuesAO}><ListItemText primary={valuesAO} /></MenuItem>))}                                   
-                                    </Select>
-                                  </Grid>
-                                  <Grid container item direction="row" xs={12} md={6} justify="center" alignItems="center">
-                                      <p className={classes.dropText}>Select levels of D : </p>
-                                      <InputLabel id="demo-simple-select-label-d"></InputLabel>
-                                      <Select style={{width:"20%"}} labelId="demo-simple-select-label" id="demo-simple-select" value={valueD} onChange={handleChangeD}>
-                                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((valuesD) => (
-                                        <MenuItem key={valuesD} value={valuesD}><ListItemText primary={valuesD} /></MenuItem>))}
+                                {(props.addOrEdit)&&<Grid className={classes.dropMenus} container item direction="row" justify="space-evenly" alignItems="center" xs={12} spacing={3}>
+                                    <Grid container item direction="row" justify="center" alignItems="center"  xs={12} md={6} >
+                                      <p className={classes.dropText}>Select levels of AO :</p>                            
+                                      <InputLabel id="demo-simple-select-label-AO"></InputLabel>
+                                      <Select style={{width:"20%"}} labelId="demo-simple-select-label" id="demo-simple-select" value={valueAO} onChange={handleChangeAO}>
+                                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((valuesAO) => (
+                                        <MenuItem key={valuesAO} value={valuesAO}><ListItemText primary={valuesAO} /></MenuItem>))}                                   
                                       </Select>
-                                  </Grid>
+                                    </Grid>
+                                    <Grid container item direction="row" xs={12} md={6} justify="center" alignItems="center">
+                                        <p className={classes.dropText}>Select levels of D : </p>
+                                        <InputLabel id="demo-simple-select-label-d"></InputLabel>
+                                        <Select style={{width:"20%"}} labelId="demo-simple-select-label" id="demo-simple-select" value={valueD} onChange={handleChangeD}>
+                                          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((valuesD) => (
+                                          <MenuItem key={valuesD} value={valuesD}><ListItemText primary={valuesD} /></MenuItem>))}
+                                        </Select>
+                                    </Grid>
                                 </Grid>
+                                }
                                 <Grid container item direction="row" xs={12} md={12} style={{justifyContent:"space-evenly"}}>
-                                  {(valueAO>0)&&<AOInput setAOI={setAOI1} AOI={AOI1} i={1}/>}
-                                  {(valueAO>1)&&<AOInput setAOI={setAOI2} AOI={AOI2} i={2}/>}
-                                  {(valueAO>2)&&<AOInput setAOI={setAOI3} AOI={AOI3} i={3}/>}
-                                  {(valueAO>3)&&<AOInput setAOI={setAOI4} AOI={AOI4} i={4}/>}
-                                  {(valueAO>4)&&<AOInput setAOI={setAOI5} AOI={AOI5} i={5}/>}
-                                  {(valueAO>5)&&<AOInput setAOI={setAOI6} AOI={AOI6} i={6}/>}
-                                  {(valueAO>6)&&<AOInput setAOI={setAOI7} AOI={AOI7} i={7}/>}
-                                  {(valueAO>7)&&<AOInput setAOI={setAOI8} AOI={AOI8} i={8}/>}
-                                  {(valueAO>8)&&<AOInput setAOI={setAOI9} AOI={AOI9} i={9}/>}
-                                  {(valueAO>9)&&<AOInput setAOI={setAOI10} AOI={AOI10} i={10}/>}
+                                  {(valueAO>0)&&<AOInput addOrEdit={props.addOrEdit} setAOI={setAOI1} AOI={AOI1} i={1}/>}
+                                  {(valueAO>1)&&<AOInput addOrEdit={props.addOrEdit} setAOI={setAOI2} AOI={AOI2} i={2}/>}
+                                  {(valueAO>2)&&<AOInput addOrEdit={props.addOrEdit} setAOI={setAOI3} AOI={AOI3} i={3}/>}
+                                  {(valueAO>3)&&<AOInput addOrEdit={props.addOrEdit} setAOI={setAOI4} AOI={AOI4} i={4}/>}
+                                  {(valueAO>4)&&<AOInput addOrEdit={props.addOrEdit} setAOI={setAOI5} AOI={AOI5} i={5}/>}
+                                  {(valueAO>5)&&<AOInput addOrEdit={props.addOrEdit} setAOI={setAOI6} AOI={AOI6} i={6}/>}
+                                  {(valueAO>6)&&<AOInput addOrEdit={props.addOrEdit} setAOI={setAOI7} AOI={AOI7} i={7}/>}
+                                  {(valueAO>7)&&<AOInput addOrEdit={props.addOrEdit} setAOI={setAOI8} AOI={AOI8} i={8}/>}
+                                  {(valueAO>8)&&<AOInput addOrEdit={props.addOrEdit} setAOI={setAOI9} AOI={AOI9} i={9}/>}
+                                  {(valueAO>9)&&<AOInput addOrEdit={props.addOrEdit} setAOI={setAOI10} AOI={AOI10} i={10}/>}
                                 </Grid>
                             </Grid>
                             : null

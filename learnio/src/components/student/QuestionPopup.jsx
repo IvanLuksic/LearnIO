@@ -85,7 +85,7 @@ function QuestionPopup(props){
     const [showABC, setShowABC] =useState(()=>{return (props.questionToDisplay.question_type===1)?true:false});
     const [imageDisplay, setImageDisplay] =useState(()=>{return (props.questionToDisplay.question_image_path==null)?'none':'inline'});
     const classes=useStyles();
-    const topicID=useSelector(state=>state.topic.id);
+    const topicID=useSelector(state=>state.topic);
     const class_id=useSelector(state=>state.class);
     const subject_id=useSelector(state=>state.subject);
     const course_id=useSelector(state=>state.unit);
@@ -94,14 +94,13 @@ function QuestionPopup(props){
     if(answeredAlready&&firstTime){
         if(offline){setPrevious('b');setValue('b')};
         const requestOptions = {
-            method: 'POST',
+            method: 'GET',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({topic_id:topicID, course_id: course_id, subject_id:subject_id, class_id:class_id,  question_id:props.questionToDisplay.question_id,}),
             credentials: 'include'
         };
 
-        fetch('/api/question/checkPrevious', requestOptions)
+        fetch(`/api/student/choice/${class_id}/${subject_id}/${course_id}/${topicID}/${props.questionToDisplay.question_id}`, requestOptions)
         .then(response => response.json())
                 .then(data => {  
                     setPrevious(data.previous);

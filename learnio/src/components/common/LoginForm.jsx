@@ -84,9 +84,9 @@ function LoginForm(props){
               Promise.resolve(response).then(response => response.json())
                 .then(data => {
                         console.log(JSON.stringify(data)+data.role);
-                        if(data.role==1){{dispatch(adminLogIn())};dispatch(userLoggedIn(object.usernames));object.pageprops.history.push('/')}
-                        else if(data.role==2){{dispatch(teacherLogIn())};dispatch(userLoggedIn(object.usernames));object.pageprops.history.push('/')}
-                        else if(data.role==3){{dispatch(studentLogIn())};dispatch(userLoggedIn(object.usernames));object.pageprops.history.push(redirectUri);}
+                        if(data.role==1){{dispatch(adminLogIn())};dispatch(userLoggedIn(data.acronim));object.pageprops.history.push('/')}
+                        else if(data.role==2){{dispatch(teacherLogIn())};dispatch(userLoggedIn(data.acronim));object.pageprops.history.push('/')}
+                        else if(data.role==3){{dispatch(studentLogIn())};dispatch(userLoggedIn(data.acronim));object.pageprops.history.push(redirectUri);}
                 })
             }else  object.pageprops.history.push('/login')
         })

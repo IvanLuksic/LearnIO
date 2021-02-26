@@ -68,10 +68,10 @@ const MenuProps = {
 
 
 const teachers1=[
-    {teacher_name:"John", teacher_surname:"Doelenaky" ,teacher_id: 12},
-    {teacher_name:"Joe", teacher_surname:"Doevich" ,teacher_id: 2},
-    {teacher_name:"Alice", teacher_surname:"Bobovich" ,teacher_id: 5},
-    {teacher_name:"Steve", teacher_surname:"Radich" ,teacher_id: 6},
+    {name:"John", surname:"Doelenaky" ,id: 12},
+    {name:"Joe", surname:"Doevich" ,id: 2},
+    {name:"Alice", surname:"Bobovich" ,id: 5},
+    {name:"Steve", surname:"Radich" ,id: 6},
 ]
 
 export default function AddCourse(props) {
@@ -93,27 +93,33 @@ export default function AddCourse(props) {
         if(offline){setPossibleTeachers(teachers1)}
         else{
             const requestOptions = {
-                method: 'POST',
+                method: 'GET',
                 mode:'cors',
                 headers: { 'Content-Type': 'application/json'},
                 credentials: 'include'
             };
 
             let apiUri;
-            if(role==="admin") apiUri='/api/class/insert'
-            else if(role==="teacher") apiUri='/api/class/insert';
+            if(role==="admin") apiUri='/api/admin/teachers'
+            else if(role==="teacher") apiUri='/api/admin/teachers';
+
 
             fetch(apiUri, requestOptions)
-            .then((data)=>{
-                if(data.status===200){
-                    setPossibleTeachers(data.teachers)
-                }
+            .then((response)=>{
+                if(response.status===200)
+                {
+                    Promise.resolve(response).then(response => response.json())
+                    .then(data => {
+                        if(data.length>0){
+                        setPossibleTeachers(data);
+                        setLoading(true);
+                    }
+                })}
                 else{
-                    setError('Error in fetch function '+ data.status);handleIndex(3);
+                    setError('Error in fetch function '+ response.status);handleIndex(3);
             }})
             .catch((error)=>{setError('Error in fetch function '+ error);handleIndex(3);});
         };
-        setLoading(true);
     }
 
     useEffect(()=>{
@@ -144,7 +150,7 @@ export default function AddCourse(props) {
         if (message!=="Incorrect year" && name.length > 0) {
         if(!offline){
 
-            let TIDs=teachers.map((t)=>t.teacher_id);
+            let TIDs=teachers.map((t)=>t.id);
             let send={
                 class_name: name,
                 class_year: year,
@@ -210,11 +216,11 @@ export default function AddCourse(props) {
                 <Grid item xs={12} className={classes.formControl}> 
                     <FormControl variant="outlined" className={classes.formControl}>
                         <InputLabel>Teachers</InputLabel>
-                        <Select label="Teachers" multiple value={teachers} onChange={(e)=>setTeachers(e.target.value)} renderValue={(selected)=>{let print=""; selected.map((t)=>{if(selected.indexOf(t)!=0){print=print+', '};print=print+t.teacher_name+" "+t.teacher_surname; }); return print}} MenuProps={MenuProps}>
+                        <Select label="Teachers" multiple value={teachers} onChange={(e)=>setTeachers(e.target.value)} renderValue={(selected)=>{let print=""; selected.map((t)=>{if(selected.indexOf(t)!=0){print=print+', '};print=print+t.name+" "+t.surname; }); return print}} MenuProps={MenuProps}>
                             {
                                 possibleTeachers.map((t)=>{
                                 return(
-                                    <MenuItem value={t}>{t.teacher_name+" "+t.teacher_surname}</MenuItem>
+                                    <MenuItem value={t}>{t.name+" "+t.surname}</MenuItem>
                                 )})
                             }
                         </Select>

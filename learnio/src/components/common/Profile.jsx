@@ -325,13 +325,13 @@ function Profile(props) {
           };
     
 
-        if(!offline){fetch(`/api/account`, requestOptions)
+        if(!offline){fetch(`/api/user/info`, requestOptions)
         .then(response => response.json())
         .then(dataFetch => {  
                 setUsername(dataFetch.username);
-                setName(dataFetch.username);
-                setSurname(dataFetch.username);
-                setEmail(dataFetch.username);
+                setName(dataFetch.name);
+                setSurname(dataFetch.surname);
+                setEmail(dataFetch.mail);
         })
         .catch((error)=>{
             console.log('Error in fetch function '+ error);
