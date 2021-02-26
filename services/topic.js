@@ -770,24 +770,23 @@ module.exports=class topic{
         try {
             let topic=await this.Topic.findOne({
                 where:{
-                    id:topic_id
+                    id:properties.topic_id
                 }
             });
             topic.name=properties.topic_name;
-            topic.rows_D=properties.rows_D;
-            topic.column_numbers=properties.columns_AO;
             topic.description=properties.topic_description;
             await this.Course_topic.findOrCreate({//ako je promijenio course_id
                 where:{
-                topic_id:new_topic.id,
+                topic_id:properties.topic_id,
                 course_id:properties.course_id
                 },
                 default:{
-                    topic_id:new_topic.id,
+                    topic_id:properties.topic_id,
                     course_id:properties.course_id
                 }
             });
             let associated_topics_ids=[];
+            this.Logger.info(properties.associated_topics.length);
             for(let i=0;i<properties.associated_topics.length;i++)//associated topcis je NIZ koji sadrži idove povezanih topica
             {
                 associated_topics_ids[i]=properties.associated_topics[i].topic_id;
@@ -795,9 +794,9 @@ module.exports=class topic{
             await this.Tags_of_topic.destroy({//unisiti one koji su promjenjeni odnosno vise nisu associated sa tim topicom
                 where:{
                     [Op.and]: [
-                        { source_topic:topic_id},
+                        { source_topic:properties.topic_id},
                         {associated_topic:{
-                            [Op.notIn]:properties.associated_topics_ids//izbrisi sve koji posotje u tablici a nisu u dobivenom nizu-> IZBRISAO IH JE KORISNIK
+                            [Op.notIn]:associated_topics_ids//izbrisi sve koji posotje u tablici a nisu u dobivenom nizu-> IZBRISAO IH JE KORISNIK
                         }
                     }
                     ]
@@ -807,15 +806,18 @@ module.exports=class topic{
             {
                 //sosaj nove ako su dodani novi associated
             await this.Tags_of_topic.findOrCreate({//voit racuna p promjeni tezine kako to ispitat
-                source_topic:topic_id,
+                source_topic:properties.topic_id,
                 associated_topic:properties.associated_topics[i].topic_id,
                 required_level:properties.associated_topics[i].required_level//zasasd spremamio po defaultu na 3
             });
             }
-            //RAZRADIT JOŠ KAKO ĆEMO-> MOŽDA SVAKI PUT OBRISAT SVE I RADIT NOVE
-            for(let i=0;i<properties.asessments_array.length;i++)//moze minjat ime i velcicinu niza ako promini broj stupaca
+            for(let i=0;i<topic.asessments_array.length;i++)
             {
-
+                await this.Assesment.update({name:asessments_array[i].asessment_name},{
+                    where:{
+                        id:topic.asessments_array[i].asessment_id
+                    }
+                });
             }
             await topic.save();
         } catch (error) {

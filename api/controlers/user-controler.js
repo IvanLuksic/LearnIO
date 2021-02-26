@@ -110,7 +110,7 @@ module.exports={
     {
         try {
             await User_instance.updateTeacherData(req.body);
-            nodelogger.info('Student data updated');
+            nodelogger.info('Teacher data updated');
             res.sendStatus(200);
         } catch (error) {
             nodelogger.error('Error in updateTeacher');
@@ -128,15 +128,13 @@ module.exports={
             next(error);
         }
     },
-    getAllTeachersForAdmin:async (req,res,next)=>
+    getUserInfo: async (req,res,next)=>
     {
         try {
-            const teachers=await User_instance.getAllTeachers();
-            res.json({
-                teachers:teachers
-            });
+            const user=await User_instance.getUserInformation(req.session.user);
+            res.json(user);
         } catch (error) {
-            nodelogger.error(' Error in  getAllTeachersForAdmin');
+            nodelogger.error('Error in getUserInfo');
             next(error);
         }
     }

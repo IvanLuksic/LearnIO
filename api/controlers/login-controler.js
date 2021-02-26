@@ -174,6 +174,7 @@ module.exports={
             }
             let format={};
             format.role=req.session.user_type;
+            format.acronim=await Login_instance.getUserAcronim(req.session.user);
             res.json(format);
     } catch (error) {
         nodelogger.error('Error in restoreSession');
@@ -212,7 +213,7 @@ module.exports={
     generateOTP:async (req,res,next)=>//generiranje OTP ako je zaboravio lozinku
     {
         try {
-            await Login_instance.createOTP(req.params.username);
+            await Login_instance.createOTPForUser(req.params.username);
             res.sendStatus(201);
         } catch (error) {
             nodelogger.error('Error in generateOTP');

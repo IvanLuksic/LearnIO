@@ -1,6 +1,6 @@
 const express=require('express');
 const user=express.Router();
-const {authenticate_admin, authenticate_admin_or_teacher,authenticate_teacher}=require('../middleware/login');
+const {authenticate_admin, authenticate_admin_or_teacher,authenticate_teacher,authenticate_student_or_teacher_or_admin}=require('../middleware/login');
 const ShemaValidator=require('../scheme/validator');
 const shema=require('../scheme/user-shema');
 ShemaValidator.addSchemas(shema);
@@ -17,10 +17,10 @@ module.exports=function(main_ruter)
     user.get('/admin/students/all/class',authenticate_admin,user_controler.getAllStudentsWithAllClasses);//dohvat svih studenta s razredima tim
     user.get('/teacher/students/all/class',authenticate_teacher,user_controler.getAllStudentsWithAllClassesForTeacher);//dohvat svih studenta kojima predaje taj ucitelj
     user.get('/students/all',authenticate_admin,user_controler.getAllStudentsForAdmin);//dohvat svih studenta bez razreda
-    user.get('teachers/all',authenticate_admin,user_controler.getAllTeachersForAdmin);//izlist svih ucitelja za pridruzivanje kod unosa u razred
     user.delete('/students/delete/:student_id',authenticate_admin,user_controler.deleteStudent);
     user.put('/students/update',authenticate_admin,user_controler.updateStudent);
-    user.get('/admin/teachers',authenticate_admin,user_controler.getAllTeachers);//dohvat podatka o svim teacherima za editanje
+    user.get('/admin/teachers',authenticate_admin,user_controler.getAllTeachers);//dohvat podatka o svim teacherima za editanje ili kod unosa razreda
     user.put('/teachers/update',authenticate_admin,user_controler.updateTeacher);
     user.delete('/teachers/delete/:teacher_id',authenticate_admin,user_controler.deleteTeacher);
+    user.get('/user/info', authenticate_student_or_teacher_or_admin,user_controler.getUserInfo);
 }

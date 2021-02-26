@@ -95,9 +95,9 @@ module.exports=class user {
                for(let clas of student.classes_student)
                {
                 temp={
-                    id:clas.id,
-                    name:clas.name,
-				    year:clas.school_year
+                    class_id:clas.id,
+                    class_name:clas.name,
+                    class_year:clas.school_year
                 };
                 format_classes.push(temp);
                 temp={};
@@ -153,9 +153,9 @@ module.exports=class user {
                for(let clas of student.classes_student)
                {
                 temp={
-                    id:clas.id,
-                    name:clas.name,
-				    year:clas.school_year
+                    class_id:clas.id,
+                    class_name:clas.name,
+                    class_year:clas.school_year
                 };
                 format_classes.push(temp);
                 temp={};
@@ -234,9 +234,9 @@ module.exports=class user {
                    for(let clas of student.classes_student)
                    {
                     temp={
-                        id:clas.id,
-                        name:clas.name,
-                        year:clas.school_year
+                        class_id:clas.id,
+                        class_name:clas.name,
+                        class_year:clas.school_year
                     };
                     format_classes.push(temp);
                     temp={};
@@ -306,7 +306,7 @@ module.exports=class user {
         try {
             // Prvo ispitat jeli teacher jer za njega moramo brisat dio u tablici teacher subject a za ADMINA ili TEACHERA BRISAT i dio u INVITE LINK
            let user = await this.User.findOne({
-                attributes:['id'],
+                attributes:['id','user_type'],
                 where:{
                     id:user_id
                 }
@@ -357,11 +357,6 @@ module.exports=class user {
                     user_id:user_id
                 }
             });
-             await this.User.destroy({
-                where:{
-                    id:user_id
-                }
-            });
             let results=await sequelize.query('SELECT * FROM user_session',{
                 type:QueryTypes.SELECT,
                  raw:true
@@ -371,8 +366,10 @@ module.exports=class user {
             for(let i=0;i<results.length;i++)
             {
                 if(results[i].sess.user==user_id)
-                this.Logger.info(rsults[i].sid);
+                {
+                this.Logger.info(results[i].sid);
                 sessions.push(results[i].sid);
+                }
             }
             //brisi ih sve
             for(let i=0;i<sessions.length;i++)
@@ -383,6 +380,11 @@ module.exports=class user {
             await this.One_time_password.destroy({//ako postoji OTP igdi
                 where:{
                     user_id:user_id
+                }
+            });
+            await this.User.destroy({
+                where:{
+                    id:user_id
                 }
             });
         } catch (error) {
@@ -396,7 +398,7 @@ module.exports=class user {
             const student= await this.User.findOne({
                 where:{
                     id:properties.id,
-                    user_type:config.roles.student
+                    user_type:parseInt(config.roles.student)
                 }
             });
             if(student)//postoji student + novi username nije zauzet-> username se provjerava na client strani
@@ -406,7 +408,6 @@ module.exports=class user {
             student.mail=properties.email;
             student.username=properties.username;
            // student.password=await hash(properties.password); to se radi u drugoj formi
-            student.date_of_birth=properties.date_of_birth;
             await this.Class_student.destroy({
                 where:{
                     [Op.and]: [
@@ -443,35 +444,43 @@ module.exports=class user {
     async updateTeacherData(properties)
     {
         try {
-           this.Logger.info(' u izradi');
+            const teacher= await this.User.findOne({
+                where:{
+                    id:properties.id,
+                    user_type:parseInt(config.roles.teacher)
+                }
+            });
+            if(teacher)//postoji student + novi username nije zauzet-> username se provjerava na client strani
+            {
+            teacher.name=properties.name;
+            teacher.surname=properties.surname;
+            teacher.mail=properties.email;
+            teacher.username=properties.username;
+            await teacher.save();
+            }
         } catch (error) {
             this.Logger.error('Error in function updateTeacherData'+error);
             throw(error);
         }
     }
-    async getAllTeachers()
+    async getUserInformation(user_id)
     {
         try {
-            let teachers=await this.User.findAll({
+            const user=await this.User.findOne({
+                attributes:['name','surname','mail','username'],
                 where:{
-                    role:parseInt(config.roles.teacher)
+                    id:user_id
                 }
             });
-            let temp={};
-            let format=[];
-            for(let teacher of format)
-            {
-                format={
-                    teacher_name:teacher.name,
-                    teacher_surname:teacher.surname,
-                    teacher_id:teacher.id
-                };
-                teachers.push(format);
-                format={};
-            }
+            let format={
+                name:user.name,
+                surname:user.surname,
+                mail:user.mail,
+                username:user.username
+            };
             return format;
         } catch (error) {
-            this.Logger.error('Error in function getAllTeachers'+error);
+            this.Logger.error('Error in function getUserInformation'+error);
             throw(error);
         }
     }

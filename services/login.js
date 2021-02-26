@@ -67,7 +67,7 @@ module.exports= class LoginService{//exportanje klasa na ovaj način-> module.ex
             throw(error);
         }
     }
-    async createOTPFromUser(username)
+    async createOTPForUser(username)
     {
         try {
             //nadi usera
@@ -78,7 +78,7 @@ module.exports= class LoginService{//exportanje klasa na ovaj način-> module.ex
             });
             if(!user)
             {
-                this.Logger.error('User doesnt exis');
+                this.Logger.error('User doesnt exist');
                 throw(new Error('No user with that username'));
             }else {
                   //Provjeri prvo ima li već prisutan OTP za tog usera->
@@ -96,22 +96,22 @@ module.exports= class LoginService{//exportanje klasa na ovaj način-> module.ex
                 let one_time_password=await OTP.generate(config.otp_length);
                 this.Logger.info('OTP generated: '+one_time_password);
                 await this.One_time_password.create({
-                    otp:hash(one_time_password),
+                    otp:(await (hash(one_time_password))).toString(),
                     created_at:Date.now(),
                     user_id:user.id
                 });
                 this.Logger.info('OTP created');
                 let transporter = nodemailer.createTransport({
-                    service: 'gmail',
+                    service: 'Gmail',
                     auth: {
                       user: 'mislavivanda454@gmail.com',
-                      pass: 'xxxxxxxxx'
+                      pass: 'xxxxxxxxxx'
                     }
                   });
                   
                   let mailOptions = {
                     from: 'mislavivanda454@gmail.com',
-                    to: `${user.mail}`,
+                    to: 'bruno.grbavac@outlook.com',//`${user.mail}`
                     subject: 'LearnIO OTP',
                     text: `Hi there! Seems like you forgot your password. Use this OTP for single login and then change your password when logged in. If you did not requested this OTP please ignore it and contact your LearnIO adminstrator
                     OTP: ${one_time_password}`
@@ -123,7 +123,7 @@ module.exports= class LoginService{//exportanje klasa na ovaj način-> module.ex
             }
           
         } catch (error) {
-            this.Logger.error('Error in function createOTP'+error);
+            this.Logger.error('Error in function createOTPForUser'+error);
             throw(error);
         }
     }
@@ -202,6 +202,23 @@ module.exports= class LoginService{//exportanje klasa na ovaj način-> module.ex
             }
         } catch (error) {
             this.Logger.error('Error in function checkPasswordOrOTP'+error);
+            throw(error);
+        }
+    }
+    async getUserAcronim(user_id)
+    {
+        try {
+            const user=await this.User.findOne({
+                attributes:['name','surname'],
+                where:{
+                    id:user_id
+                }
+            });
+            let acronim=new String();
+            acronim=user.name.slice(0,1)+user.surname.slice(0,1);
+            return acronim.toUpperCase();
+        } catch (error) {
+            this.Logger.error('Error in function getUserAcronim'+error);
             throw(error);
         }
     }
