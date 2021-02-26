@@ -6,10 +6,6 @@ import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import {  Typography } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import FilledInput from '@material-ui/core/FilledInput';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import EditIcon from '@material-ui/icons/Edit';
 import { useSelector} from 'react-redux';
@@ -48,16 +44,16 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
-        width: 200,
-      },
-    },
-};
+// const ITEM_HEIGHT = 48;
+// const ITEM_PADDING_TOP = 8;
+// const MenuProps = {
+//     PaperProps: {
+//       style: {
+//         maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
+//         width: 200,
+//       },
+//     },
+// };
 
 
 function EditTeacherPU(props) {
@@ -88,7 +84,7 @@ function EditTeacherPU(props) {
     checkName(name);
     checkSurname(surname);
     checkUsername(username);
-    if((nameError==""||nameError==null)&&(surnameError==""||surnameError==null)&&(usernameError==""||usernameError==null)&&(emailError==""||emailError==null)){
+    if((nameError===""||nameError===null)&&(surnameError===""||surnameError===null)&&(usernameError===""||usernameError===null)&&(emailError===""||emailError===null)){
       let itemToSave;
       itemToSave={
         id: props.teacher.id,
@@ -150,7 +146,7 @@ const checkSurname=(temp)=>{
 };
 
 const checkEmail=(temp)=>{
-  if(temp==""){setEmailError("Email is required.")}
+  if(temp===""){setEmailError("Email is required.")}
   else if(!((/$^|.+@.+..+/).test(temp))) {setEmailError("Not a valid email.")}
   else{setEmailError("")};
 };
@@ -208,8 +204,8 @@ const getOTP=()=>{
                     InputProps={{
                         endAdornment: (
                           <InputAdornment position="start">
-                            {(usernameError=="")&&<Icon fontSize="small" style={{color:"#27ae60"}}>check_mark</Icon>}
-                            {(usernameError!=="")&&(usernameError!=undefined)&&<Icon fontSize="small" style={{color:"#EB4949"}}>clear</Icon>}
+                            {(usernameError==="")&&<Icon fontSize="small" style={{color:"#27ae60"}}>check_mark</Icon>}
+                            {(usernameError!=="")&&(usernameError!==undefined)&&<Icon fontSize="small" style={{color:"#EB4949"}}>clear</Icon>}
                           </InputAdornment>
                         ),
                       }}

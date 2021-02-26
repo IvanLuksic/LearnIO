@@ -9,9 +9,6 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import {useSelector} from 'react-redux';
 
-
-
-
 const useStyles=makeStyles(theme =>({
     dialogWrapper:{
         // position:'absolute',
@@ -79,11 +76,11 @@ const useStyles=makeStyles(theme =>({
 function QuestionPopup(props){
     const offline= useSelector(state=>state.offline);
     const [firstTime, setFirstTime] = React.useState(()=>true);
-    const [answeredAlready, setAnsweredAlready] = React.useState(()=>(props.questionToDisplay.status==1 || props.questionToDisplay.status==4));
+    const [answeredAlready, setAnsweredAlready] = React.useState(()=>(props.questionToDisplay.status===1 || props.questionToDisplay.status===4));
     const [previous, setPrevious] = React.useState(()=>null);
     const [value, setValue] = React.useState('');
     const [showABC, setShowABC] =useState(()=>{return (props.questionToDisplay.question_type===1)?true:false});
-    const [imageDisplay, setImageDisplay] =useState(()=>{return (props.questionToDisplay.question_image_path==null)?'none':'inline'});
+    const [imageDisplay, setImageDisplay] =useState(()=>{return (props.questionToDisplay.question_image_path===null)?'none':'inline'});
     const classes=useStyles();
     const topicID=useSelector(state=>state.topic);
     const class_id=useSelector(state=>state.class);
@@ -130,7 +127,7 @@ function QuestionPopup(props){
         fetch('/api/question/check', requestOptions)
         .then(response => response.json())
                 .then(data => {  
-                  if(data.correct==false){props.setOpenPopupWrong(true)};
+                  if(data.correct===false){props.setOpenPopupWrong(true)};
                   props.setFields(data.Questions);
         })
         .catch((error)=>{
@@ -155,10 +152,10 @@ function QuestionPopup(props){
                                     <FormLabel component="legend" style={{color:"grey"}}>{props.questionToDisplay.question_text}</FormLabel>
                                     <div style={{display:'flex',margin: "2em auto"}}>
                                     <RadioGroup aria-label="answer" component="div" name="answer1" value={value} onChange={handleChange} className={classes.radioGroup} >
-                                        <div>{answeredAlready?((previous=="a")?(props.questionToDisplay.status==1?<span>❌&nbsp;&nbsp;</span>:<span>✔️&nbsp;&nbsp;</span>):<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>):null}<FormControlLabel disabled={answeredAlready} value={'a'} control={<Radio />} label={"a)  " + props.questionToDisplay.question_answer_a} />
-                                        </div><div>{answeredAlready?((previous=="b")?(props.questionToDisplay.status==1?<span>❌&nbsp;&nbsp;</span>:<span>✔️&nbsp;&nbsp;</span>):<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>):null}<FormControlLabel disabled={answeredAlready} value={'b'} control={<Radio />} label={"b)  " + props.questionToDisplay.question_answer_b} />
-                                        </div><div>{answeredAlready?((previous=="c")?(props.questionToDisplay.status==1?<span>❌&nbsp;&nbsp;</span>:<span>✔️&nbsp;&nbsp;</span>):<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>):null}<FormControlLabel disabled={answeredAlready} value={'c'} control={<Radio />} label={"c)  " + props.questionToDisplay.question_answer_c} />
-                                        </div><div>{answeredAlready?((previous=="d")?(props.questionToDisplay.status==1?<span>❌&nbsp;&nbsp;</span>:<span>✔️&nbsp;&nbsp;</span>):<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>):null}<FormControlLabel disabled={answeredAlready} value={'d'} control={<Radio />} label={"d)  " + props.questionToDisplay.question_answer_d} />
+                                        <div>{answeredAlready?((previous==="a")?(props.questionToDisplay.status===1?<span role="img" aria-label="checkmark">❌&nbsp;&nbsp;</span>:<span role="img" aria-label="checkmark">✔️&nbsp;&nbsp;</span>):<span role="img" aria-label="checkmark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>):null}<FormControlLabel disabled={answeredAlready} value={'a'} control={<Radio />} label={"a)  " + props.questionToDisplay.question_answer_a} />
+                                        </div><div>{answeredAlready?((previous==="b")?(props.questionToDisplay.status===1?<span role="img" aria-label="checkmark">❌&nbsp;&nbsp;</span>:<span role="img" aria-label="checkmark">✔️&nbsp;&nbsp;</span>):<span role="img" aria-label="checkmark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>):null}<FormControlLabel disabled={answeredAlready} value={'b'} control={<Radio />} label={"b)  " + props.questionToDisplay.question_answer_b} />
+                                        </div><div>{answeredAlready?((previous==="c")?(props.questionToDisplay.status===1?<span role="img" aria-label="checkmark">❌&nbsp;&nbsp;</span>:<span role="img" aria-label="checkmark">✔️&nbsp;&nbsp;</span>):<span role="img" aria-label="checkmark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>):null}<FormControlLabel disabled={answeredAlready} value={'c'} control={<Radio />} label={"c)  " + props.questionToDisplay.question_answer_c} />
+                                        </div><div>{answeredAlready?((previous==="d")?(props.questionToDisplay.status===1?<span role="img" aria-label="checkmark">❌&nbsp;&nbsp;</span>:<span role="img" aria-label="checkmark">✔️&nbsp;&nbsp;</span>):<span role="img" aria-label="checkmark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>):null}<FormControlLabel disabled={answeredAlready} value={'d'} control={<Radio />} label={"d)  " + props.questionToDisplay.question_answer_d} />
                                         </div>
                                     </RadioGroup>
                                     </div>
@@ -176,7 +173,7 @@ function QuestionPopup(props){
                                         <div className={classes.imgWithText} >
                                             <img src={props.questionToDisplay.image_path} className={classes.questionImg} style={{display:imageDisplay}} alt="slika zadatka"></img>
                                             <div>
-                                            <TextField  id="standard-basic" className={classes.answerText} label="Unesi kratki odgovor" value={answeredAlready?(props.questionToDisplay.status==1?("❌   "+value):("✔️   "+value)):value} onChange={()=>{if(!answeredAlready){handleChange();}}}/> 
+                                            <TextField  id="standard-basic" className={classes.answerText} label="Unesi kratki odgovor" value={answeredAlready?(props.questionToDisplay.status===1?("❌   "+value):("✔️   "+value)):value} onChange={()=>{if(!answeredAlready){handleChange();}}}/> 
                                             </div>
                                         </div>
                                 </FormControl>
