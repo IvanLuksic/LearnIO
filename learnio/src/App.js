@@ -20,7 +20,7 @@ import StudentSubjects from './components/student/StudentSubjects';
 import AddCourseSubjectClass from './components/admin/addComponents/AddCourseSubjectClass';
 import StudentCourses from './components/student/StudentCourses';
 import Invited from './pages/Invited';
-import { useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {studentLogIn, adminLogIn, teacherLogIn , logOut} from './redux/actions/loginStatus';
 import Profile from './components/common/Profile';
 

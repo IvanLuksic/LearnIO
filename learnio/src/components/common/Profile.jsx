@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import { FilledInput, makeStyles } from '@material-ui/core';
+import { FilledInput, makeStyles, Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../../images/learniobg10-15.png'
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -19,6 +19,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {userLoggedIn} from '../../redux/actions/user';
+import PopupDialog from '../common/PopupDialog';
 
 const randomColor=()=>{
     let colors=["#27ae60","#4373ec","#8f8e8b","#EB4949"];
@@ -57,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     loginButton:{
         margin: "auto",
         height:"3rem",
-        width:"7rem",
+        width:"8rem",
         marginTop: "0",
         marginBottom: "3.5em",
         display: 'flex',
@@ -83,11 +84,52 @@ const useStyles = makeStyles((theme) => ({
         fontWeight:"bold",
         fontSize:"3.5rem",
         color:"white"
-      },
+    },
+    topicTitle:{
+        fontFamily:'Lobster',
+        fontSize:'2.5rem',
+        marginBottom:"1rem",
+        textShadow:" -5px 5px #30303033",
+        color: "#3b3a3a"
+    },
+    saveBtn: {
+        fontWeight:"bold",
+        borderRadius: "7px",
+        background:"#EB4949",
+        color:"white",
+        paddingLeft:"3em",
+        paddingRight:"3em",
+        marginTop:"2.5em",
+        marginBottom:"2.5em",
+        height:"2.7rem",
+        backgroundColor: "#27ae60",
+        '&:hover': {
+        backgroundColor: "#13532e",
+        },
+    },
+    pwButton: {
+        width:"100%", 
+        height:"2.5rem",
+        color:"white",
+        fontWeight:"bold", 
+        marginTop:"0.4rem !important",
+        backgroundColor: "#27ae60",
+        '&:hover': {
+        backgroundColor: "#13532e",
+        },
+        height:"3rem",
+        marginTop:"0.5em",
+        marginBottom:"2.5em",
+    },
     Grid:{
         width:"100%",
         height:"100%",
-    }
+    },
+    pwFields:{
+        display: 'flex-inline',
+        width: "90%",
+        marginBottom: "0.5em",
+    },
 }));
 
 
@@ -131,9 +173,7 @@ function Profile(props) {
     const [visible1,setVisible1]=useState(()=>false);
     const [visible2,setVisible2]=useState(()=>false);
     const [visible3,setVisible3]=useState(()=>false);
-    const [STEP1,setSTEP1]=useState(()=>true);
-    const [STEP2,setSTEP2]=useState(()=>false);
-    const [STEP3,setSTEP3]=useState(()=>false);
+    const [popup,setPopup]=useState(()=>false);
     const acro=useSelector(state=>state.username);
 
 
@@ -165,32 +205,47 @@ function Profile(props) {
           }, 500);
     };
 
-    const checkOldPW=(temp)=>{
+    const changePassword=()=>{
 
         if(offline){                  
-            setOldPWError("");
-            setSTEP2(false);
-            setSTEP3(true);
+            setOldPWError("Incorrect current password.");
+            // setSTEP2(false);
+            // setSTEP3(true);  
         };
         const requestOptions = {
             method: 'POST',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include',
-            body:JSON.stringify({password:temp})
+            body:JSON.stringify({password:oldPW, newPassword:newPW1})
           };
     
+        checkNewPW();
+        if(newPWError==""||newPWError==null){
             fetch(`/api/check/password`, requestOptions)
-            .then(response => response.json())
-            .then(dataFetch => {  
-                  setOldPWError("");
-                  setSTEP2(false);
-                  setSTEP3(true);
+            .then((response)=>{
+                if(response.status===200)
+                {
+                    setPopup(false);
+                    setOldPWError(null);
+                    setNewPW1("");
+                    setNewPW2("");
+                    setOldPW("");
+                    setNewPWError(null);
+                }
+                else if(response.status===401)
+                {
+                    Promise.resolve(response).then(response => {
+                        setOldPWError("Incorrect current password.")
+                })}
             })
             .catch((error)=>{
-              console.log('Error in fetch function '+ error);
-              setOldPWError("Incorrect password.")
-            });    
+                console.log('Error in fetch function '+ error);
+                setOldPWError("Incorrect password.")
+            });                
+        }
+
+
     };
 
     const checkNewPW=()=>{
@@ -215,13 +270,11 @@ function Profile(props) {
         else{setEmailError("")};
     };
 
-
     const saveChanges=()=>{
         checkEmail(email);
         checkName(name);
         checkSurname(surname);
         checkUsername(username);
-        checkNewPW();
         let apiURI;
 
         if((nameError==""||nameError==null)&&(surnameError==""||surnameError==null)&&(usernameError==""||usernameError==null)&&(emailError==""||emailError==null)&&(newPWError==""||newPWError==null)){
@@ -230,13 +283,7 @@ function Profile(props) {
                 name: name,
                 surname: surname,
                 email: email,
-            };
-            if(STEP3==true){
-                itemToSave.password=newPW1;
-                apiURI="";
-            }else{
-                apiURI="";
-            }            
+            };   
             const requestOptions = {
                 method: 'POST',
                 mode:'cors',
@@ -246,36 +293,20 @@ function Profile(props) {
               };
 
             if(offline){
-                setSTEP1(true);
-                setSTEP2(false);
-                setSTEP3(false);
                 setNameError(null);
                 setSurnameError(null);
                 setEmailError(null);
                 setUsernameError(null);
-                setOldPWError(null);
-                setNewPWError(null);
-                setOldPW("");
-                setNewPW1("");
-                setNewPW2("");
                 dispatch(userLoggedIn(name[0]+surname[0]));
             }
         
             fetch(apiURI, requestOptions)
             .then(response => response.json())
             .then(dataFetch => {  
-                setSTEP1(true);
-                setSTEP2(false);
-                setSTEP3(false);
                 setNameError(null);
                 setSurnameError(null);
                 setEmailError(null);
                 setUsernameError(null);
-                setOldPWError(null);
-                setNewPWError(null);
-                setOldPW("");
-                setNewPW1("");
-                setNewPW2("");
                 dispatch(userLoggedIn(name[0]+surname[0]));
 
             })
@@ -389,92 +420,91 @@ function Profile(props) {
                                         </Grid>
                                 </Grid>
 
-                                {STEP1&&
                                 <Grid container item xs={12}>
-                                    <Button variant="contained" onClick={()=>{setSTEP1(false);setSTEP2(true);}} className={classes.loginButton} style={{width:"100%", height:"2.5rem",color:"rgba(0, 0, 0, 0.54)", fontWeight:"bold", marginTop:"0.4rem !important"}} type="submit" color="darkgray" >
+                                    <Button variant="contained" onClick={()=>{setPopup(true);}} className={classes.pwButton}  type="submit" color="darkgray" >
                                         Change password
                                     </Button>
-                                </Grid>}
-
-                                {STEP2&&
-                                <Grid container item xs={12}>
-                                    <Grid container item xs={10}>                                          
-                                        <FormControl  className={classes.fields} variant="filled" error={oldPWError!=""&&oldPWError!=null}>               
-                                            <InputLabel  variant="filled" htmlFor="filled-adornment-password" >Current password</InputLabel>
-                                            <FilledInput fullWidth error={oldPWError!=null&&oldPWError!=""}  defaultValue={oldPW} value={oldPW} onChange={(e)=>setOldPW(e.target.value)} 
-                                                id="filled-adornment-password"
-                                                type={visible1 ? 'text' : 'password'}
-                                                endAdornment={
-                                                    <InputAdornment position="end">
-                                                    <IconButton
-                                                        aria-label="toggle password visibility"
-                                                        onClick={()=>setVisible1(!visible1)}
-                                                        onMouseDown={(e)=>e.preventDefault()}
-                                                    >
-                                                    {visible1 ? <Visibility /> : <VisibilityOff />}
-                                                    </IconButton>
-                                                    </InputAdornment>
-                                                }      
-                                            />
-                                            {<FormHelperText>{oldPWError}</FormHelperText>}
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid container item xs={2}>
-                                        <Button onClick={()=>{checkOldPW(oldPW)}} variant="contained" className={classes.loginButton} style={{width:"100%", height:"3.4rem",color:"rgba(0, 0, 0, 0.54)", marginTop:"0.4rem !important", fontWeight:"bold"}} type="submit" color="darkgray" >
-                                            OK
-                                        </Button>
-                                    </Grid>
                                 </Grid>
 
-                                }
-                                {STEP3&&
-                                <Grid container item xs={12}>
-                                    <Grid container item xs={12}>
-                                        <FormControl  error={newPWError!==null&&newPWError!==""} className={classes.fields} variant="filled" >               
-                                            <InputLabel  variant="filled" htmlFor="filled-adornment-password" >New Password</InputLabel>
-                                            <FilledInput fullWidth error={newPWError!==null&&newPWError!==""}  defaultValue={newPW1} value={newPW1} onChange={(e)=>setNewPW1(e.target.value)}
-                                                id="filled-adornment-password"
-                                                type={visible2 ? 'text' : 'password'}
-                                                endAdornment={
-                                                    <InputAdornment position="end">
-                                                    <IconButton
-                                                        aria-label="toggle password visibility"
-                                                        onClick={()=>setVisible2(!visible2)}
-                                                        onMouseDown={(e)=>e.preventDefault()}
-                                                    >
-                                                    {visible2 ? <Visibility /> : <VisibilityOff />}
-                                                    </IconButton>
-                                                    </InputAdornment>
-                                                }      
-                                            />
-                                        </FormControl>                                       
-                                    </Grid>
-                                    <Grid container item xs={12}>
-                                        <FormControl  error={newPWError!==null&&newPWError!==""} className={classes.fields} variant="filled" >               
-                                            <InputLabel  variant="filled" htmlFor="filled-adornment-password" >New Password</InputLabel>
-                                            <FilledInput fullWidth error={newPWError!==null&&newPWError!==""} defaultValue={newPW2} value={newPW2} onBlur={()=>checkNewPW()} onChange={(e)=>setNewPW2(e.target.value)}
-                                                id="filled-adornment-password"
-                                                type={visible3 ? 'text' : 'password'}
-                                                endAdornment={
-                                                    <InputAdornment position="end">
-                                                    <IconButton
-                                                        aria-label="toggle password visibility"
-                                                        onClick={()=>setVisible3(!visible3)}
-                                                        onMouseDown={(e)=>e.preventDefault()}
-                                                    >
-                                                    {visible3 ? <Visibility /> : <VisibilityOff />}
-                                                    </IconButton>
-                                                    </InputAdornment>
-                                                }      
-                                            />
-                                            {<FormHelperText>{newPWError}</FormHelperText>}
-                                        </FormControl>                                                   
-                                    </Grid>
-                                </Grid>
+                                {popup&&
+                                <PopupDialog openPopup={popup} setOpenPopup={()=>setPopup(false)} clickAway={false} style={{minWidth:'33%',minHeight:'30%'}}>
+                                        <Grid container  direction="column" justify="space-between" alignItems="center">
+                                            <Grid item xs={12}>     
+                                                <Typography className={classes.topicTitle}>Password</Typography>
+                                            </Grid>
+                                            <Grid container item xs={12}  direction="column" justify="space-between" alignItems="center">                                          
+                                                <FormControl  className={classes.pwFields} variant="filled" error={oldPWError!=""&&oldPWError!=null}>               
+                                                    <InputLabel  variant="filled" htmlFor="filled-adornment-password" >Current password</InputLabel>
+                                                    <FilledInput fullWidth error={oldPWError!=null&&oldPWError!=""}  defaultValue={oldPW} value={oldPW} onChange={(e)=>setOldPW(e.target.value)} 
+                                                        id="filled-adornment-password"
+                                                        type={visible1 ? 'text' : 'password'}
+                                                        endAdornment={
+                                                            <InputAdornment position="end">
+                                                            <IconButton
+                                                                aria-label="toggle password visibility"
+                                                                onClick={()=>setVisible1(!visible1)}
+                                                                onMouseDown={(e)=>e.preventDefault()}
+                                                            >
+                                                            {visible1 ? <Visibility /> : <VisibilityOff />}
+                                                            </IconButton>
+                                                            </InputAdornment>
+                                                        }      
+                                                    />
+                                                    {<FormHelperText>{oldPWError}</FormHelperText>}
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid container item xs={12} direction="column" justify="space-between" alignItems="center">
+                                                <FormControl  error={newPWError!==null&&newPWError!==""} className={classes.pwFields} variant="filled" >               
+                                                    <InputLabel  variant="filled" htmlFor="filled-adornment-password" >New Password</InputLabel>
+                                                    <FilledInput fullWidth error={newPWError!==null&&newPWError!==""}  defaultValue={newPW1} value={newPW1} onChange={(e)=>setNewPW1(e.target.value)}
+                                                        id="filled-adornment-password"
+                                                        type={visible2 ? 'text' : 'password'}
+                                                        endAdornment={
+                                                            <InputAdornment position="end">
+                                                            <IconButton
+                                                                aria-label="toggle password visibility"
+                                                                onClick={()=>setVisible2(!visible2)}
+                                                                onMouseDown={(e)=>e.preventDefault()}
+                                                            >
+                                                            {visible2 ? <Visibility /> : <VisibilityOff />}
+                                                            </IconButton>
+                                                            </InputAdornment>
+                                                        }      
+                                                    />
+                                                </FormControl> 
+                                            </Grid>
+                                            <Grid container item xs={12} direction="column" justify="space-between" alignItems="center">
+                                                <FormControl  error={newPWError!==null&&newPWError!==""} className={classes.pwFields} variant="filled" >               
+                                                    <InputLabel  variant="filled" htmlFor="filled-adornment-password" >Repeat New Password</InputLabel>
+                                                    <FilledInput fullWidth error={newPWError!==null&&newPWError!==""} defaultValue={newPW2} value={newPW2} onBlur={()=>checkNewPW()} onChange={(e)=>setNewPW2(e.target.value)}
+                                                        id="filled-adornment-password"
+                                                        type={visible3 ? 'text' : 'password'}
+                                                        endAdornment={
+                                                            <InputAdornment position="end">
+                                                            <IconButton
+                                                                aria-label="toggle password visibility"
+                                                                onClick={()=>setVisible3(!visible3)}
+                                                                onMouseDown={(e)=>e.preventDefault()}
+                                                            >
+                                                            {visible3 ? <Visibility /> : <VisibilityOff />}
+                                                            </IconButton>
+                                                            </InputAdornment>
+                                                        }      
+                                                    />
+                                                    {<FormHelperText>{newPWError}</FormHelperText>}
+                                                </FormControl>                                                   
+                                            </Grid>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Button variant="contained"  onClick={()=>{changePassword();}} className={classes.saveBtn} type="submit" color="primary" >
+                                                Save Password
+                                            </Button>
+                                        </Grid>
+                                </PopupDialog>
                                 }
 
                                 <Grid item xs={8} md={12}  >
-                                    <Button variant="contained" className={classes.loginButton} onClick={()=>{saveChanges();}} style={{borderRadius: "20px", fontWeight:"bold"}} type="submit" color="primary" >
+                                    <Button variant="contained" className={classes.loginButton} onClick={()=>{saveChanges();}} style={{ borderRadius: "7px", fontWeight:"bold"}} type="submit" color="primary" >
                                         Save
                                     </Button>
                                 </Grid>

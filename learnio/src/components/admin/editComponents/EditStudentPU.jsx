@@ -26,6 +26,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import ListItemText from '@material-ui/core/ListItemText';
 import { useSelector} from 'react-redux';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker,} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -93,6 +95,8 @@ function EditStudentPU(props) {
   const [disableStudentClasses, setDisableStudentClasses] = useState(()=>true);
   const [OTP,setOTP]=useState(()=>"");
   const [OTPVisible,setOTPVisible]=useState(()=>false);
+  const [birthDate,setBirthDate]=useState(new Date());
+  const [disableBirthDate, setDisableBirthDate] = useState(()=>true);
 
 
 
@@ -126,7 +130,7 @@ function EditStudentPU(props) {
     checkUsername(username);
     if((nameError==""||nameError==null)&&(surnameError==""||surnameError==null)&&(usernameError==""||usernameError==null)&&(emailError==""||emailError==null)){
       let itemToSave;
-      let st=studentClasses.map((cl)=>{for(let i of props.allClasses){if(i.id==cl){return {name:i.name,id:i.id}}}});
+      let st=studentClasses.map((cl)=>{for(let i of props.allClasses){if(i.id==cl){return i.id}}});
       itemToSave={
         id: props.student.id,
         created:props.student.created,
@@ -256,7 +260,7 @@ const checkEmail=(temp)=>{
                 />
                 </Grid>
                 <Grid item xs={2} >
-                  <IconButton onClick={()=>{setDisableUsername(!disableUsername);setDisableEmail(true);setDisableName(true);setDisableSurname(true);setDisableStudentClasses(true)}} edge="end">
+                  <IconButton onClick={()=>{setDisableUsername(!disableUsername);setDisableBirthDate(true);setDisableEmail(true);setDisableName(true);setDisableSurname(true);setDisableStudentClasses(true)}} edge="end">
                     {disableUsername ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
                   </IconButton>
                 </Grid>
@@ -267,7 +271,7 @@ const checkEmail=(temp)=>{
                   <TextField fullWidth  className={classes.fields} disabled={disableName} type="string" label="Name" variant="filled" defaultValue={name} value={name} helperText={nameError} error={nameError!==""&&nameError!==null} onBlur={(e)=>checkName(e.target.value)} onChange={(event)=>{setName(event.target.value)}}/>
                 </Grid>
                 <Grid item xs={2} >
-                  <IconButton onClick={()=>{setDisableName(!disableName);setDisableEmail(true);setDisableSurname(true);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
+                  <IconButton onClick={()=>{setDisableName(!disableName);setDisableBirthDate(true);setDisableEmail(true);setDisableSurname(true);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
                     {disableName ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
                   </IconButton>
                 </Grid>
@@ -278,18 +282,45 @@ const checkEmail=(temp)=>{
                   <TextField fullWidth  className={classes.fields} disabled={disableSurname} type="string" label="Surname" variant="filled" defaultValue={surname} value={surname} helperText={surnameError} error={surnameError!==""&&surnameError!==null} onBlur={(e)=>checkSurname(e.target.value)} onChange={(event)=>{setSurname(event.target.value)}}/>
                 </Grid>
                 <Grid item xs={2} >
-                  <IconButton onClick={()=>{setDisableSurname(!disableSurname);setDisableEmail(true);setDisableName(true);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
+                  <IconButton onClick={()=>{setDisableSurname(!disableSurname);setDisableBirthDate(true);setDisableEmail(true);setDisableName(true);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
                     {disableSurname ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
                   </IconButton>
                 </Grid>
               </Grid>
+{/* 
+
+              <Grid container item xs={12}>
+                <Grid item xs={10} >
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker style={{marginTop:0}} className={classes.fields}
+                          fullWidth
+                          inputVariant="filled"
+                          margin="normal"
+                          id="date-picker-dialog"
+                          label="Birth Date"
+                          format="dd/MM/yyyy"
+                          value={birthDate}
+                          disabled={disableBirthDate}
+                          onChange={(date)=>{console.log(date);setBirthDate(date);}}
+                          KeyboardButtonProps={{
+                              'aria-label': 'change date',
+                          }}
+                      />
+                  </MuiPickersUtilsProvider>                
+                </Grid>
+                <Grid item xs={2} >
+                        <IconButton onClick={()=>{setDisableBirthDate(!disableBirthDate);setDisableName(true);setDisableEmail(true);setDisableSurname(true);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
+                                  {disableBirthDate ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
+                        </IconButton>
+                </Grid>
+              </Grid> */}
 
               <Grid container item xs={12}>
                 <Grid item xs={10} >
                   <TextField fullWidth  className={classes.fields} disabled={disableEmail} type="e-mail" label="e-mail" variant="filled" defaultValue={email} value={email} helperText={emailError} error={emailError!==""&&emailError!==null} onBlur={(e)=>checkEmail(e.target.value)} onChange={(event)=>{setEmail(event.target.value)}}/>
                 </Grid>
                 <Grid item xs={2} >
-                        <IconButton onClick={()=>{setDisableEmail(!disableEmail);setDisableName(true);setDisableSurname(true);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
+                        <IconButton onClick={()=>{setDisableEmail(!disableEmail);setDisableBirthDate(true);setDisableName(true);setDisableSurname(true);setDisableUsername(true);setDisableStudentClasses(true)}} edge="end">
                                   {disableEmail ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
                         </IconButton>
                 </Grid>
@@ -311,7 +342,7 @@ const checkEmail=(temp)=>{
                 </FormControl>
                 </Grid>
                 <Grid item xs={2} >
-                  <IconButton onClick={()=>{setDisableStudentClasses(!disableStudentClasses);setDisableEmail(true);setDisableName(true);setDisableSurname(true);setDisableUsername(true)}} edge="end">
+                  <IconButton onClick={()=>{setDisableStudentClasses(!disableStudentClasses);setDisableBirthDate(true);setDisableEmail(true);setDisableName(true);setDisableSurname(true);setDisableUsername(true)}} edge="end">
                             {setDisableStudentClasses ? <EditIcon className={classes.greyPencil} /> : <EditIcon className={classes.greenPencil}  />}
                   </IconButton>
                 </Grid>

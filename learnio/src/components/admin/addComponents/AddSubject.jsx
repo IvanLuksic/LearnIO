@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme)=>({
       },
     textField:{
         marginTop: "1em",
-        marginBottom: "0.5em",
-        width:"100%",
+        marginBottom: "1em",
+        width:"90%",
         // [theme.breakpoints.up('md')]: {
         //     marginLeft:"1em",
         // }
@@ -37,20 +37,18 @@ const useStyles = makeStyles((theme)=>({
         paddingLeft:"3em",
         paddingRight:"3em",
         marginTop:"2.5em",
+        marginBottom:"2.5em",
         height:"2.7rem",
         backgroundColor: "#27ae60",
         '&:hover': {
         backgroundColor: "#13532e",
         },
     },
-    gridStyle: {
-        marginLeft:"5%",
-        marginRight:"5%",
-        marginBottom:"5%",
-    },
     formControl: {
-        margin: theme.spacing(1),
-        minWidth: "100%",
+        // margin: theme.spacing(1),
+        // minWidth: "100%",
+        marginBottom:"1em",
+        width: "90%",
       },
 }));
 
@@ -171,7 +169,7 @@ export default function AddSubject(props) {
     },[]);
 
     return(
-        <Grid className={classes.gridStyle} container item direction="column" justify="space-between" alignItems="center" xs={12} md={10} spacing={1}>
+        <Grid container direction="column" justify="space-between" alignItems="center">
             <Typography className={classes.topicTitle}>Subject</Typography>
             <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Subject name"/>
             <FormControl variant="outlined" className={classes.formControl}>

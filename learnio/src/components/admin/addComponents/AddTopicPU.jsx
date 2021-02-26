@@ -241,16 +241,16 @@ function AddTopicPU(props){
       }
       else return null;
     });
-    const [AOI1,setAOI1]=useState(()=>{if(props.asessments_array[0]!==undefined){return props.asessments_array[0]}else{ return ""}});
-    const [AOI2,setAOI2]=useState(()=>{if(props.asessments_array[1]!==undefined){return props.asessments_array[1]}else{ return ""}});
-    const [AOI3,setAOI3]=useState(()=>{if(props.asessments_array[2]!==undefined){return props.asessments_array[2]}else{ return ""}});
-    const [AOI4,setAOI4]=useState(()=>{if(props.asessments_array[3]!==undefined){return props.asessments_array[3]}else{ return ""}});
-    const [AOI5,setAOI5]=useState(()=>{if(props.asessments_array[4]!==undefined){return props.asessments_array[4]}else{ return ""}});
-    const [AOI6,setAOI6]=useState(()=>{if(props.asessments_array[5]!==undefined){return props.asessments_array[5]}else{ return ""}});
-    const [AOI7,setAOI7]=useState(()=>{if(props.asessments_array[6]!==undefined){return props.asessments_array[6]}else{ return ""}});
-    const [AOI8,setAOI8]=useState(()=>{if(props.asessments_array[7]!==undefined){return props.asessments_array[7]}else{ return ""}});
-    const [AOI9,setAOI9]=useState(()=>{if(props.asessments_array[8]!==undefined){return props.asessments_array[8]}else{ return ""}});
-    const [AOI10,setAOI10]=useState(()=>{if(props.asessments_array[9]!==undefined){return props.asessments_array[9]}else{ return ""}});
+    const [AOI1,setAOI1]=useState(()=>{if(props.asessments_array!==undefined&&props.asessments_array[0]!==undefined){return props.asessments_array[0]}else{ return ""}});
+    const [AOI2,setAOI2]=useState(()=>{if(props.asessments_array!==undefined&&props.asessments_array[1]!==undefined){return props.asessments_array[1]}else{ return ""}});
+    const [AOI3,setAOI3]=useState(()=>{if(props.asessments_array!==undefined&&props.asessments_array[2]!==undefined){return props.asessments_array[2]}else{ return ""}});
+    const [AOI4,setAOI4]=useState(()=>{if(props.asessments_array!==undefined&&props.asessments_array[3]!==undefined){return props.asessments_array[3]}else{ return ""}});
+    const [AOI5,setAOI5]=useState(()=>{if(props.asessments_array!==undefined&&props.asessments_array[4]!==undefined){return props.asessments_array[4]}else{ return ""}});
+    const [AOI6,setAOI6]=useState(()=>{if(props.asessments_array!==undefined&&props.asessments_array[5]!==undefined){return props.asessments_array[5]}else{ return ""}});
+    const [AOI7,setAOI7]=useState(()=>{if(props.asessments_array!==undefined&&props.asessments_array[6]!==undefined){return props.asessments_array[6]}else{ return ""}});
+    const [AOI8,setAOI8]=useState(()=>{if(props.asessments_array!==undefined&&props.asessments_array[7]!==undefined){return props.asessments_array[7]}else{ return ""}});
+    const [AOI9,setAOI9]=useState(()=>{if(props.asessments_array!==undefined&&props.asessments_array[8]!==undefined){return props.asessments_array[8]}else{ return ""}});
+    const [AOI10,setAOI10]=useState(()=>{if(props.asessments_array!==undefined&&props.asessments_array[9]!==undefined){return props.asessments_array[9]}else{ return ""}});
     const [AOL1,setAOL1]=useState(()=>3);
     const [AOL2,setAOL2]=useState(()=>3);
     const [AOL3,setAOL3]=useState(()=>3);
