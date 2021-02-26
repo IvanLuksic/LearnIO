@@ -132,8 +132,6 @@ function Matrica(props)
     // ]
 
     const GetQuestion=()=>{
-
-
         const requestOptions = {
           method: 'GET',
           mode:'cors',
@@ -188,6 +186,7 @@ function Matrica(props)
        setAoSelected(ao);
        setQuestionSelected(quest);
        if(status!=="LOCKED") setOpenPopupQuestion(true);
+       console.log(status);
     };
 
   const classes = useStyles();

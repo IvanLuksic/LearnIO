@@ -13,14 +13,16 @@ import AdminTopics from './components/admin/AdminTopics';
 import {useSelector} from 'react-redux';
 import Results from "./components/admin/Results";
 import Students from "./components/admin/Students";
+import Teachers from "./components/admin/Teachers";
 import NotFound from './components/common/NotFound';
 import Register from './pages/Register';
 import StudentSubjects from './components/student/StudentSubjects';
 import AddCourseSubjectClass from './components/admin/addComponents/AddCourseSubjectClass';
 import StudentCourses from './components/student/StudentCourses';
 import Invited from './pages/Invited';
-import { useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {studentLogIn, adminLogIn, teacherLogIn , logOut} from './redux/actions/loginStatus';
+import Profile from './components/common/Profile';
 
 const theme = createMuiTheme({
     palette: {
@@ -82,6 +84,7 @@ const AppLoaded=(props)=>{
                 <Switch>
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/login" component={Login}/>
+                    {(AdminFeatures||TeacherFeatures||StudentFeatures)&&<Route exact path="/profile" component={Profile}/>}
                     {(AdminFeatures||GuestFeatures)&&<Route exact path="/register" component={Register}/>}
                     {StudentFeatures&&<Route exact path="/student/topics/:class_id/:subject_id/:unit_id"component={StudentUnit}/>}
                     {StudentFeatures&&<Route exact path="/student/units/:class_id/:subject_id" component={StudentCourses}/>}
@@ -94,6 +97,7 @@ const AppLoaded=(props)=>{
                     {(AdminFeatures||TeacherFeatures)&&<Route exact path="/AdminTopics" component={AdminTopics}/>}
                     {(AdminFeatures||TeacherFeatures)&&<Route exact path="/results" component={Results}/>}
                     {(AdminFeatures||TeacherFeatures)&&<Route exact path="/students" component={Students}/>}
+                    {(AdminFeatures)&&<Route exact path="/teachers" component={Teachers}/>}
                     <Route component={NotFound} code={"401"}/>
                 </Switch>
               </div>

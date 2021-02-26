@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
     color: "#FFFFFF",
     maxHeight: "20",
     position: "fixed",
-    bottom: "3rem",
-    right: "3rem"
+    bottom: "7%",
+    right: "5%"
   }
 }));
 
@@ -66,7 +66,7 @@ function AddCourseSubjectClass() {
   const fillYears = () => {
     const thisYear = getYear();
     let newYear = {};
-    let tempYears = [{value: "select year"}];
+    let tempYears = [];
     let yearValue = "";
 
     for(let i = -2; i < 50; i++) {
@@ -162,7 +162,7 @@ function AddCourseSubjectClass() {
         : null
       }{
         popupOpen && index === 5 ? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
-          <AddTopicPU  closePopup={closePopup} setSnackbarOpen={setSnackOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus} />
+          <AddTopicPU addOrEdit={true} closePopup={closePopup} setSnackbarOpen={setSnackOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus} />
         </PopupDialog>
         : null
       }

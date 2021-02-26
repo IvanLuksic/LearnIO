@@ -17,9 +17,10 @@ import PopupDialog from '../common/PopupDialog';
 import ConfirmDialog from '../common/ConfirmDialog';
 import hat from '../../images/hat.png';
 import EditStudentPU from '../admin/editComponents/EditStudentPU';
-import fakeAllClasses from '../../sampleData/admin/class.json'
+import fakeAllClasses from '../../sampleData/admin/allClasses.json'
 import NotFound from '../common/NotFound';
 import CustomSnackbar from '../common/Snackbar.jsx';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -137,6 +138,17 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
+        width: 200,
+      },
+    },
+};
+
 function CustomPagination(props) {
   const { paginationProps } = props;
   const classes = useStyles();
@@ -160,16 +172,18 @@ function Students(){
     const [editDialogOpen, setEditDialogOpen]=useState(()=>false);
     const [loading,setLoading]=useState(offline);//potrebno ga postavit na false da bi radilo
     const [selectedClassID,setSelectedClassID]=useState(()=>null);
-    const [selectedStudent,setSelectedStudent]=useState(()=>null);
+    const [selectedStudent,setSelectedStudent]=useState(()=>[]);
     const [allClasses,setAllClasses]=useState(()=>fakeAllClasses);
+    const [studentClasses,setStudentClasses]=useState(()=>null);
     const [snackbarText,setSnackbarText]=useState(()=>"");
     const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
     const [errorStatus,setErrorStatus]=useState(()=>"");
     const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
     const classes=useStyles();
     const [noError,setNoError]=useState(()=> true);
-    const [listOfGroups,setListOfGroups]=useState(()=>[{class_name:"All",class_id:-1},...allClasses]); 
+    const [listOfGroups,setListOfGroups]=useState(()=>[{name:"All",id:-1},...allClasses]); 
     const role=useSelector(state=>state.login);
+    
 
     
     const fetchClasses=()=>{
@@ -190,7 +204,7 @@ function Students(){
         {
           Promise.resolve(response).then(response => response.json())
           .then(dataFetch => {  
-            setListOfGroups([{class_name:"All",class_id:-1},...dataFetch]);
+            setListOfGroups([{name:"All",id:-1},...dataFetch]);
             setAllClasses(dataFetch);
            // setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
             setSnackbarStatus("success");
@@ -301,15 +315,16 @@ function Students(){
 
 /*=============================================================================================================================== */
 const editStudent=(studentToEdit)=>{
-  
-  let array=data.filter((person)=>person.id!==studentToEdit.id);
-  array.push(studentToEdit);
-  setData(array);
 
   if(offline){
     array = fakeData.filter((person)=>person.id!==studentToEdit.id);
     array.push(studentToEdit);
     setFakeData(array);
+    let array=data.filter((person)=>person.id!==studentToEdit.id);
+    array.push(studentToEdit);
+    setData(array);
+  
+    changeOfClass(selectedClassID);
   }
   else if(!offline){
     const requestOptions = {
@@ -326,10 +341,15 @@ const editStudent=(studentToEdit)=>{
       {
         Promise.resolve(response.status)
         .then(() => {  
-          changeOfClass(selectedClassID);
+          // changeOfClass(selectedClassID);
           setSnackbarStatus("success");
           setSnackbarText("Student edited successfully.");
           setSnackbarOpen(true);
+          changeOfClass(selectedClassID);//????????????????????????????
+          let array=data.filter((person)=>person.id!==studentToEdit.id);
+          array.push(studentToEdit);
+          setData(array);
+        
         })
       }      
       else{
@@ -346,8 +366,14 @@ const editStudent=(studentToEdit)=>{
 };
 
 /*=============================================================================================================================== */
-    const deleteStudent=()=>{
+    const removeStudent=()=>{
+      let stud=selectedStudent;
+      let clas=selectedStudent.classes.filter((cl)=>cl.id!=selectedClassID);
+      stud.classes=clas;
+      editStudent(stud);
+    };
 
+    const deleteStudent=()=>{
 
       if(!offline){
         const requestOptions = {
@@ -368,6 +394,8 @@ const editStudent=(studentToEdit)=>{
                 setSnackbarText("Student deleted successfully.");
                 setSnackbarOpen(true);
                 setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
+                setData(data.filter((student)=>student.id!==selectedStudent.id));
+
               })
           }
           else{
@@ -385,9 +413,11 @@ const editStudent=(studentToEdit)=>{
         });
       }
       else if(offline){
-        setFakeData(fakeData.filter((student)=>student.id!==selectedStudent.id));      }
+        setFakeData(fakeData.filter((student)=>student.id!==selectedStudent.id));    
+        setData(data.filter((student)=>student.id!==selectedStudent.id));
+  
+      }
         
-      setData(data.filter((student)=>student.id!==selectedStudent.id));
 
       }
 /*=================================================================================================================================00 */
@@ -399,7 +429,7 @@ const editStudent=(studentToEdit)=>{
           <Select value={selectedClassID} onChange={(event)=>changeOfClass(event.target.value)}>
           {
             listOfGroups.map((group)=>{
-              return <MenuItem value={group.class_id}>{group.class_name}</MenuItem>
+              return <MenuItem value={group.id}>{group.name}</MenuItem>
             })
           }
           </Select>
@@ -407,17 +437,66 @@ const editStudent=(studentToEdit)=>{
     )
     };
 
-    const columns=[
+    var cols=[
         {field: "id", headerName:'ID',type:'number',headerAlign:'center', align:'center'},
         {field: "username", width:100, headerName:'Username',type:'string',headerAlign:'center', align:'center'},
         {field: "name", width:100, headerName:'Name',type:'string',headerAlign:'center', align:'center'},
         {field: "surname", width:100, headerName:'Surname',type:'string',headerAlign:'center', align:'center'},
         {field: "email", width:200, headerName:'e-mail',type:'string',headerAlign:'center', align:'center'},
-        {field: "created", width:150, headerName:'Created',type:'date',headerAlign:'center', align:'center'},
-        {field: "classes", headerName:'Classes',type:'number',headerAlign:'center', align:'center',sortable: false , renderCell:(params)=>{ if(params.getValue('classes').length==0){return "None"}else{return renderGroupsList(params.getValue('classes'))}}},
-        {field: 'open', headerName: 'Edit',headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Button disabled={(role=="teacher")} onClick={()=>{setSelectedStudent(params.data) ;setEditDialogOpen(true)}}><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button>)},
-        {field: 'delete', headerName: 'Delete ' ,headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Button disabled={(role=="teacher")} onClick={()=>{setSelectedStudent(params.data); setConfirmDialogOpen(true);}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
+        {field: "created", width:150, headerName:'Created',type:'date',headerAlign:'center', align:'center'}
     ];
+
+    if(role=="admin"){
+    cols=[...cols,
+      {field: "classes", headerName:'Classes',type:'number',headerAlign:'center', align:'center',sortable: false , renderCell:(params)=>{ if(params.getValue('classes').length==0){return "None"}else{return renderGroupsList(params.getValue('classes'))}}},
+      {field: 'open', headerName: 'Edit',headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Tooltip title={"Edit student account"} placement="right" arrow><Button  onClick={()=>{setSelectedStudent(params.data) ;setEditDialogOpen(true)}}><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Tooltip>)},
+      {field: 'delete', headerName: 'Delete ' ,headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Tooltip title={"Delete student account"} placement="right" arrow><Button  onClick={()=>{setSelectedStudent(params.data); setConfirmDialogOpen(true);}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button></Tooltip>)}];
+    }
+    else if(role=="teacher"){
+      cols=[...cols,
+        {field: "classes", headerName:'Classes',type:'number',headerAlign:'center', align:'center',sortable: false , renderCell:(params)=>{ if(params.getValue('classes').length==0){return "None"}else{return renderGroupsList(params.getValue('classes'))}}},
+      ];
+      if(selectedClassID!=-1)cols=[...cols,{field: 'delete', headerName: 'Remove ' ,headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Tooltip title={"Remove student from this class"} placement="right" arrow><Button onClick={()=>{setSelectedStudent(params.data); console.log(params.data); setConfirmDialogOpen(true);}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button></Tooltip>)}];
+    };
+
+        // {field: 'open',width:350, headerName: 'Edit',headerAlign:'center', align:'center',sortable: false , renderCell: (params) =>{
+        //   let stud=params.data;
+        //   let ids=stud.classes.map((z)=>z.id);
+        //   return(        
+        //   <FormControl variant="outlined" style={{width:"90%"}} >
+        //     <Select style={{width:"90%",height:"40px",marginTop:"4px"}}
+        //       multiple 
+        //       value={ids} 
+        //       onChange={(e)=>{
+        //         let cids=e.target.value;
+        //         let st = cids.map((cl)=>{for(let i of allClasses){if(i.id==cl){return {name:i.name,id:i.id}}}});
+        //         let itemToSave={
+        //           id: stud.id,
+        //           created:stud.created,
+        //           username: stud.username,
+        //           name: stud.name,
+        //           surname: stud.surname,
+        //           email: stud.email,
+        //           password: stud.password,
+        //           classes: st
+        //         };
+        //         editStudent(itemToSave);
+        //         setStudentClasses(cids);
+        //       }} 
+        //       renderValue={(selected) => {
+        //       let array=selected.map((selClass)=>{for(let cl of allClasses){if(cl.id==selClass)return `${cl.name}`}}); return array.join(`, `);} } MenuProps={MenuProps2}>
+        //       {allClasses.map((oneClass) => {
+        //         return(
+        //           <MenuItem key={oneClass.id} value={oneClass.id}>
+        //           {/* <Checkbox checked={checkIfIn(oneClass)}/> */}
+        //           <ListItemText primary={`${oneClass.name} #${oneClass.id}`}  />
+        //         </MenuItem>
+        //         )})}
+        //     </Select>
+        //   </FormControl>
+        //   )}},
+
+    const columns=cols;
 
     return(
       (!noError)?<NotFound code={errorStatus}/>
@@ -425,7 +504,9 @@ const editStudent=(studentToEdit)=>{
             <PopupDialog openPopup={editDialogOpen} setOpenPopup={setEditDialogOpen} clickAway={false} style={{minHeight:'30%',width:"35rem"}}>
               <EditStudentPU allClasses={allClasses} setOpenPopup={setEditDialogOpen} editStudent={editStudent} student={selectedStudent} style={{borderRadius:'25px'}}/>
             </PopupDialog>
-            <ConfirmDialog functionToConfirm={deleteStudent} text={"Do you really want to delete this student?"} setOpenPopup={setConfirmDialogOpen} openPopup={confirmDialogOpen}></ConfirmDialog>
+            {(role=="admin")?<ConfirmDialog functionToConfirm={deleteStudent} text={"Do you really want to delete this student?"} setOpenPopup={setConfirmDialogOpen} openPopup={confirmDialogOpen}></ConfirmDialog>
+            :<ConfirmDialog functionToConfirm={removeStudent} text={"Do you really want to remove this student from this class?"} setOpenPopup={setConfirmDialogOpen} openPopup={confirmDialogOpen}></ConfirmDialog>
+            }
             <Grid container flexDirection="row" alignItems="center" justify="center">
                 <Grid item xs={12}>
                     <Typography color="primary" className={classes.topicTitle}>Students</Typography>

@@ -23,16 +23,20 @@ const useStyles = makeStyles((theme) => ({
     },
     image:{
         borderRadius:"3px",
+        marginBottom:"1.5rem",
         boxShadow: "0px 5px 10px 7px rgba(0,0,0,0.27)"
     },
     text:{
         margin:"auto",
         display:"block",
         marginTop:"2rem",
-        fontSize:"2rem",
-        fontFamily:"Lobster",
+        fontFamily:"Roboto",
         color:"#3b3a3a",
         textShadow:"-5px 5px #30303033"
+    },
+    check:{
+        width:"5rem",
+        marginTop:"2rem"
     }
     }));
 const Redirected=(props)=>{props.pageProps.history.push(`/login`); return(<CircularProgress style={{margin:"auto"}} />);};
@@ -96,7 +100,7 @@ function Invited(props) {
                 return `../../ok${(Math.floor(Math.random()*10000)%ok)}.gif`;
                 break;
             case 4:
-                return `../../yes${(Math.floor(Math.random()*10000)%yes)}.gif`;
+                return '../../check.gif'; // return `../../yes${(Math.floor(Math.random()*10000)%yes)}.gif`;
                 break;
             default:
                 return `../../ok1.gif`;
@@ -109,10 +113,10 @@ function Invited(props) {
         <Grid container direction="column" align="center" Justify="space-evenly" className={classes.background} >  
         {
             (role==="guest")?<Redirected pageProps={props}/>
-            :(role==="teacher"||role==="admin")?<div style={{margin:"auto"}}><img src={randomImage(1)} className={classes.image} alt="Not loaded"/><p className={classes.text}>Please login as a student. 🤨</p></div>
+            :(role==="teacher"||role==="admin")?<div style={{margin:"auto"}}><img src={randomImage(1)} className={classes.image} alt="Not loaded"/><p className={classes.text} style={{fontWeight:"bold",fontSize:"2.7rem"}}> You have not been added to this class.</p><p className={classes.text} style={{fontSize:"2rem"}}>Please login as a student.</p></div>
             :loading?<CircularProgress style={{margin:"auto",display:"block"}} />
             :joinedAlready?<div style={{margin:"auto"}}><img src={randomImage(3)} className={classes.image} alt="Not loaded"/><p className={classes.text}>You have already been added to this class. 🙃</p></div>
-            :joined?<div style={{margin:"auto"}}><img src={randomImage(4)} className={classes.image} alt="Not loaded"/><p className={classes.text}>{`Congrats, You have been added to ${class_name} ${class_year}! 😀`}</p></div>:<div style={{margin:"auto"}}><img src={randomImage(2)} className={classes.image} alt="Not loaded"/><p className={classes.text}>Something went wrong, we couldn't add you to this class.😦</p></div>
+            :joined?<div style={{margin:"auto"}}><p className={classes.text} style={{fontWeight:"bold",fontSize:"2.7rem"}}> Congratulations </p><p className={classes.text} style={{fontSize:"2rem"}}>{`You have been successfully added to `}</p><p className={classes.text} style={{fontSize:"2rem"}}>{`${class_name} ${class_year}`}</p><img src={randomImage(4)} className={classes.check} alt="Not loaded"/></div>:<div style={{margin:"auto"}}><img src={randomImage(2)} className={classes.image} alt="Not loaded"/><p className={classes.text}>Something went wrong, we couldn't add you to this class.😦</p></div>
         }
         </Grid>
         
@@ -129,3 +133,5 @@ function Invited(props) {
 }
 
 export default Invited;
+
+/*<div style={{margin:"auto"}}><img src={randomImage(1)} className={classes.image} alt="Not loaded"/><p className={classes.text}>Please login as a student. 🤨</p></div>*/

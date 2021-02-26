@@ -126,7 +126,7 @@ function EditQuestion(props) {
                 </PopupDialog>
               </div>
               {
-                props.questions ? <div style={{position:'relative', marginTop:'5%'}}><Accordion resetExpanded={resetExpanded} popUpClose={handleClose} handlePages={handlePages} topQ={topQ} pageCount={pageCount} handleChange={handleChange} changeText={changeText} text={text} handleDelete={handleDelete} page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions} openEdit={openEdit}/></div>
+                props.questions ? <div style={{position:'relative', marginTop:'5%'}}><Accordion numberOfQuestions={props.questions.length} resetExpanded={resetExpanded} popUpClose={handleClose} handlePages={handlePages} topQ={topQ} pageCount={pageCount} handleChange={handleChange} changeText={changeText} text={text} handleDelete={handleDelete} page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions} openEdit={openEdit}/></div>
                 : <div style={{position:'relative', marginTop:'5%'}}><Typography style={{display:'flex', justifyContent:'center', color:'gray'}}>No questions added.</Typography></div>
               }
             </div>

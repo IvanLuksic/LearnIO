@@ -177,22 +177,23 @@ const useStyles = makeStyles((theme) => ({
   }));
 
   
-const ChipsArray=(props)=> {
-  const classes = useStyles();
-  return (
-    <Paper component="ul" className={classes.rootChips}>
-      {
-      props.wrongAnswers.map((data) => {
-        return (
-          <li key={data}>
-            <Chip style={{margin:"0 0.1em"}} label={data} onDelete={()=>{props.deleteWrongAnswer(data)}}/>
-          </li>
-        );
-      })}
-    </Paper>
-  );
-};
-
+  const ChipsArray=(props)=> {
+    const classes = useStyles();
+    const abcd=['a','b','c','d']
+    return (
+      <Paper component="ul" className={classes.rootChips}>
+        {
+        props.wrongAnswers.map((data) => {
+          return (
+            <li key={data}>
+              <Chip style={{margin:"0 0.1em"}} label={abcd[props.wrongAnswers.indexOf(data)]+")    "+data} onDelete={()=>{props.deleteWrongAnswer(data)}}/>
+            </li>
+          );
+        })}
+      </Paper>
+    );
+  };
+  
 
 function AddQuestPU(props) {
   //states of elements-------------------
@@ -207,6 +208,7 @@ function AddQuestPU(props) {
   const [correctAnswer, setCorrectAnswers]=useState(()=>{ return "Točno"});
   const [multipleAnswer, setMultipleAnswers]=useState(()=>{ return false});
   const [ieQuestionList, setIeQuestionList] = useState([]);
+  const [file,setFile]=useState(()=>null);
   const [ieFilteredQuestionList, setIeFilteredQuestionList] = useState([]);
   const [ieCourseList, setIeCourseList] = useState([]);
   const [ieTopicList, setIeTopicList] = useState([]);
@@ -249,9 +251,10 @@ function AddQuestPU(props) {
 
   const handleSave= ()=>{
     let send={
+      questionImage:file,
       text:text,
       question_type:(multipleAnswer?1:2),
-      image_path:imageState,
+      // image_path:imageState,
       answer_a:((wrongAnswers.length>0)?wrongAnswers[0]:null),
       answer_b:((wrongAnswers.length>1)?wrongAnswers[1]:null),
       answer_c:((wrongAnswers.length>2)?wrongAnswers[2]:null),
@@ -382,7 +385,18 @@ function AddQuestPU(props) {
 
   // \\ Insert existing //
 //------------------------
-
+  const upload = (file) => {
+    fetch('http://localhost:3000', { // Your POST endpoint
+      method: 'POST',
+      body: file // This is your file object
+    }).then(
+      response => response.json() // if the response is a JSON object
+    ).then(
+      success => console.log(success) // Handle the success response object
+    ).catch(
+      error => console.log(error) // Handle the error response object
+    );
+  };
   return(
     <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="flex-start" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
     <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
@@ -409,7 +423,7 @@ function AddQuestPU(props) {
               </Grid>
               <Grid container item direction="row" justify="center" alignItems="center" >
                 <Grid container item xs justify="center" alignItems="center">
-                  <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; setimageState(URL.createObjectURL(img)); setIMG(true) ;}}}/>
+                  <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; console.log(event.target.files[0]); setFile(img); setimageState(URL.createObjectURL(img)); setIMG(true) ;}}}/>
                   <label htmlFor="contained-button-file">
                     <Button variant="contained" color="primary" component="span" className={classes.uploadButton}>
                       Upload photo

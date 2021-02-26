@@ -12,6 +12,7 @@ import EditQuestionPU from './editComponents/EditQuestionPU';
 import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
 import ConfirmDialog from "../common/ConfirmDialog";
+import AlertDialog from "../common/AlertDialog";
 import PopupDialog from '../common/PopupDialog';
 
 
@@ -47,6 +48,7 @@ function AddAccordion(props) {
     const classes = useStyles();
     const [openPopup, setOpenPopup] = useState(false);
     const [openPopup2, setOpenPopup2] = useState(false);
+    const [openPopup3, setOpenPopup3] = useState(false);
     const handleClose = () => {
       setOpenPopup2(false);
     };
@@ -62,6 +64,8 @@ function AddAccordion(props) {
     return(
       <div>
       <ConfirmDialog setOpenPopup={setOpenPopup} openPopup={openPopup} text="Do you really want to delete this question?" functionToConfirm={props.handleDelete}/>
+      <AlertDialog setOpenPopup={setOpenPopup3} openPopup={openPopup3} text="Unfortunatley this question can't be deleted as it is the last one standing on its matrix field." />
+
       {
       props.questions.slice(props.topQ,props.topQ+6).map((question, index) =>{
         let questionHeading=`Q${question.id}`;
@@ -87,7 +91,7 @@ function AddAccordion(props) {
                   <PopupDialog openPopup={question.id === props.openEdit && openPopup2} setOpenPopup={handleClose} clickAway={true} style={{minWidth:'60%',minHeight:'30%'}}>
                     <EditQuestionPU popUpClose={setOpenPopup2} style={{borderRadius:'25px'}} questChange={props.questChange} prop={question} changeText={props.changeText}/>
                   </PopupDialog>
-                <Button className={classes.iconButtons} onClick={() =>{setOpenPopup(true)}} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>
+                <Button className={classes.iconButtons} onClick={() =>{if(props.numberOfQuestions>1){setOpenPopup(true)}else{setOpenPopup3(true)}}} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>
               </Grid>
             </Grid>
           </AccordionDetails>
