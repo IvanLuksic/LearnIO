@@ -74,7 +74,6 @@ export default function AddSubject(props) {
     const offline= useSelector(state=>state.offline);
     const classes = useStyles();
     const [name,setName] = useState("");
-    const [className, setClass] = useState("select class");
     const [open, setOpen] = useState(false);
     const [index, setIndex] = useState(0);
     const [classCheck, setClassCheck] = useState([]);

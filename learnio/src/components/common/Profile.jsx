@@ -2,9 +2,7 @@ import React,{useState,useEffect} from 'react';
 import { FilledInput, makeStyles, Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../../images/learniobg10-15.png'
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { useDispatch, useSelector } from 'react-redux';
-import {loginRedirect} from '../../redux/actions/loginRedirect';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import backgroundimg from '../../images/learniobglogin.png'
@@ -109,10 +107,8 @@ const useStyles = makeStyles((theme) => ({
     },
     pwButton: {
         width:"100%", 
-        height:"2.5rem",
         color:"white",
         fontWeight:"bold", 
-        marginTop:"0.4rem !important",
         backgroundColor: "#27ae60",
         '&:hover': {
         backgroundColor: "#13532e",
@@ -151,7 +147,7 @@ function Profile(props) {
     const dispatch= useDispatch();
     const classes=useStyles();
     const offline= useSelector(state=>state.offline);
-    const [loading, setLoading] = useState(()=>!offline);
+    // const [loading, setLoading] = useState(()=>!offline);
     const [username, setUsername] = useState(()=>"");
     const [disableUsername, setDisableUsername] = useState(()=>true);
     const [usernameError,setUsernameError]=useState(()=>null);
@@ -178,7 +174,7 @@ function Profile(props) {
 
 
     const checkUsername=(temp)=>{
-        if(offline){setTimeout(()=>{if(username=="Username"){setUsernameError("nevalja")}else{setUsernameError("")}},500)};
+        if(offline){setTimeout(()=>{if(username==="Username"){setUsernameError("nevalja")}else{setUsernameError("")}},500)};
 
         const requestOptions = {
             method: 'POST',

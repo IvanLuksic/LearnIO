@@ -87,7 +87,7 @@ function WrongPU(props){//uzima samo closePopup
 
     const class_id=useSelector(state=>state.class);
     const subject_id=useSelector(state=>state.subject);
-    const top_id=useSelector(state=>state.topic);
+    //const top_id=useSelector(state=>state.topic);
 
 
 

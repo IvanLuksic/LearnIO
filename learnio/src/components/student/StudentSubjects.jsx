@@ -4,7 +4,6 @@ import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../../images/learniobg10-15.png';
 import { makeStyles} from '@material-ui/core/styles';
 import { useSelector} from 'react-redux';
-import WrongPU from './WrongPU';
 import MatrixSkeleton from './matrixComponents/MatrixSkeleton';
 import fakeSubjects from '../../sampleData/student/subjects.json'
 import Paper from '@material-ui/core/Paper';
@@ -102,7 +101,7 @@ const getStartingLetters=(string)=>{
   firstLetters.push(string[0]);
   let br=0;
   for(let i=1;i<string.length;i++){
-    if(string[i]===' '&& string[i+1]!==' '&&string[i+1]!=undefined&&br<3){firstLetters.push(string[i+1].toUpperCase()); br++;}
+    if(string[i] === ' ' && string[i+1] !== ' '&&string[i+1]!=undefined&&br<3){firstLetters.push(string[i+1].toUpperCase()); br++;}
   }
   return firstLetters;
 };

@@ -63,12 +63,12 @@ function Invited(props) {
         };
         fetch(`/api/invite/${props.match.params.code}`, requestOptions)// class subject course
         .then(response => {       
-            if(response.status==(201))
+            if(response.status===(201))
             {
               Promise.resolve(response).then(response => response.json())
               .then(data=>{setJoined(true);setClass_name(data.class_name);setClass_year(data.class_year);})
             }
-            else if(response.status==(200))
+            else if(response.status===(200))
             {
               Promise.resolve(response).then(response => response.json())
               .then(data=>{setJoinedAlready(true);})
@@ -80,31 +80,26 @@ function Invited(props) {
     };
 
     useEffect(()=>{
-        if(role=="student")requestJoin();
+        if(role==="student")requestJoin();
     },[])
 
     const randomImage=(code)=>{
         let cb=1;
         let oops=3;
         let ok=2;
-        let yes=3;
+        // let yes=3;
 
         switch(code){
             case 1:
                 return `../../cb${(Math.floor(Math.random()*10000)%cb)}.gif`;
-                break;
             case 2:
                 return `../../oops${(Math.floor(Math.random()*10000)%oops)}.gif`;
-                break;
             case 3:
                 return `../../ok${(Math.floor(Math.random()*10000)%ok)}.gif`;
-                break;
             case 4:
                 return '../../check.gif'; // return `../../yes${(Math.floor(Math.random()*10000)%yes)}.gif`;
-                break;
             default:
                 return `../../ok1.gif`;
-                break;    
         }
     };
 
@@ -115,8 +110,8 @@ function Invited(props) {
             (role==="guest")?<Redirected pageProps={props}/>
             :(role==="teacher"||role==="admin")?<div style={{margin:"auto"}}><img src={randomImage(1)} className={classes.image} alt="Not loaded"/><p className={classes.text} style={{fontWeight:"bold",fontSize:"2.7rem"}}> You have not been added to this class.</p><p className={classes.text} style={{fontSize:"2rem"}}>Please login as a student.</p></div>
             :loading?<CircularProgress style={{margin:"auto",display:"block"}} />
-            :joinedAlready?<div style={{margin:"auto"}}><img src={randomImage(3)} className={classes.image} alt="Not loaded"/><p className={classes.text}>You have already been added to this class. 🙃</p></div>
-            :joined?<div style={{margin:"auto"}}><p className={classes.text} style={{fontWeight:"bold",fontSize:"2.7rem"}}> Congratulations </p><p className={classes.text} style={{fontSize:"2rem"}}>{`You have been successfully added to `}</p><p className={classes.text} style={{fontSize:"2rem"}}>{`${class_name} ${class_year}`}</p><img src={randomImage(4)} className={classes.check} alt="Not loaded"/></div>:<div style={{margin:"auto"}}><img src={randomImage(2)} className={classes.image} alt="Not loaded"/><p className={classes.text}>Something went wrong, we couldn't add you to this class.😦</p></div>
+            :joinedAlready?<div style={{margin:"auto"}}><img src={randomImage(3)} className={classes.image} alt="Not loaded"/><p className={classes.text}>You have already been added to this class. <span  role="img" aria-label="checkmark">🙃</span></p></div>
+            :joined?<div style={{margin:"auto"}}><p className={classes.text} style={{fontWeight:"bold",fontSize:"2.7rem"}}> Congratulations </p><p className={classes.text} style={{fontSize:"2rem"}}>{`You have been successfully added to `}</p><p className={classes.text} style={{fontSize:"2rem"}}>{`${class_name} ${class_year}`}</p><img src={randomImage(4)} className={classes.check} alt="Not loaded"/></div>:<div style={{margin:"auto"}}><img src={randomImage(2)} className={classes.image} alt="Not loaded"/><p className={classes.text}>Something went wrong, we couldn't add you to this class.<span role="img" aria-label="checkmark">😦</span></p></div>
         }
         </Grid>
         

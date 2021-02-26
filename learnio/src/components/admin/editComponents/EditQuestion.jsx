@@ -6,7 +6,6 @@ import 'reactjs-popup/dist/index.css';
 import AddQuestPU from '../addComponents/AddQuestPU';
 import Icon from '@material-ui/core/Icon';
 import Accordion from '../Accordion.jsx';
-import {Dialog} from '@material-ui/core';
 import PopupDialog from '../../common/PopupDialog';
 
 const useStyles = makeStyles((theme)=>({
