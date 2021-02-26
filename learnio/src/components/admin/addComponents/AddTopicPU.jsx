@@ -503,7 +503,7 @@ function AddTopicPU(props){
                                   </Grid>
                                 </Grid>
                                 <Grid className={classes.dropMenus} container item direction="row" justify="space-evenly" alignItems="center" xs={12} spacing={3}>
-                                  <Grid container item diredtion="row" justify="center" alignItems="center"  xs={12} md={6} >
+                                  <Grid container item direction="row" justify="center" alignItems="center"  xs={12} md={6} >
                                     <p className={classes.dropText}>Select levels of AO :</p>                            
                                     <InputLabel id="demo-simple-select-label-AO"></InputLabel>
                                     <Select style={{width:"20%"}} labelId="demo-simple-select-label" id="demo-simple-select" value={valueAO} onChange={handleChangeAO}>
@@ -511,7 +511,7 @@ function AddTopicPU(props){
                                       <MenuItem key={valuesAO} value={valuesAO}><ListItemText primary={valuesAO} /></MenuItem>))}                                   
                                     </Select>
                                   </Grid>
-                                  <Grid container item diredtion="row" xs={12} md={6} justify="center" alignItems="center">
+                                  <Grid container item direction="row" xs={12} md={6} justify="center" alignItems="center">
                                       <p className={classes.dropText}>Select levels of D : </p>
                                       <InputLabel id="demo-simple-select-label-d"></InputLabel>
                                       <Select style={{width:"20%"}} labelId="demo-simple-select-label" id="demo-simple-select" value={valueD} onChange={handleChangeD}>
