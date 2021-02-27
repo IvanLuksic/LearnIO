@@ -24,6 +24,7 @@ import { useDispatch } from 'react-redux';
 import {studentLogIn, adminLogIn, teacherLogIn , logOut} from './redux/actions/loginStatus';
 import Profile from './components/common/Profile';
 import {userLoggedIn} from './redux/actions/user';
+import Forgot from './components/common/Forgot';
 
 const theme = createMuiTheme({
     palette: {
@@ -84,7 +85,8 @@ const AppLoaded=(props)=>{
               <div className="App-intro">
                 <Switch>
                     <Route exact path="/" component={Home}/>
-                    <Route exact path="/login" component={Login}/>
+                    {GuestFeatures&&<Route exact path="/login" component={Login}/>}
+                    {GuestFeatures&&<Route exact path="/forgot" component={Forgot}/>}
                     {(AdminFeatures||TeacherFeatures||StudentFeatures)&&<Route exact path="/profile" component={Profile}/>}
                     {(AdminFeatures||GuestFeatures)&&<Route exact path="/register" component={Register}/>}
                     {StudentFeatures&&<Route exact path="/student/topics/:class_id/:subject_id/:unit_id"component={StudentUnit}/>}

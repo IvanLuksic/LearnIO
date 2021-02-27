@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme)=>({
       },
     link:{
         width:"85%",
-        marginBottom:"5%"
+        // marginBottom:"5%"
     },
     linkField1:{
         marginBottom: theme.spacing(1),
@@ -40,8 +40,18 @@ const useStyles = makeStyles((theme)=>({
     linkField2:{
         marginBottom: theme.spacing(2),
     },
-    copyButton:{
-        margin: theme.spacing(3),
+    copybtn:{
+        width:"85%",
+        margin: "1rem auto 3rem auto",
+    },
+    btn:{
+        width:"85%",
+        margin: "1rem auto 1rem auto",
+        backgroundColor: "#27ae60",
+        '&:hover': {
+        backgroundColor: "#13532e",
+        },
+
     }
 }));
 
@@ -142,14 +152,14 @@ function InviteLink(props){
             <Grid item xs={12}  className={classes.linkField2}>
                 <OutlinedInput variant="outlined" type="number" value={counterOfMaximumJoins} style={{width:"85%", textAlignLast:"center"}} onChange={(e)=>{if(e.target.value>-1&&e.target.value<101){setCounterOfMaximumJoins(e.target.value)}}}/>
             </Grid>
+            <Grid item xs={12}>
+                <Button variant="contained" color="primary" size="large" className={classes.btn} onClick={()=>getURL(SelectedClass)}>Generate link</Button>
+            </Grid>
             <Grid item xs={12}  className={classes.linkField2}>
                 <TextField variant="outlined" value={url} placeholder={"Invitation URL"} className={classes.link} size="small" inputRef={textFieldRef}></TextField>
             </Grid>
-            <Grid item xs={12} className={classes.copyButton}>
-                <Button variant="contained" color="primary" size="large" onClick={copyToClipboard}>Copy</Button>
-            </Grid>
-            <Grid item xs={12} className={classes.copyButton}>
-                <Button variant="contained" color="primary" size="large" onClick={()=>getURL(SelectedClass)}>Generate link</Button>
+            <Grid item xs={12} >
+                <Button variant="contained" color="primary" size="large" className={classes.copybtn} onClick={copyToClipboard}>Copy</Button>
             </Grid>
         </Grid>                
     );

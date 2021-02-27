@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import EditIcon from '@material-ui/icons/Edit';
 import { useSelector} from 'react-redux';
+import CustomSnackbar from '../../common/Snackbar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,6 +75,9 @@ function EditTeacherPU(props) {
   const [disableEmail, setDisableEmail] = useState(()=>true);
   const [emailError,setEmailError]=useState(()=>null);
   const [OTP,setOTP]=useState(()=>"");
+  const [snackbarOpen, setSnackbarOpen]=useState(()=>false);
+  const [snackbarText,setSnackbarText]=useState(()=>"");
+  const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
 
 
 
@@ -153,8 +157,9 @@ const checkEmail=(temp)=>{
 
 const getOTP=()=>{
     if(offline){
-      setOTP("fm934nduigtr4e");
-    }
+      setSnackbarOpen(true);
+      setSnackbarStatus("success");
+      setSnackbarText(`One Time Password has been send to ${email}`);    }
     else{
         const requestOptions = {
             method: 'GET',
@@ -171,20 +176,37 @@ const getOTP=()=>{
         .then(response => {
           let d=response;
           if(d.status===201){
-            setOTP(`OTP has been send to ${email}.  ✔️`);
-          }
+            setSnackbarOpen(true);
+            setSnackbarStatus("success");
+            setSnackbarText(`One Time Password has been send to ${email}.`);
+        }
           else if(d.status===500){
-            setOTP(`OTP has already been send to ${email}.  ❌`);
-          }
+            setSnackbarOpen(true);
+            setSnackbarStatus("error");
+            setSnackbarText(`One Time Password has ALREADY been send to ${email}.`);              
+        }
+         else {
+            setSnackbarOpen(true);
+            setSnackbarStatus("error");
+            setSnackbarText("Something went wrong."); 
+         };
         })
-        .catch((error)=>console.log('Error in fetch function '+ error));
-    }
-};
+        .catch((error)=>{
+            console.log('Error in fetch function '+ error);
+            setSnackbarOpen(true);
+            setSnackbarStatus("error");
+            setSnackbarText('Error in fetch function '+ error);  
+        });
+  }};
 
 
 
   return(
         <Grid container flexDirection="column" justify="center" alignItems="center">
+          {
+              snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+              : null
+          } 
           <Grid item xs={12}>
             <Typography color="primary" className={classes.loginHeadline}>Edit</Typography>
           </Grid>
@@ -205,7 +227,7 @@ const getOTP=()=>{
                         endAdornment: (
                           <InputAdornment position="start">
                             {(usernameError==="")&&<Icon fontSize="small" style={{color:"#27ae60"}}>check_mark</Icon>}
-                            {(usernameError!=="")&&(usernameError!==undefined)&&<Icon fontSize="small" style={{color:"#EB4949"}}>clear</Icon>}
+                            {(usernameError!=="")&&(usernameError!==null)&&<Icon fontSize="small" style={{color:"#EB4949"}}>clear</Icon>}
                           </InputAdornment>
                         ),
                       }}
@@ -255,7 +277,7 @@ const getOTP=()=>{
 
               <Grid container item xs={12}>
                 <Button variant="contained" disabled={OTP!==""} className={classes.loginButton} onClick={()=>getOTP()} style={{width:"100%", fontWeight:"bold" , height:"2.5rem",color:"rgba(0, 0, 0, 0.54)", marginTop:"0.4rem !important"}} type="submit" color="darkgray" >
-                    {(OTP==="")?("Send recovery password"):(OTP)}
+                  Send recovery password
                 </Button>
               </Grid>
 
