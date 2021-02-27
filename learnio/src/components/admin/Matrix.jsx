@@ -126,7 +126,7 @@ function MatricaAdmin(props)
         subject_name:"Electronics",
         topic_description:"Jako dobra tema."},]
     });
-    const [asessments_array,setAsessments_array]=useState(()=>["super","jako","dobro"]);
+    const [asessments_array,setAsessments_array]=useState(()=>[{asessment_id:123123,asessment_name:"super"},{asessment_id:324234,asessment_name:"supawdawdawdawder"},{asessment_id:234,asessment_name:"AWDawd"}]);
     const [noError,setNoError]=useState(()=> true);
     const [snackbarText,setSnackbarText]=useState(()=>"");
     const [snackbarStatus,setSnackbarStatus]=useState(()=>"");

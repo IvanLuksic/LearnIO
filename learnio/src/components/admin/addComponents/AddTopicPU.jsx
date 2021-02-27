@@ -216,7 +216,7 @@ const AOInput=(props)=>{
   const classes=useStyles();
   return(
       <Grid item xs={5}>
-        <TextField className={classes.textField1} value={props.addOrEdit?props.AOI:props.AOI.asessment_name} multiline rows={1} id="outlined-basic" variant="outlined" label={`AO${props.i}`} onChange={(e)=>{if(props.addOrEdit){props.setAOI(e.target.value)}else{props.setAOI({asessment_id:props.AOI.id, asessment_name:e.target.value})}}} />
+        <TextField className={classes.textField1} value={props.addOrEdit?props.AOI:props.AOI.asessment_name} multiline rows={1} id="outlined-basic" variant="outlined" label={`AO${props.i}`} onChange={(e)=>{if(props.addOrEdit){props.setAOI(e.target.value)}else{props.setAOI({asessment_id:props.AOI.asessment_id, asessment_name:e.target.value})}}} />
       </Grid>
   );
 };
@@ -513,6 +513,7 @@ function AddTopicPU(props){
           topic_description:valueDesc,
           asessments_array:arrayAO
         };
+        console.log(send);
 
         const requestOptions = {
           method: 'PUT',
@@ -535,7 +536,7 @@ function AddTopicPU(props){
 
         fetch(apiUri, requestOptions)
         .then((response)=>{
-          if(response.status===200)
+          if(response.status===200)//KOD
           {
             Promise.resolve(response).then(response => response.json())
               .then(data => {
