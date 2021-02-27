@@ -9,7 +9,7 @@ function Alert(props) {
 
 const useStyles = makeStyles((theme)=>({
     snackbar: {
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down(50)]: {
             bottom: 90,
         },
     },

@@ -24,7 +24,12 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     bottom: "7%",
     right: "5%"
-  }
+  },
+  fab: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
 }));
 
 function getYear() {
@@ -117,9 +122,9 @@ function AddCourseSubjectClass() {
   };
 
   return (
-    <div className={classes.speedDial}>
+    <div className={classes.fab}>
       <SpeedDial
-      className={classes.speedDial}
+      className={classes.fab}
         ariaLabel="SpeedDial openIcon example"
         icon={<SpeedDialIcon openIcon={<EditIcon />} />}
         onClose={handleClose}

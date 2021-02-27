@@ -29,13 +29,12 @@ const useStyles = makeStyles((theme)=>({
       color: "#3b3a3a"
     },
     grupaBotuna:{
+      marginTop:"0.5em",
       [theme.breakpoints.down('sm')]: {
-        marginBottom: "2em",
-        marginTop: "2em",
-
+        marginBottom: "1em",
       },
       [theme.breakpoints.up('md')]: {
-        marginBottom: "5em",
+        marginBottom: "4em",
       },
     },
     title:{
@@ -59,21 +58,25 @@ const useStyles = makeStyles((theme)=>({
         },
     },
     popupStyle:{
-      height:"auto",
+      whiteSpace:"nowrap",
+      display:"flex",
+      flexDirection:"row",
+      justify:"space-between",
+      alignItems:"flex-start",
       backgroundColor:"white",
+      padding:"0 2em 1em 2em !important",
       borderRadius:"7px" ,
-      [theme.breakpoints.up('xl')]: {
-        width:"80%",
-      },
-      [theme.breakpoints.down('md')]: {
-        padding:"0 !important",
-      },
-      [theme.breakpoints.up('md')]: {
-        padding:"0 0 1em 1em !important",
-      },
-      [theme.breakpoints.down('xl')]: {
-        width:"100%",
-    }},
+      width:"100%",
+      height:"28vh",
+      [theme.breakpoints.down('sm')]: {
+        flexDirection:"column",
+        padding: "0 0 0 0",
+        width:"11em",
+        justify:"center",
+        alignItems:"center",
+        height:"auto",
+      }
+    },
     popupMenu:{
       [theme.breakpoints.down('sm')]: {
         marginBottom: "3em",
@@ -571,12 +574,8 @@ function AddTopicPU(props){
 
     const classes=useStyles();
     return(
-        <Grid className={classes.popupStyle} container direction="column" justify="space-between" alignItems="center" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
-        <Grid item xs={12}>
-          <Typography className={classes.topicTitle}>Topic</Typography>
-        </Grid>
-        <Grid className={classes.popupStyle} container direction="row" item xs={12}>
-            <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
+      <Grid container item className={classes.popupStyle}> 
+      <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"> 
               <Grid item className={classes.grupaBotuna}>
               <ButtonGroup orientation="vertical" variant="contained">
                   <Button variant="contained" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>{show1&&<Icon>keyboard_arrow_right</Icon>}  Topic      </Button>
@@ -680,7 +679,6 @@ function AddTopicPU(props){
                             :null
                         }
           </Grid>
-        </Grid>
     );
 }
 export default AddTopicPU;

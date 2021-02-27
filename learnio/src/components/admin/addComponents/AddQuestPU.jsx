@@ -20,65 +20,99 @@ import sampleCourses from '../../../sampleData/admin/allCourses.json';
 import sampleCourseTopic from '../../../sampleData/admin/allCourseTopic.json';
 import sampleTopics from '../../../sampleData/admin/allTopics.json';
 import sampleQuestions from '../../../sampleData/admin/allQuestionsOfTopic.json';
+import PopupDialog from '../../common/PopupDialog';
 
 const useStyles = makeStyles((theme) => ({
   grupaBotuna:{
+    marginTop:"0.5em",
     [theme.breakpoints.down('sm')]: {
-      marginBottom: "2em",
+      marginBottom: "1em",
     },
     [theme.breakpoints.up('md')]: {
-      marginBottom: "5em",
+      marginBottom: "4em",
     },
   },
+  textFieldWidth: {
+    width:"100%",
+    [theme.breakpoints.down('sm')]: {
+      width:"11em",
+    }
+  },
   popupStyle:{
-    height:"auto",
+    whiteSpace:"nowrap",
+    display:"flex",
+    flexDirection:"row",
+    justify:"space-between",
+    alignItems:"flex-start",
     backgroundColor:"white",
     padding:"0 2em 1em 2em !important",
     borderRadius:"7px" ,
-    [theme.breakpoints.up('xl')]: {
-      width:"80%",
-    },
-    [theme.breakpoints.down('xl')]: {
-      width:"100%",
-    },
+    width:"100%",
+    height:"28vh",
+    [theme.breakpoints.down('sm')]: {
+      flexDirection:"column",
+      padding: "0 0 0 0",
+      width:"11em",
+      justify:"center",
+      alignItems:"center",
+      height:"auto",
+    }
   },
   popupMenu:{
+    width:"11em",
+    marginRight:"3em",
     [theme.breakpoints.down('sm')]: {
-      marginBottom: "3em",
+      marginRight:"0",
     },
-    [theme.breakpoints.up('sm')]: {
-      padding:"2em 0 3em 0",
-  }
   },
   
   divider:{
     [theme.breakpoints.down('sm')]: {
       display:"none",
-  }},
-  editText:{
-    [theme.breakpoints.down('sm')]: {
-      marginLeft:"0em",
     },
-    [theme.breakpoints.up('sm')]: {
-      padding:"2em 0 3em 0",
+},
+divider2:{
+  display:"none",
+  [theme.breakpoints.down('sm')]: {
+    display:"inline",
+  },
+},
+  editText:{
+    width:"30vw",
+    marginLeft:"3.5em",
+    marginTop:"0.5em",
+    display:"flex",
+    flexDirection:"column",
+    justify:"center",
+    alignItems:"center",
+    [theme.breakpoints.down('sm')]: {
+      marginLeft:"0",
+      width:"11em",
+      marginTop:"0",
     }
   },
   buttonContainer:{
-    display:"inline-block",
-    position:"relative",
-    },
+    marginTop:"2em",
+    width:"100%",
+    display:"flex",
+    flexDirection:"row",
+    justifyContent:"flex-end",
+    alignItems:"center",
+    [theme.breakpoints.down('md')]:{
+      marginTop:"2.5em",
+    }
+  },
     
    buttonB:{
-      position: "absolute",
-      top:"5px",
-      right:"5px",
       cursor:"pointer",
       color:"#4373ec",
+      marginLeft:"1em",
+      marginTop:"0.2em",
       [theme.breakpoints.down('sm')]: {
         display:"none",}
     },
     imageUploaded:{
-      width:"15em",
+      width:"30vw",
       height:"auto", 
       borderRadius:"7px",
       border:"solid 2px #4373ec", 
@@ -96,21 +130,49 @@ const useStyles = makeStyles((theme) => ({
         display:"none",}
     },
     buttonsInGroup:{
+      width:"11em",
+      whiteSpace:"nowrap",
       backgroundColor:"#27AE60",
       color:"white",
       '&:hover': {
         backgroundColor: "#1f894b",
      },
       [theme.breakpoints.down('sm')]: {
-        paddingLeft:"5em",
-        paddingRight:"5em",
-        paddingTop:"0.5em",
-        paddingBottom:"0.5em",
+        backgroundColor:"blue",
       },
       [theme.breakpoints.up('md')]: {
-        paddingLeft:"7em",
-        paddingRight:"7em",
+        backgroundColor: 'red',
       },
+      [theme.breakpoints.up('lg')]: {
+        backgroundColor: 'black',
+      },
+    },
+    uploadGridStyle: {
+      width:"100%",
+      display:"flex",
+      flexDirection:"row",
+      justify:"space-between",
+      alignItems:"flex-start",
+      marginTop:"1em",
+      [theme.breakpoints.down('md')]: {
+        marginTop:"0",
+      },
+      [theme.breakpoints.down('sm')]: {
+        marginTop:"1em",
+        flexDirection:"column",
+        alignItems:"center",
+        justify:"center",
+        width:"11em",
+      },
+    },
+    uploadGrid2: {
+      display:"flex",
+      flexDirection:"row",
+      width:"70%",
+      justifyContent:"flex-end",
+      [theme.breakpoints.down('sm')]:{
+        width:"100%",
+      }
     },
     ieList: {
       width: '100%',
@@ -119,34 +181,71 @@ const useStyles = makeStyles((theme) => ({
       maxHeight: 200,
       marginTop: 15
     },
+    editGrid: {
+      width:"30%",
+      [theme.breakpoints.down('sm')]:{
+        width:"100%",
+        margin:"0",
+      },
+    },
+    pictureLoaded:{
+      display:"flex",
+      float:"left",
+      color:"blue",
+      textAlign:"right",
+      [theme.breakpoints.down('md')]:{
+        whiteSpace:"nowrap",
+        float:"right",
+      },
+      [theme.breakpoints.down('sm')]: {
+        textAlign:"left",
+        width:"15em",
+        whiteSpace:"normal",
+        margin:"1em 0 0 0",
+      },
+    },
     pictureNotLoaded:{
       color:"lightgrey",
-      textAlign:"left",
+      textAlign:"right",
       fontStyle:"italic",
+      margin:"2em",
+      justifyContent:"flex-end",
+      [theme.breakpoints.down('md')]:{
+        whiteSpace:"normal",
+      },
       [theme.breakpoints.down('sm')]: {
-        marginTop:"1em",
-        textAlign:"center"
+        textAlign:"left",
+        width:"15em",
+        whiteSpace:"normal",
+        margin:"1em 0 0 0",
       },
     },
     uploadButton:{
-      [theme.breakpoints.down('sm')]: {
-        paddingLeft:"3em",
-        paddingRight:"3em",
-        margin:"auto",
+      whiteSpace:"nowrap",
+      marginTop:"2em",
+      [theme.breakpoints.down('md')]: {
+        marginTop:"2.5em",
+        width:"7em",
       },
-      [theme.breakpoints.up('md')]: {
-        paddingLeft:"5em",
-        paddingRight:"5em",
+      [theme.breakpoints.down('sm')]: {
+        margin:"0",
+        width:"11em",
       },
     },
     rootChips: {
       boxShadow:"none !important",
       display: 'flex',
-      justifyContent: 'center',
+      flexDirection:"row",
+      justify:"flex-start",
       flexWrap: 'wrap',
       listStyle: 'none',
       padding: theme.spacing(0.5),
       margin: 0,
+      [theme.breakpoints.down('sm')]:{
+        flexDirection:"column",
+        alignItems:"center",
+        justify:"center",
+      }
     },
     textAnswers:{
       [theme.breakpoints.up('md')]: {
@@ -156,14 +255,8 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom:"1em",
       },
     },
-    toggleMultiple:{
-      [theme.breakpoints.up('md')]: {
-        paddingLeft:"1em",
-      },
-    },    
-    toggleButton:{marginRight:"0 !important"},
-    toggleButtonLabel:{fontSize:"0.9em !important"},
     saveBtn: {
+      width:"11em",
       borderRadius: "7px",
       background:"#EB4949",
       color:"white",
@@ -173,7 +266,92 @@ const useStyles = makeStyles((theme) => ({
       '&:hover': {
         backgroundColor: "#b81414",
     },
+    [theme.breakpoints.down('sm')]: {
+        marginBottom:"2em",
+    }
     },
+    show2grid: {
+      display:"flex",
+      flexDirection:"column",
+      justify:"space-between",
+      alignItems:"flex-start",
+    },
+    tagsStyle: {
+      marginTop:"0.8em",
+      display:"flex",
+      justify:"center",
+      alignItems:"center",
+    },
+    answersStyle: {
+      marginTop:"0.8em",
+      [theme.breakpoints.down('sm')]: {
+        marginTop:"0.5em",
+      }
+    },
+    textFieldShow2: {
+      width:"100%",
+      marginTop:"0.5em",
+      [theme.breakpoints.down('sm')]: {
+        marginTop:"0.2em",
+      }
+    },
+    show2infoText: {
+      marginLeft:"3%",
+      color:"lightgrey",
+      [theme.breakpoints.down('sm')]: {
+        marginLeft:"0",
+      }
+    },
+    imgStyle: {
+      display:"none",
+      marginLeft:"3em",
+      marginTop:"3em",
+    },
+    selectCourseStyle: {
+      width:"20%",
+      [theme.breakpoints.down('sm')]:{
+        width:"100%",
+      }
+    },
+    selectStyle: {
+      width:"60%",
+      marginLeft:"3em",
+      [theme.breakpoints.down('sm')]:{
+        width:"100%",
+        marginLeft:"0",
+      }
+    },
+    show3MainGrid: {
+      marginTop:"1em",
+      display:"flex",
+      flexDirection:"row",
+      justify:"space-between",
+      alignItems:"center",
+      whiteSpace:"nowrap",
+      [theme.breakpoints.down('sm')]:{
+        width:"100%",
+        flexDirection:"column",
+        justify:"flex-start",
+        alignItems:"flex-start",
+        whiteSpace:"normal"
+      }
+    },
+    show3textField: {
+      marginTop:"1em",
+      width:"70%",
+      [theme.breakpoints.down('sm')]:{
+        width:"100%",
+      }
+    },
+    show3root: {
+      [theme.breakpoints.down('sm')]:{
+        width:"100%",
+        display:"flex",
+        flexDirection:"column",
+        justify:"flex-start",
+        alignItems:"flex-start",
+      }
+    }
   }));
 
   
@@ -186,7 +364,7 @@ const useStyles = makeStyles((theme) => ({
         props.wrongAnswers.map((data) => {
           return (
             <li key={data}>
-              <Chip style={{margin:"0 0.1em"}} label={abcd[props.wrongAnswers.indexOf(data)]+")    "+data} onDelete={()=>{props.deleteWrongAnswer(data)}}/>
+              <Chip style={{margin:"0.2em 0.2em 0 0"}} label={abcd[props.wrongAnswers.indexOf(data)]+")    "+data} onDelete={()=>{props.deleteWrongAnswer(data)}}/>
             </li>
           );
         })}
@@ -205,7 +383,7 @@ function AddQuestPU(props) {
   const [imageState, setimageState] = useState(null);
   const [answerInput,setAnswerInput]=useState([]);
   const [wrongAnswers, setWrongAnswers]=useState(()=>{ return []});
-  const [correctAnswer, setCorrectAnswers]=useState(()=>{ return "Točno"});
+  const [correctAnswer, setCorrectAnswers]=useState(()=>{ return ""});
   const [multipleAnswer, setMultipleAnswers]=useState(()=>{ return false});
   const [ieQuestionList, setIeQuestionList] = useState([]);
   const [file,setFile]=useState(()=>null);
@@ -397,14 +575,24 @@ function AddQuestPU(props) {
       error => console.log(error) // Handle the error response object
     );
   };
+
+  // --------------------------- image popup
+
+  const [popupOpen, setPopupOpen] = React.useState(false);
+  const closePopup = () => {
+    setPopupOpen(false);
+  };
+
+// RETURN FUNCTION HERE -------------------------------------------------------------------------------------------------
+
   return(
-    <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="flex-start" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
-    <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
+    <Grid container item className={classes.popupStyle}> 
+    <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"> 
       <Grid item className={classes.grupaBotuna}>
         <ButtonGroup orientation="vertical" variant="contained">
           <Button variant="contained" onClick={() => [setShow1(true),setShow2(false),setShow3(false)]} className={classes.buttonsInGroup}>{show1&&<Icon>keyboard_arrow_right</Icon>}Question</Button>
           <Button variant="contained" onClick={() => [setShow1(false),setShow2(true),setShow3(false)]} className={classes.buttonsInGroup}>{show2&&<Icon>keyboard_arrow_right</Icon>}Answers</Button>
-          {/* <Button variant="contained" onClick={() => [setShow1(false),setShow2(false),setShow3(true),ieSetTestCourses()]} className={classes.buttonsInGroup}>{show3&&<Icon>keyboard_arrow_right</Icon>}Insert existing</Button> */}
+          <Button variant="contained" onClick={() => [setShow1(false),setShow2(false),setShow3(true),ieSetTestCourses()]} className={classes.buttonsInGroup}>{show3&&<Icon>keyboard_arrow_right</Icon>}Insert existing</Button>
         </ButtonGroup>
       </Grid>
       <Grid item>
@@ -415,30 +603,37 @@ function AddQuestPU(props) {
       </Grid>
     </Grid>
     <Divider orientation="vertical" flexItem className={classes.divider}/>
+    {/* <Divider orientation="horizontal" flexItem className={classes.divider2}/> */}
       {
       show1 ? //first case - question
-          <Grid container item className={classes.editText} xs={12} md={8} direction="column" justify="center" alignItems="center" spacing={5}> 
-              <Grid container item xs={12}  justify="center" alignItems="center">
+          <Grid container item className={classes.editText}> 
+              <Grid container item justify="center" alignItems="center" className={classes.textFieldWidth}>
                 <TextField style={{width:"100%"}} id="outlined-multiline-static" label="Question Text" multiline rows={5} variant="outlined" value={text} onChange={handleText}/>
               </Grid>
-              <Grid container item direction="row" justify="center" alignItems="center" >
-                <Grid container item xs justify="center" alignItems="center">
-                  <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; console.log(event.target.files[0]); setFile(img); setimageState(URL.createObjectURL(img)); setIMG(true) ;}}}/>
+              <Grid container item className={classes.uploadGridStyle}>
+                <Grid container item className={classes.editGrid}>
+                  <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; console.log(event.target.files[0]); setFile(img); setimageState(URL.createObjectURL(img)); setIMG(true) ; }}}/>
                   <label htmlFor="contained-button-file">
                     <Button variant="contained" color="primary" component="span" className={classes.uploadButton}>
                       Upload photo
                     </Button>
                   </label>
                 </Grid>
-                <Grid container item xs justify="center" alignItems="center">
+                <Grid container item className={classes.uploadGrid2}>
                   {
                   showIMG ?
-                      <div className={classes.buttonContainer}>
-                        <img  className={classes.imageUploaded} src={imageState} alt="hello world"/>
+                      <Grid className={classes.buttonContainer}>
+                        <p className={classes.pictureLoaded} onClick={()=>setPopupOpen(true)}>Click to show Image</p>
+                        {
+                          popupOpen ? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={true}>
+                            <img  className={classes.imageUploaded} src={imageState} alt="hello world"/>
+                          </PopupDialog>
+                          : null
+                        }
                         <Icon className={classes.buttonB} onClick={()=>{setIMG(false); setimageState(null)}}>cancel_icon</Icon>
                         <Icon className={classes.buttonA} onClick={()=>{setIMG(false); setimageState(null)}}>cloud_done_icon</Icon>
-                      </div>   
-                    : <p className={classes.pictureNotLoaded}> Image has not been uploaded yet.</p>
+                      </Grid>   
+                    : <Grid style={{display:"flex",width:"100%" , flexDirection:"row", justifyContent:"flex-end"}}><p className={classes.pictureNotLoaded}>Image has not been uploaded yet.</p></Grid>
                   }      
                 </Grid> 
               </Grid>
@@ -446,37 +641,39 @@ function AddQuestPU(props) {
       : null
       }{
         show2 ? // second case - answer
-          <Grid container item className={classes.editText} xs={12} md={8} direction="column" justify="center" alignItems="center" spacing={5}> 
-            <Grid container item xs={12}  justify="center" alignItems="center" direction="row">
-                <Grid container item xs={12} md={8}  justify="center" alignItems="center">
-                  <TextField style={{width:"100%"}} id="outlined-multiline-static" label="Correct Answer" multiline rows={multipleAnswer?1:5} variant="outlined" value={correctAnswer} onChange={handleCorrect}/>
+          <Grid container item className={classes.editText}> 
+            <Grid container item className={classes.show2grid}>
+              <Grid container item justify="flex-start" alignItems="center" direction="row">
+                <FormControlLabel control={ <Checkbox checked={multipleAnswer} onChange={toggleMultiple} name="checkedB" color="primary" />} />
+                <p> Mutiple choices</p>
+              </Grid>
+              <Grid container item>
+                <TextField className={classes.textFieldShow2} id="outlined-multiline-static" label="Correct Answer" multiline rows={multipleAnswer?1:5} variant="outlined" value={correctAnswer} onChange={handleCorrect}/>
+              </Grid>
+              {multipleAnswer&&
+                <Grid container item className={classes.answersStyle} justify="flex-start" alignItems="center" direction="row">
+                  <form onSubmit={(e)=>{e.preventDefault();}}>
+                    <TextField style={{width:"100%"}} placeholder="Odgovor" value={answerInput} onChange={updateAnswerInput} onKeyDown={addWrongAnswer}/>
+                  </form>
+                  <p className={classes.show2infoText}>Maximum 4 answers</p>
                 </Grid>
-              <Grid  className={classes.toggleMultiple} container item xs={12} md={4} justify="center" alignItems="center" direction="row">
-                <FormControlLabel className={classes.toggleButton} control={ <Checkbox checked={multipleAnswer} onChange={toggleMultiple} name="checkedB" color="primary" />} />
-                <p className={classes.toggleButtonLabel} > Mutiple choices</p>
-              </Grid>
+              }
+              { multipleAnswer && wrongAnswers &&
+                <Grid container item className={classes.tagsStyle}>
+                  <ChipsArray style={{margin:"2em"}} wrongAnswers={wrongAnswers} deleteWrongAnswer={deleteWrongAnswer}/> 
+                </Grid>
+              }
             </Grid>
-            { multipleAnswer && wrongAnswers &&
-              <Grid container item xs={12}  justify="center" alignItems="center" direction="row">
-                <ChipsArray wrongAnswers={wrongAnswers} deleteWrongAnswer={deleteWrongAnswer}/> 
-              </Grid>
-            }
-            {multipleAnswer&&
-            <Grid container item xs={12} justify="center" alignItems="center" direction="row">
-              <form onSubmit={(e)=>{e.preventDefault();}}>
-                <TextField style={{width:"100%"}} placeholder="Odgovor" value={answerInput} onChange={updateAnswerInput} onKeyDown={addWrongAnswer}/>
-              </form>
-            </Grid>
-            }
           </Grid>
           : null
         }
-        {/* {
+        {
           show3 ? // third case - insert existing
-            <Grid container item className={classes.editText} xs={12} md={8} direction="column" spacing={5}>
-              <Grid container item xs={12}>
-                <InputLabel style={{width:"25%", marginTop:"10px"}} id="ieCourse">Select course:</InputLabel>
-                <Select style={{width:"75%"}} labelId="ieCourse" id="ieCourseSelect" onChange={ieHandleCoursePick}>
+            <Grid container item className={classes.editText}>
+              <Grid container item className={classes.show3root}>
+              <Grid container item className={classes.show3MainGrid}>
+                <InputLabel className={classes.selectCourseStyle} id="ieCourse">Select course:</InputLabel>
+                <Select className={classes.selectStyle} labelId="ieCourse" id="ieCourseSelect" onChange={ieHandleCoursePick}>
                   {ieCourseList.map((item, index) => (
                     <MenuItem value={item} key={index}>
                       {item}
@@ -484,9 +681,9 @@ function AddQuestPU(props) {
                   ))}
                 </Select>
               </Grid>
-              <Grid container item xs={12}>
-                <InputLabel style={{width:"25%", marginTop:"10px"}} id="ieTopic">Select topic:</InputLabel>
-                <Select style={{width:"75%"}} labelId="label" id="ieTopicSelect" onChange={ieHandleTopicPick} disabled={!ieTopicSelectEnabled}>
+              <Grid container item className={classes.show3MainGrid}>
+                <InputLabel className={classes.selectCourseStyle} id="ieTopic">Select topic:</InputLabel>
+                <Select className={classes.selectStyle} labelId="label" id="ieTopicSelect" onChange={ieHandleTopicPick} disabled={!ieTopicSelectEnabled}>
                   {ieTopicList.map((item, index) => (
                     <MenuItem value={item} key={index}>
                       {item}
@@ -494,15 +691,16 @@ function AddQuestPU(props) {
                   ))}
                 </Select>
               </Grid>
-              <Grid style={{marginLeft: "20px"}} container item xs={12}>
-                  <TextField onChange={ieTextFieldChanged} style={{width:"70%"}} value={ieTextFieldContent} placeholder="Search question keywords" id="ieTextField" disabled={!ieTextFieldEnabled}/>
-                  <Button onClick={ieHandleInsert} variant="contained" color="primary" component="span" style={{width: "25%", marginLeft: "5%"}}>
+              </Grid>
+              <Grid container item style={{width:"100%"}}>
+                  <TextField className={classes.show3textField} onChange={ieTextFieldChanged} value={ieTextFieldContent} placeholder="Question keywords" id="ieTextField" disabled={!ieTextFieldEnabled}/>
+                  {/* <Button onClick={ieHandleInsert} variant="contained" color="primary" component="span" style={{width: "25%", marginLeft: "5%"}}>
                     Insert
                   </Button>
                   <Grid style={{flexDirection: 'row', justifyContent: 'flex-end'}} container item xs={12}>
                     <InputLabel style={{marginTop: "14px"}}>Include image </InputLabel>
                     <Checkbox disabled={!ieIncludeImageEnabled} color="primary" checked={ieIncludeImage} onChange={() => {setIeIncludeImage(!ieIncludeImage)}}/>
-                  </Grid>
+                  </Grid> */}
                   <List className={classes.ieList}> 
                     {ieFilteredQuestionList.slice(0,25).map((item, index) => (
                       <ListItem fadeIn button key={index} onClick={() => ieQuestionPick(item)}>
@@ -513,7 +711,7 @@ function AddQuestPU(props) {
               </Grid>
             </Grid>
             : null
-          } */}
+          }
   </Grid>
   );
 }

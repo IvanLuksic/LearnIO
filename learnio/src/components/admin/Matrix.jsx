@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     topicTitle:{
           fontSize:'6vh',
           marginBottom: '1em',
+          marginLeft:"4vw",
         //   [theme.breakpoints.down('sm')]: {
         //     paddingTop:"12vh",
         //   },
@@ -41,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
         //     paddingTop:"6vh",
         //   },
           paddingBottom:'9px', 
+          [theme.breakpoints.down('sm')]:{
+              marginLeft:"8vw",
+          }
     },
     lobster: {
           fontFamily: "Lobster",
@@ -50,23 +54,31 @@ const useStyles = makeStyles((theme) => ({
     },
     divider:{
         [theme.breakpoints.down('sm')]: {
-            height: "0vh",
-          },
+            display:"none",
+        },
         [theme.breakpoints.up('md')]: {
             marginTop:"12vh",
             height: "85vh",
           },
     },
     questionsTable:{
+        width:"100%",
         minHeight: "100vh",
-        paddingTop:"200px"
+        paddingTop:"20vh",
+        justifyContent:"flex-end",
+        [theme.breakpoints.down('sm')]: {
+            justifyContent:"center",
+        }
     },
     skeletonMatrica:{
         paddingTop:"20vh",
     },
     skeletonTable:{
         minHeight: "100vh",
-        paddingTop:"20vh"
+        paddingTop:"20vh",
+        [theme.breakpoints.down('sm')]:{
+            paddingTop:"0",
+        }
     },
     wholeLeftGrid:{
         [theme.breakpoints.down('sm')]: {
@@ -76,6 +88,18 @@ const useStyles = makeStyles((theme) => ({
           padding:"150px 0 0 0",
         },
         
+    },
+    gridAdjust: {
+        display:"flex",
+        flexDirection:"row",
+        justify:"center",
+        alignItems:"flex-start",
+        height:"100%",
+        width:"100%",
+        [theme.breakpoints.down('sm')]:{
+            flexDirection:"column",
+            alignItems:"center",
+        }
     }
 }));
 
@@ -482,7 +506,7 @@ function MatricaAdmin(props)
             {popup&& <PopupDialog openPopup={popup} setOpenPopup={setPopup} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
             <AddTopicPU addOrEdit={false} columns_AO={matricaAO} rows_D={matricaD} topic_name={topicName} topic_id={topicID} topic_description={topicDescription} associated_topics={associated_topics} asessments_array={asessments_array} course_id={course_id} course_name={course_name} subject_id={subject_id} subject_name={subject_name} setTopicDescription={setTopicDescription} setTopicName={setTopicName}  setSnackbarOpen={setSnackbarOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus} closePopup={()=>{setPopup(false);}}/>
             </PopupDialog>}
-            <Grid container direction="row" justify="center" alignItems="flex-start"  height="100%" >
+            <Grid container className={classes.gridAdjust}>
                 <Grid container item md={6} direction="row" justify="flex-start" alignItems="flex-start" className={classes.wholeLeftGrid}>
                     <Grid item xs={11} md={11} className={classes.topicTitle} direction="column" justify="flex-start" alignItems="flex-start"  container>
                         <Grid item xs={11} container style={{marginBottom:"3rem"}}>
@@ -491,12 +515,12 @@ function MatricaAdmin(props)
                         </Grid>
                         <Grid item xs={11}><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
                     </Grid>
-                    <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="flex-start" alignItems="flex-start" >
+                    <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
                         <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fetchedData,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
                     </Grid>
                 </Grid>
-                <Divider  orientation="vertical" className={classes.divider} flexItem/>
-                <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
+                <Divider orientation="vertical" className={classes.divider} flexItem/>
+                <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" className={classes.questionsTable}>
                     <EditQuestion forceUpdate={forceUpdate} page={page} jumpToPage={getIndex} changePage={changePage} questChange={requestChangeQuestion} questAdd={requestAddQuestion} questDelete={requestDeleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions.length!==0) ? fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions : null }/>
                 </Grid>
                 {
