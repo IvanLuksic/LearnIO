@@ -1,4 +1,4 @@
-const loginStatusReducer=(state='admin', action)=>{//OFFLINE:'guest'->'admin'
+const loginStatusReducer=(state='student', action)=>{//OFFLINE:'guest'->'admin'
     switch(action.type){
         case 'ADMIN_LOGGED_IN':
             return 'admin'

@@ -56,7 +56,8 @@ const useStyles=makeStyles(theme =>({
     },
     questionImg:{
         marginTop:"2em",
-        height:"10em"
+        height:"10em",
+        objectFit:"contain"
     },
     answerText:{
         margin:"1em 1em",
@@ -80,7 +81,7 @@ function QuestionPopup(props){
     const [previous, setPrevious] = React.useState(()=>null);
     const [value, setValue] = React.useState('');
     const [showABC, setShowABC] =useState(()=>{return (props.questionToDisplay.question_type===1)?true:false});
-    const [imageDisplay, setImageDisplay] =useState(()=>{return (props.questionToDisplay.question_image_path===null)?'none':'inline'});
+    const [imageDisplay, setImageDisplay] =useState(()=>props.questionToDisplay.hasImage);
     const classes=useStyles();
     const topicID=useSelector(state=>state.topic);
     const class_id=useSelector(state=>state.class);
@@ -150,6 +151,7 @@ function QuestionPopup(props){
                             <Grid item xs={9}>
                                 <FormControl component="fieldset" >
                                     <FormLabel component="legend" style={{color:"grey"}}>{props.questionToDisplay.question_text}</FormLabel>
+                                    {imageDisplay&&<img src={offline?"https://i.redd.it/o96asqovzgi51.jpg":`/api/question/image/${props.questionToDisplay.question_id}`} className={classes.questionImg} alt="slika zadatka"></img>}
                                     <div style={{display:'flex',margin: "2em auto"}}>
                                     <RadioGroup aria-label="answer" component="div" name="answer1" value={value} onChange={handleChange} className={classes.radioGroup} >
                                         <div>{answeredAlready?((previous==="a")?(props.questionToDisplay.status===1?<span role="img" aria-label="checkmark">❌&nbsp;&nbsp;</span>:<span role="img" aria-label="checkmark">✔️&nbsp;&nbsp;</span>):<span role="img" aria-label="checkmark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>):null}<FormControlLabel disabled={answeredAlready} value={'a'} control={<Radio />} label={"a)  " + props.questionToDisplay.question_answer_a} />
@@ -171,7 +173,7 @@ function QuestionPopup(props){
                                 <FormControl component="fieldset"> 
                                     <FormLabel component="legend">{props.questionToDisplay.question_text}</FormLabel>
                                         <div className={classes.imgWithText} >
-                                            <img src={props.questionToDisplay.image_path} className={classes.questionImg} style={{display:imageDisplay}} alt="slika zadatka"></img>
+                                            {imageDisplay&&<img src={offline?"https://i.redd.it/o96asqovzgi51.jpg":`/api/question/image/${props.questionToDisplay.question_id}`} className={classes.questionImg} alt="slika zadatka"></img>}
                                             <div>
                                             <TextField  id="standard-basic" className={classes.answerText} label="Unesi kratki odgovor" value={answeredAlready?(props.questionToDisplay.status===1?("❌   "+value):("✔️   "+value)):value} onChange={()=>{if(!answeredAlready){handleChange();}}}/> 
                                             </div>
