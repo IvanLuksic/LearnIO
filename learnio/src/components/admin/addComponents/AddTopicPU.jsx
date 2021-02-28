@@ -231,7 +231,7 @@ function AddTopicPU(props){
     const [show1, setShow1] = useState(true);
     const [show2, setShow2] = useState(false);
     const [valueDesc,setValueDesc]=useState(()=>{if(props.topic_description!==undefined){return props.topic_description} else{return ""}});
-    const [associatedTopic, setAssociatedTopic] = useState(()=>{if(props.associated_topics!==undefined){return props.associated_topics} else{return [null]}});
+    const [associatedTopic, setAssociatedTopic] = useState(()=>{if(props.associated_topics!==undefined){return props.associated_topics} else{return []}});
     const [associatedTopicVisible, setAssociatedTopicVisible] = useState((!props.addOrEdit));
     const [associatedTopicsPossible, setAssociatedTopicsPossible] = useState([{topic_id:-1,topic_name:""}]);
     const [subjectAndCourseList, setSubjectAndCourseList]=useState(()=>subjectCoursePairs);
