@@ -118,13 +118,15 @@ function MatricaAdmin(props)
     const [subject_id,setSubject_id]=useState(()=> 245674);
     const [subject_name,setSubject_name]=useState(()=> "Matematika 1");
     const [associated_topics, setAssociated_topics]=useState(()=> {return[{
-        topic_id:8,
-        topic_name:"Ebbers-Moll",
-        course_id:123,
+        topic_id:2,
+        topic_name:"MOSFET",
         course_name: "Electrical engineering",
-        subject_id:245674,
-        subject_name:"Electronics",
-        topic_description:"Jako dobra tema."},]
+        course_id:143523,
+        subject_id:345435,
+        subject_name:"Fisics 2",
+        topic_description:"Jako dobra tema.",
+        required_level:1   
+    },]
     });
     const [asessments_array,setAsessments_array]=useState(()=>[{asessment_id:123123,asessment_name:"super"},{asessment_id:324234,asessment_name:"supawdawdawdawder"},{asessment_id:234,asessment_name:"AWDawd"}]);
     const [noError,setNoError]=useState(()=> true);
@@ -453,7 +455,7 @@ function MatricaAdmin(props)
 
         fetch(apiUri, requestOptions)
         .then((response)=>{
-            if(response.status===200)
+            if(response.status===200)//KOD
             {
               Promise.resolve(response).then(response => response.json())
                 .then((data)=> {

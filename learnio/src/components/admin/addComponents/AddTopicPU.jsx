@@ -216,7 +216,7 @@ const AOInput=(props)=>{
   const classes=useStyles();
   return(
       <Grid item xs={5}>
-        <TextField className={classes.textField1} value={props.addOrEdit?props.AOI:props.AOI.asessment_name} multiline rows={1} id="outlined-basic" variant="outlined" label={`AO${props.i}`} onChange={(e)=>{if(props.addOrEdit){props.setAOI(e.target.value)}else{props.setAOI({asessment_id:props.AOI.asessment_id, asessment_name:e.target.value})}}} />
+        <TextField className={classes.textField1} value={props.addOrEdit?props.AOI:props.AOI.asessment_name} id="outlined-basic" variant="outlined" label={`AO${props.i}`} onChange={(e)=>{if(props.addOrEdit){props.setAOI(e.target.value)}else{props.setAOI({asessment_id:props.AOI.asessment_id, asessment_name:e.target.value})}}} />
       </Grid>
   );
 };
@@ -231,7 +231,6 @@ function AddTopicPU(props){
     const [show1, setShow1] = useState(true);
     const [show2, setShow2] = useState(false);
     const [valueDesc,setValueDesc]=useState(()=>{if(props.topic_description!==undefined){return props.topic_description} else{return ""}});
-    const [associatedTopic, setAssociatedTopic] = useState(()=>{if(props.associated_topics!==undefined){return props.associated_topics} else{return []}});
     const [associatedTopicVisible, setAssociatedTopicVisible] = useState((!props.addOrEdit));
     const [associatedTopicsPossible, setAssociatedTopicsPossible] = useState([{topic_id:-1,topic_name:""}]);
     const [subjectAndCourseList, setSubjectAndCourseList]=useState(()=>subjectCoursePairs);
@@ -251,16 +250,20 @@ function AddTopicPU(props){
     const [AOI8,setAOI8]=useState(()=>{if(props.asessments_array!==undefined&&props.asessments_array[7]!==undefined){return props.asessments_array[7]}else{ return ""}});
     const [AOI9,setAOI9]=useState(()=>{if(props.asessments_array!==undefined&&props.asessments_array[8]!==undefined){return props.asessments_array[8]}else{ return ""}});
     const [AOI10,setAOI10]=useState(()=>{if(props.asessments_array!==undefined&&props.asessments_array[9]!==undefined){return props.asessments_array[9]}else{ return ""}});
-    const [AOL1,setAOL1]=useState(()=>3);
-    const [AOL2,setAOL2]=useState(()=>3);
-    const [AOL3,setAOL3]=useState(()=>3);
-    const [AOL4,setAOL4]=useState(()=>3);
-    const [AOL5,setAOL5]=useState(()=>3);
-    const [AOL6,setAOL6]=useState(()=>3);
-    const [AOL7,setAOL7]=useState(()=>3);
-    const [AOL8,setAOL8]=useState(()=>3);
-    const [AOL9,setAOL9]=useState(()=>3);
-    const [AOL10,setAOL10]=useState(()=>3);
+    const [AOL1,setAOL1]=useState(()=>{if(props.associated_topics!==undefined&&props.associated_topics[0]!==undefined){return props.associated_topics[0].required_level}else{ return 3}});
+    const [AOL2,setAOL2]=useState(()=>{if(props.associated_topics!==undefined&&props.associated_topics[1]!==undefined){return props.associated_topics[1].required_level}else{ return 3}});
+    const [AOL3,setAOL3]=useState(()=>{if(props.associated_topics!==undefined&&props.associated_topics[2]!==undefined){return props.associated_topics[2].required_level}else{ return 3}});
+    const [AOL4,setAOL4]=useState(()=>{if(props.associated_topics!==undefined&&props.associated_topics[3]!==undefined){return props.associated_topics[3].required_level}else{ return 3}});
+    const [AOL5,setAOL5]=useState(()=>{if(props.associated_topics!==undefined&&props.associated_topics[4]!==undefined){return props.associated_topics[4].required_level}else{ return 3}});
+    const [AOL6,setAOL6]=useState(()=>{if(props.associated_topics!==undefined&&props.associated_topics[5]!==undefined){return props.associated_topics[5].required_level}else{ return 3}});
+    const [AOL7,setAOL7]=useState(()=>{if(props.associated_topics!==undefined&&props.associated_topics[6]!==undefined){return props.associated_topics[6].required_level}else{ return 3}});
+    const [AOL8,setAOL8]=useState(()=>{if(props.associated_topics!==undefined&&props.associated_topics[7]!==undefined){return props.associated_topics[7].required_level}else{ return 3}});
+    const [AOL9,setAOL9]=useState(()=>{if(props.associated_topics!==undefined&&props.associated_topics[8]!==undefined){return props.associated_topics[8].required_level}else{ return 3}});
+    const [AOL10,setAOL10]=useState(()=>{if(props.associated_topics!==undefined&&props.associated_topics[9]!==undefined){return props.associated_topics[9].required_level}else{ return 3}});
+
+    console.log("HHHHHHEEEEEEEEEEE");
+    console.log(props.associated_topics);
+    const [associatedTopic, setAssociatedTopic] = useState(()=>{if(props.associated_topics!==undefined){return props.associated_topics.map((t)=>{return {topic_id:t.topic_id,topic_name:t.topic_name,course_name:t.course_name,course_id:t.course_id,subject_id:t.subject_id,subject_name:t.subject_name,topic_description:t.topic_description}})} else{return []}});
 
     const role=useSelector(state=>state.login);
 
@@ -276,7 +279,7 @@ function AddTopicPU(props){
     let apiUri;
     if(role==="admin") apiUri=`/api/admin/topics/associated/${sub.subject_id}`
     else if(role==="teacher") apiUri=`/api/admin/topics/associated/${sub.subject_id}`;
-    
+    if(offline){setAssociatedTopicsPossible(fakeBackendTopics);};
     fetch(apiUri, requestOptions)
     .then((response)=>{
       if(response.status===200)
@@ -305,7 +308,6 @@ function AddTopicPU(props){
     const handleChangeTag = (event) => {
       setAssociatedTopic(event.target.value);
     };
-
     const handleChangePair = (event) => {
       if(event.target.value!==subjectAndCourse){
         setAssociatedTopicVisible(false);
@@ -317,10 +319,7 @@ function AddTopicPU(props){
         }
         else setAssociatedTopicsPossible(fakeBackendTopics);
         setAssociatedTopicVisible(true);
-      };
-
-      };
-
+    };};
     const handleChangeText=(event)=>{
       setValueText(event.target.value); 
     };
@@ -472,9 +471,6 @@ function AddTopicPU(props){
         });
       }
     };
-
-
-
     const handleEdit=()=>{
       if(subjectAndCourse!==null){
         let arrayAT=[];
@@ -570,6 +566,14 @@ function AddTopicPU(props){
       }
     };
 
+    const findTopic=(topic)=>{
+      let count=-1;
+      for(let i=0;i<associatedTopic.length;i++){
+        if(topic.topic_id===associatedTopic[i].topic_id)count=i;
+      }
+      return count;
+    };
+
     const classes=useStyles();
     return(
         <Grid className={classes.popupStyle} container direction="column" justify="space-between" alignItems="center" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
@@ -580,8 +584,8 @@ function AddTopicPU(props){
             <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
               <Grid item className={classes.grupaBotuna}>
               <ButtonGroup orientation="vertical" variant="contained">
-                  <Button variant="contained" onClick={() => [setShow1(true),setShow2(false)]} className={classes.buttonsInGroup}>{show1&&<Icon>keyboard_arrow_right</Icon>}  Topic      </Button>
-                  <Button variant="contained" onClick={() => [setShow1(false),setShow2(true)]} className={classes.buttonsInGroup}>{show2&&<Icon>keyboard_arrow_right</Icon>}  Connections</Button>
+                  <Button variant="contained" onClick={() => {setShow1(true);setShow2(false)}} className={classes.buttonsInGroup}>{show1&&<Icon>keyboard_arrow_right</Icon>}  Topic      </Button>
+                  <Button variant="contained" onClick={() => {setShow1(false);setShow2(true);if(!addOrEdit){fetchTopics(props.subject_id)}}} className={classes.buttonsInGroup}>{show2&&<Icon>keyboard_arrow_right</Icon>}  Connections</Button>
                 </ButtonGroup>
               </Grid>
               <Grid item>          
@@ -642,7 +646,7 @@ function AddTopicPU(props){
                                 <Grid item xs={12} style={{width:"100%"}}>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel >Subject and course</InputLabel>
-                                    <Select  value={subjectAndCourse} onChange={handleChangePair}  renderValue={(selected) => `${selected.course_id} - ${selected.course_name}: ${selected.subject_name}`} MenuProps={MenuProps}>
+                                    <Select disabled={!addOrEdit} value={subjectAndCourse} onChange={handleChangePair}  renderValue={(selected) => `${selected.course_id} - ${selected.course_name}: ${selected.subject_name}`} MenuProps={MenuProps}>
                                       {subjectAndCourseList.map((pair) => (
                                         <MenuItem key={pair.course_id, pair.subject_id} value={pair}>
                                           <ListItemText primary={`${pair.course_id} - ${pair.course_name}: ${pair.subject_name}`} />
@@ -658,7 +662,7 @@ function AddTopicPU(props){
                                     <Select  multiple value={associatedTopic} onChange={handleChangeTag}  renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.topic_id} - ${selTop.topic_name}`); return array.join(`, `);} } MenuProps={MenuProps}>
                                       {associatedTopicsPossible.map((topic) => (
                                         <MenuItem key={topic.topic_id} value={topic}>
-                                          <Checkbox checked={associatedTopic.indexOf(topic) > -1} />
+                                          <Checkbox checked={findTopic(topic) > -1} />
                                           <ListItemText primary={`${topic.topic_id} - ${topic.topic_name}`} />
                                         </MenuItem>
                                       ))}
