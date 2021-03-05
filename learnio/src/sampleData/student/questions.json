@@ -3,7 +3,7 @@
         "topic_description":"Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         "rows_D":5,
         "column_numbers":3,
-        "assessments_array":[{"name":"nebitno"}]
+        "assessments_array":[{"asessment_name":"Nivo reprodukcije tumačenog","asessments_id":213123},{"asessment_name":"Nivo shvaćanja gradiva","asessments_id":2321313123},{"asessment_name":"Nivo primjene i povezivanja u drugim kontekstima","asessments_id":123123}]
     },
     "Questions":[
     {
