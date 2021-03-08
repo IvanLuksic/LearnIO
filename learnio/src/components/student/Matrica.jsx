@@ -264,7 +264,7 @@ function Matrica(props)
                 ))}
                   {/* {assesment_objectives.map((AO)=>(<p style={{fontFamily:"Red Hat Display", color: "#4372ec"}}>{AO.asessment_name}: {stats[assesment_objectives.indexOf(AO)]} </p>))} */}
             </Grid>
-            <div style={{position:"absolute", bottom:"-12%", right:"5rem",width:"10rem",height:"3rem",zIndex:"-9999",textAlign: 'center',backgroundColor:"lightgrey",padding:"0 0.5em 0.5em 0.5em ",borderRadius:"0 0 7px 7px",maxWidth:"100% !important",}}>
+            <div  onClick={()=>setAoOpen(!aoOpen)}  style={{position:"absolute",cursor:"pointer", bottom:"-12%", right:"5rem",width:"10rem",height:"3rem",zIndex:"-9999",textAlign: 'center',backgroundColor:"lightgrey",padding:"0 0.5em 0.5em 0.5em ",borderRadius:"0 0 7px 7px",maxWidth:"100% !important",}}>
               <Grid container justify="center" alignItems="center" direction="row" className={classes.inside}>
                 <Grid item xs={1} style={{color:"black",marginTop:"0.4rem"}}>
                   <IconButton className={!aoOpen?classes.expand:classes.expandOpen} aria-expanded={aoOpen} aria-label="show more">
@@ -272,7 +272,7 @@ function Matrica(props)
                   </IconButton>
                 </Grid>              
                 <Grid item xs={9} style={{color:"black",marginTop:"0.4rem"}}>
-                  <Typography onClick={()=>setAoOpen(!aoOpen)} style={{color:"black",cursor:"pointer",fontWeight:"bold"}}>Results</Typography>
+                  <Typography style={{color:"black",fontWeight:"bold"}}>Results</Typography>
                 </Grid>           
               </Grid>
             </div>

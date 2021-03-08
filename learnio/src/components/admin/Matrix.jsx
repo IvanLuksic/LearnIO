@@ -338,11 +338,25 @@ function MatricaAdmin(props)
         offline&&changeQuestion(Ques);
         // console.log("ZAHTJEV ZA IZMJENOM: ");
         // console.log({...Ques});
+        const formData = new FormData()
+        formData.append('id', Ques.id);
+        formData.append('text', Ques.text);
+        formData.append('question_type', Ques.question_type);
+        formData.append('answer_a', Ques.answer_a);
+        formData.append('answer_b', Ques.answer_b);
+        formData.append('answer_c', Ques.answer_c);
+        formData.append('answer_d', Ques.answer_d);
+        formData.append('solution', Ques.solution);
+        formData.append('row_D', dSelected);
+        formData.append('column_A', aoSelected);
+        formData.append('questionImage', Ques.questionImage);
+
+
         const requestOptions = {
             method: 'PUT',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({...Ques}),
+            body: formData,
             credentials: 'include'
         };
 
@@ -401,7 +415,6 @@ function MatricaAdmin(props)
             method: 'POST',
             mode:'cors',
             // headers: { 'Content-Type': 'application/json'},
-
             body: formData,
             credentials: 'include'
         };
