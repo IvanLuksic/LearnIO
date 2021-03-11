@@ -23,7 +23,8 @@ const useStyles=makeStyles(theme =>({
         backgroundColor:"white",
         borderRadius:" 7px 7px 0 0",
         height:"auto",
-        paddingBottom:"0",    },
+        paddingBottom:"0",    
+    },
     dialogPart2:{
         paddingTop:"0",
         backgroundColor:"white",

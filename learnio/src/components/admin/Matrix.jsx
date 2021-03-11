@@ -118,15 +118,17 @@ function MatricaAdmin(props)
     const [subject_id,setSubject_id]=useState(()=> 245674);
     const [subject_name,setSubject_name]=useState(()=> "Matematika 1");
     const [associated_topics, setAssociated_topics]=useState(()=> {return[{
-        topic_id:8,
-        topic_name:"Ebbers-Moll",
-        course_id:123,
+        topic_id:2,
+        topic_name:"MOSFET",
         course_name: "Electrical engineering",
-        subject_id:245674,
-        subject_name:"Electronics",
-        topic_description:"Jako dobra tema."},]
+        course_id:143523,
+        subject_id:345435,
+        subject_name:"Fisics 2",
+        topic_description:"Jako dobra tema.",
+        required_level:1   
+    },]
     });
-    const [asessments_array,setAsessments_array]=useState(()=>["super","jako","dobro"]);
+    const [asessments_array,setAsessments_array]=useState(()=>[{asessment_id:123123,asessment_name:"super"},{asessment_id:324234,asessment_name:"supawdawdawdawder"},{asessment_id:234,asessment_name:"AWDawd"}]);
     const [noError,setNoError]=useState(()=> true);
     const [snackbarText,setSnackbarText]=useState(()=>"");
     const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
@@ -336,11 +338,25 @@ function MatricaAdmin(props)
         offline&&changeQuestion(Ques);
         // console.log("ZAHTJEV ZA IZMJENOM: ");
         // console.log({...Ques});
+        const formData = new FormData()
+        formData.append('id', Ques.id);
+        formData.append('text', Ques.text);
+        formData.append('question_type', Ques.question_type);
+        formData.append('answer_a', Ques.answer_a);
+        formData.append('answer_b', Ques.answer_b);
+        formData.append('answer_c', Ques.answer_c);
+        formData.append('answer_d', Ques.answer_d);
+        formData.append('solution', Ques.solution);
+        formData.append('row_D', dSelected);
+        formData.append('column_A', aoSelected);
+        formData.append('questionImage', Ques.questionImage);
+
+
         const requestOptions = {
             method: 'PUT',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({...Ques}),
+            body: formData,
             credentials: 'include'
         };
 
@@ -399,7 +415,6 @@ function MatricaAdmin(props)
             method: 'POST',
             mode:'cors',
             // headers: { 'Content-Type': 'application/json'},
-
             body: formData,
             credentials: 'include'
         };
@@ -453,7 +468,7 @@ function MatricaAdmin(props)
 
         fetch(apiUri, requestOptions)
         .then((response)=>{
-            if(response.status===200)
+            if(response.status===200)//KOD
             {
               Promise.resolve(response).then(response => response.json())
                 .then((data)=> {

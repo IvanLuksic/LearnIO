@@ -301,7 +301,7 @@ function Students(){
           fakeData.map((student)=>{
             let inClass=false;
             for(let group of student.classes){
-              if(group.id===value){inClass=true;}
+              if(group.class_id===value){inClass=true;}
             };
             if(inClass){newData.push(student)};
           });
@@ -317,12 +317,12 @@ function Students(){
 const editStudent=(studentToEdit)=>{
 
   if(offline){
-    array = fakeData.filter((person)=>person.id!==studentToEdit.id);
-    array.push(studentToEdit);
-    setFakeData(array);
-    let array=data.filter((person)=>person.id!==studentToEdit.id);
-    array.push(studentToEdit);
-    setData(array);
+    let ar = fakeData.filter((person)=>person.id!==studentToEdit.id);
+    ar.push(studentToEdit);
+    setFakeData(ar);
+    ar=data.filter((person)=>person.id!==studentToEdit.id);
+    ar.push(studentToEdit);
+    setData(ar);
   
     changeOfClass(selectedClassID);
   }

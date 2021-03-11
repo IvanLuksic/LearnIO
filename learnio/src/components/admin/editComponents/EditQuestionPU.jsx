@@ -183,12 +183,12 @@ function EditQuestionPU(props) {
   //states of elements-------------------
   const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(false);
-  const [showIMG, setIMG] = useState(()=>{return ((props.prop.image_path!==null)?true:false)});
+  const [showIMG, setIMG] = useState(()=>props.prop.hasImage);//
   const [text, setText] = useState(props.prop.text);
   const [file, setFile] = useState(null);
   const quest = {...props.prop};
   const [answerInput,setAnswerInput]=useState("");
-  const [imageState, setimageState] = useState(()=>props.prop.image_path);
+  const [imageState, setimageState] = useState(()=>`/api/question/image/${props.prop.question_id}`);
   const [wrongAnswers, setWrongAnswers]=useState(()=>{ return ((props.prop.answer_a!==null||props.prop.answer_b!==null||props.prop.answer_c!==null||props.prop.answer_d!==null)?[props.prop.answer_a,props.prop.answer_b,props.prop.answer_c,props.prop.answer_d]:[])});
   const [correctAnswer, setCorrectAnswers]=useState(()=>{ return props.prop.solution});
   const [multipleAnswer, setMultipleAnswers]=useState(()=>{return ((props.prop.question_type===1)?true:false)});
@@ -227,11 +227,10 @@ function EditQuestionPU(props) {
   };
   const handleSave= ()=>{
     let send={
-      questionImage:file,
       id:quest.id,
       text:text,
       question_type:(multipleAnswer?1:2),
-      image_path:imageState,
+      questionImage:file,
       row_D:quest.row_D,
       column_A:quest.column_A,
       answer_a:((wrongAnswers.length>0)?wrongAnswers[0]:null),
@@ -270,7 +269,7 @@ function EditQuestionPU(props) {
                       </Grid>
                       <Grid container item direction="row" justify="center" alignItems="center" >
                         <Grid container item xs justify="center" alignItems="center">
-                          <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; setFile(img) ;setimageState(URL.createObjectURL(img)); setIMG(true) ;}}}/>
+                        <input accept="image/*" style={{display:"none"}} id="contained-button-file" multiple type="file" onInput={(event)=>{ if(event.target.files && event.target.files[0]) {let img = event.target.files[0]; console.log(event.target.files[0]); setFile(img); setimageState(URL.createObjectURL(img)); setIMG(true) ;}}}/>
                           <label htmlFor="contained-button-file">
                             <Button variant="contained" color="primary" component="span" className={classes.uploadButton}>
                               Upload photo
