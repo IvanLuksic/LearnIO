@@ -150,6 +150,7 @@ function QuestionPopup(props){
                             <Grid item xs={9}>
                                 <FormControl component="fieldset" >
                                     <FormLabel component="legend" style={{color:"grey"}}>{props.questionToDisplay.question_text}</FormLabel>
+                                    <img src={'/api/question/image/83'} className={classes.questionImg} style={{display:imageDisplay}} alt="slika zadatka"></img>
                                     <div style={{display:'flex',margin: "2em auto"}}>
                                     <RadioGroup aria-label="answer" component="div" name="answer1" value={value} onChange={handleChange} className={classes.radioGroup} >
                                         <div>{answeredAlready?((previous==="a")?(props.questionToDisplay.status===1?<span role="img" aria-label="checkmark">❌&nbsp;&nbsp;</span>:<span role="img" aria-label="checkmark">✔️&nbsp;&nbsp;</span>):<span role="img" aria-label="checkmark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>):null}<FormControlLabel disabled={answeredAlready} value={'a'} control={<Radio />} label={"a)  " + props.questionToDisplay.question_answer_a} />
@@ -171,7 +172,7 @@ function QuestionPopup(props){
                                 <FormControl component="fieldset"> 
                                     <FormLabel component="legend">{props.questionToDisplay.question_text}</FormLabel>
                                         <div className={classes.imgWithText} >
-                                            <img src={props.questionToDisplay.image_path} className={classes.questionImg} style={{display:imageDisplay}} alt="slika zadatka"></img>
+                                            <img src={'/api/question/image/83'} className={classes.questionImg} style={{display:imageDisplay}} alt="slika zadatka"></img>
                                             <div>
                                             <TextField  id="standard-basic" className={classes.answerText} label="Unesi kratki odgovor" value={answeredAlready?(props.questionToDisplay.status===1?("❌   "+value):("✔️   "+value)):value} onChange={()=>{if(!answeredAlready){handleChange();}}}/> 
                                             </div>
