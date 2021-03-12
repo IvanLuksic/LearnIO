@@ -819,26 +819,40 @@ module.exports=class topic{
                     ]
                 }
             })
-            this.Logger.info('Dosa sam dotud');
+            this.Logger.info('Izbrisani svi uklonjeni povezani topici');
             for(let i=0;i<properties.associated_topics.length;i++)//associated topcis je NIZ koji sadrži idove povezanih topica
             {
                 //dosaj nove ako su dodani novi associated
-            await this.Tags_of_topic.findOrCreate({//vodit racuna p promjeni tezine kako to ispitat
+            await this.Tags_of_topic.findOrCreate({where:{source_topic:properties.topic_id,associated_topic:properties.associated_topics[i].topic_id},defaults:{//vodit racuna o promjeni tezine kako to ispitat
                 source_topic:properties.topic_id,
                 associated_topic:properties.associated_topics[i].topic_id,
                 required_level:properties.associated_topics[i].required_level//zasasd spremamio po defaultu na 3
-            });
+            }});
             }
-            this.Logger.info('Dosa sam dotud'+JSON.stringify(properties.asessments_array));
+            this.Logger.info('Kreirani svi povezani topici');
+            //Nakon ovoga će svi biti uneseni u bazu-> promijenimo/updteamo required level onima koji imaju flag didChange=true
+            for(let i=0;i<properties.associated_topics.length;i++)
+            {
+                if(properties.associated_topics[i].didChange)//ako je true onda mu updateamo required level
+                {
+                    await this.Tags_of_topic.update({required_level:properties.associated_topics[i].required_level},{
+                        where:{
+                            source_topic:properties.topic_id,
+                            associated_topic:properties.associated_topics[i].topic_id
+                        }
+                    })
+                }
+            }
+            this.Logger.info('Updejtane sve reuqired level ocjene');
             for(let i=0;i<properties.asessments_array.length;i++)
             {
-                this.Logger.info('usa sam');
                 await this.Assesment.update({name:properties.asessments_array[i].asessment_name},{
                     where:{
                         id:properties.asessments_array[i].asessment_id
                     }
                 });
             }
+            this.Logger.info('Updateana sva imena assesmenta');
             await topic.save();
         } catch (error) {
             this.Logger.error('Error in function updateTopic'+error);

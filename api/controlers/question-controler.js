@@ -61,7 +61,7 @@ module.exports={
     },
     checkAnswer: async (req,res,next)=>{
         try {
-            const {topic_id=1,course_id=1,class_id=1,subject_id=1,question_id=20,solution='a'}=req.body;
+            const {topic_id,course_id,class_id,subject_id,question_id,solution}=req.body;
             const student_id=req.session.user;
             nodelogger.info('Parametri: '+course_id+' '+topic_id+' '+student_id+' '+question_id+subject_id+class_id+'Solution '+solution);
             var response={};//formatirat resposne-> sadržavat će flag correct i niz pitanja-> ako je kriv odgovor onda je on prazan
@@ -73,7 +73,7 @@ module.exports={
                  throw(error);
              }
              if(!correct)//odgovor je točan -> 1)Otključaj pitanja 2)Vrati u resposne ponovo sva pitanja sa promijenjenim statusom za ponovno renderiranje matrice
-             {
+             {//3) Svim topicima kojima je ovaj topic povezan topic otkljucamo netocno odgovorena pitanja
                 response.correct=true;
                 try {
                     await Question_instance.unlockQuestionsAndUpdateResultsAndGrade(solution,student_id,topic_id,course_id,class_id,subject_id,question_id);
@@ -84,8 +84,13 @@ module.exports={
                 try {
                     var questions=await Question_instance.getQuestionsFromSave(topic_id,course_id,student_id,class_id,subject_id);
                 } catch (error) {
-                    nodelogger.error('Errro in fetching from database ');
+                    nodelogger.error('Errro in fetching questions from database ');
                     throw(error);
+                }
+                try {
+                    await Question_instance.unlockQuestionsInSourceTopics(topic_id,course_id,student_id,class_id,subject_id);//svim source topciima kojima je ovaj topic associated topic mijenjamo status kirivih(crvenih) pitanja u plava-> OTKLJUČVAMO IH
+                } catch (error) {
+                    nodelogger.error('Error in unlocking wrong answers from associated topics');
                 }
                 response.Questions=questions;
                 res.json(response);

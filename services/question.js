@@ -747,4 +747,39 @@ module.exports=class question{
             throw(error);
         }
     }
+    async unlockQuestionsInSourceTopics(topic_id,course_id,student_id,class_id,subject_id)//svim source topciima kojima je ovaj topic associated topic mijenjamo status kirivih(crvenih) pitanja u plava-> OTKLJUČVAMO IH
+    {
+        try {
+            //1) pronaći source topice kojima je topic_id topic associated
+            let source_topics=await sequelize.query('SELECT  source_topic  FROM tags_of_topic WHERE associated_topic=:topic_id ' ,{
+                raw:true,
+                replacements: { topic_id: topic_id},
+                type: QueryTypes.SELECT
+               });
+            let source_topics_ids=[];
+               for(let source of source_topics)
+                source_topics_ids.push(source.source_topic);
+            this.Logger.info('Source topics: '+JSON.stringify(source_topics));
+            //2) Svim sesijama za tog usera u gornjim source topicima otključamo sva zaključana pitanja-> crvena boja
+            this.Logger.info(parseInt(config.colors.blue))
+            await this.Save.update({status:parseInt(config.colors.blue)},{
+                where:{
+                    [Op.and]:[
+                        {course_id:course_id},
+                        {student_id:student_id},
+                        {class_id:class_id},
+                        {subject_id:subject_id},
+                        {status:parseInt(config.colors.red)},
+                        {topic_id:{
+                            [Op.in]:source_topics_ids
+                        }}
+                    ]
+                }
+            });
+            this.Logger.info('Questions unlocked succesfuly');
+        } catch (error) {
+            this.Logger.error('Error in function unlockQuestionsInSourceTopics '+error);
+            throw(error);
+        }
+    }
 }
