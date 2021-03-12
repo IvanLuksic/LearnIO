@@ -497,10 +497,39 @@ module.exports=class question{
             this.Logger.error('Error in function wrongAnswer '+error);
             throw(error);
         }
-    }
-    async deleteQuestion(questions_id)
+    }//FRONTEND NEĆE DOPUSTITI BRISANJE AKO JE PITANJE KOJE SE BRIŠE JEDINO PITANJE ZA TU POZICIJU-> SIGURNO ĆEMO IMATI BAREM 1 PRESOTALO PITANJE ZA ZAMIJENITI S NJIM
+    async deleteAndReplaceQuestion(questions_id)//izbrisemo to pitanje iz baze a na mjestima gdje se ono pojavljuje u sesijama zamijeniti ga s random odabranim pitanjem od svih pitanja za tu piziciju u matrici
     {
         try {
+            const question=await this.Question.findOne({//prvo vidimo kojoj piozciji u matrici pripada to pitanje
+                attributes:['row_D','column_A','topic_id'],
+                where:{
+                    id:questions_id
+                }
+            });
+            let questions_ij=await this.Question.findAll({
+                attributes:['id'],//trebat će nam jedino id od pitanja za spremanje u tablicu save
+                where:{
+                  [Op.and]: [//sva pitanja iz te skupine osim onog koje se brise
+                        { row_D: question.row_D },
+                        { column_A: question.column_A },
+                        {topic_id:question.topic_id},
+                        {id:{
+                            [Op.ne]:questions_id
+                        }}
+                      ]
+                },
+            });
+            this.Logger.info('Succesfully readquestions');
+            this.Logger.info(JSON.stringify(questions_ij));
+            let random=Math.floor(Math.random() *questions_ij.length);//random broj izmedu 0 i duljine niza -1
+            this.Logger.info('Randomly geenrated index and question id'+random +' '+questions_ij[random].id);
+            await this.Save.update({question_id:questions_ij[random].id},{//zamijeni na svim jestima s tim novim pitanjem
+                where:{
+                    question_id:questions_id
+                }
+            });
+            //izbriisi nakon zamjene
             await this.Question.destroy({
                 where:{
                     id:questions_id
@@ -540,7 +569,10 @@ module.exports=class question{
     async addQuestion(text,solution,question_type,row_D,column_A,answer_a,answer_b,answer_c,answer_d,topic_id,image_path,mime_type,image_size)
     {
         try {
-            const question=await this.Question.create({
+            let question;
+            if(question_type==1&&image_size!==undefined)//a,b,c pitanje+ ima sliku
+            {
+            question=await this.Question.create({
                 text:text,
                 solution:solution,
                 question_type:question_type,
@@ -555,7 +587,47 @@ module.exports=class question{
                 answer_d:answer_d,
                 topic_id:topic_id
             });
-            return question.id;
+        }
+        else if(question_type==1&&image_size===undefined)//a b c pitanje + nema sliku-> nismo poslali parametar pa je on po defaultu undefined
+        {
+            question=await this.Question.create({
+                text:text,
+                solution:solution,
+                question_type:question_type,
+                row_D:row_D,
+                column_A:column_A,
+                answer_a:answer_a,
+                answer_b:answer_b,
+                answer_c:answer_c,
+                answer_d:answer_d,
+                topic_id:topic_id
+            });
+        }
+        else if(question_type==2&&image_size!==undefined)//pitanje bez a,b,c,d + ima sliku
+        {
+            question=await this.Question.create({
+                text:text,
+                solution:solution,
+                question_type:question_type,
+                row_D:row_D,
+                column_A:column_A,
+                image_path:image_path,
+                mime_type:mime_type,
+                image_size:image_size,
+                topic_id:topic_id
+            });
+        }
+        else {//pitanje bez a,b,c,d + nema sliku
+            question=await this.Question.create({
+                text:text,
+                solution:solution,
+                question_type:question_type,
+                row_D:row_D,
+                column_A:column_A,
+                topic_id:topic_id
+            });
+        }
+        return question.id;
         } catch (error) {
             this.Logger.error('Error in function addQuestion '+error);
             throw(error);
@@ -639,6 +711,39 @@ module.exports=class question{
             return question.user_answer;
         } catch (error) {
             this.Logger.error('Error in function userQuestionChoice'+error);
+            throw(error);
+        }
+    }
+    async insertExistingQuestionIntoTopic(topic_id,question_id,row_D,column_A)//unos postojećeg pitanja sa question_id među sva moguća pitanja topica_id na pozicijama rows_D i column_A
+    {
+        try {
+            let existing_question=await this.Question.findOne({
+                attributes:['text','solution','question_type','image_path','mime_type','image_size','answer_a','answer_b','answer_c','answer_d'],
+                where:{
+                    id:question_id
+                }
+            });
+            if(existing_question)//dodatna zastitia ako ne postoji zadani question
+            {
+                await this.Question.create({
+                    text:existing_question.text,
+                    solution:existing_question.solution,
+                    question_type:existing_question.question_type,
+                    row_D:row_D,
+                    column_A:column_A,
+                    image_path:existing_question.image_path,
+                    mime_type:existing_question.mime_type,
+                    image_size:existing_question.image_size,
+                    answer_a:existing_question.answer_a,
+                    answer_b:existing_question.answer_b,
+                    answer_c:existing_question.answer_c,
+                    answer_d:existing_question.answer_d,
+                    topic_id:topic_id
+                });
+            }
+            else throw(new Error('Question doesnt exist'));
+        } catch (error) {
+            this.Logger.error('Error in function insertExistingQuestionIntoTopic'+error);
             throw(error);
         }
     }

@@ -177,7 +177,7 @@ module.exports=class topic{
             {
                 temp={
                     topic_id:assoc.id,
-                    name:assoc.name,
+                    topic_name:assoc.name,
                     required_level:assoc.required_level,
                     course_id:assoc.course_id
                 };
@@ -353,20 +353,37 @@ module.exports=class topic{
     {
         try {
             try {
-               var topic_info=await this.Topic.findOne({
+               var topic_info=await this.Topic.findOne({//joinamo da dobijemo subject id od tog predmeta
                     attributes:['name','rows_D','column_numbers','description'],
+                    include:{
+                     model:this.Course,
+                     as:"courses_topic",
+                     through: { attributes: []},
+                     include:{
+                         model:this.Subject,
+                         as:"subjects_course",
+                         through: { attributes: []},
+                     }
+                    },
                     where:{
                         id:topics_id
                     },
-                    raw:true
                 })
             } catch (error) {
                 this.Logger.error('Error in fetching topic from databse');
                 throw(error);
             }
-            this.Logger.info('Topic info fetched succesfuly from database');
             this.Logger.info(JSON.stringify(topic_info));
-            return topic_info;
+            let format={
+                name:topic_info.name,
+                rows_D:topic_info.rows_D,
+                column_numbers:topic_info.column_numbers,
+                description:topic_info.description,
+                subject_id:topic_info.courses_topic[0].subjects_course[0].id
+            }
+            this.Logger.info('Topic info fetched succesfuly from database');
+            this.Logger.info(JSON.stringify(format));
+            return format;
         } catch (error) {
             this.Logger.error('Error in function getTopicInfo'+error);
             throw(error);
@@ -791,7 +808,7 @@ module.exports=class topic{
             {
                 associated_topics_ids[i]=properties.associated_topics[i].topic_id;
             } 
-            await this.Tags_of_topic.destroy({//unisiti one koji su promjenjeni odnosno vise nisu associated sa tim topicom
+            await this.Tags_of_topic.destroy({//unisiti one koji su promjenjeni/uklonjeni odnosno vise nisu associated sa tim topicom
                 where:{
                     [Op.and]: [
                         { source_topic:properties.topic_id},
@@ -802,20 +819,23 @@ module.exports=class topic{
                     ]
                 }
             })
+            this.Logger.info('Dosa sam dotud');
             for(let i=0;i<properties.associated_topics.length;i++)//associated topcis je NIZ koji sadrži idove povezanih topica
             {
-                //sosaj nove ako su dodani novi associated
-            await this.Tags_of_topic.findOrCreate({//voit racuna p promjeni tezine kako to ispitat
+                //dosaj nove ako su dodani novi associated
+            await this.Tags_of_topic.findOrCreate({//vodit racuna p promjeni tezine kako to ispitat
                 source_topic:properties.topic_id,
                 associated_topic:properties.associated_topics[i].topic_id,
                 required_level:properties.associated_topics[i].required_level//zasasd spremamio po defaultu na 3
             });
             }
-            for(let i=0;i<topic.asessments_array.length;i++)
+            this.Logger.info('Dosa sam dotud'+JSON.stringify(properties.asessments_array));
+            for(let i=0;i<properties.asessments_array.length;i++)
             {
-                await this.Assesment.update({name:asessments_array[i].asessment_name},{
+                this.Logger.info('usa sam');
+                await this.Assesment.update({name:properties.asessments_array[i].asessment_name},{
                     where:{
-                        id:topic.asessments_array[i].asessment_id
+                        id:properties.asessments_array[i].asessment_id
                     }
                 });
             }

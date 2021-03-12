@@ -74,7 +74,8 @@ module.exports={
                 topic_name:topic_info.name,
                 rows:topic_info.rows_D,
                 columns:topic_info.column_numbers,
-                topic_description:topic_info.description
+                topic_description:topic_info.description,
+                subject_id:topic_info.subject_id
             };
             try {
                var questions=await Question_instance.getQuestionsForAllA0D(req.params.topic_id,response.rows,response.columns);
