@@ -390,22 +390,32 @@ function MatricaAdmin(props)
             console.log('Error in fetch function '+ error);
           });
     };
-    const requestAddQuestion=(Ques,ID)=>{
-        const formData = new FormData()
-        formData.append('questionImage', Ques.questionImage);
-        formData.append('text', Ques.text);
-        formData.append('question_type', Ques.question_type);
-        formData.append('answer_a', Ques.answer_a);
-        formData.append('answer_b', Ques.answer_b);
-        formData.append('answer_c', Ques.answer_c);
-        formData.append('answer_d', Ques.answer_d);
-        formData.append('solution', Ques.solution);
-        formData.append('row_D', dSelected);
-        formData.append('column_A', aoSelected);
-        formData.append('topic_id', Number(topicID));
-
-
-
+    const requestAddQuestion=(Ques,existing)=>{
+        var apiUri;
+        const formData = new FormData();
+        if(existing){
+            if(role==="admin") apiUri='/insert/existing/question'
+            else if(role==="teacher") apiUri='/insert/existing/question';
+            formData.append('question_id',Ques.question_id);
+            formData.append('row_D', dSelected);
+            formData.append('column_A', aoSelected);
+            formData.append('topic_id', Number(topicID));
+        }
+        else{
+            if(role==="admin") apiUri='/api/question/add'
+            else if(role==="teacher") apiUri='/api/question/add';
+            formData.append('questionImage', Ques.questionImage);
+            formData.append('text', Ques.text);
+            formData.append('question_type', Ques.question_type);
+            formData.append('answer_a', Ques.answer_a);
+            formData.append('answer_b', Ques.answer_b);
+            formData.append('answer_c', Ques.answer_c);
+            formData.append('answer_d', Ques.answer_d);
+            formData.append('solution', Ques.solution);
+            formData.append('row_D', dSelected);
+            formData.append('column_A', aoSelected);
+            formData.append('topic_id', Number(topicID));
+        }
 
         offline&&addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});
         offline&&forceUpdate();
@@ -418,10 +428,6 @@ function MatricaAdmin(props)
             body: formData,
             credentials: 'include'
         };
-
-        let apiUri;
-        if(role==="admin") apiUri='/api/question/add'
-        else if(role==="teacher") apiUri='/api/question/add';
 
         fetch(apiUri, requestOptions)
         .then((response)=>{
