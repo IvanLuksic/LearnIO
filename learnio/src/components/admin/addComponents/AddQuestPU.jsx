@@ -297,6 +297,7 @@ function AddQuestPU(props) {
     if(ieSelectedQuestion===null){
       send={
         questionImage:file,
+        // hasImage:(file!==null)?true:false,
         text:text,
         question_type:(multipleAnswer?1:2),
         // image_path:imageState,
@@ -306,9 +307,11 @@ function AddQuestPU(props) {
         answer_d:((wrongAnswers.length>3)?wrongAnswers[3]:null),
         solution:correctAnswer
       };
+      props.questAdd(send,false);
     }
     else{
       send={
+        question_id:ieSelectedQuestion.question_id,
         questionImage:ieSelectedQuestion.questionImage,
         text:ieSelectedQuestion.text,
         question_type:ieSelectedQuestion.question_type,
@@ -319,10 +322,8 @@ function AddQuestPU(props) {
         answer_d:ieSelectedQuestion.answer_d,
         solution:ieSelectedQuestion.solution
       };
+      props.questAdd(send,true);
     };
-
-
-    props.questAdd(send);
     props.popUpClose(false);
   }
 
