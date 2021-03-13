@@ -538,7 +538,7 @@ function AddTopicPU(props){
 
         fetch(apiUri, requestOptions)
         .then((response)=>{
-          if(response.status===200)//KOD
+          if(response.status===204)//KOD
           {
             Promise.resolve(response).then(response => response.json())
               .then(data => {
