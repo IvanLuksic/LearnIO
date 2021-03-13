@@ -173,11 +173,7 @@ function QuestionPopup(props){
                                 <FormControl component="fieldset"> 
                                     <FormLabel component="legend">{props.questionToDisplay.question_text}</FormLabel>
                                         <div className={classes.imgWithText} >
-<<<<<<< HEAD
-                                            <img src={'/api/question/image/83'} className={classes.questionImg} style={{display:imageDisplay}} alt="slika zadatka"></img>
-=======
                                             {imageDisplay&&<img src={offline?"https://i.redd.it/o96asqovzgi51.jpg":`/api/question/image/${props.questionToDisplay.question_id}`} className={classes.questionImg} alt="slika zadatka"></img>}
->>>>>>> b28429a9238a9c3756fa6eef7e087b74f17564e1
                                             <div>
                                             <TextField  id="standard-basic" className={classes.answerText} label="Unesi kratki odgovor" value={answeredAlready?(props.questionToDisplay.status===1?("❌   "+value):("✔️   "+value)):value} onChange={()=>{if(!answeredAlready){handleChange();}}}/> 
                                             </div>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {makeStyles} from '@material-ui/core/styles';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -224,7 +224,7 @@ function AddQuestPU(props) {
   const [correctAnswer, setCorrectAnswers]=useState(()=>{ return ""});
   const [multipleAnswer, setMultipleAnswers]=useState(()=>{ return false});
   const [file,setFile]=useState(()=>null);
-  const [ieCourseList, setIeCourseList] = useState(()=>CoursesAndTopics);
+  const [ieCourseList, setIeCourseList] = useState(CoursesAndTopics);
   const [ieTopicList, setIeTopicList] = useState([]);
   const [ieQuestionList, setIeQuestionList] = useState([]);
   const [ieTopicSelectEnabled, setIeTopicSelectEnabled] = useState(false);
@@ -237,6 +237,35 @@ function AddQuestPU(props) {
   const classes = useStyles();
 //dropdown button---------------------
 
+  useEffect(()=>{
+    const requestOptions = {
+      method: 'GET',
+      mode:'cors',
+      headers: { 'Content-Type': 'application/json'},
+      credentials: 'include'
+    };
+
+    fetch(`/api/courses/with/topics/${props.subject_id}`, requestOptions)
+    .then(response => {
+      if(response.status===200)        {
+        Promise.resolve(response).then(response => response.json())
+        .then(data => {
+          setIeCourseList(data);
+        })
+     }      
+     else {
+        setSnackbarOpen(true);
+        setSnackbarStatus("error");
+        setSnackbarText("Something went wrong."); 
+     };
+    })
+    .catch((error)=>{
+        console.log('Error in fetch function '+ error);
+        setSnackbarOpen(true);
+        setSnackbarStatus("error");
+        setSnackbarText('Error in fetch function '+ error);  
+    });
+  },[])
   const handleText = (event) => {
     setText(event.target.value);
   };
@@ -317,7 +346,7 @@ function AddQuestPU(props) {
 
     fetch(`/api/admin/topics/edit/${topic.topic_id}`, requestOptions)
     .then(response => {
-      if(response.status===201)        {
+      if(response.status===200)        {
         Promise.resolve(response).then(response => response.json())
         .then(data => {
           ieFormatQuestions(data);
@@ -363,7 +392,6 @@ function AddQuestPU(props) {
   //   }
   //   setIeSelectedQuestion(item);
   // }
-
 
   return(
     <Grid className={classes.popupStyle} container direction="row" justify="space-between" alignItems="flex-start" style={{padding:"1em",height:"auto"}} wrap="wrap"> 

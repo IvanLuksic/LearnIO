@@ -202,7 +202,7 @@ const TopicAndLevel=(props)=>{
         </Grid>
         <Grid  container flexDirection="row" justify="center" item xs={3} style={{padding:"0.25em",borderRadius:"25px",border:"1px solid lightgrey",backgroundColor:"#77777722",alignItems:"center"}}>
           <Grid item xs={8}>
-            <Slider aria-labelledby="discrete-slider-small-steps" step={1} marks min={1} max={5} valueLabelDisplay="auto" value={props.AOL} onChange={(event,newValue)=>{props.setAOL(newValue);}}/>
+            <Slider aria-labelledby="discrete-slider-small-steps" step={1} marks min={1} max={5} valueLabelDisplay="auto" value={props.AOL} onChange={(event,newValue)=>{props.setDidChange(props.ind);props.setAOL(newValue);}}/>
           </Grid>
           <Grid item xs={2}>
               {props.AOL}
@@ -260,6 +260,11 @@ function AddTopicPU(props){
     const [AOL8,setAOL8]=useState(()=>{if(props.associated_topics!==undefined&&props.associated_topics[7]!==undefined){return props.associated_topics[7].required_level}else{ return 3}});
     const [AOL9,setAOL9]=useState(()=>{if(props.associated_topics!==undefined&&props.associated_topics[8]!==undefined){return props.associated_topics[8].required_level}else{ return 3}});
     const [AOL10,setAOL10]=useState(()=>{if(props.associated_topics!==undefined&&props.associated_topics[9]!==undefined){return props.associated_topics[9].required_level}else{ return 3}});
+    var didChange=[false,false,false,false,false,false,false,false,false,false];
+
+    const setDidChange=(ind)=>{
+      didChange[ind]=true;
+    }
 
     console.log("HHHHHHEEEEEEEEEEE");
     console.log(props.associated_topics);
@@ -373,7 +378,7 @@ function AddTopicPU(props){
       });
     };
 
-    useEffect(()=>{getSubjectCoursePairs();},[]);
+    useEffect(()=>{getSubjectCoursePairs()},[]);
     //submit botun sprema vrijednosti i poziva closePopUp
     const handleSave= ()=>{
       if(subjectAndCourse!==null){
@@ -476,16 +481,16 @@ function AddTopicPU(props){
         let arrayAT=[];
         let arrayAO=[];
         if(associatedTopic!==[null]){
-          if(associatedTopic[0]!==undefined)arrayAT.push({...associatedTopic[0],required_level:AOL1});
-          if(associatedTopic[1]!==undefined)arrayAT.push({...associatedTopic[1],required_level:AOL2});
-          if(associatedTopic[2]!==undefined)arrayAT.push({...associatedTopic[2],required_level:AOL3});
-          if(associatedTopic[3]!==undefined)arrayAT.push({...associatedTopic[3],required_level:AOL4});
-          if(associatedTopic[4]!==undefined)arrayAT.push({...associatedTopic[4],required_level:AOL5});
-          if(associatedTopic[5]!==undefined)arrayAT.push({...associatedTopic[5],required_level:AOL6});
-          if(associatedTopic[6]!==undefined)arrayAT.push({...associatedTopic[6],required_level:AOL7});
-          if(associatedTopic[7]!==undefined)arrayAT.push({...associatedTopic[7],required_level:AOL8});
-          if(associatedTopic[8]!==undefined)arrayAT.push({...associatedTopic[8],required_level:AOL9});
-          if(associatedTopic[9]!==undefined)arrayAT.push({...associatedTopic[9],required_level:AOL10});
+          if(associatedTopic[0]!==undefined)arrayAT.push({...associatedTopic[0],required_level:AOL1, didChange:didChange[0]});
+          if(associatedTopic[1]!==undefined)arrayAT.push({...associatedTopic[1],required_level:AOL2, didChange:didChange[1]});
+          if(associatedTopic[2]!==undefined)arrayAT.push({...associatedTopic[2],required_level:AOL3, didChange:didChange[2]});
+          if(associatedTopic[3]!==undefined)arrayAT.push({...associatedTopic[3],required_level:AOL4, didChange:didChange[3]});
+          if(associatedTopic[4]!==undefined)arrayAT.push({...associatedTopic[4],required_level:AOL5, didChange:didChange[4]});
+          if(associatedTopic[5]!==undefined)arrayAT.push({...associatedTopic[5],required_level:AOL6, didChange:didChange[5]});
+          if(associatedTopic[6]!==undefined)arrayAT.push({...associatedTopic[6],required_level:AOL7, didChange:didChange[6]});
+          if(associatedTopic[7]!==undefined)arrayAT.push({...associatedTopic[7],required_level:AOL8, didChange:didChange[7]});
+          if(associatedTopic[8]!==undefined)arrayAT.push({...associatedTopic[8],required_level:AOL9, didChange:didChange[8]});
+          if(associatedTopic[9]!==undefined)arrayAT.push({...associatedTopic[9],required_level:AOL10, didChange:didChange[9]});
 
         };
         if(valueAO>0)arrayAO.push(AOI1);
@@ -505,7 +510,7 @@ function AddTopicPU(props){
           columns_AO:valueAO,
           rows_D: valueD,
           course_id:subjectAndCourse.course_id,
-          associated_topics: arrayAT,
+          associated_topics: arrayAT,//didChange bit
           topic_description:valueDesc,
           asessments_array:arrayAO
         };
@@ -585,7 +590,7 @@ function AddTopicPU(props){
               <Grid item className={classes.grupaBotuna}>
               <ButtonGroup orientation="vertical" variant="contained">
                   <Button variant="contained" onClick={() => {setShow1(true);setShow2(false)}} className={classes.buttonsInGroup}>{show1&&<Icon>keyboard_arrow_right</Icon>}  Topic      </Button>
-                  <Button variant="contained" onClick={() => {setShow1(false);setShow2(true);if(!addOrEdit){fetchTopics(props.subject_id)}}} className={classes.buttonsInGroup}>{show2&&<Icon>keyboard_arrow_right</Icon>}  Connections</Button>
+                  <Button variant="contained" onClick={() => {setShow1(false);setShow2(true);if(!addOrEdit){fetchTopics({subject_id:props.subject_id})}}} className={classes.buttonsInGroup}>{show2&&<Icon>keyboard_arrow_right</Icon>}  Connections</Button>
                 </ButtonGroup>
               </Grid>
               <Grid item>          
@@ -670,16 +675,16 @@ function AddTopicPU(props){
                                 </FormControl>
                                 </Grid>
                                 <Grid item xs={12} style={{width:"100%",paddingTop:"2rem"}}> 
-                                      {(associatedTopic[0]!==undefined)&&<TopicAndLevel topic={associatedTopic[0]} setAOL={setAOL1} AOL={AOL1}/>}
-                                      {(associatedTopic[1]!==undefined)&&<TopicAndLevel topic={associatedTopic[1]} setAOL={setAOL2} AOL={AOL2}/>}
-                                      {(associatedTopic[2]!==undefined)&&<TopicAndLevel topic={associatedTopic[2]} setAOL={setAOL3} AOL={AOL3}/>}
-                                      {(associatedTopic[3]!==undefined)&&<TopicAndLevel topic={associatedTopic[3]} setAOL={setAOL4} AOL={AOL4}/>}
-                                      {(associatedTopic[4]!==undefined)&&<TopicAndLevel topic={associatedTopic[4]} setAOL={setAOL5} AOL={AOL5}/>}
-                                      {(associatedTopic[5]!==undefined)&&<TopicAndLevel topic={associatedTopic[5]} setAOL={setAOL6} AOL={AOL6}/>}
-                                      {(associatedTopic[6]!==undefined)&&<TopicAndLevel topic={associatedTopic[6]} setAOL={setAOL7} AOL={AOL7}/>}
-                                      {(associatedTopic[7]!==undefined)&&<TopicAndLevel topic={associatedTopic[7]} setAOL={setAOL8} AOL={AOL8}/>}
-                                      {(associatedTopic[8]!==undefined)&&<TopicAndLevel topic={associatedTopic[8]} setAOL={setAOL9} AOL={AOL9}/>}
-                                      {(associatedTopic[9]!==undefined)&&<TopicAndLevel topic={associatedTopic[9]} setAOL={setAOL10} AOL={AOL10}/>}
+                                      {(associatedTopic[0]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[0]} setAOL={setAOL1} AOL={AOL1} ind={0}/>}
+                                      {(associatedTopic[1]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[1]} setAOL={setAOL2} AOL={AOL2} ind={1}/>}
+                                      {(associatedTopic[2]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[2]} setAOL={setAOL3} AOL={AOL3} ind={2}/>}
+                                      {(associatedTopic[3]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[3]} setAOL={setAOL4} AOL={AOL4} ind={0}/>}
+                                      {(associatedTopic[4]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[4]} setAOL={setAOL5} AOL={AOL5} ind={4}/>}
+                                      {(associatedTopic[5]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[5]} setAOL={setAOL6} AOL={AOL6} ind={5}/>}
+                                      {(associatedTopic[6]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[6]} setAOL={setAOL7} AOL={AOL7} ind={6}/>}
+                                      {(associatedTopic[7]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[7]} setAOL={setAOL8} AOL={AOL8} ind={7}/>}
+                                      {(associatedTopic[8]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[8]} setAOL={setAOL9} AOL={AOL9} ind={8}/>}
+                                      {(associatedTopic[9]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[9]} setAOL={setAOL10} AOL={AOL10} ind={9}/>}
                                 </Grid>
                                 </Grid>}
                             </Grid>

@@ -165,6 +165,7 @@ function MatricaAdmin(props)
                 setMatricaD(data.rows);
                 setTopicName(data.topic_name);
                 setTopicDescription(data.topic_description)
+                setSubject_id(data.subject_id);
                 dispatch(topicSelected(topicID,topicName));
                 setSnackbarStatus("success");
                 setSnackbarText("Topic loaded successfully.")
@@ -528,7 +529,7 @@ function MatricaAdmin(props)
                 </Grid>
                 <Divider  orientation="vertical" className={classes.divider} flexItem/>
                 <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
-                    <EditQuestion forceUpdate={forceUpdate} page={page} jumpToPage={getIndex} changePage={changePage} questChange={requestChangeQuestion} questAdd={requestAddQuestion} questDelete={requestDeleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions.length!==0) ? fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions : null }/>
+                    <EditQuestion forceUpdate={forceUpdate} page={page} jumpToPage={getIndex} changePage={changePage} questChange={requestChangeQuestion} questAdd={requestAddQuestion} questDelete={requestDeleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions.length!==0) ? fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions : null } subject_id={subject_id}/>
                 </Grid>
                 {
                     snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>

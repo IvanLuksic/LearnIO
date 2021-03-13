@@ -129,7 +129,7 @@ const getStats=(Questions,AO,D)=>{
   for(let i=1;i<=AO;i++){
     let count=0;
     for(let j=0;j<Questions.length;j++){
-      if(Questions[j].column_A===i&&Questions[j].status==4){count++;};
+      if((Questions[j].column_A===i)&&(Questions[j].status==4)){count++;};
     }
     stat.push(count+"/"+D);
   }
@@ -207,6 +207,7 @@ function Matrica(props)
                 setTopicName(data.Matrix.topic_name);
                 setTopicDescription(data.Matrix.topic_description);
                 setAssesment_objectives(data.Matrix.asessments_array);
+                setStats(getStats(data.Questions,data.Matrix.column_numbers,data.Matrix.rows_D));
                 setSnackbarStatus("success");
                 setSnackbarText("Topic loaded successfully.");
                 setSnackbarOpen(true);
