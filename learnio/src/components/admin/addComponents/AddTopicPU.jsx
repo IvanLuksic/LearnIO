@@ -540,22 +540,10 @@ function AddTopicPU(props){
         .then((response)=>{
           if(response.status===204)//KOD
           {
-            Promise.resolve(response).then(response => response.json())
-              .then(data => {
-                (props.addTopic!==undefined)&&props.addTopic({
-                  topic_id:props.topic_id,
-                  topic_name:valueText,
-                  course_id:subjectAndCourse.course_id,
-                  course_name:subjectAndCourse.course_name,
-                  subject_id:subjectAndCourse.subject_id,
-                  subject_name:subjectAndCourse.subject_name,
-                  topic_description:valueDesc
-                });
                 props.closePopup();
                 props.setSnackbarStatus("success");
                 props.setSnackbarText("Topic edited successfully.")
                 props.setSnackbarOpen(true);
-              })
             }
             else{
               props.setSnackbarStatus("error");
