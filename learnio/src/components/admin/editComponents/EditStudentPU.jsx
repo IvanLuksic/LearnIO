@@ -26,8 +26,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import ListItemText from '@material-ui/core/ListItemText';
 import { useSelector} from 'react-redux';
-import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker,} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+import CustomSnackbar from '../../common/Snackbar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -79,6 +78,7 @@ function EditStudentPU(props) {
   //states of elements-------------------
   const offline= useSelector(state=>state.offline);
   const role=useSelector(state=>state.login);
+  const [cusername, setCUsername] = useState(()=>props.student.username);
   const [username, setUsername] = useState(()=>props.student.username);
   const [disableUsername, setDisableUsername] = useState(()=>true);
   const [usernameError,setUsernameError]=useState(()=>null);
@@ -91,13 +91,14 @@ function EditStudentPU(props) {
   const [email, setEmail] = useState(()=>props.student.email);
   const [disableEmail, setDisableEmail] = useState(()=>true);
   const [emailError,setEmailError]=useState(()=>null);
-  const [studentClasses, setStudentClasses] = useState(()=>props.student.classes.map((cl)=>cl.id));
+  const [studentClasses, setStudentClasses] = useState(()=>props.student.classes.map((cl)=>cl.class_id));
   const [disableStudentClasses, setDisableStudentClasses] = useState(()=>true);
   const [OTP,setOTP]=useState(()=>"");
-  const [OTPVisible,setOTPVisible]=useState(()=>false);
   const [birthDate,setBirthDate]=useState(new Date());
   const [disableBirthDate, setDisableBirthDate] = useState(()=>true);
-
+  const [snackbarOpen, setSnackbarOpen]=useState(()=>false);
+  const [snackbarText,setSnackbarText]=useState(()=>"");
+  const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
 
 
   const classes = useStyles();
@@ -130,7 +131,7 @@ function EditStudentPU(props) {
     checkUsername(username);
     if((nameError==""||nameError==null)&&(surnameError==""||surnameError==null)&&(usernameError==""||usernameError==null)&&(emailError==""||emailError==null)){
       let itemToSave;
-      let st=studentClasses.map((cl)=>{for(let i of props.allClasses){if(i.id==cl){return i.id}}});
+      let st=studentClasses.map((cl)=>{for(let i of props.allClasses){if(i.class_id==cl){return i.class_id}}});
       itemToSave={
         id: props.student.id,
         created:props.student.created,
@@ -147,32 +148,35 @@ function EditStudentPU(props) {
 
   const checkUsername=(temp)=>{
 
-    if(offline){setTimeout(()=>{if(username=="Username"){setUsernameError("nevalja")}else{setUsernameError("")}},500)};
-    
-    const requestOptions = {
-        method: 'POST',
-        mode:'cors',
-        headers: { 'Content-Type': 'application/json'},
-        credentials: 'include',
-        body:JSON.stringify({username:temp})
-      };
+    if(cusername==temp)setUsernameError(null);
+    else{
+      if(offline){setTimeout(()=>{if(username=="Username"){setUsernameError("nevalja")}else{setUsernameError("")}},500)};
+      
+      const requestOptions = {
+          method: 'POST',
+          mode:'cors',
+          headers: { 'Content-Type': 'application/json'},
+          credentials: 'include',
+          body:JSON.stringify({username:temp})
+        };
 
-      setTimeout(function(){ 
-        fetch(`/api/check/username`, requestOptions)
-        .then(response => response.json())
-        .then(dataFetch => {  
-                if(dataFetch.available==false){
-                  setUsernameError(`This username is not available.`);
-                }
-                else{
-                  setUsernameError("");
-                }
-                // setUsername(temp);
-        })
-        .catch((error)=>{
-          console.log('Error in fetch function '+ error);
-        });    
-      }, 500);
+        setTimeout(function(){ 
+          fetch(`/api/check/username`, requestOptions)
+          .then(response => response.json())
+          .then(dataFetch => {  
+                  if(dataFetch.available==false){
+                    setUsernameError(`This username is not available.`);
+                  }
+                  else{
+                    setUsernameError("");
+                  }
+                  // setUsername(temp);
+          })
+          .catch((error)=>{
+            console.log('Error in fetch function '+ error);
+          });    
+        }, 500);
+      }
 
 };
 
@@ -198,7 +202,9 @@ const checkEmail=(temp)=>{
 
   const getOTP=()=>{
     if(offline){
-      setOTP("fm934nduigtr4e");
+      setSnackbarOpen(true);
+      setSnackbarStatus("success");
+      setSnackbarText(`One Time Password has been send to ${email}`);    
     }
     else{
         const requestOptions = {
@@ -209,16 +215,38 @@ const checkEmail=(temp)=>{
         };
 
         let apiUri;
-        if(role==="admin") apiUri=`/api/OTP/${props.student.id}`
-        else if(role==="teacher") apiUri=`/api/OTP/${props.student.id}`;
+        if(role==="admin") apiUri=`/api/OTP/${props.student.username}`
+        else if(role==="teacher") apiUri=`/api/OTP/${props.student.username}`;
 
         fetch(apiUri, requestOptions)
-        .then(response => response.json())
-        .then(data => { setOTP(data.otp)})
-        .catch((error)=>console.log('Error in fetch function '+ error));
-    }
-    setOTPVisible(true);
+        .then(response => {
+          let d=response;
+          if(d.status===201){
+            setSnackbarOpen(true);
+            setSnackbarStatus("success");
+            setSnackbarText(`One Time Password has been send to ${email}.`);
+        }
+          else if(d.status===500){
+            setSnackbarOpen(true);
+            setSnackbarStatus("error");
+            setSnackbarText(`One Time Password has ALREADY been send to ${email}.`);              
+        }
+         else {
+            setSnackbarOpen(true);
+            setSnackbarStatus("error");
+            setSnackbarText("Something went wrong."); 
+         };
+        })
+        .catch((error)=>{
+            console.log('Error in fetch function '+ error);
+            setSnackbarOpen(true);
+            setSnackbarStatus("error");
+            setSnackbarText('Error in fetch function '+ error);  
+        });
   }
+  };
+
+  //SNACKBAR
 
   // const checkIfIn=(oneClass)=>{
   //   let bool=false;
@@ -234,6 +262,10 @@ const checkEmail=(temp)=>{
 
   return(
         <Grid container flexDirection="column" justify="center" alignItems="center">
+          {
+              snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+              : null
+          } 
           <Grid item xs={12}>
             <Typography color="primary" className={classes.loginHeadline}>Edit</Typography>
           </Grid>
@@ -330,12 +362,12 @@ const checkEmail=(temp)=>{
               <Grid item xs={10} >
                 <FormControl variant="filled" className={classes.fields}>
                     <InputLabel >Classes</InputLabel>
-                    <Select  multiple value={studentClasses} onChange={handleChangeClasses}  disabled={disableStudentClasses} renderValue={(selected) => {let array=selected.map((selClass)=>{for(let cl of props.allClasses){if(cl.id==selClass)return `${cl.name}`}}); return array.join(`, `);} } MenuProps={MenuProps}>
+                    <Select  multiple value={studentClasses} onChange={handleChangeClasses}  disabled={disableStudentClasses} renderValue={(selected) => {let array=selected.map((selClass)=>{for(let cl of props.allClasses){if(cl.class_id==selClass)return `${cl.class_name}`}}); return array.join(`, `);} } MenuProps={MenuProps}>
                       {props.allClasses.map((oneClass) => {
                         return(
-                          <MenuItem key={oneClass.id} value={oneClass.id}>
+                          <MenuItem key={oneClass.class_id} value={oneClass.class_id}>
                           {/* <Checkbox checked={checkIfIn(oneClass)}/> */}
-                          <ListItemText primary={`${oneClass.name} #${oneClass.id}`}  />
+                          <ListItemText primary={`${oneClass.class_name} #${oneClass.class_id}`}  />
                         </MenuItem>
                         )})}
                     </Select>
@@ -348,21 +380,14 @@ const checkEmail=(temp)=>{
                 </Grid>
               </Grid>
 
-              {!OTPVisible&&
               <Grid container item xs={12}>
                 <Button variant="contained" className={classes.loginButton} onClick={()=>getOTP()} style={{width:"100%", fontWeight:"bold" , height:"2.5rem",color:"rgba(0, 0, 0, 0.54)", marginTop:"0.4rem !important"}} type="submit" color="darkgray" >
-                    Recovery password
+                    Send recovery password
                 </Button>
-              </Grid>}
-
-              {OTPVisible&&
-                <Grid container item xs={12}>
-                  <TextField fullWidth  className={classes.fields} type="string" label="Recovery One Time Password" variant="filled" defaultValue={OTP} value={OTP} />
-                </Grid>
-              }
+              </Grid>
 
               <Grid item xs={8} md={12}  style={{marginTop: "3em"}} >
-                <Button variant="contained" className={classes.loginButton} onClick={()=>{if(usernameError==""){saveChanges();}}} style={{borderRadius: "25px", fontWeight:"bold"}} type="submit" color="primary" >
+                <Button variant="contained" className={classes.loginButton} onClick={()=>{if(usernameError==""||usernameError==null){saveChanges();}}} style={{borderRadius: "25px", fontWeight:"bold"}} type="submit" color="primary" >
                     Save
                 </Button>
               </Grid>

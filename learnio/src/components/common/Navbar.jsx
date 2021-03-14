@@ -109,8 +109,7 @@ const useStyles = makeStyles((theme) => ({
     '&:hover':{
       color:"#4d5254"
     }
-  },
-  }
+  },}
   ));
 
 

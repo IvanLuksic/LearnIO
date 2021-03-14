@@ -181,7 +181,7 @@ function Students(){
     const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
     const classes=useStyles();
     const [noError,setNoError]=useState(()=> true);
-    const [listOfGroups,setListOfGroups]=useState(()=>[{name:"All",id:-1},...allClasses]); 
+    const [listOfGroups,setListOfGroups]=useState(()=>[{class_name:"All",class_id:-1},...allClasses]); 
     const role=useSelector(state=>state.login);
     
 
@@ -204,7 +204,7 @@ function Students(){
         {
           Promise.resolve(response).then(response => response.json())
           .then(dataFetch => {  
-            setListOfGroups([{name:"All",id:-1},...dataFetch]);
+            setListOfGroups([{class_name:"All",class_id:-1},...dataFetch]);
             setAllClasses(dataFetch);
            // setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT
             setSnackbarStatus("success");
@@ -242,7 +242,7 @@ function Students(){
             <Select>
             {
               list.map((group)=>{
-                return <MenuItem disabled value={group.name}>{group.name}</MenuItem>
+                return <MenuItem disabled value={group.class_name}>{group.class_name}</MenuItem>
               })
             }
             </Select>
@@ -301,7 +301,7 @@ function Students(){
           fakeData.map((student)=>{
             let inClass=false;
             for(let group of student.classes){
-              if(group.id===value){inClass=true;}
+              if(group.class_id===value){inClass=true;}
             };
             if(inClass){newData.push(student)};
           });
@@ -317,12 +317,12 @@ function Students(){
 const editStudent=(studentToEdit)=>{
 
   if(offline){
-    array = fakeData.filter((person)=>person.id!==studentToEdit.id);
-    array.push(studentToEdit);
-    setFakeData(array);
-    let array=data.filter((person)=>person.id!==studentToEdit.id);
-    array.push(studentToEdit);
-    setData(array);
+    let ar = fakeData.filter((person)=>person.id!==studentToEdit.id);
+    ar.push(studentToEdit);
+    setFakeData(ar);
+    ar=data.filter((person)=>person.id!==studentToEdit.id);
+    ar.push(studentToEdit);
+    setData(ar);
   
     changeOfClass(selectedClassID);
   }
@@ -368,7 +368,7 @@ const editStudent=(studentToEdit)=>{
 /*=============================================================================================================================== */
     const removeStudent=()=>{
       let stud=selectedStudent;
-      let clas=selectedStudent.classes.filter((cl)=>cl.id!=selectedClassID);
+      let clas=selectedStudent.classes.filter((cl)=>cl.class_id!=selectedClassID);
       stud.classes=clas;
       editStudent(stud);
     };
@@ -429,7 +429,7 @@ const editStudent=(studentToEdit)=>{
           <Select value={selectedClassID} onChange={(event)=>changeOfClass(event.target.value)}>
           {
             listOfGroups.map((group)=>{
-              return <MenuItem value={group.id}>{group.name}</MenuItem>
+              return <MenuItem value={group.class_id}>{group.class_name}</MenuItem>
             })
           }
           </Select>

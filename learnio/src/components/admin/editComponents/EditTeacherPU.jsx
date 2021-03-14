@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import EditIcon from '@material-ui/icons/Edit';
 import { useSelector} from 'react-redux';
+import CustomSnackbar from '../../common/Snackbar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,6 +62,7 @@ function EditTeacherPU(props) {
   const offline= useSelector(state=>state.offline);
   const role=useSelector(state=>state.login);
   const [username, setUsername] = useState(()=>props.teacher.username);
+  const [cusername, setCUsername] = useState(()=>props.teacher.username);
   const [disableUsername, setDisableUsername] = useState(()=>true);
   const [usernameError,setUsernameError]=useState(()=>null);
   const [name, setName] = useState(()=>props.teacher.name);
@@ -73,7 +75,9 @@ function EditTeacherPU(props) {
   const [disableEmail, setDisableEmail] = useState(()=>true);
   const [emailError,setEmailError]=useState(()=>null);
   const [OTP,setOTP]=useState(()=>"");
-  const [OTPVisible,setOTPVisible]=useState(()=>false);
+  const [snackbarOpen, setSnackbarOpen]=useState(()=>false);
+  const [snackbarText,setSnackbarText]=useState(()=>"");
+  const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
 
 
 
@@ -103,31 +107,35 @@ function EditTeacherPU(props) {
 
 const checkUsername=(temp)=>{
 
-    if(offline){setTimeout(()=>{if(username==="Username"){setUsernameError("nevalja")}else{setUsernameError("")}},500)};
+    if(cusername==temp)setUsernameError(null);
+    else{
+      if(offline){setTimeout(()=>{if(username=="Username"){setUsernameError("nevalja")}else{setUsernameError("")}},500)};
 
-    const requestOptions = {
-        method: 'POST',
-        mode:'cors',
-        headers: { 'Content-Type': 'application/json'},
-        credentials: 'include',
-        body:JSON.stringify({username:temp})
-      };
+      const requestOptions = {
+          method: 'POST',
+          mode:'cors',
+          headers: { 'Content-Type': 'application/json'},
+          credentials: 'include',
+          body:JSON.stringify({username:temp})
+        };
 
-      setTimeout(function(){ 
-        fetch(`/api/check/username`, requestOptions)
-        .then(response => response.json())
-        .then(dataFetch => {  
-                if(dataFetch.available===false){
-                  setUsernameError(`This username is not available.`);
-                }
-                else{
-                  setUsernameError("");
-                }
-        })
-        .catch((error)=>{
-          console.log('Error in fetch function '+ error);
-        });    
-      }, 500);
+        setTimeout(function(){ 
+          fetch(`/api/check/username`, requestOptions)
+          .then(response => response.json())
+          .then(dataFetch => {  
+                  if(dataFetch.available==false){
+                    setUsernameError(`This username is not available.`);
+                  }
+                  else{
+                    setUsernameError("");
+                  }
+          })
+          .catch((error)=>{
+            console.log('Error in fetch function '+ error);
+          });    
+        }, 500);
+
+    }
 
 };
 
@@ -149,8 +157,9 @@ const checkEmail=(temp)=>{
 
 const getOTP=()=>{
     if(offline){
-      setOTP("fm934nduigtr4e");
-    }
+      setSnackbarOpen(true);
+      setSnackbarStatus("success");
+      setSnackbarText(`One Time Password has been send to ${email}`);    }
     else{
         const requestOptions = {
             method: 'GET',
@@ -160,21 +169,44 @@ const getOTP=()=>{
         };
 
         let apiUri;
-        if(role==="admin") apiUri=`/api/OTP/${props.teacher.id}`
-        else if(role==="teacher") apiUri=`/api/OTP/${props.teacher.id}`;
+        if(role==="admin") apiUri=`/api/OTP/${props.teacher.username}`
+        else if(role==="teacher") apiUri=`/api/OTP/${props.teacher.username}`;
 
         fetch(apiUri, requestOptions)
-        .then(response => response.json())
-        .then(data => { setOTP(data.otp)})
-        .catch((error)=>console.log('Error in fetch function '+ error));
-    }
-    setOTPVisible(true);
-};
+        .then(response => {
+          let d=response;
+          if(d.status===201){
+            setSnackbarOpen(true);
+            setSnackbarStatus("success");
+            setSnackbarText(`One Time Password has been send to ${email}.`);
+        }
+          else if(d.status===500){
+            setSnackbarOpen(true);
+            setSnackbarStatus("error");
+            setSnackbarText(`One Time Password has ALREADY been send to ${email}.`);              
+        }
+         else {
+            setSnackbarOpen(true);
+            setSnackbarStatus("error");
+            setSnackbarText("Something went wrong."); 
+         };
+        })
+        .catch((error)=>{
+            console.log('Error in fetch function '+ error);
+            setSnackbarOpen(true);
+            setSnackbarStatus("error");
+            setSnackbarText('Error in fetch function '+ error);  
+        });
+  }};
 
 
 
   return(
         <Grid container flexDirection="column" justify="center" alignItems="center">
+          {
+              snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+              : null
+          } 
           <Grid item xs={12}>
             <Typography color="primary" className={classes.loginHeadline}>Edit</Typography>
           </Grid>
@@ -195,7 +227,7 @@ const getOTP=()=>{
                         endAdornment: (
                           <InputAdornment position="start">
                             {(usernameError==="")&&<Icon fontSize="small" style={{color:"#27ae60"}}>check_mark</Icon>}
-                            {(usernameError!=="")&&(usernameError!==undefined)&&<Icon fontSize="small" style={{color:"#EB4949"}}>clear</Icon>}
+                            {(usernameError!=="")&&(usernameError!==null)&&<Icon fontSize="small" style={{color:"#EB4949"}}>clear</Icon>}
                           </InputAdornment>
                         ),
                       }}
@@ -243,21 +275,15 @@ const getOTP=()=>{
                 </Grid>
               </Grid>
 
-              {!OTPVisible&&
               <Grid container item xs={12}>
-                <Button variant="contained" className={classes.loginButton} onClick={()=>getOTP()} style={{width:"100%", height:"2.5rem",color:"rgba(0, 0, 0, 0.54)", marginTop:"0.4rem !important"}} type="submit" color="darkgray" >
-                    Recovery password
+                <Button variant="contained" disabled={OTP!==""} className={classes.loginButton} onClick={()=>getOTP()} style={{width:"100%", fontWeight:"bold" , height:"2.5rem",color:"rgba(0, 0, 0, 0.54)", marginTop:"0.4rem !important"}} type="submit" color="darkgray" >
+                  Send recovery password
                 </Button>
-              </Grid>}
+              </Grid>
 
-              {OTPVisible&&
-                <Grid container item xs={12}>
-                  <TextField fullWidth  className={classes.fields} type="string" label="Recovery One Time Password" variant="filled" defaultValue={OTP} value={OTP} />
-                </Grid>
-              }
 
               <Grid item xs={8} md={12}  style={{marginTop: "3em"}} >
-                <Button variant="contained" className={classes.loginButton} onClick={()=>{if(usernameError===""){saveChanges();}}} style={{borderRadius: "25px"}} type="submit" color="primary" >
+                <Button variant="contained" className={classes.loginButton} onClick={()=>{if(usernameError==""||usernameError==null){saveChanges();}}} style={{borderRadius: "25px"}} type="submit" color="primary" >
                     Save
                 </Button>
               </Grid>

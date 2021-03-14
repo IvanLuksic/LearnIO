@@ -30,11 +30,15 @@ const styles = {
     },
     loginButton:{
         margin: "auto",
-        marginTop: "2em",
+        marginTop: "2.5em",
         marginBottom: "2em",
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    link:{
+        margin:"1rem auto 0.5rem auto",
+        textAlign: "center",
     }
   };
 
@@ -84,9 +88,9 @@ function LoginForm(props){
               Promise.resolve(response).then(response => response.json())
                 .then(data => {
                         console.log(JSON.stringify(data)+data.role);
-                        if(data.role==1){{dispatch(adminLogIn())};dispatch(userLoggedIn(object.usernames));object.pageprops.history.push('/')}
-                        else if(data.role==2){{dispatch(teacherLogIn())};dispatch(userLoggedIn(object.usernames));object.pageprops.history.push('/')}
-                        else if(data.role==3){{dispatch(studentLogIn())};dispatch(userLoggedIn(object.usernames));object.pageprops.history.push(redirectUri);}
+                        if(data.role==1){{dispatch(adminLogIn())};dispatch(userLoggedIn(data.acronim));object.pageprops.history.push('/')}
+                        else if(data.role==2){{dispatch(teacherLogIn())};dispatch(userLoggedIn(data.acronim));object.pageprops.history.push('/')}
+                        else if(data.role==3){{dispatch(studentLogIn())};dispatch(userLoggedIn(data.acronim));object.pageprops.history.push(redirectUri);}
                 })
             }else  object.pageprops.history.push('/login')
         })
@@ -101,8 +105,9 @@ function LoginForm(props){
             <form onSubmit={(e)=>{(!offline)&&PostLogin(e,object);offline&&pseudoPostLogin(e,object)}} className={classes.root} noValidate autoComplete="off" >
                 <TextField onChange={(e)=>{setUsername(e.target.value)}} fullWidth className={classes.fields} type="email" label="Username" variant="filled" />
                 <TextField onChange={(e)=>{setPassword(e.target.value)}} fullWidth  className={classes.fields} type="password" label="Password" variant="filled" />
-                <Button variant="contained" className={classes.loginButton} style={{borderRadius: 25}} type="submit" color="primary" >
-                    Prijavi se
+                <div className={classes.link}><a href={"/forgot"}>Forgot your password?</a></div>
+                <Button variant="contained" className={classes.loginButton} style={{borderRadius: 15}} type="submit" color="primary" >
+                    Log in
                 </Button>
             </form>
         </React.Fragment>

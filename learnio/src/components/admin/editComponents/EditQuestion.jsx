@@ -117,7 +117,7 @@ function EditQuestion(props) {
                 <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>  
                 <Button onClick={()=>handleOpen()} className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>
                 <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false} >
-                  <AddQuestPU popUpClose={handleClose} changePage={props.jumpToPage} forceUpdate={props.forceUpdate} nextID={nextID} changeText={changeText} questAdd={handleAdd}/>
+                  <AddQuestPU subject_id={props.subject_id} popUpClose={handleClose} changePage={props.jumpToPage} forceUpdate={props.forceUpdate} nextID={nextID} changeText={changeText} questAdd={handleAdd}/>
                 </PopupDialog>
               </div>
               {

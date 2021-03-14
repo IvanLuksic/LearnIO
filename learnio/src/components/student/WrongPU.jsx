@@ -163,7 +163,7 @@ function WrongPU(props){//uzima samo closePopup
     for(let i=0;i<data.length;i++){
         rows=[...rows,{
             id: data[i].topic_id,
-            name: data[i].name,
+            name: data[i].topic_name,
             required_lvl: data[i].required_level,
         }]
     }

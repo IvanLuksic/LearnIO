@@ -136,14 +136,41 @@ li {
     display:none !important;
 }  
 
-.popup-content{
-    border-radius: 7px;
-    width: 80% !important;
-    height: auto;
-    padding:1vw !important;
-    background: lightgrey !important;
-
+#AOcontainer {
+    overflow:hidden;
+    position:relative;
+    /* the container's height will determine the height of its slider  */
+    height:350px; 
 }
+
+
+.AOslider {
+	overflow-y:visible;
+	/* complete liquid height based on the parent's height!! */
+    height:100%;
+
+    /* only transition on transform properties which are hardware accelerated = way better performances */
+	-webkit-transition:-webkit-transform .3s ease;
+       -moz-transition:   -moz-transform .3s ease;
+        -ms-transition:    -ms-transform .3s ease;
+            transition:        transform .3s ease;
+}
+
+.AOslider.opened { 
+    /* visible */
+    -webkit-transform: translate(0, 0%);
+       -moz-transform: translate(0, 0%);
+        -ms-transform: translate(0, 0%);
+            transform: translate(0, 0%);
+}
+.AOslider.closed { 
+    /* completely offscreen */
+    -webkit-transform: translate(0, -100%);
+       -moz-transform: translate(0, -100%);
+        -ms-transform: translate(0, -100%);
+            transform: translate(0, -100%);
+}
+
 
 /* 
 .MuiDataGrid-root .MuiDataGrid-dataContainer {
