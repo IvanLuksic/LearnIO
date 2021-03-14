@@ -9,6 +9,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import CustomSnackbar from '../../common/Snackbar'
 import { useSelector} from 'react-redux';
+import ListItemText from '@material-ui/core/ListItemText';
+import { OutlinedInput } from '@material-ui/core';
 
 const useStyles = makeStyles((theme)=>({
     topicTitle:{
@@ -23,42 +25,57 @@ const useStyles = makeStyles((theme)=>({
         fontWeight:"bold",
         textAlign: 'center', 
         
-    },  formControl: {
+    },  
+    formControl: {
         margin: theme.spacing(1),
         minWidth: "85%",
       },
-    selectClass: {
-        margin: theme.spacing(3),
-        [theme.breakpoints.down('md')]: {
-          minWidth: "80%",
-        },
-        [theme.breakpoints.up('lg')]: {
-          minWidth: "27%",
-        },
-        width:"90%",
-      },
     link:{
         width:"85%",
-        marginBottom:"5%",
+        // marginBottom:"5%"
     },
-    linkField:{
-        marginTop: theme.spacing(3),
+    linkField1:{
+        marginBottom: theme.spacing(1),
     },
-    copyButton:{
-        margin: theme.spacing(3),
+    linkField2:{
+        marginBottom: theme.spacing(2),
+    },
+    copybtn:{
+        width:"85%",
+        margin: "1rem auto 3rem auto",
+    },
+    btn:{
+        width:"85%",
+        margin: "1rem auto 1rem auto",
+        backgroundColor: "#27ae60",
+        '&:hover': {
+        backgroundColor: "#13532e",
+        },
+
     }
 }));
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
+        width: 200,
+      },
+    },
+};
 
 function InviteLink(props){
     const offline= useSelector(state=>state.offline);
     const classes=useStyles()
     const [AllClasses,setAllClasses]=useState(()=>fakeAllClasses);
-    const [SelectedClass,setSelectedClass]=useState(0);
+    const [SelectedClass,setSelectedClass]=useState(null);
     const [url,setUrl]=React.useState("");
+    const [counterOfMaximumJoins,setCounterOfMaximumJoins]=useState(0);
     const textFieldRef = useRef(null);
     const [openSnackbar,setOpenSnackbar]=useState(false);
     const role=useSelector(state=>state.login);
-
 
     const fetchClasses=()=>{
         const requestOptions = {
@@ -80,8 +97,8 @@ function InviteLink(props){
 
     const handleClass=(event)=>{
         setSelectedClass(event.target.value);   
-        getURL(event.target.value);
-    }
+    };
+
     //funkcija za dobit url za svaki class posebno
     const getURL=(sub)=>{
         const requestOptions = {
@@ -92,8 +109,8 @@ function InviteLink(props){
         };
 
         let apiUri;
-        if(role==="admin") apiUri=`/api/invite/to/class/${sub.class_id}`
-        else if(role==="teacher") apiUri=`/api/invite/to/class/${sub.class_id}`;
+        if(role==="admin") apiUri=`/api/invite/to/class/${sub.class_id}/${counterOfMaximumJoins}`
+        else if(role==="teacher") apiUri=`/api/invite/to/class/${sub.class_id}/${counterOfMaximumJoins}`;
 
         fetch(apiUri, requestOptions)// class subject course
         .then(response => response.json())
@@ -111,7 +128,7 @@ function InviteLink(props){
     };
 
     useEffect(()=>{
-        (!offline)&&fetchClasses();
+        if(!offline){fetchClasses()};
     },[])
     return(
         <Grid>
@@ -119,51 +136,30 @@ function InviteLink(props){
             <Grid item>
                 <Typography className={classes.topicTitle}>Invite</Typography>
             </Grid>
-            <Grid item xs={12}>
-            {/* <FormControl className={classes.selectClass} >
-                <InputLabel id="demo-simple-select-label">Choose class</InputLabel>
-                <Select value={SelectedClass} onChange={handleClass}>
-                {
-                    AllClasses.map((group)=>{ 
-                    return <MenuItem value={group.id}>{group.name}</MenuItem>
-                   
-                })
-                 }
-            </Select>
-            </FormControl> */}
-            {/* <FormControl className={classes.selectClass}>
-                    <InputLabel >Choose class</InputLabel>
-                    <Select id="selektiranjeFilterPropertyja" value={SelectedClass} onChange={handleClass}>
+            <Grid item xs={12}  className={classes.linkField1}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                    <InputLabel>Classes</InputLabel>
+                    <Select label="Classes" value={SelectedClass} onChange={handleClass} MenuProps={MenuProps}>
                         {
-                             AllClasses.map((group)=>{
-                                return(
-                                    <MenuItem value={group.id}>{group.name}</MenuItem>
-                                )
-                            })
+                            AllClasses.map((group)=>{
+                            return(
+                                <MenuItem value={group}>{group.class_name}</MenuItem>
+                            )})
                         }
                     </Select>
-                </FormControl> */}
-        <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel id="demo-simple-select-outlined-label">Class</InputLabel>
-        <Select labelId="demo-simple-select-outlined-label" id="demo-simple-select-outlined" label="Class" value={SelectedClass} onChange={handleClass}>
-            {
-                    AllClasses.map((group)=>{
-                    return(
-                        <MenuItem value={group}>{group.class_name}</MenuItem>
-                    )
-                })
-            }
-        </Select>
-      </FormControl>
+                </FormControl>
+            </Grid>
+            <Grid item xs={12}  className={classes.linkField2}>
+                <OutlinedInput variant="outlined" type="number" value={counterOfMaximumJoins} style={{width:"85%", textAlignLast:"center"}} onChange={(e)=>{if(e.target.value>-1&&e.target.value<101){setCounterOfMaximumJoins(e.target.value)}}}/>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="body1" >Invitation link:</Typography>
+                <Button variant="contained" color="primary" size="large" className={classes.btn} onClick={()=>getURL(SelectedClass)}>Generate link</Button>
             </Grid>
-            <Grid item xs={12} className={classes.linkField}>
-                <TextField variant="outlined" value={url} className={classes.link} size="small" inputRef={textFieldRef}></TextField>
+            <Grid item xs={12}  className={classes.linkField2}>
+                <TextField variant="outlined" value={url} placeholder={"Invitation URL"} className={classes.link} size="small" inputRef={textFieldRef}></TextField>
             </Grid>
-            <Grid item xs={12} className={classes.copyButton}>
-                <Button variant="contained" color="primary" size="large" onClick={copyToClipboard}>Copy</Button>
+            <Grid item xs={12} >
+                <Button variant="contained" color="primary" size="large" className={classes.copybtn} onClick={copyToClipboard}>Copy</Button>
             </Grid>
         </Grid>                
     );

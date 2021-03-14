@@ -87,7 +87,7 @@ function WrongPU(props){//uzima samo closePopup
 
     const class_id=useSelector(state=>state.class);
     const subject_id=useSelector(state=>state.subject);
-    const top_id=useSelector(state=>state.topic);
+    //const top_id=useSelector(state=>state.topic);
 
 
 
@@ -163,7 +163,7 @@ function WrongPU(props){//uzima samo closePopup
     for(let i=0;i<data.length;i++){
         rows=[...rows,{
             id: data[i].topic_id,
-            name: data[i].name,
+            name: data[i].topic_name,
             required_lvl: data[i].required_level,
         }]
     }

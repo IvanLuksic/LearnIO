@@ -85,7 +85,7 @@ const filterData=(filters,dataToFilter,event)=>{/*filters,dataToFilter,event */
       for(let filter of filters){
         if((typeof piece[filter.propertyName])==="number")
         {
-          if(piece[filter.propertyName]==filter.propertyValue){outcome=outcome&&true;}
+          if(piece[filter.propertyName]===filter.propertyValue){outcome=outcome&&true;}
           else {outcome=outcome&&false; console.log("NIJE " + piece[filter.propertyName] +" "+filter.propertyValue)};
         }
         else 

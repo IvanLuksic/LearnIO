@@ -7,12 +7,17 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 const useStyles=makeStyles(theme =>({
     dialogWrapper:{
-        // position:'absolute',
+        position:'absolute',
+        top:"20vh",
         textAlign: 'center',
         backgroundColor:"lightgrey",
         padding:"1em",
         borderRadius:"7px",
-        maxWidth:"100% !important"
+        maxWidth:"100%",
+        [theme.breakpoints.down('sm')]:{
+            width:"18em",
+            top:"10vh"
+        }
     },
     questionName:{
         flexGrow:1,
@@ -23,11 +28,12 @@ const useStyles=makeStyles(theme =>({
         backgroundColor:"white",
         borderRadius:" 7px 7px 0 0",
         height:"auto",
-        paddingBottom:"0",    },
+        paddingBottom:"0",
+    },
     dialogPart2:{
         paddingTop:"0",
         backgroundColor:"white",
-        borderRadius:"0 0 7px 7px"
+        borderRadius:"0 0 7px 7px",
     },
     radioGroup:{
         maxWidth:"100%",

@@ -17,6 +17,9 @@ import {classSelected} from '../../redux/actions/classID';
 import NotFound from '../common/NotFound';
 import CustomSnackbar from '../common/Snackbar.jsx';
 import {useDispatch} from 'react-redux';
+import { differenceInCalendarQuarters } from "date-fns/esm/fp";
+import IconButton from '@material-ui/core/IconButton';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +44,9 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom:'9px', 
     },
     lobster: {
-        fontFamily: "Lobster"
+        fontFamily: "Lobster",
+        marginBottom:"1rem",
+        textShadow:" -5px 5px #30303033",
     },
     skeleton:{
       paddingTop:"15vh",
@@ -57,12 +62,49 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.up('md')]: {
         padding:"100px 0 0 0",
       },
+    },
     descriptionAO:{
       fontFamily: "Red Hat Display, sans-serif !important"
-    }
-      
-    }
+    },
+    asessmentSlider:{
+      width:"20rem",
+      height:"20rem",
+      position: "fixed",
+      textAlign: 'center',
+      backgroundColor:"lightgrey",
+      padding:"0 0.5em 0.5em 0.5em ",
+      borderRadius:"0 0 7px 7px",
+      maxWidth:"100% !important",
+      color:"black",
+      fontFamily:"Roboto",
+      right: "5%",
+      ['@media (orientation: landscape)']:{
+        top:"46px",
+      },
+      [theme.breakpoints.down('xs')]: {
+        top:"56px",
+      },
+      [theme.breakpoints.up('sm')]: {
+        top:"64px",
+      },
+    },
 
+    inside:{
+      padding:0,
+      backgroundColor:"white",
+      borderRadius:"0 0 7px 7px",
+      height:"inherit"
+    },
+    expand: {
+      transform: 'rotate(0deg)',
+      transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+      }),
+    },
+    expandOpen: {
+      transform: 'rotate(180deg)',
+    },
+  
 }));
 
 const fieldToRows=(field,ao,d)=>{
@@ -80,6 +122,18 @@ const fieldToRows=(field,ao,d)=>{
       arrayOfRows=[...arrayOfRows,obj];
   }
   return arrayOfRows;
+};
+
+const getStats=(Questions,AO,D)=>{
+  var stat=[];
+  for(let i=1;i<=AO;i++){
+    let count=0;
+    for(let j=0;j<Questions.length;j++){
+      if((Questions[j].column_A===i)&&(Questions[j].status==4)){count++;};
+    }
+    stat.push(count+"/"+D);
+  }
+  return stat;
 };
 
 function Matrica(props)
@@ -100,16 +154,19 @@ function Matrica(props)
     const [openPopupWrong, setOpenPopupWrong] = useState(()=>{return false});
     const [matricaAO,setMatricaAO] = useState(()=>fakeFetchResponse.Matrix.column_numbers);
     const [matricaD,setMatricaD] = useState(()=>fakeFetchResponse.Matrix.rows_D);
-    const [assesment_objectives,setAssesment_objectives]=useState();
+    const [assesment_objectives,setAssesment_objectives]=useState(fakeFetchResponse.Matrix.assessments_array);
     const [topicName,setTopicName]=useState(()=>fakeFetchResponse.Matrix.topic_name);
     const [topicDescription,setTopicDescription]=useState(()=>fakeFetchResponse.Matrix.topic_description);
     const [topicID,setTopicID]=useState(useSelector(state=>state.topic));
+    const [stats,setStats]=useState(()=>getStats(fakeFetchResponse.Questions,fakeFetchResponse.Matrix.column_numbers,fakeFetchResponse.Matrix.rows_D))
     const [loading,setLoading]=useState(offline);//OFFLINE:true
     const [noError,setNoError]=useState(()=> true);
     const [snackbarText,setSnackbarText]=useState(()=>"");
     const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
     const [errorStatus,setErrorStatus]=useState(()=>"");
     const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+    const [aoOpen,setAoOpen]=useState(()=>false);
+
 
     
     const sub=useSelector(state=>state.subject);
@@ -132,8 +189,6 @@ function Matrica(props)
     // ]
 
     const GetQuestion=()=>{
-
-
         const requestOptions = {
           method: 'GET',
           mode:'cors',
@@ -152,6 +207,7 @@ function Matrica(props)
                 setTopicName(data.Matrix.topic_name);
                 setTopicDescription(data.Matrix.topic_description);
                 setAssesment_objectives(data.Matrix.asessments_array);
+                setStats(getStats(data.Questions,data.Matrix.column_numbers,data.Matrix.rows_D));
                 setSnackbarStatus("success");
                 setSnackbarText("Topic loaded successfully.");
                 setSnackbarOpen(true);
@@ -188,6 +244,7 @@ function Matrica(props)
        setAoSelected(ao);
        setQuestionSelected(quest);
        if(status!=="LOCKED") setOpenPopupQuestion(true);
+       console.log(status);
     };
 
   const classes = useStyles();
@@ -197,6 +254,31 @@ function Matrica(props)
     {
       loading? 
       <div>
+        <div className={"AOslider "+[aoOpen?"opened ":"closed "]+classes.asessmentSlider}>
+          <div className={classes.inside} style={{height:"inherit"}} >
+            <Grid direction="row" container style={{height:"inherit",alignContent:"space-around"}}> 
+                {assesment_objectives.map((AO)=>(
+                <Grid direction="row" container item xs={12} >
+                  <Grid item xs={7}><p style={{textAlign:"right"}}>{AO.asessment_name}:</p></Grid>
+                  <Grid item xs={5}><p style={{textAlign:"center",fontWeight:"bold"}}>{stats[assesment_objectives.indexOf(AO)]} </p></Grid>
+                </Grid>
+                ))}
+                  {/* {assesment_objectives.map((AO)=>(<p style={{fontFamily:"Red Hat Display", color: "#4372ec"}}>{AO.asessment_name}: {stats[assesment_objectives.indexOf(AO)]} </p>))} */}
+            </Grid>
+            <div  onClick={()=>setAoOpen(!aoOpen)}  style={{position:"absolute",cursor:"pointer", bottom:"-12%", right:"5rem",width:"10rem",height:"3rem",zIndex:"-9999",textAlign: 'center',backgroundColor:"lightgrey",padding:"0 0.5em 0.5em 0.5em ",borderRadius:"0 0 7px 7px",maxWidth:"100% !important",}}>
+              <Grid container justify="center" alignItems="center" direction="row" className={classes.inside}>
+                <Grid item xs={1} style={{color:"black",marginTop:"0.4rem"}}>
+                  <IconButton className={!aoOpen?classes.expand:classes.expandOpen} aria-expanded={aoOpen} aria-label="show more">
+                    <ExpandMoreIcon/>
+                  </IconButton>
+                </Grid>              
+                <Grid item xs={9} style={{color:"black",marginTop:"0.4rem"}}>
+                  <Typography style={{color:"black",fontWeight:"bold"}}>Results</Typography>
+                </Grid>           
+              </Grid>
+            </div>
+          </div>
+        </div>
         <PopupDialog openPopup={openPopupQuestion} setOpenPopup={setOpenPopupQuestion} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
           <QuestionPopup ao={matricaAO} d={matricaD} questionToDisplay={questionSelected} setOpenPopup={setOpenPopupQuestion} setOpenPopupWrong={setOpenPopupWrong} field={fields} setFields={setFields}/>
         </PopupDialog>        
@@ -210,7 +292,7 @@ function Matrica(props)
                   <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
               </Grid>
                 {/* <Grid direction="column" > 
-                  {opis.slice(0,matricaAO).map((AO)=>(<p style={{fontFamily:"Red Hat Display", color: "#4372ec"}}>AO={AO.ao} {AO.opis} </p>))}
+                  {opis.slice(0,matricaAO).map((AO)=>(<p style={{fontFamily:"Red Hat Display", color: "#4372ec"}}>Assessment objective={AO.ao} {AO.opis} </p>))}
                 </Grid> OVO SU AO-ovi SAMO UMISTO OPISA KORISTIT ASSESSMENT OBJE */}
               <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
                   <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>

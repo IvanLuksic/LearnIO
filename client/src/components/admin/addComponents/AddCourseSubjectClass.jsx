@@ -22,9 +22,14 @@ const useStyles = makeStyles((theme) => ({
     color: "#FFFFFF",
     maxHeight: "20",
     position: "fixed",
-    bottom: "3rem",
-    right: "3rem"
-  }
+    bottom: "7%",
+    right: "5%"
+  },
+  fab: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
 }));
 
 function getYear() {
@@ -49,7 +54,7 @@ function AddCourseSubjectClass() {
     { icon: <Icon>list_icon</Icon>, name: 'Add unit', operation: 'addcourse' },
   ];
 
-  if(role=="admin"){
+  if(role==="admin"){
     actionsStart.push({ icon: <Icon>subject_icon</Icon>, name: 'Add subject', operation: 'addsubject' });
     actionsStart.push({ icon: <Icon>class_icon</Icon>, name: 'Add class', operation: 'addclass' }); 
     actionsStart.push({ icon: <Icon>account_circle_sharp</Icon>, name: 'Add user', operation: 'adduser' });    
@@ -66,7 +71,7 @@ function AddCourseSubjectClass() {
   const fillYears = () => {
     const thisYear = getYear();
     let newYear = {};
-    let tempYears = [{value: "select year"}];
+    let tempYears = [];
     let yearValue = "";
 
     for(let i = -2; i < 50; i++) {
@@ -88,7 +93,7 @@ function AddCourseSubjectClass() {
   function handleClick (e,operation){
     setOpen(false);
     e.preventDefault();
-    if(operation=="invitePopUp") setIndex(4);
+    if(operation === "invitePopUp") setIndex(4);
     if(operation === "addcourse") setIndex(1);
     if(operation === "addsubject") setIndex(2);
     if(operation === "addtopic") setIndex(5);
@@ -96,7 +101,7 @@ function AddCourseSubjectClass() {
       fillYears();
       setIndex(3);
     }
-    if(operation==="adduser"){
+    if(operation === "adduser"){
       window.location.assign("/register");
     }
     setPopupOpen(true);
@@ -117,9 +122,9 @@ function AddCourseSubjectClass() {
   };
 
   return (
-    <div className={classes.speedDial}>
+    <div className={classes.fab}>
       <SpeedDial
-      className={classes.speedDial}
+      className={classes.fab}
         ariaLabel="SpeedDial openIcon example"
         icon={<SpeedDialIcon openIcon={<EditIcon />} />}
         onClose={handleClose}
@@ -146,12 +151,12 @@ function AddCourseSubjectClass() {
         </PopupDialog>
         : null
       }{
-        popupOpen && index === 2 && role=="admin"? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'40%'}}>
+        popupOpen && index === 2 && role === "admin"? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'40%'}}>
           <AddSubject closePopup={closePopup} handleOpen={handleSnackOpen} handleIndex={handleSnackIndex}/>
         </PopupDialog>
         : null
       }{
-        popupOpen && index === 3 && role=="admin"? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'40%'}}>
+        popupOpen && index === 3 && role === "admin"? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'40%'}}>
           <AddClass years={years} closePopup={closePopup} handleOpen={handleSnackOpen} handleIndex={handleSnackIndex}/>
         </PopupDialog>
         : null
@@ -162,7 +167,7 @@ function AddCourseSubjectClass() {
         : null
       }{
         popupOpen && index === 5 ? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
-          <AddTopicPU  closePopup={closePopup} setSnackbarOpen={setSnackOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus} />
+          <AddTopicPU addOrEdit={true} closePopup={closePopup} setSnackbarOpen={setSnackOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus} />
         </PopupDialog>
         : null
       }

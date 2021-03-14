@@ -1,4 +1,4 @@
-const offlineReducer=(state=false, action)=>{
+const offlineReducer=(state=true, action)=>{
             return state
 }
 export default offlineReducer;

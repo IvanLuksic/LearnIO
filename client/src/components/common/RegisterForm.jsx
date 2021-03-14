@@ -18,7 +18,6 @@ import { useSelector} from 'react-redux';
 import Icon from '@material-ui/core/Icon';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-
 import {Link} from 'react-router-dom';
 
 
@@ -53,17 +52,23 @@ const useStyles=makeStyles((theme)=>({
 function RegisterForm(props){
 
     const classes=useStyles();
+    const offline= useSelector(state=>state.offline);
     const roleOfUser=useSelector(state=>state.login);
     const [name, setName] = useState("");
+    const [nameError, setNameError] = useState(null);
     const [surname,setSurname]=useState("");
+    const [surnameError,setSurnameError]=useState(null);
     const [username,setUsername]=useState("");
+    const [usernameError,setUsernameError]=useState(null);
     const [email,setEmail]=useState("");
+    const [emailError,setEmailError]=useState("");
     const [roleVisible, setRoleVisible]=useState(()=> {return((roleOfUser=="guest")?false:true)});
     const [role, setRole]=useState(()=>3);
     const [password,setPassword]=useState("");
     const [passwordCheck,setPasswordCheck]=useState("");
     const [showPassword,setShowPassword]=useState(false);
     const [showPasswordCheck,setShowPasswordCheck]=useState(false);
+    const [passwordError,setPasswordError]=useState(null);
     const [birthDate,setBirthDate]=useState(new Date());
     const [errors,setErrors]=useState({});
     const [openSnackbar,setOpenSnackbar]=useState(false);
@@ -72,130 +77,67 @@ function RegisterForm(props){
     const handleChangeEmail=(event)=>{
         setEmail(event.target.value);
     }
-    //provjerava jesu li sva polja unesena i da li se lozinke podudaraju
-    const validation=()=>{   
-        let temp={}
-        temp.name=object.name ?"":"Name is required."
-        if(temp.name=="Name is required."){
-            temp.nameError=true
-        }
-        else temp.nameError=false
 
-        temp.surname=object.surname ?"":"Surname is required."
-        if(temp.surname=="Surname is required."){
-            temp.surnameError=true
-        }
-        else temp.surnameError=false
-
-        temp.username=object.username ?"":"Username is required."
-        if(temp.username=="Username is required."){
-            temp.usernameError=true
-        }
-        else temp.usernameError=false
-
-        temp.password=object.password ?"":"Password is required."
-        if(temp.password=="Password is required."){
-            temp.passwordError=true
-        }
-        else temp.passwordError=false
-
-    	temp.email=(/$^|.+@.+..+/).test(object.mail)?"":"Email is not vaild."
-        temp.email1=object.mail ?"":"Email is required." 
-        if(temp.email=="Email is not vaild."){
-            temp.emailError=true
-        }
-        else if (temp.email1=="Email is required.") {
-            temp.emailError=true
-            temp.email=temp.email1
-        }
-        else 
-            temp.emailError=false
-
-            
-       temp.passwordCheck=passwordCheck ?"":"Password Check is required."
-        if(temp.passwordCheck=="Password Check is required."){
-             temp.passwordCheckError=true
-        }
-        else temp.passwordCheckError=false
-        
-        if(password!=passwordCheck)
-        {
-            temp.passwordCheck="Wrong Password"
-            temp.passwordCheckError=true
-        }
-
-        setErrors({
-            ...temp
-        })
-        return Object.values(temp).every(x=>x=="")
-    }
     //prikazuje sifru kad se pritisne na oko
     const handleClickShowPassword = () => {
-        if(showPassword==false)
-        {
-            setShowPassword(true);
-        }
-        else
-        {
-            setShowPassword(false);
-        }  
+        setShowPassword(!showPassword);
     };
     const handleClickShowPasswordCheck = () => {
-        if(showPasswordCheck==false)
-        {
-            setShowPasswordCheck(true);
-        }
-        else
-        {
-            setShowPasswordCheck(false);
-        }  
+        setShowPasswordCheck(!showPasswordCheck);
     };
     //za datum rodenja ako triba
     const handleDateChange = (date) => {
         setBirthDate(date);
     };
-    
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
 
-    //objekt(tj osoba) koja se registrira
-    let object={
-        name:name,
-        surname:surname,
-        date_of_birth:birthDate,
-        mail:email,
-        user_type:role,
-        username:username,
-        password:password,
-        
-    };
+
+
     function sendSignup()
     {
+            //objekt(tj osoba) koja se registrira
 
-        console.log(object);
-            const requestOptions = {
-              method: 'POST',
-              mode:'cors',
-              headers: { 'Content-Type': 'application/json'},
-              credentials: 'include',
-              body:JSON.stringify(object)
-            };
-            fetch('/api/student/register', requestOptions)
-            .then((data)=>{
-                if(data.status===200){
-                   props.pageProps.history.push('/');
-                }
-                else{
-                    console.log('Error in fetch function '+ data.status);
-            }})
-            .catch((error)=>{ console.log('Error in fetch function '+ error);});
+        let object={
+            name:name,
+            surname:surname,
+            date_of_birth:birthDate,
+            mail:email,
+            user_type:role,
+            username:username,
+            password:password,
+            
+        };
+        const requestOptions = {
+            method: 'POST',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            credentials: 'include',
+            body:JSON.stringify(object)
+        };
+        fetch('/api/student/register', requestOptions)
+        .then((data)=>{
+            if(data.status===200){
+                props.pageProps.history.push('/');
+            }
+            else{
+                console.log('Error in fetch function '+ data.status);
+        }})
+        .catch((error)=>{ console.log('Error in fetch function '+ error);});
             
     }
     //unosimo podatke i provjeravamo jeli sve okej
     const Submit=(e)=>{
         e.preventDefault();
-        if(validation())
+
+        checkEmail(email);
+        checkName(name);
+        checkSurname(surname);
+        checkUsername(username);
+        checkPassword();
+
+        if((nameError==""||nameError==null)&&(surnameError==""||surnameError==null)&&(usernameError==""||usernameError==null)&&(emailError==""||emailError==null)&&(passwordError==""||passwordError==null))
         {
             sendSignup();
             setOpenSnackbar(true);
@@ -219,6 +161,8 @@ function RegisterForm(props){
     
     const checkUsername=(temp)=>{
 
+        if(offline){if(temp=="Username"){setUsernameError("Nevalja.")}else{setUsernameError("")}};
+
         const requestOptions = {
             method: 'POST',
             mode:'cors',
@@ -233,26 +177,36 @@ function RegisterForm(props){
           .then(dataFetch => {  
                   console.log(dataFetch);
                   if(dataFetch.available==false){
-                    console.log("Tu sammm");
-                    let ar=errors;
-                    ar.usernameError=true;
-                    ar.username=`This username is not available.`;
-                    setErrors(ar);
+                    setUsernameError(`This username is not available.`);
                   }
                   else{
-                    let ar=errors;
-                    ar.usernameError=false;
-                    ar.username=null;
-                    setErrors(ar);
+                    setUsernameError(``);
                   }
-                  setUsername(temp);
           })
           .catch((error)=>{
             console.log('Error in fetch function '+ error);
           });    
     };
         
-    
+    const checkName=(temp)=>{
+        if(temp=="") setNameError("Name is required.")
+        else setNameError("");
+    };
+    const checkSurname=(temp)=>{
+        if(temp=="") setSurnameError("Surname is required.")
+        else setSurnameError("");
+    };
+    const checkEmail=(temp)=>{
+        if(temp==""){setEmailError("Email is required.")}
+        else if(!((/$^|.+@.+..+/).test(temp))) {setEmailError("Not a valid email.")}
+        else{setEmailError("")};
+    };
+    const checkPassword=()=>{
+        if(password.length<5||passwordCheck.length<5) setPasswordError("Password shold be longer than 4 characters.")
+        else if(password!==passwordCheck) setPasswordError("Passwords don't match.")
+        else setPasswordError("");
+    };
+
     return(
         <React.Fragment>
             <CustomSnackbar text="You successfully registered" status="success" open={openSnackbar} handleClose={closeSnackbar}></CustomSnackbar>
@@ -263,16 +217,18 @@ function RegisterForm(props){
                     label="Name" 
                     variant="filled" 
                     onChange={(e)=>{setName(e.target.value)}}
-                    error
-                    {  ...( {error:errors.nameError,helperText:errors.name})}
+                    onBlur={(e)=>checkName(e.target.value)}
+                    error={nameError!=""&&nameError!=null}
+                    helperText={nameError}
                 />
                 <TextField  fullWidth  className={classes.fields} 
                     type="surname" 
                     label="Surname" 
                     variant="filled" 
                     onChange={(e)=>{setSurname(e.target.value)}}
-                    error
-                    {  ...( {error:errors.surnameError,helperText:errors.surname})}
+                    onBlur={(e)=>checkSurname(e.target.value)}
+                    error={surnameError!=""&&surnameError!=null}
+                    helperText={surnameError}
                 />
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker style={{marginTop:0}} className={classes.fields}
@@ -295,23 +251,24 @@ function RegisterForm(props){
                     variant="filled" 
                     onChange={handleChangeEmail} 
                     value={email}
-                    error
-                    {  ...( {error:errors.emailError,helperText:errors.email})}
+                    onBlur={(e)=>checkEmail(e.target.value)}
+                    error={emailError!=""&&emailError!=null}
+                    helperText={emailError}
                 />
                 <TextField  fullWidth className={classes.fields}  
                     type="username" 
                     label="Username" 
                     variant="filled" 
-                    onChange={(e)=>{ if(e.target.value.length>4){ checkUsername(e.target.value);}else{setUsername(e.target.value);}}}
+                    onChange={(e)=>{ if(e.target.value.length>4){setUsername(e.target.value); checkUsername(e.target.value);}else{setUsername(e.target.value);}}}
                     // onBlur={()=>{const temp=username; setUsername("");}}
-                    error={errors.usernameError}
+                    error={usernameError!=""&&usernameError!=null}
                     value={username}
-                    helperText={errors.username}                    
+                    helperText={usernameError}                    
                     InputProps={{
                         endAdornment: (
                           <InputAdornment position="start">
-                            {(!errors.usernameError)&&(errors.usernameError!=undefined)&&<Icon fontSize="small" style={{color:"#27ae60"}}>check_mark</Icon>}
-                            {(errors.usernameError)&&(errors.usernameError!=undefined)&&<Icon fontSize="small" style={{color:"#EB4949"}}>clear</Icon>}
+                            {(!(usernameError!=""))&&<Icon fontSize="small" style={{color:"#27ae60"}}>check_mark</Icon>}
+                            {(usernameError!=""&&usernameError!=null)&&<Icon fontSize="small" style={{color:"#EB4949"}}>clear</Icon>}
                           </InputAdornment>
                         ),
                       }}
@@ -345,7 +302,7 @@ function RegisterForm(props){
                     //onChange={()=>{setRole("student")}}
                     
                 />} */}
-                <FormControl  className={classes.fields} variant="filled" error {...({error:errors.passwordError})}>               
+                <FormControl  className={classes.fields} variant="filled" error={passwordError!==null&&passwordError!==""}>               
                     <InputLabel  variant="filled" htmlFor="filled-adornment-password" >Password</InputLabel>
                     <FilledInput fullWidth
                         id="filled-adornment-password"
@@ -363,17 +320,16 @@ function RegisterForm(props){
                             </IconButton>
                             </InputAdornment>
                         }      
-                    />
-                    {<FormHelperText>{errors.password}</FormHelperText>}
-                    
+                    />                    
                 </FormControl>
-                <FormControl  className={classes.fields} variant="filled" error {...({error:errors.passwordCheckError})}>
+                <FormControl  className={classes.fields} variant="filled" error={passwordError!==null&&passwordError!==""}>
                     <InputLabel  variant="filled" htmlFor="filled-adornment-password" >Password Check</InputLabel>
                     <FilledInput fullWidth
                         id="filled-adornment-password2"
                         type={showPasswordCheck ? 'text' : 'password'}
                         value={passwordCheck}
                         onChange={(e)=>{setPasswordCheck(e.target.value)}}
+                        onBlur={()=>checkPassword()}
                         endAdornment={
                             <InputAdornment position="end">
                             <IconButton
@@ -386,9 +342,9 @@ function RegisterForm(props){
                             </InputAdornment>
                         }      
                     />
-                    {<FormHelperText>{errors.passwordCheck}</FormHelperText>}         
+                    {<FormHelperText>{passwordError}</FormHelperText>}         
                 </FormControl>
-                <Button variant="contained" className={classes.loginButton} style={{borderRadius: 25}} type="submit" color="primary" >
+                <Button variant="contained" className={classes.loginButton} style={{borderRadius: 25, fontWeight:"bold"}} type="submit" color="primary" >
                     Sign Up              
                 </Button>
             </form>
