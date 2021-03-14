@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     padding:"0 2em 1em 2em !important",
     borderRadius:"7px" ,
     width:"100%",
-    height:"28vh",
+    height:"15.5em",
     [theme.breakpoints.down('sm')]: {
       flexDirection:"column",
       padding: "0 0 0 0",
@@ -70,12 +70,6 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       display:"none",
     },
-},
-divider2:{
-  display:"none",
-  [theme.breakpoints.down('sm')]: {
-    display:"inline",
-  },
 },
   editText:{
     width:"30vw",
@@ -137,15 +131,6 @@ divider2:{
       '&:hover': {
         backgroundColor: "#1f894b",
      },
-      [theme.breakpoints.down('sm')]: {
-        backgroundColor:"blue",
-      },
-      [theme.breakpoints.up('md')]: {
-        backgroundColor: 'red',
-      },
-      [theme.breakpoints.up('lg')]: {
-        backgroundColor: 'black',
-      },
     },
     uploadGridStyle: {
       width:"100%",
@@ -301,11 +286,6 @@ divider2:{
       [theme.breakpoints.down('sm')]: {
         marginLeft:"0",
       }
-    },
-    imgStyle: {
-      display:"none",
-      marginLeft:"3em",
-      marginTop:"3em",
     },
     selectCourseStyle: {
       width:"20%",
@@ -603,7 +583,6 @@ function AddQuestPU(props) {
       </Grid>
     </Grid>
     <Divider orientation="vertical" flexItem className={classes.divider}/>
-    {/* <Divider orientation="horizontal" flexItem className={classes.divider2}/> */}
       {
       show1 ? //first case - question
           <Grid container item className={classes.editText}> 
