@@ -29,13 +29,12 @@ const useStyles = makeStyles((theme)=>({
       color: "#3b3a3a"
     },
     grupaBotuna:{
+      marginTop:"0.5em",
       [theme.breakpoints.down('sm')]: {
-        marginBottom: "2em",
-        marginTop: "2em",
-
+        marginBottom: "1em",
       },
       [theme.breakpoints.up('md')]: {
-        marginBottom: "5em",
+        marginBottom: "6em",
       },
     },
     title:{
@@ -45,12 +44,12 @@ const useStyles = makeStyles((theme)=>({
     },
     formControl: {
         margin: theme.spacing(2),
-        width: "70%",
+        width: "80%",
         position: "relative",
     },
     formControl2: {
         margin: theme.spacing(2),
-        width: "30%",
+        width: "100%",
         position: "relative",
     },
     root: {
@@ -59,69 +58,109 @@ const useStyles = makeStyles((theme)=>({
         },
     },
     popupStyle:{
-      height:"auto",
+      whiteSpace:"nowrap",
+      display:"flex",
+      flexDirection:"row",
+      justify:"space-between",
+      alignItems:"flex-start",
       backgroundColor:"white",
+      padding:"0 2em 1em 2em !important",
       borderRadius:"7px" ,
-      [theme.breakpoints.up('xl')]: {
-        width:"80%",
-      },
-      [theme.breakpoints.down('md')]: {
-        padding:"0 !important",
-      },
-      [theme.breakpoints.up('md')]: {
-        padding:"0 0 1em 1em !important",
-      },
-      [theme.breakpoints.down('xl')]: {
-        width:"100%",
-    }},
-    popupMenu:{
+      width:"100%",
+      height:"15.5em",
       [theme.breakpoints.down('sm')]: {
-        marginBottom: "3em",
+        flexDirection:"column",
+        padding: "0 0 0 0",
+        width:"11em",
+        justify:"center",
+        alignItems:"center",
+        height:"auto",
+      }
+    },
+    popupMenu:{
+      position:"absolute",
+      float:"right",
+      width:"11em",
+      marginRight:"3em",
+      [theme.breakpoints.down('sm')]: {
+        marginRight:"0",
+        position:"static",
+        justifyContent:"center",
       },
-      [theme.breakpoints.up('sm')]: {
-        padding:"2em 0 3em 0",
-    }
     },
     divider:{
+      marginLeft:"14em",
         [theme.breakpoints.down('sm')]: {
           display:"none",
+          marginLeft:"0",
     }},
     buttonsInGroup:{
+      width:"11em",
+      whiteSpace:"nowrap",
       backgroundColor:"#27AE60",
       color:"white",
       '&:hover': {
         backgroundColor: "#1f894b",
      },
-      [theme.breakpoints.down('sm')]: {
-        paddingLeft:"5em",
-        paddingRight:"5em",
-        paddingTop:"0.5em",
-        paddingBottom:"0.5em",
-      },
-      [theme.breakpoints.up('md')]: {
-        paddingLeft:"7em",
-        paddingRight:"7em",
-      },
+    },
+    formControlGrid:{
+      width:"100%",
+      display:"flex",
+      flexDirection:"column",
+      justifyContent:"flex-start",
+      alignItems:"flex-start",
+      marginLeft:"3em",
+      [theme.breakpoints.down("sm")]:{
+        justifyContent:"center",
+        alignItems:"flex-start",
+        marginLeft:"0",
+      }
     },
     rightSide:{
-      [theme.breakpoints.down('sm')]: {
-        marginLeft:"0em",
-        marginBottom:"1em",
+      display:"flex",
+      flexDirection:"column",
+      justify:"flex-start",
+      alignItems:"flex-start",
+      width:"35vw",
+      [theme.breakpoints.down("sm")]:{
+        height:"30vh",
+        width:"11em",
+        justify:"center",
+        alignItems:"flex-start",
       },
-      [theme.breakpoints.up('sm')]: {
-        padding:"2em 1em 3em 1em",
-      }
+    },
+    topicName:{
+      width:"70%",
     },
     dropText:{
       fontSize:"0.8rem",
       paddingRight:"1em"
     },
     dropMenus:{
+      display:"flex",
+      flexDirection:"row",
+      justifyContent:"flex-start",
+      alignItems:"flex-start",
+      [theme.breakpoints.down("sm")]:{
+        flexDirection:"column",
+      },
       [theme.breakpoints.up('md')]: {
         paddingLeft:"2em !important",
       }
     },
+    levels: {
+      width:"50%",
+      display:"flex",
+      flexDirection:"row",
+      justifyContent:"flex-start",
+      alignItems:"center",
+      [theme.breakpoints.down("sm")]:{
+        justifyContent:"space-between",
+        width:"100%"
+      }
+    },
     saveBtn: {
+      width:"11em",
       borderRadius: "7px",
       background:"#EB4949",
       color:"white",
@@ -130,10 +169,18 @@ const useStyles = makeStyles((theme)=>({
       backgroundColor: "#EB4949",
       '&:hover': {
         backgroundColor: "#b81414",
-    },},
+    },
+    [theme.breakpoints.down('sm')]: {
+        marginBottom:"2em",
+    }
+    },
+    textFields: {
+      display:"flex",
+      flexDirection:"column",
+      width:"100%",
+    },
     textField1:{
-      marginTop: "1em",
-      marginBottom: "0.25em",
+      marginBottom: "1em",
       width:"100%",
       [theme.breakpoints.up('md')]: {
         marginLeft:"1em",
@@ -148,9 +195,24 @@ const useStyles = makeStyles((theme)=>({
       }
     },
     topicWithSlider:{
-      padding:"1rem 0 0 0",
+      marginBottom:"0.5em",
+      padding:"0 0 0 1rem",
       alignItems:"center"
+    },
+  editText:{
+    width:"30vw",
+    marginLeft:"3.5em",
+    marginTop:"0.5em",
+    display:"flex",
+    flexDirection:"column",
+    justify:"center",
+    alignItems:"center",
+    [theme.breakpoints.down("sm")]: {
+      marginLeft:"0",
+      width:"11em",
+      marginTop:"0",
     }
+  },
 }));
 
 
@@ -570,13 +632,9 @@ function AddTopicPU(props){
 
     const classes=useStyles();
     return(
-        <Grid className={classes.popupStyle} container direction="column" justify="space-between" alignItems="center" style={{padding:"1em",height:"auto"}} wrap="wrap"> 
-        <Grid item xs={12}>
-          <Typography className={classes.topicTitle}>Topic</Typography>
-        </Grid>
-        <Grid className={classes.popupStyle} container direction="row" item xs={12}>
-            <Grid container item className={classes.popupMenu} direction="column" justify="space-between" alignItems="center"  xs={12} md={4} > 
-              <Grid item className={classes.grupaBotuna}>
+      <Grid container item className={classes.popupStyle}> 
+        <Grid container item className={classes.popupMenu}> 
+            <Grid item className={classes.grupaBotuna}>
               <ButtonGroup orientation="vertical" variant="contained">
                   <Button variant="contained" onClick={() => {setShow1(true);setShow2(false)}} className={classes.buttonsInGroup}>{show1&&<Icon>keyboard_arrow_right</Icon>}  Topic      </Button>
                   <Button variant="contained" onClick={() => {setShow1(false);setShow2(true);if(!addOrEdit){fetchTopics({subject_id:props.subject_id})}}} className={classes.buttonsInGroup}>{show2&&<Icon>keyboard_arrow_right</Icon>}  Connections</Button>
@@ -592,26 +650,26 @@ function AddTopicPU(props){
             <Divider orientation="vertical" flexItem className={classes.divider}/>
             {
                         show1 ? 
-                            <Grid container item direction="column" justify="space-between" alignItems="flex-start" xs={12} md={8} spacing={1} className={classes.rightSide}>
-                                <Grid container item direction="column"  xs={12} md={12} spacing={3}>
-                                  <Grid item xs={12}>
+                        <Grid container item className={classes.editText}> 
+                            <Grid container item className={classes.textFields}>
+                                  <Grid item>
                                     <TextField className={classes.textField1} multiline rows={1} id="outlined-basic" variant="outlined" label="Topic name" value={valueText} onChange={handleChangeText}/>
                                   </Grid>
                                   <Grid item xs={12} >
                                     <TextField className={classes.textField2} multiline rows={3} id="outlined-basic" variant="outlined" label="Description" value={valueDesc} onChange={handleChangeDesc}/>
                                   </Grid>
                                 </Grid>
-                                {(props.addOrEdit)&&<Grid className={classes.dropMenus} container item direction="row" justify="space-evenly" alignItems="center" xs={12} spacing={3}>
-                                    <Grid container item direction="row" justify="center" alignItems="center"  xs={12} md={6} >
-                                      <p className={classes.dropText}>Select levels of AO :</p>                            
+                                {(props.addOrEdit)&&<Grid className={classes.dropMenus} container item>
+                                    <Grid container item className={classes.levels}>
+                                      <p className={classes.dropText}>AO levels:</p>                            
                                       <InputLabel id="demo-simple-select-label-AO"></InputLabel>
                                       <Select style={{width:"20%"}} labelId="demo-simple-select-label" id="demo-simple-select" value={valueAO} onChange={handleChangeAO}>
                                         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((valuesAO) => (
                                         <MenuItem key={valuesAO} value={valuesAO}><ListItemText primary={valuesAO} /></MenuItem>))}                                   
                                       </Select>
                                     </Grid>
-                                    <Grid container item direction="row" xs={12} md={6} justify="center" alignItems="center">
-                                        <p className={classes.dropText}>Select levels of D : </p>
+                                    <Grid container item className={classes.levels}>
+                                        <p className={classes.dropText}>D levels: </p>
                                         <InputLabel id="demo-simple-select-label-d"></InputLabel>
                                         <Select style={{width:"20%"}} labelId="demo-simple-select-label" id="demo-simple-select" value={valueD} onChange={handleChangeD}>
                                           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((valuesD) => (
@@ -636,8 +694,8 @@ function AddTopicPU(props){
                             : null
                         }{
                         show2?
-                              <Grid container item direction="column" justify="center" alignItems="center" xs={12} md={8} spacing={2} className={classes.rightSide}>
-                                <Grid item xs={12} style={{width:"100%"}}>
+                        <Grid container item className={classes.rightSide}>
+                                <Grid container item className={classes.formControlGrid}>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel >Subject and course</InputLabel>
                                     <Select disabled={!addOrEdit} value={subjectAndCourse} onChange={handleChangePair}  renderValue={(selected) => `${selected.course_id} - ${selected.course_name}: ${selected.subject_name}`} MenuProps={MenuProps}>
@@ -649,8 +707,7 @@ function AddTopicPU(props){
                                     </Select>
                                 </FormControl>
                                 </Grid>
-                                {associatedTopicVisible&&<Grid item xs={12} style={{width:"100%"}}>
-                                <Grid item xs={12} style={{width:"100%"}}>
+                                {associatedTopicVisible&&<Grid container item className={classes.formControlGrid}>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel >Associated topics</InputLabel>
                                     <Select  multiple value={associatedTopic} onChange={handleChangeTag}  renderValue={(selected) => {let array=selected.map((selTop)=>`${selTop.topic_id} - ${selTop.topic_name}`); return array.join(`, `);} } MenuProps={MenuProps}>
@@ -662,9 +719,10 @@ function AddTopicPU(props){
                                       ))}
                                     </Select>
                                 </FormControl>
-                                </Grid>
-                                <Grid item xs={12} style={{width:"100%",paddingTop:"2rem"}}> 
-                                      {(associatedTopic[0]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[0]} setAOL={setAOL1} AOL={AOL1} />}
+                                </Grid>}
+                                {
+                                  associatedTopicVisible&&
+                                  <Grid container item className={classes.topicName}>                                       {(associatedTopic[0]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[0]} setAOL={setAOL1} AOL={AOL1} />}
                                       {(associatedTopic[1]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[1]} setAOL={setAOL2} AOL={AOL2} />}
                                       {(associatedTopic[2]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[2]} setAOL={setAOL3} AOL={AOL3} />}
                                       {(associatedTopic[3]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[3]} setAOL={setAOL4} AOL={AOL4} />}
@@ -674,12 +732,10 @@ function AddTopicPU(props){
                                       {(associatedTopic[7]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[7]} setAOL={setAOL8} AOL={AOL8} />}
                                       {(associatedTopic[8]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[8]} setAOL={setAOL9} AOL={AOL9} />}
                                       {(associatedTopic[9]!==undefined)&&<TopicAndLevel setDidChange={setDidChange} topic={associatedTopic[9]} setAOL={setAOL10} AOL={AOL10} />}
-                                </Grid>
                                 </Grid>}
                             </Grid>
                             :null
                         }
-          </Grid>
         </Grid>
     );
 }

@@ -7,12 +7,17 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 const useStyles=makeStyles(theme =>({
     dialogWrapper:{
-        // position:'absolute',
+        position:'absolute',
+        top:"20vh",
         textAlign: 'center',
         backgroundColor:"lightgrey",
         padding:"1em",
         borderRadius:"7px",
-        maxWidth:"100% !important"
+        maxWidth:"100%",
+        [theme.breakpoints.down('sm')]:{
+            width:"18em",
+            top:"10vh"
+        }
     },
     questionName:{
         flexGrow:1,

@@ -88,7 +88,7 @@ function AddAccordion(props) {
               </Grid>
               <Grid container item md={3} xs={4} direction="row" justify="flex-end" alignItems="center"> 
                 <Button onClick={()=>setOpenPopup2(true)} className={classes.iconButtons}><Icon style={{color:"#4372ec",fontSize:'2em'}}>edit_outlined_icon </Icon></Button>
-                  <PopupDialog openPopup={question.id === props.openEdit && openPopup2} setOpenPopup={handleClose} clickAway={true} style={{minWidth:'60%',minHeight:'30%'}}>
+                  <PopupDialog openPopup={question.id === props.openEdit && openPopup2} setOpenPopup={handleClose} clickAway={true}>
                     <EditQuestionPU popUpClose={setOpenPopup2} style={{borderRadius:'25px'}} questChange={props.questChange} prop={question} changeText={props.changeText}/>
                   </PopupDialog>
                 <Button className={classes.iconButtons} onClick={() =>{if(props.numberOfQuestions>1){setOpenPopup(true)}else{setOpenPopup3(true)}}} ><Icon  style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>

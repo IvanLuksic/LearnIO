@@ -281,7 +281,7 @@ function AdminTopics(props){
               <DataGrid disableSelectionOnClick={true}  pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
             </div>
 
-            <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
+            <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false}>
               <AddTopicPU addOrEdit={true} closePopup={handleClose} addTopic={addQuestion} setSnackbarOpen={setSnackbarOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus}/>
             </PopupDialog>
           </div>
