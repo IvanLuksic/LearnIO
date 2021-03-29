@@ -5,6 +5,7 @@ let rate_limiter_global_options=config.rateLimiter.global;
 rate_limiter_global_options.storeClient=sequelize;//dodajemo klijenta nakon što se povežemo na bazu kako bi se mogli spremat podaci u bazu
 // Postavke rate limitera
 const rateLimiter = new RateLimiterPostgres(rate_limiter_global_options);//stvorimo rate limiter
+//!!!!!!!RATE LIMITER ĆE BRISATI POLJA U BAZI KOJA SU EXPIREALA(TO ZNA PO EXPIRE STUPCU) SVAKIH 5 MINUTA PERIODIČKI I TO ONA POLJA KOJA SU ISTEKLA PRIJE SAT VREMENA!!!!!
 //U BAZI ĆE SE NAPRAVIT TABLICA S 3 STUPCA:
 //1) STUPAC KEY SA PREFIKSOM KOJI ZADAMO ĆE BITI IP ADRESA AKO SMO TAKO ODABRALI
 //2) STUPCA points ĆE OZNAČAVAT KOLIKO SMO POINTIOVA POTROŠILI/CONSUMALI-> POVEĆAVA SE ZA SVAKI REQUEST KOJI UPUTIMO

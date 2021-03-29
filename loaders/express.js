@@ -3,26 +3,13 @@ const bodyParser = require('body-parser');//za parsirat body od requesta
 const session=require('express-session');
 const {globalRateLimiterMiddleware}=require('..//api/middleware/rate-limiter-global');
 const config=require('../config');
-
-var PostgreSqlStore = require('connect-pg-simple')(session);
-var cors = require('cors')
-var corsOptions = {
-    origin: '*',
-    credentials: true };
+const session_store=require('./session_store');
 
 module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcija
     app.use(httplogger);
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
-    app.use(cors(corsOptions));
-    app.disable('etag');//OVO SMO ISLJUČILI ZBOG CACHEANJA PODATAKA KADA BROWSER VRAĆA STATUS 304 UMJESTO 200
-    app.options("/*", function(req, res, next){// regularni izraz /*-> ovo se odnosi na sve rute koji pocinju sa /-> TO SU ZAPRAVO SVE RUTE
-     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-      res.header('Access-Control-Allow-Credentials','true');
-      res.send(200);
-    });
-    app.set('trust proxy', 1)
+  
     /*MORA BITI PRIJE MAIN RUTERA JER SE INACE NECE MOC KORSITIT U NJIMA*/
     app.use(session({/*session objektu lako pristupimo preko request objekta-> req.session i njemu dodajemo propertiese:
       POSTUPCI KOD ZAHTJEVA KORISNIKA:
@@ -35,12 +22,8 @@ module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcij
     resave:false,
     key:'user_sid',//ime cookieja
     //store: stavit sotre za postgres da ih sprema
-    secret:'50794A91D858997DD137B114C6F1AB233D0907E1F869E3CC08BF5EEBBE78751C',//This is the secret used to sign the session ID cookie-> KOD HASH FUNKCIJE DA OSIGURAMO INTEGIRTET JER JE JEDINO MI ZNAMO->DA NEBI NEKO DRUGI MOGA NESTO HASHIRAT I POSLAT->OČUVAN INTEGRITET SESIJE->NE MOZE NIKO MIJENJAT SESSION ID I PROBAT UPAST U TUĐU SESIJU
-    store: new PostgreSqlStore({
-      conString:config.database_url,
-      tableName : 'user_session',
-      prunesessionInterval:60//svako 60 sekundi brise sesije koje se expireale
-    }),
+    secret:config.express_session.signature_secret,//This is the secret used to sign the session ID cookie-> KOD HASH FUNKCIJE DA OSIGURAMO INTEGIRTET JER JE JEDINO MI ZNAMO->DA NEBI NEKO DRUGI MOGA NESTO HASHIRAT I POSLAT->OČUVAN INTEGRITET SESIJE->NE MOZE NIKO MIJENJAT SESSION ID I PROBAT UPAST U TUĐU SESIJU
+    store: session_store,
     cookie:{
      path: '/',secureProxy: true, sameSite:'lax',secure: true, maxAge: 1000*60*60*60 //60 sec, POSTAVTI NA NEKI RAZUMNI BROJ->defulte vrijednosti-> maxage null znaci da se brise kada izade iz browsera,BROJ MILISKEUNDI KOLIKO TRAJE COOKIE
     }//PROBLEM S maxage=null je sta se nece pruneat nikako u bazi pa bolje postavti na neko odredeno vrijeme->DOGOVORIT SE

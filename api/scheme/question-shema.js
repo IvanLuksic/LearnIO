@@ -116,19 +116,5 @@ module.exports={
                 maxLength:1000
             }
         }
-    },
-    replaceQuestion:{
-        title:'Shema za zamjenu određenog pitanja s drugim',
-        type:'object',
-        properties:{
-            source_question_id:{
-                type:'number',
-                minimum:1
-            },
-            new_question_id:{
-                type:'number',
-                minimum:1
-            }
-        }
     }
 }

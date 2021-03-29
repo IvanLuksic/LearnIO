@@ -61,7 +61,7 @@ module.exports={
     },
     checkAnswer: async (req,res,next)=>{
         try {
-            const {topic_id=1,course_id=1,class_id=1,subject_id=1,question_id=20,solution='a'}=req.body;
+            const {topic_id,course_id,class_id,subject_id,question_id,solution}=req.body;
             const student_id=req.session.user;
             nodelogger.info('Parametri: '+course_id+' '+topic_id+' '+student_id+' '+question_id+subject_id+class_id+'Solution '+solution);
             var response={};//formatirat resposne-> sadržavat će flag correct i niz pitanja-> ako je kriv odgovor onda je on prazan
@@ -73,10 +73,10 @@ module.exports={
                  throw(error);
              }
              if(!correct)//odgovor je točan -> 1)Otključaj pitanja 2)Vrati u resposne ponovo sva pitanja sa promijenjenim statusom za ponovno renderiranje matrice
-             {
+             {//3) Svim topicima kojima je ovaj topic povezan topic otkljucamo netocno odgovorena pitanja
                 response.correct=true;
                 try {
-                    await Question_instance.unlockQuestionsAndUpdateResultsAndGrade(student_id,topic_id,course_id,class_id,subject_id,question_id);
+                    await Question_instance.unlockQuestionsAndUpdateResultsAndGrade(solution,student_id,topic_id,course_id,class_id,subject_id,question_id);
                 } catch (error) {
                     nodelogger.error('Error in unlocking questions ');
                     throw(error);
@@ -84,8 +84,13 @@ module.exports={
                 try {
                     var questions=await Question_instance.getQuestionsFromSave(topic_id,course_id,student_id,class_id,subject_id);
                 } catch (error) {
-                    nodelogger.error('Errro in fetching from database ');
+                    nodelogger.error('Errro in fetching questions from database ');
                     throw(error);
+                }
+                try {
+                    await Question_instance.unlockQuestionsInSourceTopics(topic_id,course_id,student_id,class_id,subject_id);//svim source topciima kojima je ovaj topic associated topic mijenjamo status kirivih(crvenih) pitanja u plava-> OTKLJUČVAMO IH
+                } catch (error) {
+                    nodelogger.error('Error in unlocking wrong answers from associated topics');
                 }
                 response.Questions=questions;
                 res.json(response);
@@ -93,7 +98,7 @@ module.exports={
              else {//netocno-> vrati response sa flagom correct:false + VRATI MU NIZ POVETZANIH TOPICA DA GA MOŽEMO ODVEST LINKOM NA NJIH
                 response.correct=false;
                 try {
-                   await  Question_instance.wrongAnswer(student_id,topic_id,course_id,class_id,subject_id,question_id);
+                   await  Question_instance.wrongAnswer(solution,student_id,topic_id,course_id,class_id,subject_id,question_id);
                 } catch (error) {
                     nodelogger.error('Error in locking question');
                     throw(error);
@@ -115,7 +120,7 @@ module.exports={
     deleteQuestionByID: async(req,res,next)=>//QUERY URL PARAMETRI SU DOSTUPNI PREKO req.params objekta
     {
         try {
-            await Question_instance.deleteQuestion(req.params.questionID);
+            await Question_instance.deleteAndReplaceQuestion(req.params.questionID);
             nodelogger.info('Questipn deleted from database');
             res.sendStatus(200);
         } catch (error) {
@@ -137,8 +142,14 @@ module.exports={
     addQuestions: async (req,res,next)=>
     {
         try {
+            let question_id;
             nodelogger.info(JSON.stringify(req.file));
-           question_id= await Question_instance.addQuestion(req.body.text,req.body.solution,req.body.question_type,req.body.row_D,req.body.column_A,req.body.answer_a,req.body.answer_b,req.body.answer_c,req.body.answer_d,req.body.topic_id,req.file.path,req.file.mimetype,req.file.size);
+            if(req.file===undefined)//saljemo bez req.file propertiesa
+            {
+                nodelogger.info('Nema slike');
+                question_id= await Question_instance.addQuestion(req.body.text,req.body.solution,req.body.question_type,req.body.row_D,req.body.column_A,req.body.answer_a,req.body.answer_b,req.body.answer_c,req.body.answer_d,req.body.topic_id);
+            }
+            else question_id= await Question_instance.addQuestion(req.body.text,req.body.solution,req.body.question_type,req.body.row_D,req.body.column_A,req.body.answer_a,req.body.answer_b,req.body.answer_c,req.body.answer_d,req.body.topic_id,req.file.path,req.file.mimetype,req.file.size);
             nodelogger.info('Question succesfuly added to database');
             let response={
                 id:question_id
@@ -153,13 +164,19 @@ module.exports={
         try {
             const {image_path,mime_type,image_size}=await Question_instance.getQuestionImagePath(req.params.questionID);
             nodelogger.info(__dirname);
-            let options = {
-                headers: {
-                    'Content-Type':mime_type,
-                    'Content-Length':image_size
-                }
-              };
-            res.sendFile(path.join(config.multer.question_images_root_path,image_path),options);
+            if(!image_path)//NULL-> NEMA SLIKE-> VRATI STATUS 201
+            {
+                res.sendStatus(201);//NO CONTENT
+            }
+            else {
+                let options = {
+                    headers: {
+                        'Content-Type':mime_type,
+                        'Content-Length':image_size
+                    }
+                  };
+                res.sendFile(path.join(config.multer.question_images_root_path,image_path),options);
+            }
         } catch (error) {
             nodelogger.error('Error in getQuestionImage');
             next(error);
@@ -183,6 +200,26 @@ module.exports={
             res.sendStatus(200);
         } catch (error) {
             nodelogger.error('Error in replaceQuestion');
+            next(error);
+        }
+    },
+    getUserChoice:async (req,res,next)=>{
+        try {
+            let student_answer=await Question_instance.studentQuestionChoice(req.session.user,req.params.topic_id,req.params.course_id,req.params.subject_id,req.params.class_id,req.params.question_id);
+            res.json({
+                previous:student_answer
+            });
+        } catch (error) {
+            nodelogger.error('Error in getUserChoice');
+            next(error);
+        }
+    },
+    insertExistingQuestion:async (req,res,next)=>{
+        try {
+            await Question_instance.insertExistingQuestionIntoTopic(req.body.topic_id,req.body.question_id,req.body.row_D,req.body.column_A);
+            res.sendStatus(200);
+        } catch (error) {
+            nodelogger.error('Error in insertExistingQuestion');
             next(error);
         }
     }

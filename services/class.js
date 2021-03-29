@@ -1,10 +1,11 @@
 module.exports= class clas{
-    constructor(clas,user,class_student,subject,logger)
+    constructor(clas,user,class_student,subject,class_of_teacher,logger)
     {
         this.Clas=clas;
         this.User=user;//student ili ucitelj
         this.Class_student=class_student;
         this.Subject=subject;
+        this.Class_of_teacher=class_of_teacher;
         this.Logger=logger;
     }
     async getAllClassAndSubjectsForAdmin()
@@ -243,13 +244,13 @@ module.exports= class clas{
                     name:request.class_name,
                     school_year:request.class_year
                 });
-               /* ZASAD NE UNOSIMO STUDENTE U CLASS JER BI BILO NEPRAKTICNO PA CEMO PROBAT PREKO INVITE LINKA for(let i=0;i<request.student_id.length;i++)//povezi sve studente s tin razredon
-                {
-                    await this.Class_student.create({
-                        student_id:request.student_id[i],
-                        class_id:new_clas.id//id novog dodanog razreda
+                for(let teacher of request.class_teachers)//niz idova od teachera
+                {//kako se unosi novi razred nema straha da ce prethodno vec postojat neki teacheri povezani s tim razredom pa ne trebamo to provjeravat KOD UNOSA
+                    await this.Class_of_teacher.create({
+                        teacher_id:teacher,
+                        class_id:new_clas.id
                     });
-                }*/
+                }
                 this.Logger.info('Class inserted succesfuly');
             }
             else throw(new Error('Defined class already exists'));

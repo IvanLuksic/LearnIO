@@ -9,12 +9,14 @@ const inviteclass=require('./services/invite_link');
 const {nodelogger}=require('./loaders/logger');
 const hash=require('./services/crypto');
 const models=require('./models');
+const {sequelize}=require('./models');
+const { QueryTypes } = require('sequelize');
 //instance=new questionclass(question,topic,save,course,user,result,nodelogger);
-let result_instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger)
-let instance=new topicclass(models.topic,models.user,models.asessment_objective,models.topic_assesment, models.course,models.subject,models.result,models.save,models.question,models.tags_of_topic,models.course_topic,result_instance, nodelogger);
+//let result_instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger)
+//let instance=new topicclass(models.topic,models.user,models.asessment_objective,models.topic_assesment, models.course,models.subject,models.result,models.save,models.question,models.tags_of_topic,models.course_topic,result_instance, nodelogger);
 //instance=new resultclass(models.result,models.user,models.subject,models.course,models.topic,models.asessment_objective,models.clas,nodelogger);
-//instance=new clasclass(models.clas,models.user,models.class_student,models.subject,nodelogger);
-//instance=new courseclass(models.course,models.clas,models.subject,models.course_subject,models.topic,nodelogger);
+//instance=new clasclass(models.clas,models.user,models.class_student,models.subject,models.class_of_teacher,nodelogger);
+instance=new courseclass(models.course,models.clas,models.subject,models.course_subject,models.topic,nodelogger);
 //instance=new subject_class(models.subject,models.clas,models.user,models.class_subject,nodelogger);
 //instance=new userclass(models.user,models.clas,models.class_student,models.result,models.save,models.session,models.teacher_subject,models.invite_links,nodelogger);
 //instance=new inviteclass(models.invite_links,models.class_student,models.clas,nodelogger);
@@ -40,7 +42,7 @@ async function init()
          //const x=await instance.getTopicsForUserAndCourse(3,1,1);
       //const x=await instance.getAsesmentsForTopic(1);
        //nodelogger.info(JSON.stringify(x));
-        //const x=await instance.associatedTopics(5);
+        
        // nodelogger.info( await instance.isBlue(1,1,3));
         //const x=await instance.getQuestionsFromSave(1,1,3);
       //await instance.insertIntoResults(1,1,1,1,4);
@@ -58,7 +60,7 @@ async function init()
      //await instance.getSubject_CoursePairs();
     // await instance.getAllClassForStudent(5);
     //await instance.getAllClassForTeacher(2);
-    //await instance.  getAllCoursesWithTopicsForSubject(2);
+    await instance.getAllCoursesWithTopicsForSubject(1);
    // await instance.getAllSubjectsForClass(1);
         //await instance.unlockAssociatedTopics(3,1,1,1);
         //await instance.getAllClassForAdmin();
@@ -81,9 +83,19 @@ async function init()
    //await instance.getClassesForTeacher(2);
   // await instance.associatedTopics(1,5);
  // await hash('c6TYXm3');
+ //await instance.getTopicInfo(1);
+/* var results=await sequelize.query('SELECT * FROM user_session',{
+   type:QueryTypes.SELECT,
+    raw:true
+ });
+ console.log(results[0]);
+ for (let i=0;i<results.length;i++)
+ {
+    console.log(JSON.stringify(results[i]));
+ }
+*/
     } catch (error) {
         console.log('Greska u izvodenju'+error);
     }
-    
 }
 init();

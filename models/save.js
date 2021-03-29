@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
   save.init({
     row_D: DataTypes.SMALLINT,
     column_A: DataTypes.SMALLINT,
-    status: DataTypes.SMALLINT
+    status: DataTypes.SMALLINT,
+    user_answer:DataTypes.STRING
   }, {
     sequelize,
     modelName: 'save',

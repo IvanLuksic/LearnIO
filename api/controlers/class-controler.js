@@ -44,7 +44,7 @@ module.exports={
     insertClass:async(req,res,next)=>
     {
         try {
-            await Class_instance.addClass(req.body);//Format:{class_name,class_year}
+            await Class_instance.addClass(req.body);//Format:{class_name,class_year,class_teachers[niz idova]}
             res.sendStatus(200);
         } catch (error) {
             nodelogger.error('Error in insertClass');

@@ -4,7 +4,7 @@ module.exports={
     getInviteLink:async (req,res,next)=>
     {
         try {
-            let link =await Invite_instance.generateInviteLink(req.session.user,req.params.class_id);//saljemo id teachera iz session cookieja i id razreda
+            let link =await Invite_instance.generateInviteLink(req.session.user,req.params.class_id,req.params.maxJoins);//saljemo id teachera iz session cookieja i id razreda
             res.json(link);
         } catch (error) {
             nodelogger.error('Error in getInviteLink');

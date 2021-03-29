@@ -8,7 +8,8 @@ const storage= multer.diskStorage({//spremamo na disk ne u memoriju
       },
     filename: function(req,file,cb)
     {
-        cb(null,new Date().toISOString().slice(0, 10)+file.originalname);//način na koji ćemo spremati ime slike jer kad uzmemo unique ime od multera onda ono nema ekstenziju .jpg,.png pšta nam ne paše a ovako će imat jer će original name bit na kraju
+        console.log(Date.now()+'-'+file.originalname);
+        cb(null,Date.now()+'-'+file.originalname);//način na koji ćemo spremati ime slike jer kad uzmemo unique ime od multera onda ono nema ekstenziju .jpg,.png pšta nam ne paše a ovako će imat jer će original name bit na kraju
     }
 });//filename cemo ostavit da se sam generira-> ima i opcija da izvucemo file name iz req.file
 //U FIČTERU MOŽEMO DEFINIRAT KOJE MIME tipoive želimio prihvatiti

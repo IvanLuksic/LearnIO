@@ -17,7 +17,10 @@ module.exports = {
       status: {//1->Plavo,2->Žuto(tek otključano),3->Crveno->zaključano,4->Zeleno->Točno rješeno
         type: Sequelize.SMALLINT
       },
-     
+      user_answer:{
+        type:Sequelize.STRING,
+        defaultValue:null
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {

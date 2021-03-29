@@ -1,9 +1,11 @@
 const { Op } = require("sequelize");
-const { format } = require("winston");
 const config=require('../config');
 const hash=require('./crypto');
+const {sequelize}=require('../models');
+const { QueryTypes } = require('sequelize');
+const session_store=require('../loaders/session_store');
 module.exports=class user {
-    constructor(user,clas,class_student,result,save,session,teacher_subject,invite_links,logger)
+    constructor(user,clas,class_student,result,save,session,teacher_subject,invite_links,class_of_teacher,one_time_password,logger)
     {
         this.User=user;
         this.Clas=clas;
@@ -13,6 +15,8 @@ module.exports=class user {
         this.Session=session;
         this.Teacher_subject=teacher_subject;
         this.Invite_links=invite_links;
+        this.One_time_password=one_time_password;
+        this.Class_of_teacher=class_of_teacher;
         this.Logger=logger;
     }
     async addUser(properties)//ovdje ce doc req.body po unaprojed dogovorenom formatu
@@ -91,9 +95,9 @@ module.exports=class user {
                for(let clas of student.classes_student)
                {
                 temp={
-                    id:clas.id,
-                    name:clas.name,
-				    year:clas.school_year
+                    class_id:clas.id,
+                    class_name:clas.name,
+                    class_year:clas.school_year
                 };
                 format_classes.push(temp);
                 temp={};
@@ -149,9 +153,9 @@ module.exports=class user {
                for(let clas of student.classes_student)
                {
                 temp={
-                    id:clas.id,
-                    name:clas.name,
-				    year:clas.school_year
+                    class_id:clas.id,
+                    class_name:clas.name,
+                    class_year:clas.school_year
                 };
                 format_classes.push(temp);
                 temp={};
@@ -230,9 +234,9 @@ module.exports=class user {
                    for(let clas of student.classes_student)
                    {
                     temp={
-                        id:clas.id,
-                        name:clas.name,
-                        year:clas.school_year
+                        class_id:clas.id,
+                        class_name:clas.name,
+                        class_year:clas.school_year
                     };
                     format_classes.push(temp);
                     temp={};
@@ -264,27 +268,27 @@ module.exports=class user {
             throw(error);
         }
     }
-    async getAllStudents()//bez razreda,samo studenti
+    async getAllUsers(user_type)//dohvati sve podatke o svim korisnicima odredenog tipa/role
     {
         try {
-            const students=await this.User.findAll({
+            const users=await this.User.findAll({
                 attributes:['id','name','surname','mail','username','created_at'],
                 where:{
-                    user_type:config.roles.student
+                    user_type:user_type
                 }
             });
             let format=[];
             let temp={};
-            for(let student of students)
+            for(let user of users)
             {
-                let date=new Date(Date.parse(student.created_at));
+                let date=new Date(Date.parse(user.created_at));
                 let date_format=date.getDate().toString()+' '+(date.getMonth()+1).toString()+' '+date.getFullYear().toString()+' '+date.getHours().toString()+'h '+date.getMinutes().toString()+'m ';
                 temp={
-                    id:student.id,
-                    name:student.name,
-                    surname:student.surname,
-                    email:student.mail,
-                    username:student.username,
+                    id:user.id,
+                    name:user.name,
+                    surname:user.surname,
+                    email:user.mail,
+                    username:user.username,
                     created:date_format
                 };
                 format.push(temp);
@@ -293,7 +297,7 @@ module.exports=class user {
             this.Logger.info(JSON.stringify(format));
             return format;
         } catch (error) {
-            this.Logger.error('Error in function getAllStudents'+error);
+            this.Logger.error('Error in function getAllUsers'+error);
             throw(error);
         }
     }
@@ -302,32 +306,30 @@ module.exports=class user {
         try {
             // Prvo ispitat jeli teacher jer za njega moramo brisat dio u tablici teacher subject a za ADMINA ili TEACHERA BRISAT i dio u INVITE LINK
            let user = await this.User.findOne({
-                attributes:['id'],
+                attributes:['id','user_type'],
                 where:{
                     id:user_id
                 }
             });
             //Sigurno postoji user jer ga inace nebi moga krenija brisat jer mu ne bi bio ponuden na ekranu
-            await this.Class_student.destroy({
-                where:{
-                    student_id:user_id
-                }
-            });
-            await this.Result.destroy({
-                where:{
-                    student_id:user_id
-                }
-            });
-            await this.Save.destroy({
-                where:{
-                    student_id:user_id
-                }
-            });
-            await this.Session.destroy({
-                where:{
-                    user_id:user_id
-                }
-            });
+            if(user.user_type==config.roles.student)
+            {
+                await this.Class_student.destroy({
+                    where:{
+                        student_id:user_id
+                    }
+                });
+                await this.Result.destroy({
+                    where:{
+                        student_id:user_id
+                    }
+                });
+                await this.Save.destroy({
+                    where:{
+                        student_id:user_id
+                    }
+                });
+            }
             if(user.user_type==config.roles.teacher)
             {
                 await this.Teacher_subject.destroy({
@@ -335,6 +337,11 @@ module.exports=class user {
                         teacher_id:user_id
                     }
                 });
+                await this.Class_of_teacher.destroy({
+                    where:{
+                        teacher_id:user_id
+                    }
+                })
             }
             if(user.user_type==config.roles.admin || user.user_type==config.roles.teacher)
             {
@@ -345,6 +352,36 @@ module.exports=class user {
                 });
             }
              //+ dodat da izbrise njegove session cookiese u mmeory store + vodit računa da se ne može logirat 2 puta ako već ima cookie-> ne dat mu login botun nigdi
+             await this.Session.destroy({
+                where:{
+                    user_id:user_id
+                }
+            });
+            let results=await sequelize.query('SELECT * FROM user_session',{
+                type:QueryTypes.SELECT,
+                 raw:true
+              });
+              //dohvati sve sessionse od tog usera
+            let sessions=[];//svi session cookiesi(njighovi idovi) koji su izdani tom useru-> u pravilu bi treba bit samo 1 ali ako je on npr brisa cookie pa smo mu ponovo izdali novi pokrijemo i te slučajeve pa zato stavljamo da je ovo niz
+            for(let i=0;i<results.length;i++)
+            {
+                if(results[i].sess.user==user_id)
+                {
+                this.Logger.info(results[i].sid);
+                sessions.push(results[i].sid);
+                }
+            }
+            //brisi ih sve
+            for(let i=0;i<sessions.length;i++)
+            {
+                session_store.destroy(sessions[i]);//dajemo mu sid
+                this.Logger.info('Deleted session: '+sessions[i]);
+            }
+            await this.One_time_password.destroy({//ako postoji OTP igdi
+                where:{
+                    user_id:user_id
+                }
+            });
             await this.User.destroy({
                 where:{
                     id:user_id
@@ -361,23 +398,89 @@ module.exports=class user {
             const student= await this.User.findOne({
                 where:{
                     id:properties.id,
-                    user_type:config.roles.student
+                    user_type:parseInt(config.roles.student)
                 }
             });
-            if(student)//postoji student + novi username nije zauzet
+            if(student)//postoji student + novi username nije zauzet-> username se provjerava na client strani
             {
             student.name=properties.name;
             student.surname=properties.surname;
             student.mail=properties.email;
             student.username=properties.username;
-            student.password=await hash(properties.password);
-           // student.date_of_birth=properties.date_of_birth;
-           // student.created_at:properties.created; zasad nepotrebno
+           // student.password=await hash(properties.password); to se radi u drugoj formi
+            await this.Class_student.destroy({
+                where:{
+                    [Op.and]: [
+                        {student_id:properties.id},
+                        {class_id:{
+                            [Op.notIn]:properties.classes//izbrisi sve koji posotje u tablici a nisu u dobivenom nizu-> IZBRISAO IH JE KORISNIK
+                        }
+                    }
+                    ]
+                }
+            })
+            //dodaj u bazu NOVE RAZREDE KOJIMA JE KORISNIK PRIDRUZIO STUDENTA
+            for(let i=0;i<properties.classes.length;i++)//dobivamo i niz razreda kojima student pripada koji se mogu mijenjat-> dodavat novi ili micat stari
+            {
+                await this.Class_student.findOrCreate({//ako je doda nove napravit ce samo njih
+                    where:{//uvjeti po kojima trazimo
+                        class_id:properties.classes[i],
+                        student_id:properties.id
+                    },
+                    default:{// u slucaju da se ne pronade-> kakvu zelimo instnacu kreirati ako ne postoji vec u bazi
+                        class_id:properties.classes[i],
+                        student_id:properties.id
+                    }
+                })
+            }
             await student.save();
             }
             else throw(new Error('Student does not exist'));
         } catch (error) {
             this.Logger.error('Error in function updateStudent'+error);
+            throw(error);
+        }
+    }
+    async updateTeacherData(properties)
+    {
+        try {
+            const teacher= await this.User.findOne({
+                where:{
+                    id:properties.id,
+                    user_type:parseInt(config.roles.teacher)
+                }
+            });
+            if(teacher)//postoji student + novi username nije zauzet-> username se provjerava na client strani
+            {
+            teacher.name=properties.name;
+            teacher.surname=properties.surname;
+            teacher.mail=properties.email;
+            teacher.username=properties.username;
+            await teacher.save();
+            }
+        } catch (error) {
+            this.Logger.error('Error in function updateTeacherData'+error);
+            throw(error);
+        }
+    }
+    async getUserInformation(user_id)
+    {
+        try {
+            const user=await this.User.findOne({
+                attributes:['name','surname','mail','username'],
+                where:{
+                    id:user_id
+                }
+            });
+            let format={
+                name:user.name,
+                surname:user.surname,
+                mail:user.mail,
+                username:user.username
+            };
+            return format;
+        } catch (error) {
+            this.Logger.error('Error in function getUserInformation'+error);
             throw(error);
         }
     }

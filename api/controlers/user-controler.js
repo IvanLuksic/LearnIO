@@ -23,7 +23,7 @@ module.exports={
             }
             else await registerRateLimiter.consume(req.ip,points = 1);//ako ima još pointova onda ih konzumiraj
         } catch (error) {
-            nodelogger.error('Error in fetching rate limiter options'+error);
+            nodelogger.error('Error in rate limiter'+error);
             throw(error);
         }
         try {
@@ -67,14 +67,14 @@ module.exports={
     getAllStudentsForAdmin:async(req,res,next)=>
     {
         try {
-            const students=await User_instance.getAllStudents();
+            const students=await User_instance.getAllUsers(parseInt(config.roles.student));
             res.json(students);
         } catch (error) {
             nodelogger.error('Error in getAllStudentsForAdmin');
             next(error);
         }
     },
-    deleteUser:async(req,res,next)=>
+    deleteStudent:async(req,res,next)=>
     {
         try {
             await User_instance.deleteUserFromDB(req.params.student_id);
@@ -93,6 +93,48 @@ module.exports={
             res.sendStatus(200);
         } catch (error) {
             nodelogger.error('Error in updateStudent');
+            next(error);
+        }
+    },
+    getAllTeachers:async (req,res,next)=>
+    {
+        try {
+            const teachers=await User_instance.getAllUsers(parseInt(config.roles.teacher));
+            res.json(teachers);
+        } catch (error) {
+            nodelogger.error('Error in getAllTeachers');
+            next(error);
+        }
+    },
+    updateTeacher:async (req,res,next)=>
+    {
+        try {
+            await User_instance.updateTeacherData(req.body);
+            nodelogger.info('Teacher data updated');
+            res.sendStatus(200);
+        } catch (error) {
+            nodelogger.error('Error in updateTeacher');
+            next(error);
+        }
+    },
+    deleteTeacher:async (req,res,next)=>
+    {
+        try {
+            await User_instance.deleteUserFromDB(req.params.teacher_id);
+            nodelogger.info('Teacher deleted from database');
+            res.sendStatus(200);
+        } catch (error) {
+            nodelogger.error('Error in deleteTeacher');
+            next(error);
+        }
+    },
+    getUserInfo: async (req,res,next)=>
+    {
+        try {
+            const user=await User_instance.getUserInformation(req.session.user);
+            res.json(user);
+        } catch (error) {
+            nodelogger.error('Error in getUserInfo');
             next(error);
         }
     }
