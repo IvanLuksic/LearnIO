@@ -18,11 +18,11 @@ import { Typography } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
     textField:{
         marginTop: "1em",
-        marginBottom: "0.5em",
-        width:"100%",
-        [theme.breakpoints.up('md')]: {
-            marginLeft:"1em",
-        }
+        marginBottom: "1em",
+        width:"90%",
+        // [theme.breakpoints.up('md')]: {
+        //     marginLeft:"1em",
+        // }
     },
     saveBtn: {
         borderRadius: "7px",
@@ -30,22 +30,21 @@ const useStyles = makeStyles((theme) => ({
         color:"white",
         paddingLeft:"3em",
         paddingRight:"3em",
-        marginTop:"1em",
-        backgroundColor: "#EB4949",
+        marginTop:"2.5em",
+        marginBottom:"2.5em",
+        height:"2.7rem",
+        backgroundColor: "#27ae60",
         '&:hover': {
-        backgroundColor: "#b81414",
+        backgroundColor: "#13532e",
         },
     },
-    gridStyle: {
-        marginLeft:"5%",
-        marginRight:"5%",
-        marginBottom:"5%",
-    },
     formControl: {
-        margin: theme.spacing(2),
-        width: "70%",
-        position: "relative",
-    },    
+        marginBottom:"1em",
+        width: "90%",
+        // [theme.breakpoints.up('md')]: {
+        //     marginLeft:"1em",
+        // }
+      },
     topicTitle:{
         fontFamily:'Lobster',
         fontSize:'2.5rem',
@@ -117,7 +116,6 @@ export default function AddCourse(props) {
         setIndex(value);
         setOpen(true);
     };
-
     useEffect(()=>{
         (!offline)&&fetchSubjects();
     },[]);
@@ -167,12 +165,12 @@ export default function AddCourse(props) {
     //-------------------------------------------------------------------------
 
     return(
-        <Grid className={classes.gridStyle} container item direction="column" justify="space-between" alignItems="center" xs={12} md={10} spacing={1}>
+        <Grid container direction="column" justify="space-between" alignItems="center">
             <Typography className={classes.topicTitle}>Unit</Typography>
             <TextField className={classes.textField} multiline rows={1} id="outlined-basic" variant="outlined" value={name} onChange={handleName} label="Unit name"/>
-            <FormControl className={classes.formControl}>
+            <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel>Subjects</InputLabel>
-                <Select value={subjectCheck} onChange={(event)=>handleSubjectCheck(event)} renderValue={(selected) => `${selected.subject_id} - ${selected.subject_name}`}  MenuProps={MenuProps}>
+                <Select label="Subjects" value={subjectCheck} onChange={(event)=>handleSubjectCheck(event)} renderValue={(selected) => `${selected.subject_id} - ${selected.subject_name}`}  MenuProps={MenuProps}>
                     {subjects.map((subject) => (
                             <MenuItem key={subject.subject_id} value={subject}>
                                 <Tooltip title={getClassNames(subject)} placement="right" arrow>

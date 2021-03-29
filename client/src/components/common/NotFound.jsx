@@ -48,10 +48,10 @@ function NotFound(props) {
         // <div style={{display: "flex", flexDirection: "column"}} > 
             <Grid container direction="column" align="center" Justify="space-evenly" className={classes.background} >  
                 <Grid item xs={12} style={{ margin:"12em 0 0 0",}}>
-                    <strong className={classes.text}>{props.code!=undefined?props.code:"404"}</strong>
+                    <strong className={classes.text}>{props.code!==undefined?props.code:"404"}</strong>
                 </Grid>
                 <Grid item  xs={12} >
-                    <img src={caveman} alt={"Oops, even the 404 image got 404-ed..."}className={classes.Caveman}></img>
+                    <img src={caveman} alt={"Oops, even the 404 got 404-ed..."} className={classes.Caveman}></img>
                 </Grid>
             </Grid>
         // </div>

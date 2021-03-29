@@ -3,15 +3,23 @@ import React,{useState, useEffect} from 'react';
 import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../../images/learniobg10-15.png';
 import { makeStyles} from '@material-ui/core/styles';
-import DisplayMatrix from './DisplayMatrix';
-import fakeFetchResponse from './questions.json';
+import DisplayMatrix from './matrixComponents/DisplayMatrix';
+import fakeFetchResponse from '../../sampleData/student/questions.json';
 import QuestionPopup from './QuestionPopup.jsx';
 import PopupDialog from '../common/PopupDialog.jsx';
-import {useDispatch, useSelector} from 'react-redux';
-import {topicSelected} from '../../redux/actions/topicID';
+import { useSelector} from 'react-redux';
 import WrongPU from './WrongPU';
-import Skeleton from '@material-ui/lab/Skeleton';
+import MatrixSkeleton from './matrixComponents/MatrixSkeleton';
+import {topicSelected} from '../../redux/actions/topicID';
+import {unitSelected} from '../../redux/actions/unitID';
+import {subjectSelected} from '../../redux/actions/subjectID';
+import {classSelected} from '../../redux/actions/classID';
 import NotFound from '../common/NotFound';
+import CustomSnackbar from '../common/Snackbar.jsx';
+import {useDispatch} from 'react-redux';
+import { differenceInCalendarQuarters } from "date-fns/esm/fp";
+import IconButton from '@material-ui/core/IconButton';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -33,20 +41,14 @@ const useStyles = makeStyles((theme) => ({
     topicTitle:{
         fontSize:'6vh',
         marginBottom: '1em',
-        // [theme.breakpoints.down('sm')]: {
-        //   paddingTop:"10vh",
-        // },
-        // [theme.breakpoints.up('md')]: {
-        //   paddingTop:"4vh",
-        // },
         paddingBottom:'9px', 
     },
     lobster: {
-        fontFamily: "Lobster"
+        fontFamily: "Lobster",
+        marginBottom:"1rem",
+        textShadow:" -5px 5px #30303033",
     },
     skeleton:{
-      //width:"50%",
-      //height:"100%",
       paddingTop:"15vh",
       paddingLeft:"25%",
       paddingRight:"25%",
@@ -60,9 +62,49 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.up('md')]: {
         padding:"100px 0 0 0",
       },
-      
-    }
+    },
+    descriptionAO:{
+      fontFamily: "Red Hat Display, sans-serif !important"
+    },
+    asessmentSlider:{
+      width:"20rem",
+      height:"20rem",
+      position: "fixed",
+      textAlign: 'center',
+      backgroundColor:"lightgrey",
+      padding:"0 0.5em 0.5em 0.5em ",
+      borderRadius:"0 0 7px 7px",
+      maxWidth:"100% !important",
+      color:"black",
+      fontFamily:"Roboto",
+      right: "5%",
+      ['@media (orientation: landscape)']:{
+        top:"46px",
+      },
+      [theme.breakpoints.down('xs')]: {
+        top:"56px",
+      },
+      [theme.breakpoints.up('sm')]: {
+        top:"64px",
+      },
+    },
 
+    inside:{
+      padding:0,
+      backgroundColor:"white",
+      borderRadius:"0 0 7px 7px",
+      height:"inherit"
+    },
+    expand: {
+      transform: 'rotate(0deg)',
+      transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+      }),
+    },
+    expandOpen: {
+      transform: 'rotate(180deg)',
+    },
+  
 }));
 
 const fieldToRows=(field,ao,d)=>{
@@ -82,14 +124,28 @@ const fieldToRows=(field,ao,d)=>{
   return arrayOfRows;
 };
 
+const getStats=(Questions,AO,D)=>{
+  var stat=[];
+  for(let i=1;i<=AO;i++){
+    let count=0;
+    for(let j=0;j<Questions.length;j++){
+      if((Questions[j].column_A===i)&&(Questions[j].status==4)){count++;};
+    }
+    stat.push(count+"/"+D);
+  }
+  return stat;
+};
+
 function Matrica(props)
-{    
-    const [noError,setNoError]=useState(()=> true);
-    const changeToError=()=>{if(noError===true) setNoError(false);}
-    const changeToNoError=()=>{if(noError===false) setNoError(true);}
-    let dispatch=useDispatch();
-    //if(Number(props.match.params.id)){changeToNoError();dispatch(topicSelected(props.match.params.id,"Topic"))};
-    //if(!Number(props.match.params.id)){changeToError()};
+{       
+    const dispatch=useDispatch();//rows su podaci
+    dispatch(topicSelected(parseInt(props.match.params.topic_id)));
+    dispatch(unitSelected(parseInt(props.match.params.unit_id)));
+    dispatch(subjectSelected(parseInt(props.match.params.subject_id)));
+    dispatch(classSelected(parseInt(props.match.params.class_id)));
+
+
+    const offline= useSelector(state=>state.offline);
     const [fields, setFields]=useState(()=>{return fakeFetchResponse.Questions});//bilo data.Questions
     const [aoSelected,setAoSelected]=useState(1);
     const [dSelected,setDSelected]=useState(1);
@@ -98,112 +154,179 @@ function Matrica(props)
     const [openPopupWrong, setOpenPopupWrong] = useState(()=>{return false});
     const [matricaAO,setMatricaAO] = useState(()=>fakeFetchResponse.Matrix.column_numbers);
     const [matricaD,setMatricaD] = useState(()=>fakeFetchResponse.Matrix.rows_D);
-    const [loading,setLoading]=useState(true);//OFFLINE:true
-    const [assesment_objectives,setAssesment_objectives]=useState();
+    const [assesment_objectives,setAssesment_objectives]=useState(fakeFetchResponse.Matrix.assessments_array);
     const [topicName,setTopicName]=useState(()=>fakeFetchResponse.Matrix.topic_name);
     const [topicDescription,setTopicDescription]=useState(()=>fakeFetchResponse.Matrix.topic_description);
     const [topicID,setTopicID]=useState(useSelector(state=>state.topic));
-    const sub=useSelector(state=>state.subject);
-    const cla=useSelector(state=>state.class);
-    const uni=useSelector(state=>state.unit);
+    const [stats,setStats]=useState(()=>getStats(fakeFetchResponse.Questions,fakeFetchResponse.Matrix.column_numbers,fakeFetchResponse.Matrix.rows_D))
+    const [loading,setLoading]=useState(offline);//OFFLINE:true
+    const [noError,setNoError]=useState(()=> true);
+    const [snackbarText,setSnackbarText]=useState(()=>"");
+    const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+    const [errorStatus,setErrorStatus]=useState(()=>"");
+    const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+    const [aoOpen,setAoOpen]=useState(()=>false);
 
+
+    
+    const sub=useSelector(state=>state.subject);
+    const uni=useSelector(state=>state.unit);
+    const cla=useSelector(state=>state.class);
+
+
+    //opis svakog ao
+    // const opis=[
+    //   {ao:1,opis:"tezina 1"},
+    //   {ao:2,opis:"tezina 2"},
+    //   {ao:3,opis:"tezina 3"},
+    //   {ao:4,opis:"tezina 4"},
+    //   {ao:5,opis:"tezina 5"},
+    //   {ao:6,opis:"tezina 6"},
+    //   {ao:7,opis:"tezina 7"},
+    //   {ao:8,opis:"tezina 8"},
+    //   {ao:9,opis:"tezina 9"},
+    //   {ao:10,opis:"tezina 10"},
+    // ]
 
     const GetQuestion=()=>{
-            const requestOptions = {
-            method: 'GET',
-            mode:'cors',
-            headers: { 'Content-Type': 'application/json'},
-            credentials: 'include'
+        const requestOptions = {
+          method: 'GET',
+          mode:'cors',
+          headers: { 'Content-Type': 'application/json'},
+          credentials: 'include'
         };
         fetch(`/api/question/${cla}/${sub}/${uni}/${topicID}`, requestOptions)//class_id subject_id course_id topic_id
-        .then(response => response.json())
-                .then(data => {  
-                  console.log(JSON.stringify(data));
-                  setFields(data.Questions);
-                  setMatricaAO(data.Matrix.column_numbers);
-                  setMatricaD(data.Matrix.rows_D);
-                  setTopicName(data.Matrix.topic_name);
-                  setTopicDescription(data.Matrix.topic_description);
-                  setAssesment_objectives(data.Matrix.asessments_array);
-                  setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
-        })
+        .then((response)=>{
+          if(response.status===200)
+          {
+            Promise.resolve(response).then(response => response.json())
+              .then(data => {
+                setFields(data.Questions);
+                setMatricaAO(data.Matrix.column_numbers);
+                setMatricaD(data.Matrix.rows_D);
+                setTopicName(data.Matrix.topic_name);
+                setTopicDescription(data.Matrix.topic_description);
+                setAssesment_objectives(data.Matrix.asessments_array);
+                setStats(getStats(data.Questions,data.Matrix.column_numbers,data.Matrix.rows_D));
+                setSnackbarStatus("success");
+                setSnackbarText("Topic loaded successfully.");
+                setSnackbarOpen(true);
+                setLoading(true);//mice skeleton da prikaze podatke PO MENI BI TAKO TRIBALO BIT 
+              })
+          }      
+          else{
+            setNoError(false);
+            setSnackbarStatus("error");
+            setErrorStatus(response.status);
+            setSnackbarText("Topic did not load successfully.")
+            setSnackbarOpen(true);
+        }})
         .catch((error)=>{
-            console.log('Error in fetch function '+ error);
-    });
-  }
-   useEffect(() => {
-     console.log("saljem" + topicID);
-     GetQuestion();
-     window.scrollTo(0, 0)
+          setNoError(false);
+          setSnackbarStatus("error");
+          setErrorStatus("Oops");
+          setSnackbarText("Topic did not load successfully.")
+          setSnackbarOpen(true);
+          console.log('Error in fetch function '+ error);
+        });
+  };
+
+  useEffect(() => {
+     (!offline)&&GetQuestion();
+     window.scrollTo(0, 0);
    },[topicID]);
 
    
    //function that is executed on matrix field select
-   const changeAoDSelected= (e,ao,d,quest,status)=>{
+  const changeAoDSelected= (e,ao,d,quest,status)=>{
        e.preventDefault();
        setDSelected(d);
        setAoSelected(ao);
        setQuestionSelected(quest);
-       console.log(questionSelected);
        if(status!=="LOCKED") setOpenPopupQuestion(true);
-       console.log(openPopupQuestion)
+       console.log(status);
     };
 
-   const classes = useStyles();
-    return(
+  const classes = useStyles();
+  return(
+    (!noError)?<NotFound code={errorStatus}/>
+    :<div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
+    {
+      loading? 
       <div>
-        {noError?
-          <div>
-            {loading? 
-              <div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
-                {
-                  <PopupDialog openPopup={openPopupQuestion} setOpenPopup={setOpenPopupQuestion} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
-                    <QuestionPopup ao={matricaAO} d={matricaD} questionToDisplay={questionSelected} setOpenPopup={setOpenPopupQuestion} setOpenPopupWrong={setOpenPopupWrong} field={fields} setFields={setFields}/>
-                  </PopupDialog>        
-                }
-                {
-                  <PopupDialog openPopup={openPopupWrong} setOpenPopup={setOpenPopupWrong} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
-                    <WrongPU closePopup={setOpenPopupWrong} setTopicID={setTopicID} pageProps={props}/>
-                  </PopupDialog>        
-                }
-                <Grid container direction="column" justify="flex-start" alignItems="center" className={classes.wholeGrid}>
-                    <Grid container item md={6} direction="row"  justify="center" alignItems="center" >
-                        <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
-                            <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName} </Typography></Grid>
-                            <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
-                        </Grid>
-                        <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
-                            <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
-                        </Grid>
-                    </Grid>
-                </Grid> 
-              </div>
-              :
-              <div className={classes.skeleton}>
-                <Grid container  direction="row"  justify="center" alignItems="center" style={{marginBottom:"5px"}}>
-                  <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200}/></Grid> 
-                  <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
-                  <Grid item style={{margin:"5px"}}><Skeleton variant="reck"  animation="wave" height={200}  width={200} /></Grid> 
+        <div className={"AOslider "+[aoOpen?"opened ":"closed "]+classes.asessmentSlider}>
+          <div className={classes.inside} style={{height:"inherit"}} >
+            <Grid direction="row" container style={{height:"inherit",alignContent:"space-around"}}> 
+                {assesment_objectives.map((AO)=>(
+                <Grid direction="row" container item xs={12} >
+                  <Grid item xs={7}><p style={{textAlign:"right"}}>{AO.asessment_name}:</p></Grid>
+                  <Grid item xs={5}><p style={{textAlign:"center",fontWeight:"bold"}}>{stats[assesment_objectives.indexOf(AO)]} </p></Grid>
                 </Grid>
-                <Grid container direction="row"  justify="center" alignItems="center" style={{marginBottom:"5px"}}>
-                  <Grid item style={{margin:"5px"}}><Skeleton variant="reck" animation="wave" height={200}  width={200} /></Grid> 
-                  <Grid item style={{margin:"5px"}} ><Skeleton variant="reck" animation="wave" height={200}  width={200} /></Grid> 
-                  <Grid item style={{margin:"5px"}}><Skeleton variant="reck" animation="wave" height={200}  width={200} /></Grid> 
-                </Grid>
-                <Grid container  direction="row"  justify="center" alignItems="center" style={{marginBottom:"5px"}}>
-                  <Grid item style={{margin:"5px"}}><Skeleton variant="reck" animation="wave" height={200}  width={200} /></Grid> 
-                  <Grid item style={{margin:"5px"}}><Skeleton variant="reck" animation="wave" height={200}  width={200} /></Grid> 
-                  <Grid item style={{margin:"5px"}}><Skeleton variant="reck" animation="wave" height={200}  width={200} /></Grid> 
-                </Grid>
-              </div>
-            }
+                ))}
+                  {/* {assesment_objectives.map((AO)=>(<p style={{fontFamily:"Red Hat Display", color: "#4372ec"}}>{AO.asessment_name}: {stats[assesment_objectives.indexOf(AO)]} </p>))} */}
+            </Grid>
+            <div  onClick={()=>setAoOpen(!aoOpen)}  style={{position:"absolute",cursor:"pointer", bottom:"-12%", right:"5rem",width:"10rem",height:"3rem",zIndex:"-9999",textAlign: 'center',backgroundColor:"lightgrey",padding:"0 0.5em 0.5em 0.5em ",borderRadius:"0 0 7px 7px",maxWidth:"100% !important",}}>
+              <Grid container justify="center" alignItems="center" direction="row" className={classes.inside}>
+                <Grid item xs={1} style={{color:"black",marginTop:"0.4rem"}}>
+                  <IconButton className={!aoOpen?classes.expand:classes.expandOpen} aria-expanded={aoOpen} aria-label="show more">
+                    <ExpandMoreIcon/>
+                  </IconButton>
+                </Grid>              
+                <Grid item xs={9} style={{color:"black",marginTop:"0.4rem"}}>
+                  <Typography style={{color:"black",fontWeight:"bold"}}>Results</Typography>
+                </Grid>           
+              </Grid>
+            </div>
           </div>
-          :
-          <div>
-            <NotFound/>
-          </div>
-        }
+        </div>
+        <PopupDialog openPopup={openPopupQuestion} setOpenPopup={setOpenPopupQuestion} clickAway={true}>
+          <QuestionPopup ao={matricaAO} d={matricaD} questionToDisplay={questionSelected} setOpenPopup={setOpenPopupQuestion} setOpenPopupWrong={setOpenPopupWrong} field={fields} setFields={setFields}/>
+        </PopupDialog>        
+        <PopupDialog openPopup={openPopupWrong} setOpenPopup={setOpenPopupWrong} clickAway={true}>
+          <WrongPU closePopup={setOpenPopupWrong} setTopicID={setTopicID} pageProps={props}/>
+        </PopupDialog>        
+        <Grid container direction="column" justify="flex-start" alignItems="center" className={classes.wholeGrid}>
+          <Grid container item md={10} direction="row"  justify="center" alignItems="center" >
+              <Grid item xs={11} md={8} className={classes.topicTitle} direction="column" justify="center" alignItems="flex-start"  container>
+                  <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName} </Typography></Grid>
+                  <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
+              </Grid>
+                {/* <Grid direction="column" > 
+                  {opis.slice(0,matricaAO).map((AO)=>(<p style={{fontFamily:"Red Hat Display", color: "#4372ec"}}>Assessment objective={AO.ao} {AO.opis} </p>))}
+                </Grid> OVO SU AO-ovi SAMO UMISTO OPISA KORISTIT ASSESSMENT OBJE */}
+              <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="center" alignItems="center" >
+                  <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fields,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
+              </Grid>
+          </Grid>
+        </Grid>
+        {
+          snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+          : null
+        }    
       </div>
-    )
-}
+    :
+    <MatrixSkeleton/>
+    }
+
+    </div>
+  )
+};
+
 export default Matrica;
+
+
+// .then((response)=>{
+//   if(response.status===200)
+//   {
+//     Promise.resolve(response).then(response => response.json())
+//       .then(data => {
+        
+//       })
+//   }      
+//   else{
+
+// }})
+// .catch((error)=>{
+
+//   console.log('Error in fetch function '+ error);
+// });

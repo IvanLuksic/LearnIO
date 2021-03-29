@@ -191,7 +191,7 @@ function AdminTopics(props){
     };
 
     useEffect(()=>{
-      fetchTopics();
+      if(!offline){fetchTopics()};
     },[]);
     const handleOpen = () => {
       setOpen(true);
@@ -263,7 +263,7 @@ function AdminTopics(props){
         {field: "name", width: 200, type:'string',headerAlign:'center', align:'center', renderHeader: () => (<div ><strong>{"Topic"}</strong><Button onClick={()=>handleOpen()} className={classes.addButton} ><Icon style={{color:"white"}}>add_circle</Icon></Button></div>),},
         {field: "course", width: 200,headerName:'Course',type:'string',headerAlign:'center', align:'center'},                                                                                                                          
         {field: "subject", width: 200, headerName:'Subject',type:'string',headerAlign:'center', align:'center'},
-        {field: 'open', headerName: 'Edit',headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Link to={`/admin-topic/${params.getValue('topic_id')}`} onClick={()=>{dispatch(topicSelected(params.getValue('topic_id')))}}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>)},
+        {field: 'open', headerName: 'Edit',headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Link to={`/admin-topic/${params.getValue('topic_id')}`} onClick={()=>{dispatch(topicSelected(parseInt(params.getValue('topic_id'))))}}><Button><Icon style={{color:"#27AE60",fontSize:'2em'}}>edit_outlined_icon </Icon> </Button></Link>)},
         {field: 'delete', headerName: 'Delete ' ,headerAlign:'center', align:'center',sortable: false , renderCell: (params) => (<Button onClick={()=>{Confirm(params.data.topic_id)}}><Icon style={{color:"#EB4949",fontSize:'2em'}}>delete_forever_rounded_icon</Icon></Button>)},
     ];
 
@@ -281,8 +281,8 @@ function AdminTopics(props){
               <DataGrid disableSelectionOnClick={true}  pageSize={5} components={{pagination: CustomPagination,}} rows={rows} columns={columns} />               
             </div>
 
-            <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
-              <AddTopicPU closePopup={handleClose} addTopic={addQuestion} setSnackbarOpen={setSnackbarOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus}/>
+            <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false}>
+              <AddTopicPU addOrEdit={true} closePopup={handleClose} addTopic={addQuestion} setSnackbarOpen={setSnackbarOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus}/>
             </PopupDialog>
           </div>
           }

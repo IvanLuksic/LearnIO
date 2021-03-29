@@ -3,8 +3,11 @@ import { makeStyles,withStyles} from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import { DataGrid} from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button';
+import fakeBackendAssociatedTopics from '../../sampleData/student/associatedTopics.json';
+import NotFound from '../common/NotFound';
+import CustomSnackbar from '../common/Snackbar.jsx';
 import {useSelector} from 'react-redux';
-import fakeBackendAssociatedTopics from './backendAssociatedTopics.json';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const ColorButton = withStyles((theme) => ({
     root: {
@@ -75,14 +78,30 @@ const useStyles=makeStyles(theme =>({
 function WrongPU(props){//uzima samo closePopup 
     const [data,setData]=useState(()=>fakeBackendAssociatedTopics);//fakeBackendAssociatedTopics
     const classes=useStyles();
+    const [noError,setNoError]=useState(()=> true);
+    const [snackbarText,setSnackbarText]=useState(()=>"");
+    const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
+    const [errorStatus,setErrorStatus]=useState(()=>"");
+    const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+    const [loading,setLoading]=useState(()=>true);
+
+    const class_id=useSelector(state=>state.class);
+    const subject_id=useSelector(state=>state.subject);
+    //const top_id=useSelector(state=>state.topic);
+
+
+
     const closePopup=(value)=>{
         if(Number.isInteger(value)){
+            let chosenTopic;
+            for(let top of data){
+                if(top.topic_id===value)chosenTopic=top;
+            }
             props.setTopicID(value);
-            props.pageProps.history.push(`/topic/${value}`);
+            props.pageProps.history.push(`/student/topic/${class_id}/${subject_id}/${chosenTopic.course_id}/${value}`);
         };
         props.closePopup(false);
-    }
-
+    };
 
     const fetchAssociatedTopics=()=>{
 
@@ -93,13 +112,42 @@ function WrongPU(props){//uzima samo closePopup
             credentials: 'include'
         };
 
-        fetch(`https://learn1o.herokuapp.com/student/topics/associated/${5}`, requestOptions)//topic id
-        .then(response => response.json())
-        .then(data => { setData(data.Associated);})
-        .catch((error)=>{
+        fetch(`/api/student/topics/fetch/associated/${subject_id}/${5}`, requestOptions)//topic id
+        .then((response)=>{
+            if(response.status===200)
+            {
+              Promise.resolve(response).then(response => response.json())
+              .then(data => { 
+                  setData(data.Associated);
+                  setSnackbarStatus("success");
+                  setSnackbarText("Topic loaded successfully.")
+                  setSnackbarOpen(true);
+                  setLoading(false);
+            })}      
+            else{
+                setNoError(false);
+                setSnackbarStatus("error");
+                setErrorStatus(response.status);
+                setSnackbarText("Topic did not load successfully.")
+                setSnackbarOpen(true);
+          }})
+          .catch((error)=>{
+            setNoError(false);
+            setSnackbarStatus("error");
+            setErrorStatus("Oops");
+            setSnackbarText("Topic did not load successfully.")
+            setSnackbarOpen(true);
             console.log('Error in fetch function '+ error);
-        });
-    }
+          });
+
+
+
+    };
+        // .then(data => { setData(data.Associated);})
+    //     .catch((error)=>{
+    //         console.log('Error in fetch function '+ error);
+    //     });
+    // }
 
     useEffect(()=>{
         fetchAssociatedTopics();
@@ -115,7 +163,7 @@ function WrongPU(props){//uzima samo closePopup
     for(let i=0;i<data.length;i++){
         rows=[...rows,{
             id: data[i].topic_id,
-            name: data[i].name,
+            name: data[i].topic_name,
             required_lvl: data[i].required_level,
         }]
     }
@@ -123,23 +171,34 @@ function WrongPU(props){//uzima samo closePopup
     let dataExists=(data!=null)?true:false;//nece radit data grid ako nema topica
     return(
         <div>
-            <Grid className={classes.title}>
-                <h1>WRONG ANSWER</h1>
-            </Grid>
-            <Grid className={classes.subtitle} >
-                <p>You have answered that question wrong.</p>
-                <p>Go study associated topics.</p>
-                <p>That will help you to understand that question better.</p>
-            </Grid>
-            {dataExists&&
-             <div className={classes.tabela}>
-                <DataGrid disableSelectionOnClick={true} rows={rows} hideFooter={"true"} columns={columns} />
-            </div>
+            {
+                (!noError)?<NotFound code={errorStatus}/>
+                :loading?<CircularProgress style={{margin:"auto"}}/>
+                :<div>
+                    <Grid className={classes.title}>
+                        <h1>WRONG ANSWER</h1>
+                    </Grid>
+                    <Grid className={classes.subtitle} >
+                        <p>You have answered that question wrong.</p>
+                        <p>Go study associated topics.</p>
+                        <p>That will help you to understand that question better.</p>
+                    </Grid>
+                    {dataExists&&
+                    <div className={classes.tabela}>
+                        <DataGrid disableSelectionOnClick={true} rows={rows} hideFooter={"true"} columns={columns} />
+                    </div>
+                    }
+                    <Grid className={classes.button}>
+                        <Button variant="contained" onClick={()=>closePopup(null)} className={classes.pickButton} style={{backgroundColor:"#EB4949", color:"white"}}>Close</Button>
+                    </Grid>
+                    {
+                        snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
+                        : null
+                    }     
+                </div>
             }
-            <Grid className={classes.button}>
-                <Button variant="contained" onClick={()=>closePopup(null)} className={classes.pickButton} style={{backgroundColor:"#EB4949", color:"white"}}>Close</Button>
-            </Grid>
         </div>
+
     )
 }
 export default WrongPU;

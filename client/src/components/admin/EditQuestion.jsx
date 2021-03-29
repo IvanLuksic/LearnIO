@@ -6,7 +6,6 @@ import 'reactjs-popup/dist/index.css';
 import AddQuestPU from '../addComponents/AddQuestPU';
 import Icon from '@material-ui/core/Icon';
 import Accordion from '../Accordion.jsx';
-import {Dialog} from '@material-ui/core';
 import PopupDialog from '../../common/PopupDialog';
 
 const useStyles = makeStyles((theme)=>({
@@ -121,12 +120,12 @@ function EditQuestion(props) {
                 <Typography className={classes.Heading}>ID</Typography>
                 <Typography style={{marginLeft:'-3%'}} className={classes.Heading}>Question</Typography>  
                 <Button onClick={()=>handleOpen()} className={classes.addButton}><Icon style={{color:"white"}}>add_circle</Icon></Button>
-                <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
-                  <AddQuestPU popUpClose={handleClose} changePage={props.jumpToPage} forceUpdate={props.forceUpdate} nextID={nextID} changeText={changeText} questAdd={handleAdd}/>
+                <PopupDialog openPopup={open} setOpenPopup={handleClose} clickAway={false}>
+                  <AddQuestPU subject_id={props.subject_id}  popUpClose={handleClose} changePage={props.jumpToPage} forceUpdate={props.forceUpdate} nextID={nextID} changeText={changeText} questAdd={handleAdd}/>
                 </PopupDialog>
               </div>
               {
-                props.questions ? <div style={{position:'relative', marginTop:'5%'}}><Accordion resetExpanded={resetExpanded} popUpClose={handleClose} handlePages={handlePages} topQ={topQ} pageCount={pageCount} handleChange={handleChange} changeText={changeText} text={text} handleDelete={handleDelete} page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions} openEdit={openEdit}/></div>
+                props.questions ? <div style={{position:'relative', marginTop:'5%'}}><Accordion numberOfQuestions={props.questions.length} resetExpanded={resetExpanded} popUpClose={handleClose} handlePages={handlePages} topQ={topQ} pageCount={pageCount} handleChange={handleChange} changeText={changeText} text={text} handleDelete={handleDelete} page={props.page} changePage={props.changePage} expanded={props.expanded} changeExpanded={props.changeExpanded} questChange={props.questChange} questions={props.questions} openEdit={openEdit}/></div>
                 : <div style={{position:'relative', marginTop:'5%'}}><Typography style={{display:'flex', justifyContent:'center', color:'gray'}}>No questions added.</Typography></div>
               }
             </div>

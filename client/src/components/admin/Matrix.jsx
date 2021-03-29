@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Button,Typography } from "@material-ui/core";
 import React, { useState,useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import backgroundIMG from '../../images/learniobg10-15.png';
@@ -12,6 +12,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {topicSelected} from '../../redux/actions/topicID';
 import NotFound from '../common/NotFound';
 import CustomSnackbar from '../common/Snackbar.jsx';
+import Icon from '@material-ui/core/Icon';
+import AddTopicPU from './addComponents/AddTopicPU'
+import PopupDialog from '../common/PopupDialog';
 
 const useStyles = makeStyles((theme) => ({
     background:{
@@ -31,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     topicTitle:{
           fontSize:'6vh',
           marginBottom: '1em',
+          marginLeft:"4vw",
         //   [theme.breakpoints.down('sm')]: {
         //     paddingTop:"12vh",
         //   },
@@ -38,31 +42,43 @@ const useStyles = makeStyles((theme) => ({
         //     paddingTop:"6vh",
         //   },
           paddingBottom:'9px', 
+          [theme.breakpoints.down('sm')]:{
+              marginLeft:"8vw",
+          }
     },
     lobster: {
           fontFamily: "Lobster",
           textShadow:" -5px 5px #30303033",
+          display:"inline"
 
     },
     divider:{
         [theme.breakpoints.down('sm')]: {
-            height: "0vh",
-          },
+            display:"none",
+        },
         [theme.breakpoints.up('md')]: {
             marginTop:"12vh",
             height: "85vh",
           },
     },
     questionsTable:{
+        width:"100%",
         minHeight: "100vh",
-        paddingTop:"200px"
+        paddingTop:"20vh",
+        justifyContent:"flex-end",
+        [theme.breakpoints.down('sm')]: {
+            justifyContent:"center",
+        }
     },
     skeletonMatrica:{
         paddingTop:"20vh",
     },
     skeletonTable:{
         minHeight: "100vh",
-        paddingTop:"20vh"
+        paddingTop:"20vh",
+        [theme.breakpoints.down('sm')]:{
+            paddingTop:"0",
+        }
     },
     wholeLeftGrid:{
         [theme.breakpoints.down('sm')]: {
@@ -72,6 +88,18 @@ const useStyles = makeStyles((theme) => ({
           padding:"150px 0 0 0",
         },
         
+    },
+    gridAdjust: {
+        display:"flex",
+        flexDirection:"row",
+        justify:"center",
+        alignItems:"flex-start",
+        height:"100%",
+        width:"100%",
+        [theme.breakpoints.down('sm')]:{
+            flexDirection:"column",
+            alignItems:"center",
+        }
     }
 }));
 
@@ -81,7 +109,21 @@ function useForceUpdate() {
   }
 
 function MatricaAdmin(props)
-{
+{     
+    // topic_name: valueText,
+    // columns_AO:valueAO,
+    // rows_D: valueD,
+    // course_id:subjectAndCourse.course_id,
+    // course_name:subjectAndCourse.course_name,
+    // subject_id:subjectAndCourse.subject_id,
+    // subject_name:subjectAndCourse.subject_name,
+    // associated_topics: arrayAT,
+    // topic_description:valueDesc,
+    // asessments_array:arrayAO
+    // "course_id":123,
+    // "course_name": "Electrical engineering",
+    // "subject_id":245674,
+    // "subject_name":"Matematika 1",
     const offline= useSelector(state=>state.offline);
     let dispatch=useDispatch();
     const [aoSelected,setAoSelected]=useState(1);
@@ -95,11 +137,28 @@ function MatricaAdmin(props)
     const [topicName,setTopicName]=useState(()=>fakeBackendQuestions.topic_name);
     const [topicID,setTopicID]=useState(useSelector(state=>state.topic));
     const [topicDescription,setTopicDescription]=useState(()=>fakeBackendQuestions.topic_description);
+    const [course_id,setCourse_id]=useState(()=> 123);
+    const [course_name,setCourse_name]=useState(()=> "Electrical engineering");
+    const [subject_id,setSubject_id]=useState(()=> 245674);
+    const [subject_name,setSubject_name]=useState(()=> "Matematika 1");
+    const [associated_topics, setAssociated_topics]=useState(()=> {return[{
+        topic_id:2,
+        topic_name:"MOSFET",
+        course_name: "Electrical engineering",
+        course_id:143523,
+        subject_id:345435,
+        subject_name:"Fisics 2",
+        topic_description:"Jako dobra tema.",
+        required_level:1   
+    },]
+    });
+    const [asessments_array,setAsessments_array]=useState(()=>[{asessment_id:123123,asessment_name:"super"},{asessment_id:324234,asessment_name:"supawdawdawdawder"},{asessment_id:234,asessment_name:"AWDawd"}]);
     const [noError,setNoError]=useState(()=> true);
     const [snackbarText,setSnackbarText]=useState(()=>"");
     const [snackbarStatus,setSnackbarStatus]=useState(()=>"");
     const [errorStatus,setErrorStatus]=useState(()=>"");
     const [snackbarOpen,setSnackbarOpen]=useState(()=>false);
+    const [popup,setPopup]=useState(()=>false);
 
     const role=useSelector(state=>state.login);
     const forceUpdate = useForceUpdate();
@@ -130,6 +189,7 @@ function MatricaAdmin(props)
                 setMatricaD(data.rows);
                 setTopicName(data.topic_name);
                 setTopicDescription(data.topic_description)
+                setSubject_id(data.subject_id);
                 dispatch(topicSelected(topicID,topicName));
                 setSnackbarStatus("success");
                 setSnackbarText("Topic loaded successfully.")
@@ -303,11 +363,25 @@ function MatricaAdmin(props)
         offline&&changeQuestion(Ques);
         // console.log("ZAHTJEV ZA IZMJENOM: ");
         // console.log({...Ques});
+        const formData = new FormData()
+        formData.append('id', Ques.id);
+        formData.append('text', Ques.text);
+        formData.append('question_type', Ques.question_type);
+        formData.append('answer_a', Ques.answer_a);
+        formData.append('answer_b', Ques.answer_b);
+        formData.append('answer_c', Ques.answer_c);
+        formData.append('answer_d', Ques.answer_d);
+        formData.append('solution', Ques.solution);
+        formData.append('row_D', dSelected);
+        formData.append('column_A', aoSelected);
+        formData.append('questionImage', Ques.questionImage);
+
+
         const requestOptions = {
             method: 'PUT',
             mode:'cors',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({...Ques}),
+            body: formData,
             credentials: 'include'
         };
 
@@ -341,7 +415,33 @@ function MatricaAdmin(props)
             console.log('Error in fetch function '+ error);
           });
     };
-    const requestAddQuestion=(Ques,ID)=>{
+    const requestAddQuestion=(Ques,existing)=>{
+        var apiUri;
+        const formData = new FormData();
+        if(existing){
+            if(role==="admin") apiUri='/insert/existing/question'
+            else if(role==="teacher") apiUri='/insert/existing/question';
+            formData.append('question_id',Ques.question_id);
+            formData.append('row_D', dSelected);
+            formData.append('column_A', aoSelected);
+            formData.append('topic_id', Number(topicID));
+        }
+        else{
+            if(role==="admin") apiUri='/api/question/add'
+            else if(role==="teacher") apiUri='/api/question/add';
+            formData.append('questionImage', Ques.questionImage);
+            formData.append('text', Ques.text);
+            formData.append('question_type', Ques.question_type);
+            formData.append('answer_a', Ques.answer_a);
+            formData.append('answer_b', Ques.answer_b);
+            formData.append('answer_c', Ques.answer_c);
+            formData.append('answer_d', Ques.answer_d);
+            formData.append('solution', Ques.solution);
+            formData.append('row_D', dSelected);
+            formData.append('column_A', aoSelected);
+            formData.append('topic_id', Number(topicID));
+        }
+
         offline&&addQuestion({id:Math.floor(Math.random()*10000),...Ques,row_D:dSelected,column_A:aoSelected});
         offline&&forceUpdate();
         // console.log("ZAHTJEV ZA DODAVANJE: ");
@@ -349,14 +449,10 @@ function MatricaAdmin(props)
         const requestOptions = {
             method: 'POST',
             mode:'cors',
-            headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({...Ques,row_D:dSelected,column_A:aoSelected,topic_id:Number(topicID)}),
+            // headers: { 'Content-Type': 'application/json'},
+            body: formData,
             credentials: 'include'
         };
-
-        let apiUri;
-        if(role==="admin") apiUri='/api/question/add'
-        else if(role==="teacher") apiUri='/api/question/add';
 
         fetch(apiUri, requestOptions)
         .then((response)=>{
@@ -389,17 +485,73 @@ function MatricaAdmin(props)
     };
 
 
+    const openEdit=()=>{
+        const requestOptions = {
+            method: 'GET',
+            mode:'cors',
+            headers: { 'Content-Type': 'application/json'},
+            credentials: 'include'
+        };
+
+        let apiUri;
+        if(role==="admin") apiUri=`/api/topic/info/${topicID}`
+        else if(role==="teacher") apiUri=`/api/topic/info/${topicID}`;
+
+        fetch(apiUri, requestOptions)
+        .then((response)=>{
+            if(response.status===200)//KOD
+            {
+              Promise.resolve(response).then(response => response.json())
+                .then((data)=> {
+                        setCourse_id(data.course_id);
+                        setCourse_name(data.course_name);
+                        setSubject_id(data.subject_id);
+                        setSubject_name(data.subject_name);
+                        setAsessments_array(data.asessments_array);
+                        setAssociated_topics(data.associated_topics);
+                        setSnackbarStatus("success");
+                        setSnackbarText("Edit started successfully.");
+                        setSnackbarOpen(true);
+                        
+                        setPopup(true);
+                })
+            }      
+            else{
+                setSnackbarStatus("error");
+                setErrorStatus(response.status);
+                setSnackbarText("Edit did not start successfully.");
+                setSnackbarOpen(true);
+          }})
+          .catch((error)=>{
+            setSnackbarStatus("error");
+            setSnackbarText("Error in fetch function.");
+            setSnackbarOpen(true);
+            console.log('Error in fetch function '+ error);
+          });
+
+          if(offline){setPopup(true);}
+
+    }
+
+
     const classes = useStyles();
 
     return (
         (!noError)?<NotFound code={errorStatus}/>
         :<div style={{display: "flex", flexDirection: "column",justifyContent:"space-evenly", alignItems:"center"}} className={classes.background}> 
         {loading?
-            <Grid container direction="row" justify="center" alignItems="flex-start"  height="100%" >
+            <div>
+            {popup&& <PopupDialog openPopup={popup} setOpenPopup={setPopup} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
+            <AddTopicPU addOrEdit={false} columns_AO={matricaAO} rows_D={matricaD} topic_name={topicName} topic_id={topicID} topic_description={topicDescription} associated_topics={associated_topics} asessments_array={asessments_array} course_id={course_id} course_name={course_name} subject_id={subject_id} subject_name={subject_name} setTopicDescription={setTopicDescription} setTopicName={setTopicName}  setSnackbarOpen={setSnackbarOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus} closePopup={()=>{setPopup(false);}}/>
+            </PopupDialog>}
+            <Grid container className={classes.gridAdjust}>
                 <Grid container item md={6} direction="row" justify="flex-start" alignItems="flex-start" className={classes.wholeLeftGrid}>
                     <Grid item xs={11} md={11} className={classes.topicTitle} direction="column" justify="flex-start" alignItems="flex-start"  container>
-                        <Grid item><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName}</Typography></Grid>
-                        <Grid item><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
+                        <Grid item xs={11} container style={{marginBottom:"3rem"}}>
+                            <Grid item xs={10}><Typography  xs={11} color="primary" variant="h2" component="h2" className={classes.lobster}>{topicName}</Typography></Grid>
+                            <Grid item xs={2} style={{ textAlign:"center", alignSelf:"center"}}><Button onClick={()=>openEdit()}><Icon  style={{fontSize:"3rem", textShadow:" -5px 5px #30303033",color:"rgb(235, 73, 73)"}}>edit_outlined_icon</Icon></Button></Grid>
+                        </Grid>
+                        <Grid item xs={11}><p style={{fontSize:'2vh', color: 'black', display: 'block'}}>{topicDescription}</p></Grid>
                     </Grid>
                     <Grid item md = {11} xs = {11} sm = {11} spacing={3} container direction="row" justify="flex-start" alignItems="flex-start" >
                         <DisplayMatrix changeSelected={changeAoDSelected} ar={fieldToRows(fetchedData,matricaAO,matricaD)} aoSelected={aoSelected} dSelected={dSelected}/>
@@ -407,13 +559,14 @@ function MatricaAdmin(props)
                 </Grid>
                 <Divider  orientation="vertical" className={classes.divider} flexItem/>
                 <Grid container item md={5} sm={12} xs={12} direction="row" alignContent="flex-start" alignItems="flex-start" justify="center" className={classes.questionsTable}>
-                    <EditQuestion forceUpdate={forceUpdate} page={page} jumpToPage={getIndex} changePage={changePage} questChange={requestChangeQuestion} questAdd={requestAddQuestion} questDelete={requestDeleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions.length!==0) ? fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions : null }/>
+                    <EditQuestion forceUpdate={forceUpdate} page={page} jumpToPage={getIndex} changePage={changePage} questChange={requestChangeQuestion} questAdd={requestAddQuestion} questDelete={requestDeleteQuestion} expanded={expanded} changeExpanded={changeExpanded} questions={(fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions.length!==0) ? fetchedData[(aoSelected+matricaAO*(dSelected-1)-1)].Questions : null } subject_id={subject_id}/>
                 </Grid>
                 {
                     snackbarOpen ? <CustomSnackbar handleClose={()=>{setSnackbarOpen(false);}} open={snackbarOpen} text={snackbarText} status={snackbarStatus}/>
                     : null
                 } 
             </Grid>
+            </div>
             :
             <MatrixSkeleton/>
         }

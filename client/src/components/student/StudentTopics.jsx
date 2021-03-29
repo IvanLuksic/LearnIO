@@ -40,13 +40,16 @@ const useStyles = makeStyles((theme) => ({
       borderColor: "transparent !important",
       height:"25em",
       [theme.breakpoints.down('sm')]: {
-        width:"90%",
+        width:"90vw",
       },
-      [theme.breakpoints.up('md')]: {
-        width:"60%",
+      [theme.breakpoints.down("md")]: {
+        width:"80vw",
+      },
+      [theme.breakpoints.up('lg')]: {
+        width:"60vw",
       },
       [theme.breakpoints.up('xl')]: {
-        width:"50%",
+        width:"50vw",
       },
     },
     topicTitle:{
