@@ -279,10 +279,10 @@ function Matrica(props)
             </div>
           </div>
         </div>
-        <PopupDialog openPopup={openPopupQuestion} setOpenPopup={setOpenPopupQuestion} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
+        <PopupDialog openPopup={openPopupQuestion} setOpenPopup={setOpenPopupQuestion} clickAway={true}>
           <QuestionPopup ao={matricaAO} d={matricaD} questionToDisplay={questionSelected} setOpenPopup={setOpenPopupQuestion} setOpenPopupWrong={setOpenPopupWrong} field={fields} setFields={setFields}/>
         </PopupDialog>        
-        <PopupDialog openPopup={openPopupWrong} setOpenPopup={setOpenPopupWrong} clickAway={true} style={{minWidth:'40%',minHeight:'10%'}}>
+        <PopupDialog openPopup={openPopupWrong} setOpenPopup={setOpenPopupWrong} clickAway={true}>
           <WrongPU closePopup={setOpenPopupWrong} setTopicID={setTopicID} pageProps={props}/>
         </PopupDialog>        
         <Grid container direction="column" justify="flex-start" alignItems="center" className={classes.wholeGrid}>

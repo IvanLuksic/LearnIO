@@ -570,7 +570,7 @@ function AddQuestPU(props) {
       : null
       }{
         show2 ? // second case - answer
-        <Grid container item className={classes.editText}> 
+        <Grid container item className={classes.editText} style={{marginTop:"0"}}> 
             <Grid container item className={classes.show2grid}>
             <Grid container item justify="flex-start" alignItems="center" direction="row">
                   <FormControlLabel control={ <Checkbox checked={multipleAnswer} onChange={toggleMultiple} name="checkedB" color="primary" />} />

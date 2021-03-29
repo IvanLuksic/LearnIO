@@ -8,15 +8,15 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 const useStyles=makeStyles(theme =>({
     dialogWrapper:{
         position:'absolute',
-        top:"20vh",
         textAlign: 'center',
         backgroundColor:"lightgrey",
         padding:"1em",
         borderRadius:"7px",
         maxWidth:"100%",
+        maxHeight:"80vh",
+        margin:"10vh",
         [theme.breakpoints.down('sm')]:{
             width:"18em",
-            top:"10vh"
         }
     },
     questionName:{
@@ -31,6 +31,7 @@ const useStyles=makeStyles(theme =>({
         paddingBottom:"0",    
     },
     dialogPart2:{
+        marginTop:"0em",
         paddingTop:"0",
         backgroundColor:"white",
         borderRadius:"0 0 7px 7px"

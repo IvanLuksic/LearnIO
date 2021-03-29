@@ -161,7 +161,7 @@ function AddCourseSubjectClass() {
         </PopupDialog>
         : null
       }{
-        popupOpen && index === 5 ? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false} style={{minWidth:'60%',minHeight:'30%'}}>
+        popupOpen && index === 5 ? <PopupDialog openPopup={popupOpen} setOpenPopup={closePopup} clickAway={false}>
           <AddTopicPU addOrEdit={true} closePopup={closePopup} setSnackbarOpen={setSnackOpen} setSnackbarText={setSnackbarText} setSnackbarStatus={setSnackbarStatus} />
         </PopupDialog>
         : null

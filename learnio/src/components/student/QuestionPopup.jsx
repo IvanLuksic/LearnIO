@@ -15,7 +15,7 @@ const useStyles=makeStyles(theme =>({
         textAlign: 'center',
         backgroundColor:"lightgrey",
         padding:"1em",
-        borderRadius:"7px"
+        borderRadius:"7px",
     },
     questionName:{
         flexGrow:1,
@@ -24,16 +24,22 @@ const useStyles=makeStyles(theme =>({
     },
     dialogPart1:{
         backgroundColor:"white",
-        borderRadius:" 7px 7px 0 0"
+        borderRadius:" 7px 7px 0 0",
+        [theme.breakpoints.down("sm")]: {
+            display:"none",
+        }
     },
     dialogPart2:{
         backgroundColor:"white",
-        borderRadius:"0 0 7px 7px"
+        borderRadius:"0 0 7px 7px",
+        [theme.breakpoints.down("sm")]: {
+            width:"11em",
+        }
     },
     radioGroup:{
         maxWidth:"100%",
         flexGrow:1, 
-        justifyContent:"center",
+        justifyContent:"left",
         textAlign:"left"
     },
     saveButton:{
@@ -55,13 +61,43 @@ const useStyles=makeStyles(theme =>({
         justifyContent:"space-evenly"
     },
     questionImg:{
-        marginTop:"2em",
-        height:"10em",
-        objectFit:"contain"
+        width:"100%",
+        objectFit:"contain",
+        marginBottom:"2em",
+        [theme.breakpoints.down("sm")]: {
+            marginBottom:"0.5",
+        }
     },
     answerText:{
         margin:"1em 1em",
         width:"90%"
+    },
+    fixQuest: {
+        display:"flex",
+        flexDirection:"row",
+        justifyContent:"flex-start",
+        alignItems:"center",
+        width:"45%",
+        [theme.breakpoints.down("sm")]: {
+            width:"100%",
+            flexDirection:"column",
+        }
+    },  
+    fixQuest2: {
+        display:"flex",
+        flexDirection:"column",
+        justifyContent:"flex-start",
+        alignItems:"flex-start",
+        width:"40%",
+        marginLeft:"6em",
+        [theme.breakpoints.down("sm")]: {
+            width:"100%",
+            marginLeft:"0",
+            alignItems:"center"
+        }
+    },
+    root: {
+        width:"20wv",
     }
  
 }))
@@ -137,10 +173,9 @@ function QuestionPopup(props){
     }
 
     return(
-        <div> 
-            <div> 
+        <Grid item container className={classes.root} direction="column" justify="flex-start" alignItems="center">
                 <DialogTitle className={classes.dialogPart1}>
-                    <div style={{display:'flex'}}>
+                    <div style={{display:'flex',}}>
                         <Typography variant="h6" component="div" className={classes.questionName}>AO{props.questionToDisplay.column_A} D{props.questionToDisplay.row_D}</Typography>
                     </div>
                 </DialogTitle>
@@ -148,11 +183,18 @@ function QuestionPopup(props){
                     {  
                     showABC ?
                         <Grid container direction="column" justify="center" alignItems="center">
-                            <Grid item xs={9}>
+                            <Grid item>
                                 <FormControl component="fieldset" >
-                                    <FormLabel component="legend" style={{color:"grey"}}>{props.questionToDisplay.question_text}</FormLabel>
+                                    <Grid item container style={{width:"100%"}} direction="row" justify="flex-start" alignItems="flex-start">
+                                    <Grid item container className={classes.fixQuest}>
                                     {imageDisplay&&<img src={offline?"https://i.redd.it/o96asqovzgi51.jpg":`/api/question/image/${props.questionToDisplay.question_id}`} className={classes.questionImg} alt="slika zadatka"></img>}
-                                    <div style={{display:'flex',margin: "2em auto"}}>
+                                    {imageDisplay ? 
+                                        <FormLabel component="legend" style={{color:"grey"}}>{props.questionToDisplay.question_text}</FormLabel>
+                                        : <FormLabel component="legend" style={{color:"black"}}>{props.questionToDisplay.question_text}</FormLabel>
+                                    }
+
+                                    </Grid>
+                                    <Grid item container className={classes.fixQuest2}>
                                     <RadioGroup aria-label="answer" component="div" name="answer1" value={value} onChange={handleChange} className={classes.radioGroup} >
                                         <div>{answeredAlready?((previous==="a")?(props.questionToDisplay.status===1?<span role="img" aria-label="checkmark">❌&nbsp;&nbsp;</span>:<span role="img" aria-label="checkmark">✔️&nbsp;&nbsp;</span>):<span role="img" aria-label="checkmark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>):null}<FormControlLabel disabled={answeredAlready} value={'a'} control={<Radio />} label={"a)  " + props.questionToDisplay.question_answer_a} />
                                         </div><div>{answeredAlready?((previous==="b")?(props.questionToDisplay.status===1?<span role="img" aria-label="checkmark">❌&nbsp;&nbsp;</span>:<span role="img" aria-label="checkmark">✔️&nbsp;&nbsp;</span>):<span role="img" aria-label="checkmark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>):null}<FormControlLabel disabled={answeredAlready} value={'b'} control={<Radio />} label={"b)  " + props.questionToDisplay.question_answer_b} />
@@ -160,7 +202,8 @@ function QuestionPopup(props){
                                         </div><div>{answeredAlready?((previous==="d")?(props.questionToDisplay.status===1?<span role="img" aria-label="checkmark">❌&nbsp;&nbsp;</span>:<span role="img" aria-label="checkmark">✔️&nbsp;&nbsp;</span>):<span role="img" aria-label="checkmark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>):null}<FormControlLabel disabled={answeredAlready} value={'d'} control={<Radio />} label={"d)  " + props.questionToDisplay.question_answer_d} />
                                         </div>
                                     </RadioGroup>
-                                    </div>
+                                    </Grid>
+                                    </Grid>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={3} >
@@ -186,8 +229,7 @@ function QuestionPopup(props){
                         </Grid>
                     }
                 </DialogContent>
-            </div>
-        </div>
+        </Grid>
         );
 
 }
