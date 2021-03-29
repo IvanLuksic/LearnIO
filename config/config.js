@@ -11,7 +11,10 @@ module.exports= {
     url: process.env.DATABASE_URL,
     dialect: "postgres",
     dialectOptions: {
-      ssl: true
+      ssl: {
+        require: true,
+        rejectUnauthorized: false // <<<<<< YOU NEED THIS
+    }
   },  
     logging: (msg) => nodelogger.info(`Node logger: ${msg}`)
   },
@@ -20,7 +23,10 @@ module.exports= {
     url: process.env.DATABASE_URL,
     dialect: "postgres",
     dialectOptions: {
-      ssl: true
+      ssl: {
+        require: true,
+        rejectUnauthorized: false // <<<<<< YOU NEED THIS
+    }
      },
     logging: (msg) => nodelogger.info(`Node logger: ${msg}`)
   },
