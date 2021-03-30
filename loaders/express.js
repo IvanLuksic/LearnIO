@@ -4,12 +4,26 @@ const session=require('express-session');
 const {globalRateLimiterMiddleware}=require('..//api/middleware/rate-limiter-global');
 const config=require('../config');
 const session_store=require('./session_store');
+var cors = require('cors')
+var corsOptions = {
+    origin: '*',
+    credentials: true };
 
 module.exports=(app,httplogger)=>{//module.exports nije vise objekt nego funkcija
     app.use(httplogger);
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
   
+    app.use(cors(corsOptions));
+    app.disable('etag');//OVO SMO ISLJUČILI ZBOG CACHEANJA PODATAKA KADA BROWSER VRAĆA STATUS 304 UMJESTO 200
+    app.options("/", function(req, res, next){// regularni izraz /-> ovo se odnosi na sve rute koji pocinju sa /-> TO SU ZAPRAVO SVE RUTE
+     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+      res.header('Access-Control-Allow-Credentials','true');
+      res.send(200);
+    });
+    app.set('trust proxy', 1)
+
     /*MORA BITI PRIJE MAIN RUTERA JER SE INACE NECE MOC KORSITIT U NJIMA*/
     app.use(session({/*session objektu lako pristupimo preko request objekta-> req.session i njemu dodajemo propertiese:
       POSTUPCI KOD ZAHTJEVA KORISNIKA:
