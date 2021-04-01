@@ -30,6 +30,9 @@ module.exports={
   multer:{
     question_images_storage: process.env.QUESTION_IMAGE_FOLDER_PATH,
     question_images_root_path: process.env.QUESTION_IMAGE_ROOT_PATH,
+    ftp_hname: process.env.HOST,
+    ftp_uname: process.env.UNAME,
+    ftp_pwd: process.env.PWD,
     maxImageFileSize:1024*1024//ui bajtovima , 1MB
   },
   rateLimiter: {
