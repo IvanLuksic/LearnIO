@@ -58,7 +58,7 @@ module.exports={
         fileSize:config.multer.maxImageFileSize
         },
        fileFilter:fileFilter
-    })
+    }).single('questionImage');
  
 
 
