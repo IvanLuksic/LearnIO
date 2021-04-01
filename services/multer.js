@@ -34,7 +34,7 @@ module.exports={
     upload:upload
 }*/
 
-module.exports.upload =  function(req , res , next){
+
 
     // sftp settings     
      var storage = sftpStorage({
@@ -58,17 +58,10 @@ module.exports.upload =  function(req , res , next){
         fileSize:config.multer.maxImageFileSize
         },
        fileFilter:fileFilter
-    }).array('file');
+    })
  
-     upload(req,res,function(err){
-         logger.debug(JSON.stringify(req.body));
-               logger.debug(JSON.stringify(req.files));
-           if(err){
-                logger.debug("Error Occured", JSON.stringify(err));
-                res.json({error_code:1,err_desc:err});
-           } else{
-                logger.debug("Files uploaded successfully");
-               res.json({error_code:0,err_desc:null});
-           }
-       });
+
+
+ module.exports = {
+    upload: upload
  }
