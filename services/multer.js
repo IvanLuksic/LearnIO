@@ -46,7 +46,7 @@ module.exports={
  
        },
        destination: function (req, file, cb) {
-         cb(null, 'images/') // designation folder in host
+         cb(null, './images/') // designation folder in host
        },
        filename: function (req, file, cb) {
          // file name settings
