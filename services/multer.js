@@ -17,6 +17,7 @@ var sftpStorage = require('multer-sftp')
 //filename cemo ostavit da se sam generira-> ima i opcija da izvucemo file name iz req.file
 //U FIČTERU MOŽEMO DEFINIRAT KOJE MIME tipoive želimio prihvatiti
 const fileFilter=(req,file,cb)=>{//cb je callback funkcija od multera koju pozivamo preko ove reference
+    console.log("Usao u filter")
     if(file.mimetype==='image/jpeg' || file.mimetype==='image/png'||file.mimetype==='image/jpg')//prihvaćamo samo ova 2 formata za slike
     {
         cb(null,true);//pozvat ce se middleware sa porukom o uspjehu
@@ -46,10 +47,13 @@ module.exports={
  
        },
        destination: function (req, file, cb) {
+           console.log("Odabrao destinaciju")
          cb(null, './images/') // designation folder in host
+         
        },
        filename: function (req, file, cb) {
          // file name settings
+         console.log("dao ime")
          cb(null,Date.now() + '-' +file.fieldname )
        }
      })
