@@ -57,7 +57,7 @@ module.exports={
        filename: function (req, file, cb) {
          // file name settings
          console.log("dao ime")
-         cb(null,Date.now() + '-' +file.fieldname )
+         cb(null,Date.now() + '-' +file.originalname )
        }
      })
  
@@ -65,7 +65,7 @@ module.exports={
         fileSize:config.multer.maxImageFileSize
         },
        fileFilter:fileFilter
-    }).single('questionImage');
+    });
  
 
 
