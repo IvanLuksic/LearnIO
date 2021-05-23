@@ -32,7 +32,7 @@ module.exports={
     question_images_root_path: process.env.QUESTION_IMAGE_ROOT_PATH,
     ftp_hname: process.env.HOST,
     ftp_uname: process.env.UNAME,
-    ftp_pwd: process.env.PWD,
+    ftp_pwd: process.env.PASSWD,
     maxImageFileSize:1024*1024//ui bajtovima , 1MB
   },
   rateLimiter: {
