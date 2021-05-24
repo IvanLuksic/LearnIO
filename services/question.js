@@ -37,6 +37,7 @@ module.exports=class question{
             this.Logger.error('Error in fetching topic number of rows and columns');
             throw(error);//idi na vanjski error handler-> OVO RADIMO ZATO JER BI SE ODI HANDLEA ERROR I DALJE BI SE SVE NASTAVILO RADIT NORMALNO A MI ZELIMO SVE PREKINUTI I IZACI IZ FUNKCIJE PA IDEMO SKROZ DO VANJSKOG ERROR HANDLEARA
         }
+        console.log(JSON.stringify(rows_columns))
         this.Logger.info(rows_columns.topic.rows_D+' '+rows_columns.topic.column_numbers);
         //2. izvuci sva pitanja iz tog topica koja su spremljena za tog korisnika taj topic i kurs s potrebnin atributima
         try {
@@ -59,7 +60,7 @@ module.exports=class question{
        // nodelogger.info('questions array:\n'+questions[0]);
        
         var temp={};
-        console.log()
+        
        for(let i=1;i<=rows_columns.topic.rows_D;i++) //jer se unutarquestion modela rows_columns nalazi includeani topic model-> ugniježđeni su
         {
             for(let j=1;j<=rows_columns.topic.column_numbers;j++)
