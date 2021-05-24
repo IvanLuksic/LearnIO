@@ -8,7 +8,7 @@ module.exports={
         try {
               //1.provjeri jeli se u zadani topic ulazi prvi put-> AKO JE ONDA MU GENERIRAJ PITANJA U BAZU PA ONDA TEK ŠALJI
         const student_id=req.session.user;
-        nodelogger.info('Parametri: '+req.params.course_id+' '+req.params.topic_id+' '+req.params.student_id);
+        nodelogger.info('Parametri: '+req.params.course_id+' '+req.params.topic_id+' '+student_id);
         var response={};//u njega ćemo stavit objekte pitanja i objekt naziva assesment objectivea za taj topic
         //1. Vidi jeli se u zadani topic u bazi NIKAD NIJE UŠLO-> AKO JEST ONDA JE PLAV->NE TREBA GENEIRAT PITANJA
             try {

@@ -59,6 +59,7 @@ module.exports=class question{
        // nodelogger.info('questions array:\n'+questions[0]);
        
         var temp={};
+        console.log()
        for(let i=1;i<=rows_columns.topic.rows_D;i++) //jer se unutarquestion modela rows_columns nalazi includeani topic model-> ugniježđeni su
         {
             for(let j=1;j<=rows_columns.topic.column_numbers;j++)
