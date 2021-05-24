@@ -163,6 +163,7 @@ module.exports={
     getQuestionImage:async (req,res,next)=>{
         try {
             const {image_path,mime_type,image_size}=await Question_instance.getQuestionImagePath(req.params.questionID);
+            //Ovde otvorit path
             nodelogger.info(__dirname);
             if(!image_path)//NULL-> NEMA SLIKE-> VRATI STATUS 201
             {
