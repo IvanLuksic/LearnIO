@@ -572,6 +572,7 @@ module.exports=class question{
             let question;
             if(question_type==1&&image_size!==undefined)//a,b,c pitanje+ ima sliku
             {
+                console.log("ABC + slika")
             question=await this.Question.create({
                 text:text,
                 solution:solution,
@@ -590,6 +591,7 @@ module.exports=class question{
         }
         else if(question_type==1&&image_size===undefined)//a b c pitanje + nema sliku-> nismo poslali parametar pa je on po defaultu undefined
         {
+            console.log("ABC - slika")
             question=await this.Question.create({
                 text:text,
                 solution:solution,
@@ -605,6 +607,7 @@ module.exports=class question{
         }
         else if(question_type==2&&image_size!==undefined)//pitanje bez a,b,c,d + ima sliku
         {
+            console.log("Odg + slika")
             question=await this.Question.create({
                 text:text,
                 solution:solution,
@@ -618,6 +621,7 @@ module.exports=class question{
             });
         }
         else {//pitanje bez a,b,c,d + nema sliku
+            console.log("Odg - slika")
             question=await this.Question.create({
                 text:text,
                 solution:solution,
