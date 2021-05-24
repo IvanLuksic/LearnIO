@@ -570,7 +570,7 @@ module.exports=class question{
     {
         try {
             let question;
-            if(question_type==1&&image_size!==undefined)//a,b,c pitanje+ ima sliku
+            if(question_type==1&&image_path!==undefined)//a,b,c pitanje+ ima sliku
             {
                 console.log("ABC + slika")
             question=await this.Question.create({
@@ -589,7 +589,7 @@ module.exports=class question{
                 topic_id:topic_id
             });
         }
-        else if(question_type==1&&image_size===undefined)//a b c pitanje + nema sliku-> nismo poslali parametar pa je on po defaultu undefined
+        else if(question_type==1&&image_path===undefined)//a b c pitanje + nema sliku-> nismo poslali parametar pa je on po defaultu undefined
         {
             console.log("ABC - slika")
             question=await this.Question.create({
@@ -605,7 +605,7 @@ module.exports=class question{
                 topic_id:topic_id
             });
         }
-        else if(question_type==2&&image_size!==undefined)//pitanje bez a,b,c,d + ima sliku
+        else if(question_type==2&&image_path!==undefined)//pitanje bez a,b,c,d + ima sliku
         {
             console.log("Odg + slika")
             question=await this.Question.create({
