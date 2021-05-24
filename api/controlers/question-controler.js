@@ -172,7 +172,6 @@ module.exports={
                 let options = {
                     headers: {
                         'Content-Type':mime_type,
-                        'Content-Length':image_size
                     }
                   };
                 res.sendFile(path.join(config.multer.question_images_root_path,image_path),options);
